@@ -1,0 +1,43 @@
+<mjml>
+  <mj-head>
+    <mj-title>Vérifyé imél a-w</mj-title>
+    <mj-font name="Noto Serif" href="https://fonts.googleapis.com/css?family=Noto+Serif" />
+    <mj-font name="Titillium Web" href="https://fonts.googleapis.com/css?family=Titillium+Web:400,600" />
+    <mj-attributes>
+      <mj-class name="title" font-family="Titillium Web" font-weight="600" font-size="20px" />
+      <mj-class name="code" font-family="Titillium Web" font-weight="400" font-size="12px" />
+      <mj-all font-family="Noto Serif" font-size="13px" line-height="17px" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#ccd3e0">
+    <!-- header -->
+    <mj-section background-color="#422B8F">
+    </mj-section>
+
+    <mj-section background-color="#fff" padding-bottom="20px" padding-top="20px">
+      <mj-column>
+        <mj-text>
+          {{message}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#f7f7fc">
+      <mj-column>
+        <mj-social>
+          <mj-social-element href="#" name="facebook" />
+          <mj-social-element href="#" name="twitter" />
+        </mj-social>
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#141414">
+      <mj-column>
+        <mj-text color="#e7e7e7" align="center" font-size="9px">
+          &copy; Plume Magique 2020
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>

@@ -1,0 +1,114 @@
+{
+    "$ref": "#/definitions/word",
+    "definitions": {
+      "word": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "entry": {
+            "type": "string",
+            "minLength": 1
+          },
+          "variations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "definitions": {
+            "$ref": "#/definitions/Definitions"
+          }
+        },
+        "required": ["definitions", "entry", "variations"],
+        "title": "word"
+      },
+      "Definitions": {
+        "type": "object",
+        "additionalProperties": true,
+        "minProperties": 1,
+        "propertyNames": {
+          "pattern": "^[a-z]{2}$"
+        },
+        "patternProperties": {
+          ".+": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/def_item"
+            }
+          }
+        },
+        "title": "Definitions"
+      },
+      "def_item": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "nature": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "adjectif",
+                "adverbe",
+                "article",
+                "conjonction",
+                "exclamation",
+                "expression",
+                "interjection",
+                "locution",
+                "nom",
+                "nom propre",
+                "nombre",
+                "particule",
+                "préfixe",
+                "préposition",
+                "pronom",
+                "suffixe",
+                "verbe"
+              ]
+            }
+          },
+          "meaning": {
+            "$ref": "#/definitions/Meaning"
+          },
+          "usage": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "synonyms": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "quotes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": ["meaning", "nature"],
+        "title": "def_item"
+      },
+      "Meaning": {
+        "type": "object",
+        "additionalProperties": true,
+        "minProperties": 1,
+        "propertyNames": {
+          "pattern": "^[a-z]{2}$"
+        },
+        "patternProperties": {
+          ".+": {
+            "type": "string"
+          }
+        },
+        "title": "Meaning"
+      }
+    }
+  }
+  
