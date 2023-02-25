@@ -1,0 +1,18 @@
+# production
+dist
+build
+
+# Database files
+data/
+
+# Test files
+*.rest
+
+# Old files
+old/
+
+# Sequelize generated files
+apps/server/src/database/
+
+# Jest generated file
+jest.config.js

@@ -1,0 +1,32 @@
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# System Files
+.DS_Store
+Thumbs.db
+node_modules
+
+# turbo cache
+.turbo
+
+# dotenv environment variable files
+.env*
+
+# compiled output
+build
+dist
+tmp
+/out-tsc
+
+# Test files
+test.rest
+
+data/db/*
+data/mongodb/*
+!data/db/.gitkeep
+!data/mongodb/.gitkeep
+
