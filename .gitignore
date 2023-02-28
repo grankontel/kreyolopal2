@@ -30,3 +30,6 @@ data/mongodb/*
 !data/db/.gitkeep
 !data/mongodb/.gitkeep
 
+# Vagrant
+
+.vagrant
