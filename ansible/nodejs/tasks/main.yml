@@ -1,0 +1,21 @@
+---
+# tasks file for nodejs
+- name: NODEJS | Download Install
+  get_url:
+    url: "https://deb.nodesource.com/setup_{{ nodejs_version }}.x"
+    dest: ~/nodejs
+    mode: 0755
+- name: NODEJS | Package
+  command: ~/nodejs
+  args:
+    creates: /etc/apt/sources.list.d/nodesource.list
+- name: NODEJS | Install
+  apt:
+    name: 
+      - nodejs
+    update_cache: true
+- name: NODEJS | npm globals packages
+  npm:
+    name: "{{ item }}"
+    global: yes
+  with_items: "{{ npm_globals }}"

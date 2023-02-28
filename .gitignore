@@ -31,3 +31,4 @@ data/mongodb/*
 !data/db/.gitkeep
 !data/mongodb/.gitkeep
 
+facts.json
