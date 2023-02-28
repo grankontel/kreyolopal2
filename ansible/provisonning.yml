@@ -1,0 +1,28 @@
+
+---
+- name : Installation du serveur
+  hosts: all
+  remote_user: root
+  tasks:
+    - include_vars:
+        file: vars.yml
+    - name: USER | creation
+      user: 
+        name: "{{ user }}"
+        shell: /bin/bash
+    - name: USER | cle ssh
+      authorized_key:
+        user: "{{ user }}"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+    - name: APT | upgrade & update
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - include_role:
+        name: firewall
+
+    - include_role:
+        name: docker
