@@ -1,0 +1,15 @@
+# ansistrano
+ansistrano_deploy_from: "{{ playbook_dir }}/../build/"
+ansistrano_deploy_to: "/home/{{ user }}/{{ domain }}"
+ansistrano_deploy_via: rsync
+ansistrano_keep_releases: 3
+ansistrano_shared_paths: ["data", "server/dico"]
+ansistrano_shared_files: [".env", "server/.env", "dico/.env.local"]
+
+# app config
+apps:
+  dico:
+    port: 3000
+  api:
+    port: 5000
+
