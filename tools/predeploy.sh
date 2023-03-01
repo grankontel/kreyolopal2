@@ -6,11 +6,11 @@ if [ -z "$1" ]
     exit 1
 fi
 
-path=`readlink -f "${BASH_SOURCE:-$0}"`
+path=`realpath "${BASH_SOURCE:-$0}"`
 DIR_PATH=`dirname $path`
 APP=$1
-APP_PATH=`readlink -f "${DIR_PATH}/../apps/${APP}"`
-BUILD_PATH=`readlink -f "${APP_PATH}/../../build/${APP}"`
+APP_PATH=`realpath "${DIR_PATH}/../apps/${APP}"`
+BUILD_PATH="${APP_PATH}/../../build/${APP}"
 
 if not [ -d "$APP_PATH" ]; then
     echo "$APP_PATH is not a directory."
