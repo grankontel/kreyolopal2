@@ -1,9 +1,11 @@
+
 ---
 - name : Installation du serveur
   hosts: all
   remote_user: root
-
   tasks:
+    - include_vars:
+        file: vars.yml
     - name: USER | creation
       user: 
         name: "{{ user }}"
@@ -19,35 +21,11 @@
         upgrade: dist
         update_cache: yes
 
-    - name: APT | Install required system packages
-      apt:
-        pkg:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - software-properties-common
-          - python3-pip
-          - virtualenv
-          - python3-setuptools
-        state: latest
-        update_cache: true
+    - include_role:
+        name: firewall
 
-    - name: Add Docker GPG apt Key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-
-    - name: Add Docker Repository
-      apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu focal stable
-        state: present
-
-    - name: Update apt and install docker-ce
-      apt:
-        name: docker-ce
-        state: latest
-        update_cache: true
-
-    - name: Install Docker Module for Python
-      pip:
+    - include_role:
         name: docker
+        
+    - include_role:
+        name: nodejs

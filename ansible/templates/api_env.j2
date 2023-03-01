@@ -1,0 +1,47 @@
+SKIP_PREFLIGHT_CHECK=true
+
+PORT={{ api_port }}
+
+LOGLEVEL='debug'
+
+SESSION_SECRET='{{ session_secret }}'
+SESSION_DURATION=3600
+
+API_SALT='{{ api_salt }}'
+TOKEN_SALT='{{ token_salt }}'
+ARGON_MEMORYCOST=24
+ARGON_LENGTH=24
+ARGON_ITERATIONS=3
+
+MAILGUN_API_KEY='{{ mailgun_api_key }}'
+MAILGUN_DOMAIN='mg.kreyolopal.com'
+MAILGUN_HOST='api.eu.mailgun.net'
+MAILGUN_FROM='no-reply@kreyolopal.com'
+
+MAILIST_API_KEY='{{ mailist_api_key }}'
+MAILIST_LISTID='{{ mailist_listid }}'
+
+CAPTCHA_SECRET_KEY='{{ captcha_secret_key }}'
+
+
+PROD_POSTGRES_HOST='localhost'
+PROD_POSTGRES_DB='{{ db_name }}'
+PROD_POSTGRES_USERNAME='{{ db_user }}'
+PROD_POSTGRES_PASSWORD='{{ db_password }}'
+
+
+AWS_ACCESS_KEY_ID='{{ aws_access_key_id }}'
+AWS_SECRET_ACCESS_KEY='{{ aws_secret_access_key }}'
+AWS_BUCKET_REGION='us-east-1'
+AWS_BUCKET_NAME='kreyol-dico'
+
+MONGODB_URI='{{ mongodb_uri }}'
+
+
+
+MAINTAINTER_EMAIL='thierry.malo@gmail.com'
+
+SLACK_WEBHOOK_URL='{{ slack_webhook_url }}'
+
+REDIS_URL='redis://localhost:6379'
+REDIS_DB=1

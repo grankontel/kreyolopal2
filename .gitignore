@@ -33,3 +33,4 @@ data/mongodb/*
 # Vagrant
 
 .vagrant
+facts.json

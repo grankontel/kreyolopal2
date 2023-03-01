@@ -1,0 +1,32 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres:14-bullseye
+    container_name: "my_postgres"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
+    restart: always
+    volumes:
+      - {{ ansistrano_shared_path }}/data/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  mongo:
+    image: mongo
+    restart: always
+    container_name: "mongo"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - {{ ansistrano_shared_path }}/data/mongodb:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  db:
+
+
