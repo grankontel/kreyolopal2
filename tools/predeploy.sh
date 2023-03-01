@@ -25,8 +25,8 @@ mkdir -p ${BUILD_PATH}/.next/static
 
 cp ${APP_PATH}/package.json ${BUILD_PATH}/
 
-cd ${BUILD_PATH}/
-npm install --omit=dev
+# cd ${BUILD_PATH}/
+# npm install --omit=dev
 
 cp -R ${APP_PATH}/public ${BUILD_PATH}/
 cp -R ${APP_PATH}/.next/standalone/ ${BUILD_PATH}/
