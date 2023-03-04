@@ -25,7 +25,9 @@
 
 - name: DOCKER | Update apt and install docker-ce
   apt:
-    name: docker-ce
+    pkg:
+      - docker-ce
+      - docker-compose
     state: latest
     update_cache: true
 

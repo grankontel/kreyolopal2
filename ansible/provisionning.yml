@@ -2,19 +2,53 @@
 ---
 - name : Installation du serveur
   hosts: all
+  gather_facts: true
   remote_user: root
   tasks:
     - include_vars:
         file: vars.yml
+    - name: Make sure we have a 'wheel' group
+      group:
+        name: wheel
+        state: present
     - name: USER | creation
       user: 
         name: "{{ user }}"
+        group: wheel
         shell: /bin/bash
     - name: USER | cle ssh
       authorized_key:
         user: "{{ user }}"
         state: present
         key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+    # - name: POLKIT | Allow user to do some admin tasks
+    #   template:
+    #     src: polkit_admin.j2
+    #     dest: "/etc/polkit-1/localauthority.conf.d/60-{{ user }}-perm.conf"
+
+    # - name: POLKIT | Grant services management to wheel group
+    #   copy:
+    #     dest: "/etc/polkit-1/localauthority.conf.d/70-wheel-perm.conf"
+    #     content: |
+    #       [Allow wheel to start/stop/restart services]
+    #       Identity=unix-group:wheel
+    #       Action=org.freedesktop.systemd1.manage-units
+    #       ResultActive=yes
+
+    - name: USER | Allow some privileges
+      community.general.sudoers:
+        name: wheel-nginx
+        group: wheel
+        commands:
+          - /bin/systemctl restart nginx.service
+          - /bin/systemctl reload nginx.service
+        nopassword: true
+
+    # - name: USER | Restart polkit
+    #   service:
+    #     name: polkit
+    #     state: restarted
 
     - name: APT | upgrade & update
       apt:
@@ -24,8 +58,52 @@
     - include_role:
         name: firewall
 
+    - name: Nginx | Required packages
+      apt:
+        name: 
+          - openssl
+          - certbot
+          - nginx
+        state: present
+
+    - name: Postgresql | Utility present
+      ansible.builtin.package:
+        name: python3-psycopg2
+        state: present
+
+    - name: Install pymongo python package
+      ansible.builtin.pip:
+        name: pymongo
+        state: latest
+
+    - name: Wheel Group | Permissions /etc/nginx
+      ansible.builtin.file:
+        path: /etc/nginx
+        owner: root
+        group: wheel
+        recurse: true
+        mode: g=rw
+    - name: Wheel Group | Ensure nginx subdirectories can be open
+      command: find /etc/nginx -type d -exec chmod g+x {} \;
+
+    - name: Wheel Group | Permissions /etc/ssl
+      ansible.builtin.file:
+        path: /etc/ssl
+        owner: root
+        group: wheel
+        recurse: true
+        mode: g=rw
+    - name: Wheel Group | Ensure ssl subdirectories can be open
+      command: find /etc/ssl -type d -exec chmod g+x {} \;
+
     - include_role:
         name: docker
-        
+
+    - name: USER | add to docker group
+      user: 
+        name: "{{ user }}"
+        groups: docker
+        append: true
+
     - include_role:
         name: nodejs
