@@ -19,3 +19,8 @@
     name: "{{ item }}"
     global: yes
   with_items: "{{ npm_globals }}"
+
+- name: PM2 | prepare startup
+  command: "env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{ user }} --hp /home/{{ user }} "
+  args:
+    creates: "/etc/systemd/system/pm2-{{ user }}.service"
