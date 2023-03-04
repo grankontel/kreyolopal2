@@ -61,6 +61,7 @@ app.use(
 
 setRoutes({ app })
 
+/*
 const CLIENT_BUILD_PATH = path.join(__dirname, '../public')
 
 // serve static assets
@@ -73,6 +74,7 @@ app.get(
 app.get(/^(?!\/(api|backend))(.+)/, (request, response) => {
   response.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'))
 })
+*/
 
 // errors
 app.use(function (err, req, res, next) {

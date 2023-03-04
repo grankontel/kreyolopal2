@@ -1,5 +1,37 @@
 
 ---
+- name: DOCKER | ensure docker is up
+  community.docker.docker_compose:
+    project_src: "{{ ansistrano_shared_path }}"
+    state: present
+
+- name: MONGO | Create 'zakari' database user with name 'zakari' and secret password.
+  community.mongodb.mongodb_user:
+    login_user: root
+    login_password: "{{ pwd_mongo }}"
+    database: zakari
+    name: zakari
+    password: "{{ mongodb_password }}"
+    roles: readWrite,dbAdmin
+    state: present
+
+- name: POSTGRESQL | Ensure database exists
+  community.postgresql.postgresql_ping:
+    db: "{{ db_name }}"
+    login_host: localhost
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+  register: dbresult
+
+- name: DOCKER | create database and user
+  community.docker.docker_container_exec:
+    container: my_postgres
+    env: 
+      PGPASSWORD: "{{ pwd_postgres }}"
+    command: psql -U postgres -c "\set AUTOCOMMIT on\ncreate database {{ db_name }}; create user {{ db_user }} with encrypted password '{{ db_password }}'; grant all privileges on database {{ db_name }} to {{ db_user }};"
+  register: result
+  when: not dbresult.is_available
+
 - name: APP SERVER | npm install
   command: 
     cmd: npm install
@@ -7,6 +39,7 @@
     chdir: "{{ ansistrano_release_path.stdout }}/server"
   environment:
     NODE_ENV: 'production'
+
 - name: APP DICO | npm install
   command: 
     cmd: npm install
@@ -15,3 +48,32 @@
   environment:
     NODE_ENV: 'production'
 
+- name: APP SERVER | write proper config.json
+  template:
+    src: config_json.j2
+    dest: "{{ ansistrano_release_path.stdout }}/server/database/config/config.json"
+
+- name: APP SERVER | migrate db
+  command: 
+    cmd: npm run migrate
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}/server"
+  environment:
+    NODE_ENV: 'production'
+  register: migrate_result
+
+- name: Print return information from the previous task
+  ansible.builtin.debug:
+    var: migrate_result.stdout_lines | last
+
+- name: APP | start api
+  command:
+    cmd: pm2 start npm --name "api.{{ domain }}" -- start
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}/server"
+
+- name: APP | start dico
+  command:
+    cmd: pm2 start npm --name "dico.{{ domain }}" -- start
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}/dico"

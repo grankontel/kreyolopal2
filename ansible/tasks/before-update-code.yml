@@ -1,0 +1,19 @@
+
+---
+- name: "Nginx | {{ subdomain }} | Check docker-compose file "
+  stat:
+    path: "{{ ansistrano_shared_path }}/docker-compose.yml"
+  register: compose_file
+
+- name: APP | stop previous app
+  command:
+    cmd: pm2 delete "{{ item.key }}.{{ domain }}"
+  loop: "{{  apps | dict2items }}"
+  ignore_errors: yes
+
+- name: DOCKER | ensure docker is stopped
+  community.docker.docker_compose:
+    project_src: "{{ ansistrano_shared_path }}"
+    state: absent
+  when: compose_file.stat.exists 
+

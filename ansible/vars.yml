@@ -4,7 +4,12 @@ ansistrano_deploy_to: "/home/{{ user }}/{{ domain }}"
 ansistrano_deploy_via: rsync
 ansistrano_keep_releases: 3
 ansistrano_shared_paths: ["data", "server/dico"]
-ansistrano_shared_files: [".env", "server/.env", "dico/.env.local"]
+ansistrano_shared_files: [".env", "docker-compose.yml", "server/.env", "dico/.env.local"]
+
+ansistrano_before_setup_tasks_file: "{{ playbook_dir }}/tasks/before-setup.yml"
+ansistrano_before_update_code_tasks_file: "{{ playbook_dir }}/tasks/before-update-code.yml"
+ansistrano_before_symlink_shared_tasks_file: "{{ playbook_dir }}/tasks/before-symlink.yml"
+ansistrano_after_symlink_tasks_file: "{{ playbook_dir }}/tasks/after-symlink.yml"
 
 # app config
 apps:

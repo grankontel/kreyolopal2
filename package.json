@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "deploy": "dotenv -v NODE_ENV='production' -- turbo run build && ./tools/predeploy.sh",
+    "predeploy": "dotenv -v NODE_ENV='production' -- turbo run build && ./tools/predeploy.sh",
+    "deploy": "cd ansible && ansible-playbook -i hosts.yml deploy.yml --ask-vault-password",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{js,ts,tsx,md}\""

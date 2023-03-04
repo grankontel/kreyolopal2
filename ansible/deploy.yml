@@ -1,21 +1,41 @@
 ---
 - name: Déploiement des applicatifs
   hosts: all
+  gather_facts: true
   remote_user: '{{ user }}'
   tasks:
     - include_vars:
         file: vars.yml
     - name: DEPLOY |  salts & keys
       set_fact:
-        session_secret: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
-        api_salt: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
-        token_salt: "{{ lookup('password', '/dev/null length=16 chars=ascii_letters,digits') }}"
-        cacheable: yes
+        session_secret: "{{ lookup('password', 'credentials/' + ansible_host + '/session_secret length=32 chars=ascii_letters,digits') }}"
+        api_salt: "{{ lookup('password', 'credentials/' + ansible_host + '/api_salt length=32 chars=ascii_letters,digits') }}"
+        token_salt: "{{ lookup('password', 'credentials/' + ansible_host + '/token_salt length=16 chars=ascii_letters,digits') }}"
+        pwd_postgres: "{{ lookup('password', 'credentials/' + ansible_host + '/pwd_postgres length=18 chars=ascii_letters,digits') }}"
+        pwd_mongo: "{{ lookup('password', 'credentials/' + ansible_host + '/pwd_mongo length=18 chars=ascii_letters,digits') }}"
+
+    - name: DEPLOY | Get user info
+      block:
+        - getent:
+            database: passwd
+            key: "{{ user }}"
+        - ansible.builtin.debug:
+            var: ansible_facts.getent_passwd
+        - set_fact:
+            user_id: "{{ getent_passwd[user].1 }}"
+            user_gid: "{{ getent_passwd[user].2 }}"
+
     - name: DEPLOY | Set apps port
       set_fact:
         "{{ item.key }}_port": "{{ item.value.port }}"
+        "{{ item.key }}_domain": "{{ item.key }}.{{ domain }}"
       loop: "{{  apps | dict2items }}"
     - debug:
         msg: "Api Port '{{ api_port }}'"
-#    - include_role:
-#        name: ansistrano.deploy
+
+    - name: DEPLOY | httpd
+      include_role:
+        name: httpd
+
+    - include_role:
+        name: ansistrano.deploy

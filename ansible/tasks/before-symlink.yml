@@ -1,4 +1,4 @@
----    
+---
 - name: DEPLOY | Create global .env
   template:
     src: env_docker.j2
@@ -14,8 +14,7 @@
     src: env_dico.j2
     dest: "{{ ansistrano_shared_path }}/dico/.env.local"
 
-- name: DEPLOY | Create docker-composer
+- name: DEPLOY | Create docker-compose
   template:
     src: compose.j2
     dest: "{{ ansistrano_shared_path }}/docker-compose.yml"
-    
