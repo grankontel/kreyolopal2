@@ -12,7 +12,7 @@ APP=$1
 APP_PATH=`realpath "${DIR_PATH}/../apps/${APP}"`
 BUILD_PATH="${APP_PATH}/../../build/${APP}"
 
-if not [ -d "$APP_PATH" ]; then
+if ! [ -d "$APP_PATH" ]; then
     echo "$APP_PATH is not a directory."
     exit 1
 fi
