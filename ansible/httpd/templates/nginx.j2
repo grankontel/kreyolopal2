@@ -11,7 +11,7 @@ include              /etc/nginx/modules-enabled/*.conf;
 
 events {
     multi_accept       on;
-    worker_connections 65535;
+    worker_connections 1000;
 }
 
 http {
