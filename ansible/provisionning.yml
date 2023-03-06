@@ -22,20 +22,6 @@
         state: present
         key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
-    # - name: POLKIT | Allow user to do some admin tasks
-    #   template:
-    #     src: polkit_admin.j2
-    #     dest: "/etc/polkit-1/localauthority.conf.d/60-{{ user }}-perm.conf"
-
-    # - name: POLKIT | Grant services management to wheel group
-    #   copy:
-    #     dest: "/etc/polkit-1/localauthority.conf.d/70-wheel-perm.conf"
-    #     content: |
-    #       [Allow wheel to start/stop/restart services]
-    #       Identity=unix-group:wheel
-    #       Action=org.freedesktop.systemd1.manage-units
-    #       ResultActive=yes
-
     - name: USER | Allow some privileges
       community.general.sudoers:
         name: wheel-nginx
@@ -44,11 +30,6 @@
           - /bin/systemctl restart nginx.service
           - /bin/systemctl reload nginx.service
         nopassword: true
-
-    # - name: USER | Restart polkit
-    #   service:
-    #     name: polkit
-    #     state: restarted
 
     - name: APT | upgrade & update
       apt:
@@ -64,6 +45,7 @@
           - openssl
           - certbot
           - nginx
+          - python3-passlib
         state: present
 
     - name: Postgresql | Utility present

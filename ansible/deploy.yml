@@ -33,6 +33,17 @@
     - debug:
         msg: "Api Port '{{ api_port }}'"
 
+    - name: DEPLOY | Set restricted directory
+      set_fact:
+        restricted_dir:  "/etc/nginx/{{ domain }}/conf"
+
+    - name: "DEPLOY | Create restrited directory "
+      file:
+        path: "{{ restricted_dir }}"
+        state: directory
+        group: wheel
+        mode: o=rx
+
     - name: DEPLOY | httpd
       include_role:
         name: httpd

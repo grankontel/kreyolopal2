@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- restrict access with basic auth
 - deploy via ansible
 - provisionning via ansible
 - basic dictionnary page (NextJs)

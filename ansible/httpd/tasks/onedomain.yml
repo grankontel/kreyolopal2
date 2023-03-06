@@ -2,8 +2,27 @@
 # onedomain.yml
 - name: Nginx | Set subdomain
   set_fact:
+    domainhost: "{{ item.key }}"
     subdomain: "{{ item.key }}.{{ domain }}"
     domainport: "{{ item.value.port }}"
+    is_restricted: "{{ item.value.restricted | bool }}"
+
+- name: "Nginx | {{ subdomain }} | Password directory "
+  file:
+    path: "{{ restricted_dir }}/{{ domainhost }}"
+    state: directory
+    group: wheel
+    mode: o=rx
+  when: is_restricted
+
+- name: "Nginx | {{ subdomain }} | Restrict Access "
+  community.general.htpasswd:
+    path: "{{ restricted_dir }}/{{ domainhost }}/htpasswd"
+    name: wabap
+    password: '5edKreyol!'
+    group: wheel
+    mode: o=r
+  when: is_restricted
 
 - name: "Nginx | {{ subdomain }} | Check certificate file "
   stat:
