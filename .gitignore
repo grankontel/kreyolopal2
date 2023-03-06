@@ -34,3 +34,6 @@ data/mongodb/*
 
 .vagrant
 facts.json
+
+# Ansible
+ansible/credentials

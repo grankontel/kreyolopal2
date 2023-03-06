@@ -1,0 +1,9 @@
+# HTTP redirect
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name {{ domain }};
+
+    include     /etc/nginx/nginxconfig.io/letsencrypt.conf;
+
+}

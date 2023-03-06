@@ -2,5 +2,6 @@
 # defaults file for nodejs
 npm_globals:
   - npm@latest
+  - pm2@latest
 nodejs_version: 18
   

@@ -19,6 +19,8 @@ delete pdata.devDependencies
 
 const distDirectory = './dist'
 
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`)
+
 export default {
   input: 'src/server.js',
   external: [
@@ -62,10 +64,13 @@ export default {
           src: '.sequelizerc',
           dest: 'dist/',
           transform: (contents, filename) =>
-            contents.toString().replace('./src/', './'),
+            contents.toString().replaceAll('./src/', './'),
         },
       ],
     }),
+    process.env.NODE_ENV === 'production'
+          ? terser()
+          : null,
     // terser(),
     writePackageJson(pdata),
   ],
