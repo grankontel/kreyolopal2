@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- use keycloak to authenticate user
 - improve dico HTML
 - restrict access with basic auth
 - deploy via ansible
