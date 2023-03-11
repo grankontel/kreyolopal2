@@ -27,8 +27,8 @@
         name: wheel-nginx
         group: wheel
         commands:
-          - /bin/systemctl restart nginx.service
-          - /bin/systemctl reload nginx.service
+          - /bin/systemctl restart nginx
+          - /bin/systemctl reload nginx
         nopassword: true
 
     - name: APT | upgrade & update
@@ -38,6 +38,13 @@
 
     - include_role:
         name: firewall
+
+    - name: Ansible | Required packages
+      apt:
+        name: 
+          - python3
+          - python3-pip
+        state: present
 
     - name: Nginx | Required packages
       apt:
@@ -78,8 +85,31 @@
     - name: Wheel Group | Ensure ssl subdirectories can be open
       command: find /etc/ssl -type d -exec chmod g+x {} \;
 
+    - name: Wheel Group | Permissions /var/www
+      ansible.builtin.file:
+        path: /var/www
+        owner: root
+        group: wheel
+        recurse: true
+        mode: g=rw
+    - name: Wheel Group | Ensure /var/www subdirectories can be open
+      command: find /var/www -type d -exec chmod g+x {} \;
+
+    - name: Wheel Group | Permissions /etc/letsencrypt
+      ansible.builtin.file:
+        path: /etc/letsencrypt
+        owner: root
+        group: wheel
+        recurse: true
+        mode: g=rw
+    - name: Wheel Group | Ensure ssl subdirectories can be open
+      command: find /etc/letsencrypt -type d -exec chmod g+x {} \;
+
     - include_role:
         name: docker
+
+    - include_role:
+        name: mongosh
 
     - name: USER | add to docker group
       user: 

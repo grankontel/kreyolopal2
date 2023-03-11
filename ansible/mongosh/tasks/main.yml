@@ -1,0 +1,29 @@
+---
+# tasks file for mongosh
+- name: MongoSH | Install required system packages
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+    state: latest
+    update_cache: true
+
+- name: MongoSH | Add MongoDB GPG apt Key
+  apt_key:
+    url: https://www.mongodb.org/static/pgp/server-6.0.asc 
+    state: present
+
+- name: MongoSH | Add MongoSH Repository
+  apt_repository:
+    repo: "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/6.0 multiverse"
+    state: present
+
+- name: MongoSH | Update apt and install mongosh
+  apt:
+    pkg:
+      - libssl3
+      - mongodb-mongosh-shared-openssl3
+    state: latest
+    update_cache: true

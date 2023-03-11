@@ -13,7 +13,7 @@ server {
     ssl_certificate /etc/ssl/certs/{{ subdomain }}.crt;
     ssl_certificate_key /etc/ssl/private/{{ subdomain }}.pem;
     {% else %}
-    include                 /etc/nginx/nginxconfig.io/letsencrypt.conf;
+    include                 /etc/nginx/nginxconfig.io/{{ domainhost }}_letsencrypt.conf;
     ssl_certificate         /etc/letsencrypt/live/{{ subdomain }}/fullchain.pem;
     ssl_certificate_key     /etc/letsencrypt/live/{{ subdomain }}/privkey.pem;
     ssl_trusted_certificate /etc/letsencrypt/live/{{ subdomain }}/chain.pem;
@@ -46,7 +46,7 @@ server {
     server_name {{ subdomain }};
 
     {%if not self_signed == true %}
-    include     /etc/nginx/nginxconfig.io/letsencrypt.conf;
+    include     /etc/nginx/nginxconfig.io/{{ domainhost }}_letsencrypt.conf;
     {% endif %}
 
     {%if listen_http == true %}
