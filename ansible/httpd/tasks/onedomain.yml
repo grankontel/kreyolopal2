@@ -7,6 +7,13 @@
     domainport: "{{ item.value.port }}"
     is_restricted: "{{ item.value.restricted | bool }}"
 
+- name: "Nginx | {{ subdomain }} | Configuration letsencrypt"
+  template:
+    src: domain_letsencrypt.j2
+    dest: "/etc/nginx/nginxconfig.io/{{ domainhost }}_letsencrypt.conf"
+    group: wheel
+    mode: o=r
+
 - name: "Nginx | {{ subdomain }} | Password directory "
   file:
     path: "{{ restricted_dir }}/{{ domainhost }}"
@@ -60,8 +67,9 @@
     group: wheel
     mode: o+r
   when: not self_signed | bool
+
 - name: "Nginx | {{ subdomain }} | Get SSL certificates"
-  command: "certbot certonly --webroot -d {{ subdomain }} --email info@{{ domain }} -w /var/www/{{ subdomain }}/_letsencrypt -n --agree-tos --force-renewal"
+  command: "certbot certonly --webroot --work-dir {{ ansistrano_deploy_to }}/letsencrypt/lib  --logs-dir {{ ansistrano_deploy_to }}/letsencrypt/log -d {{ subdomain }} --email info@{{ domain }} -w /var/www/{{ subdomain }}/_letsencrypt -n --agree-tos --force-renewal"
   when: not self_signed | bool
 - name: "Nginx | {{ subdomain }} | Automatic certificate renewal"
   copy:

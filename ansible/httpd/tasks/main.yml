@@ -55,12 +55,6 @@
         dest: "/etc/nginx/nginxconfig.io/ssl.conf"
         group: wheel
         mode: o=r
-    - name: "Nginx | Configuration letsencrypt"
-      template:
-        src: letsencrypt.j2
-        dest: "/etc/nginx/nginxconfig.io/letsencrypt.conf"
-        group: wheel
-        mode: o=r
     - name: "Nginx | Configuration security"
       template:
         src: security.j2
