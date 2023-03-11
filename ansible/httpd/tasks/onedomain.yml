@@ -57,6 +57,14 @@
     path: "/etc/nginx/sites-available/{{ subdomain }}.conf"
     regexp: '(\w*ssl_.+)$'
     replace: '# \1'
+
+- name: "Nginx | {{ subdomain }} | Comment Restrict directives"
+  replace:
+    path: "/etc/nginx/sites-available/{{ subdomain }}.conf"
+    regexp: '(\w*auth_.+)$'
+    replace: '# \1'
+  when: is_restricted
+
   notify:
     - restart_nginx
     
@@ -131,5 +139,13 @@
     path: "/etc/nginx/sites-available/{{ subdomain }}.conf"
     regexp: '# (listen .+443 ssl .+)$'
     replace: '\1'
+
+- name: "Nginx | {{ subdomain }} | Uncomment Restrict access"
+  replace:
+    path: "/etc/nginx/sites-available/{{ subdomain }}.conf"
+    regexp: '# (\w*auth_.+)$'
+    replace: '\1'
+  when: is_restricted
+
   notify:
     - restart_nginx
