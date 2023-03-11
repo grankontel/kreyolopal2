@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- can now import mongo database
 - improve dico HTML
 - restrict access with basic auth
 - deploy via ansible

@@ -1,0 +1,50 @@
+---
+- name: Import des données dans mongodb
+  hosts: all
+  gather_facts: true
+  remote_user: '{{ user }}'
+  tasks:
+    - include_vars:
+        file: vars.yml
+    - name: IMPORT |  salts & keys
+      set_fact:
+        pwd_mongo: "{{ lookup('password', 'credentials/' + ansible_host + '/pwd_mongo length=18 chars=ascii_letters,digits') }}"
+
+    - name: IMPORT | Create import directory
+      file:
+        path: ~/import/var
+        state: directory
+
+    - name: IMPORT | Copy import data
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../import/var/entries.json"
+        dest: ~/import/var/entries.json
+
+    - name: IMPORT | ensure docker is up
+      community.docker.docker_compose:
+        project_src: "{{ ansistrano_deploy_to }}/shared"
+        state: present
+
+    - name: IMPORT | Create multiple indexes
+      community.mongodb.mongodb_index:
+        login_user: root
+        login_password: "{{ pwd_mongo }}"
+        indexes:
+          - database: zakari
+            collection: words
+            keys:
+              entry: 1
+            options:
+              name: entry_1
+              unique: true
+            state: present
+          - database: zakari
+            collection: words
+            keys:
+              variations: 1
+            options:
+              name: variations_1
+            state: present
+
+    - name: IMPORT | Import Json File
+      command: "mongoimport -u zakari -p {{ mongodb_password }} --db zakari --collection words --file ~/import/var/entries.json --jsonArray"
