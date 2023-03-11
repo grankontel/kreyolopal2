@@ -1,0 +1,4 @@
+---
+# defaults file for mongosh
+my_package_url: https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2204-x86_64-100.7.0.deb
+my_package_name: mongodb-database-tools
