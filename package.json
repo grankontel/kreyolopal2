@@ -22,6 +22,7 @@
   "devDependencies": {
     "dotenv-cli": "^7.0.0",
     "eslint-config-custom": "*",
+    "n-readlines": "^1.0.1",
     "prettier": "latest",
     "turbo": "latest"
   },
