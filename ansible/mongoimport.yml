@@ -25,6 +25,9 @@
         project_src: "{{ ansistrano_deploy_to }}/shared"
         state: present
 
+    - name: IMPORT | Import Json File
+      command: "mongoimport -u zakari -p {{ mongodb_password }} --drop --db zakari --collection words --file ~/import/var/entries.json --jsonArray"
+
     - name: IMPORT | Create multiple indexes
       community.mongodb.mongodb_index:
         login_user: root
@@ -45,6 +48,3 @@
             options:
               name: variations_1
             state: present
-
-    - name: IMPORT | Import Json File
-      command: "mongoimport -u zakari -p {{ mongodb_password }} --db zakari --collection words --file ~/import/var/entries.json --jsonArray"
