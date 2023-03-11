@@ -105,7 +105,7 @@ function cleanSubNature(nat) {
 while ((line = liner.next())) {
   // console.log('Line ' + lineNumber)
   const values = line.toString('utf8').split(';')
-  let ent = values[0].trim()
+  let ent = values[0].replaceAll(' ',' ').trim()
   if (ent === '' || values[1] === 'variations') {
     lineNumber++
     continue

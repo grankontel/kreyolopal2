@@ -1,7 +1,7 @@
 // const { MongoClient } = require('mongodb')
 import config from '../../config'
 import logger from '../../services/logger'
-import {getClient} from '../../services/mongo'
+import { getClient } from '../../services/mongo'
 
 const getWord = async function (req, res) {
   const language = req.params.language
@@ -15,6 +15,7 @@ const getWord = async function (req, res) {
     }
     const projection = {
       entry: 1,
+      variations: 1,
       definitions: 1,
     }
 
@@ -28,12 +29,18 @@ const getWord = async function (req, res) {
       return {
         id: item._id,
         entry: item.entry,
+        variations: item.variations,
         definitions: item.definitions[language],
       }
     })
-    res.set('Cache-Control', 's-maxage=86400')
-    res.set('Content-Type', 'application/json')
-    res.status(200).send(data)
+
+    if (data.length > 0) {
+      res.set('Cache-Control', 's-maxage=86400')
+      res.set('Content-Type', 'application/json')
+      return res.status(200).send(data)
+    }
+
+    return res.status(404).send({ error: 'Not found.' })
   } catch (e) {
     logger.error(e.message)
     res.status(500).send({ error: 'Unknown error.' })
@@ -55,8 +62,8 @@ const getSuggestion = async function (req, res) {
       variations: 1,
     }
 
-    const sort = { 
-      variations: 1 
+    const sort = {
+      variations: 1,
     }
 
     const client = getClient()
