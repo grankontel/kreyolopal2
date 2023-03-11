@@ -1,7 +1,7 @@
 ---
 # handlers file for httpd
 - name: restart_nginx
-  command:  sudo /bin/systemctl restart nginx.service
+  command:  sudo /bin/systemctl restart nginx
 
   # service: 
   #   name: nginx 

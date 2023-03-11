@@ -30,6 +30,10 @@ data/mongodb/*
 !data/db/.gitkeep
 !data/mongodb/.gitkeep
 
+# import file
+import/var 
+sources
+
 # Vagrant
 
 .vagrant

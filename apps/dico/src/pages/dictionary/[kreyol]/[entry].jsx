@@ -3,7 +3,7 @@ import { Content, Heading, Section } from 'react-bulma-components'
 
 export const revalidate = 3600;
 
-const DicoPage = ({ error, entries }) => {
+const DicoPage = ({ kreyol, error, entries }) => {
 
   return (
     <Section>
@@ -14,7 +14,7 @@ const DicoPage = ({ error, entries }) => {
         <div>
           {entries.map((item, index) => {
             return (
-              <DicoEntry item={item} key={item.id} />
+              <DicoEntry item={item} kreyol={kreyol} key={item.id} />
             )
           })}
         </div>)}
@@ -27,7 +27,7 @@ export const getServerSideProps = async (ctx) => {
 
   const kreyol = ctx.params?.kreyol.toLowerCase()
   const entry = ctx.params?.entry.toLowerCase()
-  const {res} = ctx
+  const { res } = ctx
   res.setHeader(
     'Cache-Control',
     'public, s-maxage=3600, stale-while-revalidate=59'
@@ -56,9 +56,16 @@ export const getServerSideProps = async (ctx) => {
     return {
       props: {
         entries: data,
+        kreyol,
       },
     }
 
+  }
+
+  if (result.status === 404) {
+    return {
+      notFound: true, //redirects to 404 page
+    }
   }
 
   console.log('Mauvaise réponse du réseau');

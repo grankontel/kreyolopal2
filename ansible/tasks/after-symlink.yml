@@ -27,9 +27,13 @@
   community.docker.docker_container_exec:
     container: my_postgres
     env: 
-      PGPASSWORD: "{{ pwd_postgres }}"
-    command: psql -U postgres -c "\set AUTOCOMMIT on\ncreate database {{ db_name }}; create user {{ db_user }} with encrypted password '{{ db_password }}'; grant all privileges on database {{ db_name }} to {{ db_user }};"
-  register: result
+      PGPASSWORD: "{{ pwd_postgres | string }}"
+    command: psql -U postgres -c "{{ item }}" 
+  loop:
+    - "create database {{ db_name }};"
+    - "create user {{ db_user }} with encrypted password '{{ db_password }}';"
+    -  "grant all privileges on database {{ db_name }} to {{ db_user }};"
+  no_log: true
   when: not dbresult.is_available
 
 - name: APP SERVER | npm install

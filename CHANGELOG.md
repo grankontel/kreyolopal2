@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - use keycloak to authenticate user
+- improved entry display
+- can now import mongo database
 - improve dico HTML
 - restrict access with basic auth
 - deploy via ansible
