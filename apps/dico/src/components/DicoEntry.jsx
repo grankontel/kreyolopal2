@@ -1,24 +1,29 @@
 import { Heading } from 'react-bulma-components'
+import AlsoList from './dictionnary/AlsoList'
+import SynonymList from './dictionnary/SynonymList'
+import Tranlations from './dictionnary/Translations'
+import VariationList from './dictionnary/VariationList'
 
-const DicoEntry = ({ item, ...rest }) => {
+const DicoEntry = ({ item, kreyol, ...rest }) => {
+    const nb_definitions = item.definitions.length
+
     return (
         <article className="dico_word" {...rest}>
             <Heading size={4} renderAs="h2">
                 {item.entry}
             </Heading>
+            {item.variations.length > 1 ? (
+                <VariationList variations={item.variations} />
+            ) : null}
             {item.definitions.map((def, index) => {
                 const nature = def.nature.join(', ')
                 return (
                     <div key={index} className="definition">
-                        <div className="nature">{nature}</div>
-                        <div className="translations">
-                            <div className="translation translation_gp">
-                                {def.meaning['gp']}
-                            </div>
-                            <div className="translation translation_fr">
-                                {def.meaning['fr']}
-                            </div>
+                        <div className="nature">
+                            {nb_definitions > 1 ? (`${index + 1}. `) : null}
+                            {def.subnature?.length ? def.subnature.join(', ') : nature}
                         </div>
+                        <Tranlations meanings={def.meaning} />
                         {def.usage.length > 0 ? (
                             <div className="usage">
                                 {def.usage.map((example, ex_index) =>
@@ -32,17 +37,13 @@ const DicoEntry = ({ item, ...rest }) => {
                         ) : null}
 
                         {def.synonyms.length > 0 ? (
-                            <div className="synonyms">
-                                <Heading size={6} renderAs="h3">
-                                    Voir aussi
-                                </Heading>
-                                {def.synonyms.map((example, ex_index) => (
-                                    <div className="synonym" key={ex_index}>
-                                        {example}
-                                    </div>
-                                ))}
-                            </div>
+                            <SynonymList synonyms={def.synonyms} />
                         ) : null}
+
+                        {def.confer.length > 0 ? (
+                            <AlsoList also={def.confer} />
+                        ) : null}
+
                     </div>
                 )
             })}
