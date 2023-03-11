@@ -1,13 +1,13 @@
 const lineByLine = require('n-readlines')
 const path = require('path')
 const fs = require('fs')
-const { argv } = require('node:process');
+const { argv } = require('node:process')
 
 const fname = argv[2]
 
-if (! fname?.length > 0) {
-    console.error("No filename provided")
-    process.exit(1)
+if (!fname?.length > 0) {
+  console.error('No filename provided')
+  process.exit(1)
 }
 
 const csvfile = path.resolve(fname)
@@ -84,9 +84,10 @@ function cleanNature(nat) {
   if (natures.includes(nat)) return nat
 
   if (['vebre', 'verb'].includes(nat)) return 'verbe'
-  if (['noun', 'nm','nomn'].includes(nat)) return 'nom'
+  if (['noun', 'nm', 'nomn'].includes(nat)) return 'nom'
   if (['adjverbe'].includes(nat)) return 'adverbe'
-  if (['adjective', 'adejctif', 'advectif', 'adjecif'].includes(nat)) return 'adjectif'
+  if (['adjective', 'adejctif', 'advectif', 'adjecif'].includes(nat))
+    return 'adjectif'
   if (['pronoun'].includes(nat)) return 'pronom'
   if (['prefixe'].includes(nat)) return 'préfixe'
 
@@ -94,13 +95,12 @@ function cleanNature(nat) {
 }
 
 function cleanSubNature(nat) {
-    if (subnatures.includes(nat)) return nat
-  
-    if (['posséssif'].includes(nat)) return 'possessif'
-  
-    return nat
-  }
-  
+  if (subnatures.includes(nat)) return nat
+
+  if (['posséssif'].includes(nat)) return 'possessif'
+
+  return nat
+}
 
 while ((line = liner.next())) {
   // console.log('Line ' + lineNumber)
@@ -128,10 +128,10 @@ while ((line = liner.next())) {
 
   // add definition
   let definition = {}
-  if (values[3].trim() == "nom propre") {
-    definition.nature = ["nom propre"]
+  if (values[3].trim() == 'nom propre') {
+    definition.nature = ['nom propre']
   } else {
-    let cleanats = values[3].trim().replace(" de ", " ")
+    let cleanats = values[3].trim().replace(' de ', ' ')
     let nats = cleanats.split(' ')
 
     let nat = cleanNature(nats[0])
@@ -141,7 +141,7 @@ while ((line = liner.next())) {
       errors++
     } else if (nats[1]?.length > 0) {
       let subnature = cleanSubNature(nats[1])
-  
+
       if (subnatures.includes(subnature)) {
         definition.subnature = []
         definition.subnature.push([nat, subnature].join(' '))
@@ -160,7 +160,11 @@ while ((line = liner.next())) {
   definition.usage = values[5]
     .split('/')
     .map((x) => x.trim().replaceAll(' ', ''))
-  definition.synonyms = values[6].split(',').map((x) => x.trim())
+    .filter((y) => y.length > 0)
+  definition.synonyms = values[6]
+    .split(',')
+    .map((x) => x.trim())
+    .filter((y) => y.length > 0)
   definition.confer = values[7]
     .split('/')
     .map((x) => x.trim())
