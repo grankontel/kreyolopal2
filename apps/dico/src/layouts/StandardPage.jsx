@@ -69,15 +69,9 @@ export default function StandardPage({ children }) {
             <Container className="main" renderAs="main">
                 {children}
             </Container>
-            <Container
-                max
-                breakpoint="fullhd"
-                textAlign="center"
-                className="page-footer"
-                renderAs="footer"
-            >
+            <footer className="page-footer has-text-centered">
                 <Content>&copy; TiMalo — 2022</Content>
-            </Container>
+            </footer>
         </>
     )
 }
