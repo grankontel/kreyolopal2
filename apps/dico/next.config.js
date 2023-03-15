@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['@kreyolopal/web-ui'],
   reactStrictMode: true,
   output: 'standalone',
   poweredByHeader: false,
@@ -14,7 +15,6 @@ const nextConfig = {
         },
       ],
     }
-
   },
 }
 

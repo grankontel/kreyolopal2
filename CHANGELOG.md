@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- moved TopNavbar to lib
 - improved entry display
 - can now import mongo database
 - improve dico HTML

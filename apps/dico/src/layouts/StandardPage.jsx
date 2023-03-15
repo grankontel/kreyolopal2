@@ -1,4 +1,4 @@
-import TopNavbar from '@/components/TopNavbar'
+import { TopNavbar } from '@kreyolopal/web-ui'
 import Head from 'next/head'
 
 import {
