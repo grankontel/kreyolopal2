@@ -1,6 +1,5 @@
 
 import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/router'
 import Downshift from 'downshift'
 import debounce from 'lodash.debounce'
 
@@ -31,9 +30,8 @@ const getEntries = (w) => {
         })
 }
 
-const HeroSearchBox = () => {
+const HeroSearchBox = ({navigate, ...rest}) => {
     const [items, setItems] = useState([])
-    const router = useRouter()
 
     const renderItems = (getItemProps, highlightedIndex, selectedItem) => {
         return items.map((item, index) => (
@@ -68,7 +66,7 @@ const HeroSearchBox = () => {
         onChange={(selection) => {
             if (selection) {
                 const next = `/dictionary/gp/${selection.entry}`
-                if (location.pathname !== next) router.push(next)
+                if (location.pathname !== next) navigate(next)
             }
         }}
         itemToString={(item) => (item ? item.entry : '')}
@@ -87,7 +85,7 @@ const HeroSearchBox = () => {
             selectedItem,
             getRootProps,
         }) => (
-            <div className="wabap_searchbox">
+            <div {...rest} className="wabap_searchbox">
                 <div
                     style={{ display: 'inline-block', width: '100%' }}
                     {...getRootProps({}, { suppressRefError: true })}
