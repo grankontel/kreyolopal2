@@ -32,3 +32,4 @@ cp -R ${APP_PATH}/public ${BUILD_PATH}/
 cp -R ${APP_PATH}/.next/standalone/ ${BUILD_PATH}/
 cp -R ${APP_PATH}/.next/static/ ${BUILD_PATH}/.next/static
 
+node ${DIR_PATH}/remove_dev.js ${BUILD_PATH}/package.json
