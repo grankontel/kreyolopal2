@@ -1,5 +1,5 @@
 
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Downshift from 'downshift'
 import debounce from 'lodash.debounce'
 
@@ -30,7 +30,7 @@ const getEntries = (w) => {
         })
 }
 
-const HeroSearchBox = ({navigate, ...rest}) => {
+export const HeroSearchBox = ({navigate, ...rest}) => {
     const [items, setItems] = useState([])
 
     const renderItems = (getItemProps, highlightedIndex, selectedItem) => {
@@ -118,5 +118,3 @@ const HeroSearchBox = ({navigate, ...rest}) => {
     </Downshift>
     )
 }
-
-export default HeroSearchBox

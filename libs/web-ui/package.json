@@ -14,8 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "peerDependencies": {
     "bulma": "^0.9.4",
@@ -32,6 +32,8 @@
     "babel-loader": "^9.1.2",
     "classnames": "^2.3.2",
     "css-loader": "^6.7.3",
+    "downshift": "^7.4.1",
+    "lodash.debounce": "^4.0.8",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.2",
