@@ -1,28 +1,28 @@
-import { useCallback, useState } from 'react'
+import React, { useCallback, useState } from "react";
 import Link from 'next/link'
 import { Button, Navbar } from 'react-bulma-components'
 import classNames from 'classnames';
 
 const useToggle = (initialState = false) => {
-  // Initialize the state
-  const [state, setState] = useState(initialState)
+    // Initialize the state
+    const [state, setState] = useState(initialState)
 
-  // Define and memorize toggler function in case we pass down the comopnent,
-  // This function change the boolean value to it's opposite value
-  const toggle = useCallback(() => setState((state) => !state), [])
+    // Define and memorize toggler function in case we pass down the comopnent,
+    // This function change the boolean value to it's opposite value
+    const toggle = useCallback(() => setState((state) => !state), [])
 
-  return [state, toggle]
+    return [state, toggle]
 }
 
 export const TopNavbar = () => {
-  const [mobileOpen, openMobileMenu] = useToggle(false)
-  const navMenu = classNames({
-    'is-active': mobileOpen,
-  })
+    const [mobileOpen, openMobileMenu] = useToggle(false)
+    const navMenu = classNames({
+        'is-active': mobileOpen,
+    })
 
-  return (
-    <Navbar color="dark" className="navbar_top">
-      <Navbar.Brand>
+    return (
+        <Navbar color="dark" className="navbar_top">
+       <Navbar.Brand>
         <Navbar.Item renderAs="li">
           <Link href="/">
             <img src="/images/logo_name.svg" alt="Zakari Brand" />
@@ -36,8 +36,8 @@ export const TopNavbar = () => {
           <Navbar.Item href="/contact">Contact</Navbar.Item>
         </Navbar.Container>
       </Navbar.Menu>
-    </Navbar>
-  )
-}
 
-export default TopNavbar
+        </Navbar>
+    )
+};
+

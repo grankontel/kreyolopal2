@@ -11,17 +11,16 @@
   "dependencies": {
     "@next/font": "13.1.6",
     "bulma": "^0.9.4",
-    "downshift": "^7.2.1",
     "eslint": "8.34.0",
     "eslint-config-next": "13.1.6",
     "feather-icons": "^4.29.0",
-    "lodash.debounce": "^4.0.8",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-bulma-components": "^4.1.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@kreyolopal/web-ui": "*",
     "sass": "^1.58.3"
   }
 }

@@ -38,7 +38,7 @@
 
 - name: APP SERVER | npm install
   command: 
-    cmd: npm install
+    cmd: npm ci --omit=dev
   args:
     chdir: "{{ ansistrano_release_path.stdout }}/server"
   environment:
@@ -46,7 +46,7 @@
 
 - name: APP DICO | npm install
   command: 
-    cmd: npm install
+    cmd: npm ci --omit=dev
   args:
     chdir: "{{ ansistrano_release_path.stdout }}/dico"
   environment:
@@ -70,17 +70,6 @@
   ansible.builtin.debug:
     var: migrate_result.stdout_lines | last
 
-- name: APP | start api
-  command:
-    cmd: pm2 start npm --name "api.{{ domain }}" -- start
-  args:
-    chdir: "{{ ansistrano_release_path.stdout }}/server"
-
-- name: APP | start dico
-  command:
-    cmd: pm2 start npm --name "dico.{{ domain }}" -- start
-  args:
-    chdir: "{{ ansistrano_release_path.stdout }}/dico"
-
-- name: APP | saving app list
-  command: pm2 save
+- name: Include task list in play
+  ansible.builtin.include_tasks:
+    file: "{{ playbook_dir }}/tasks/start-apps.yml"

@@ -1,0 +1,15 @@
+---
+- name: APP | start api
+  command:
+    cmd: pm2 start npm --name "api.{{ domain }}" -- start
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}/server"
+
+- name: APP | start dico
+  command:
+    cmd: pm2 start npm --name "dico.{{ domain }}" -- start
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}/dico"
+
+- name: APP | saving app list
+  command: pm2 save
