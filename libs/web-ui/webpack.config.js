@@ -22,7 +22,7 @@ module.exports = {
         },
       },
       {
-        test: /\.scss$/,
+        test: /\.s[c|a]ss$/,
         exclude: /node_modules/,
         use: [
           {
