@@ -41,3 +41,5 @@ facts.json
 
 # Ansible
 ansible/credentials
+
+shared/public/images/w*
