@@ -6,7 +6,9 @@ export function StandardPage({ children, getHead }) {
   return (
     <>
       {getHead()}
-      <TopNavbar />
+      <header>
+        <TopNavbar />
+      </header>
       <main className="main">
         {children}
       </main>
