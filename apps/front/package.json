@@ -1,10 +1,10 @@
 {
-  "name": "dico",
+  "name": "front",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
-    "build": "next build",
+    "dev": "next dev -p 3001",
+    "build": "next build && next export -o build/",
     "start": "next start",
     "lint": "next lint"
   },
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@kreyolopal/web-ui": "*",
+    "http-server": "^14.1.1",
     "sass": "^1.58.3"
   }
 }

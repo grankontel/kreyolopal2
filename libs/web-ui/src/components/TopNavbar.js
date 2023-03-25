@@ -1,30 +1,35 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState } from 'react'
 import Link from 'next/link'
 import { Button, Navbar } from 'react-bulma-components'
-import classNames from 'classnames';
+import classNames from 'classnames'
+import PropTypes from 'prop-types'
 
 const useToggle = (initialState = false) => {
-    // Initialize the state
-    const [state, setState] = useState(initialState)
+  // Initialize the state
+  const [state, setState] = useState(initialState)
 
-    // Define and memorize toggler function in case we pass down the comopnent,
-    // This function change the boolean value to it's opposite value
-    const toggle = useCallback(() => setState((state) => !state), [])
+  // Define and memorize toggler function in case we pass down the comopnent,
+  // This function change the boolean value to it's opposite value
+  const toggle = useCallback(() => setState((state) => !state), [])
 
-    return [state, toggle]
+  return [state, toggle]
 }
 
-export const TopNavbar = () => {
-    const [mobileOpen, openMobileMenu] = useToggle(false)
-    const navMenu = classNames({
-        'is-active': mobileOpen,
-    })
+export const TopNavbar = ({ links }) => {
+  const [mobileOpen, openMobileMenu] = useToggle(false)
+  const navMenu = classNames({
+    'is-active': mobileOpen,
+  })
 
-    return (
-        <Navbar color="dark" className="navbar_top">
-       <Navbar.Brand>
+  const rootUrl =
+    links.filter((item) => item.id == 0)?.url || 'https://kreyolopal.com'
+  const navs = links.filter((item) => item.id != 0) || []
+
+  return (
+    <Navbar color="dark" className="navbar_top">
+      <Navbar.Brand>
         <Navbar.Item renderAs="li">
-          <Link href="/">
+          <Link href={rootUrl}>
             <img src="/images/logo_name.svg" alt="Zakari Brand" />
           </Link>
         </Navbar.Item>
@@ -33,11 +38,25 @@ export const TopNavbar = () => {
       <Navbar.Burger onClick={openMobileMenu} aria-label="menu" />
       <Navbar.Menu renderAs="div" className={navMenu}>
         <Navbar.Container align="right">
-          <Navbar.Item href="/contact">Contact</Navbar.Item>
+          {navs.map((item, index) => {
+            return (
+              <Navbar.Item key={item.id || index} href={item.url}>
+                {item.text}
+              </Navbar.Item>
+            )
+          })}
         </Navbar.Container>
       </Navbar.Menu>
+    </Navbar>
+  )
+}
 
-        </Navbar>
-    )
-};
-
+TopNavbar.propTypes = {
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      url: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+}

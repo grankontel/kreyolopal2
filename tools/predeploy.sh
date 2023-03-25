@@ -2,6 +2,7 @@
 
 path=`realpath "${BASH_SOURCE:-$0}"`
 DIR_PATH=`dirname $path`
+FRONT_PATH=`realpath "${DIR_PATH}/../apps/front"`
 BUILD_PATH="${DIR_PATH}/../build"
 
 if [ -d "$BUILD_PATH" ]; then
@@ -19,3 +20,6 @@ NODE_ENV='production' npm install --omit=dev --package-lock-only
 
 cd  ${BUILD_PATH}/server
 NODE_ENV='production' npm install --omit=dev --package-lock-only
+
+cp -R ${FRONT_PATH}/build ${BUILD_PATH}/www/
+

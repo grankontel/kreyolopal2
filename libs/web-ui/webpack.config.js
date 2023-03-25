@@ -1,7 +1,8 @@
 const nodeExternals = require('webpack-node-externals')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const Dotenv = require('dotenv-webpack');
 
-module.exports = {
+module.exports =  {
   entry: '/src/index.js',
   output: {
     filename: 'main.js',
@@ -22,7 +23,7 @@ module.exports = {
         },
       },
       {
-        test: /\.scss$/,
+        test: /\.s[c|a]ss$/,
         exclude: /node_modules/,
         use: [
           {
@@ -39,7 +40,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [new NodePolyfillPlugin()],
+  plugins: [new Dotenv(),new NodePolyfillPlugin()],
   externals: [
     nodeExternals(),
     {
