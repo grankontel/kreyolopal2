@@ -16,6 +16,15 @@
         name: "{{ user }}"
         group: wheel
         shell: /bin/bash
+
+    - name: Give access to home
+      file:
+        path: "/home/{{ user }}"
+        state: directory
+        owner: "{{user }}"
+        group: wheel
+        mode: o+rx
+
     - name: USER | cle ssh
       authorized_key:
         user: "{{ user }}"

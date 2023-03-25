@@ -78,6 +78,19 @@
       include_tasks: onedomain.yml
       loop: "{{  apps | dict2items }}"
 
+    - name: Nginx | Set www subdomain
+      block:
+      - name: Nginx | Set www facts
+        set_fact:
+          domainhost: www
+          subdomain: "www.{{ domain }}"
+          is_restricted: true
+          domain_template: empty_domain.j2
+
+      - name: Include task list in play for www
+        ansible.builtin.include_tasks:
+          file: domain_tasks.yml
+
     - name: "Nginx | Configuration default"
       template:
         src: default.j2
