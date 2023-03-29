@@ -3,6 +3,15 @@ const path = require('path')
 const fs = require('fs')
 const { argv } = require('node:process')
 
+const ENTRY_FIELD = 0
+const VARIATIONS_FIELD = 1
+const DEFINITION_RANK_FIELD = 2
+const NATURE_FIELD = 3
+const MEANING_FR_FIELD = 4
+const USAGE_FIELD = 5
+const SYNONYMS_FIELD = 6
+const CONFER_FIELD = 7
+
 const fname = argv[2]
 
 if (!fname?.length > 0) {
@@ -12,6 +21,7 @@ if (!fname?.length > 0) {
 
 const csvfile = path.resolve(fname)
 const datafile = path.resolve(__dirname, '../import/var/entries.json')
+fs.mkdirSync(path.dirname(datafile), { recursive: true })
 
 const liner = new lineByLine(csvfile)
 
@@ -45,6 +55,7 @@ const subnatures = [
   'interrogatif',
   'négation',
   'numéral',
+  'modale',
   'personnel',
   'impersonnel',
   'possessif',
@@ -105,8 +116,8 @@ function cleanSubNature(nat) {
 while ((line = liner.next())) {
   // console.log('Line ' + lineNumber)
   const values = line.toString('utf8').split(';')
-  let ent = values[0].replaceAll(' ',' ').trim()
-  if (ent === '' || values[1] === 'variations') {
+  let ent = values[ENTRY_FIELD].replaceAll(' ',' ').trim()
+  if (ent === '' || values[VARIATIONS_FIELD] === 'variations') {
     lineNumber++
     continue
   }
@@ -128,10 +139,10 @@ while ((line = liner.next())) {
 
   // add definition
   let definition = {}
-  if (values[3].trim() == 'nom propre') {
+  if (values[NATURE_FIELD].trim() == 'nom propre') {
     definition.nature = ['nom propre']
   } else {
-    let cleanats = values[3].trim().replace(' de ', ' ')
+    let cleanats = values[NATURE_FIELD].trim().replace(' de ', ' ')
     let nats = cleanats.split(' ')
 
     let nat = cleanNature(nats[0])
@@ -156,16 +167,16 @@ while ((line = liner.next())) {
 
   definition.meaning = {}
   definition.meaning.gp = ''
-  definition.meaning.fr = values[4].trim().replaceAll(' ', '')
-  definition.usage = values[5]
+  definition.meaning.fr = values[MEANING_FR_FIELD].trim().replaceAll(' ', '')
+  definition.usage = values[USAGE_FIELD]
     .split('/')
     .map((x) => x.trim().replaceAll(' ', ''))
     .filter((y) => y.length > 0)
-  definition.synonyms = values[6]
+  definition.synonyms = values[SYNONYMS_FIELD]
     .split(',')
     .map((x) => x.trim())
     .filter((y) => y.length > 0)
-  definition.confer = values[7]
+  definition.confer = values[CONFER_FIELD]
     .split('/')
     .map((x) => x.trim())
     .filter((y) => y.length > 0)
