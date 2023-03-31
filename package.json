@@ -28,7 +28,7 @@
     "prettier": "latest",
     "rimraf": "^4.4.1",
     "sharp": "^0.31.3",
-    "turbo": "latest"
+    "turbo": "^1.8.6"
   },
   "engines": {
     "node": ">=18.0.0"

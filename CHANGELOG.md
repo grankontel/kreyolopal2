@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- script to create dico .dic file from mongo entries
 - moved TopNavbar to lib
 - improved entry display
 - can now import mongo database
