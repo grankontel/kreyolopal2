@@ -132,7 +132,7 @@ while ((line = liner.next())) {
     }
     entry = ent
     curitem.entry = entry
-    curitem.variations = values[1].split('/').map((x) => x.trim())
+    curitem.variations = values[VARIATIONS_FIELD].split('/').map((x) => x.trim())
     curitem.definitions = {}
     curitem.definitions.gp = []
   }
@@ -158,7 +158,7 @@ while ((line = liner.next())) {
         definition.subnature.push([nat, subnature].join(' '))
       } else {
         console.log(
-          `\t entry : ${entry}, line : ${lineNumber} ; ${values[3].trim()} inconnu`
+          `\t entry : ${entry}, line : ${lineNumber} ; ${values[NATURE_FIELD].trim()} inconnu`
         )
         errors++
       }
@@ -167,17 +167,15 @@ while ((line = liner.next())) {
 
   definition.meaning = {}
   definition.meaning.gp = ''
-  definition.meaning.fr = values[MEANING_FR_FIELD].trim().replaceAll(' ', '')
+  definition.meaning.fr = values[MEANING_FR_FIELD]?.trim().replaceAll(' ', '')
   definition.usage = values[USAGE_FIELD]
     .split('/')
     .map((x) => x.trim().replaceAll(' ', ''))
     .filter((y) => y.length > 0)
-  definition.synonyms = values[SYNONYMS_FIELD]
-    .split(',')
+  definition.synonyms = values[SYNONYMS_FIELD].split(',')
     .map((x) => x.trim())
     .filter((y) => y.length > 0)
-  definition.confer = values[CONFER_FIELD]
-    .split('/')
+  definition.confer = values[CONFER_FIELD]?.split('/')
     .map((x) => x.trim())
     .filter((y) => y.length > 0)
   definition.quotes = []
