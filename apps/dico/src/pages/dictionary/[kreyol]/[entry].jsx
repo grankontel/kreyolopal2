@@ -1,23 +1,42 @@
+import { useRouter } from 'next/router'
 import DicoEntry from '@/components/DicoEntry'
-import { Content, Heading, Section } from 'react-bulma-components'
+import { Container, Content, Form, Heading, Section, Columns } from 'react-bulma-components'
+import { HeroSearchBox } from '@kreyolopal/web-ui'
 
 export const revalidate = 3600;
 
 const DicoPage = ({ kreyol, error, entries }) => {
+  const router = useRouter()
 
   return (
     <Section>
       <Heading size={2} renderAs="h1">
         Dictionnaire
       </Heading>
-      {error?.length > 0 ? (<Content>{error}</Content>) : (
-        <div>
-          {entries.map((item, index) => {
-            return (
-              <DicoEntry item={item} kreyol={kreyol} key={item.id} />
-            )
-          })}
-        </div>)}
+      <Container>
+        <Columns>
+          <Columns.Column size={8} offset={3} backgroundColor='primary-light'>
+            <Form.Field className="inner_field">
+              <Form.Control fullwidth>
+                <HeroSearchBox
+                  navigate={(destination) => router.push(destination)}
+                />
+              </Form.Control>
+            </Form.Field>
+          </Columns.Column>
+
+          <Columns.Column size={7} offset={3}>
+            {error?.length > 0 ? (<Content>{error}</Content>) : (
+              <div>
+                {entries.map((item, index) => {
+                  return (
+                    <DicoEntry item={item} kreyol={kreyol} key={item.id} />
+                  )
+                })}
+              </div>)}
+          </Columns.Column>
+        </Columns>
+      </Container>
     </Section>
   )
 }

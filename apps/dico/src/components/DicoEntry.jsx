@@ -9,7 +9,7 @@ const DicoEntry = ({ item, kreyol, ...rest }) => {
 
     return (
         <article className="dico_word" {...rest}>
-            <Heading size={4} renderAs="h2">
+            <Heading size={3} renderAs="h2">
                 {item.entry}
             </Heading>
             {item.variations.length > 1 ? (
