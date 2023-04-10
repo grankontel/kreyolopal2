@@ -1,9 +1,11 @@
+import { simpleHash } from '@kreyolopal/web-ui'
+
 const UsageList = ({ usages }) => {
     return (
         <div className="usage">
-            {usages.map((example, ex_index) =>
+            {usages.map((example) =>
                 example !== null ? (
-                    <div className="example " key={ex_index}>
+                    <div className="example " key={simpleHash(example)}>
                         {example}
                     </div>
                 ) : null

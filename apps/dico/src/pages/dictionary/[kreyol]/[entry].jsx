@@ -2,9 +2,13 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import DicoEntry from '@/components/DicoEntry'
 import { Container, Content, Form, Heading, Section, Columns } from 'react-bulma-components'
-import { HeroSearchBox } from '@kreyolopal/web-ui'
+import { HeroSearchBox, simpleHash } from '@kreyolopal/web-ui'
 
 export const revalidate = 3600;
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index
+}
+
 
 const DicoPage = ({ kreyol, error, entries }) => {
   const router = useRouter()
@@ -16,7 +20,7 @@ const DicoPage = ({ kreyol, error, entries }) => {
       return def.confer
     }).flat()
     return syns.concat(confer)
-  }).flat()
+  }).flat().filter(onlyUnique)
 
   const hasRelated = relatedList.length > 0
 
@@ -44,8 +48,8 @@ const DicoPage = ({ kreyol, error, entries }) => {
                   Voir aussi
                 </Heading>
                 <ul className='also-list'>
-                  {relatedList.map((rel, ex_index) => {
-                    return (<li key={ex_index}  className='also-listitem'>
+                  {relatedList.map((rel) => {
+                    return (<li key={simpleHash(rel)}  className='also-listitem'>
                       <Link href={`/dictionary/gp/${encodeURI(rel)}`}>{rel}</Link>
 
                     </li>)
