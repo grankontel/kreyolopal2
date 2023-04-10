@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import DicoEntry from '@/components/DicoEntry'
 import { Container, Content, Form, Heading, Section, Columns } from 'react-bulma-components'
 import { HeroSearchBox } from '@kreyolopal/web-ui'
@@ -7,6 +8,17 @@ export const revalidate = 3600;
 
 const DicoPage = ({ kreyol, error, entries }) => {
   const router = useRouter()
+  const relatedList = entries.map(entry => {
+    const syns = entry.definitions.map(def => {
+      return def.synonyms
+    }).flat()
+    const confer = entry.definitions.map(def => {
+      return def.confer
+    }).flat()
+    return syns.concat(confer)
+  }).flat()
+
+  const hasRelated = relatedList.length > 0
 
   return (
     <Section>
@@ -25,7 +37,24 @@ const DicoPage = ({ kreyol, error, entries }) => {
             </Form.Field>
           </Columns.Column>
 
-          <Columns.Column size={7} offset={3}>
+          {hasRelated ? (
+            <Columns.Column size={3}>
+              <sidebar>
+                <Heading size={4} renderAs="h3" color="secondary">
+                  Voir aussi
+                </Heading>
+                <ul className='also-list'>
+                  {relatedList.map((rel, ex_index) => {
+                    return (<li key={ex_index}>
+                      <Link href={`/dictionary/gp/${encodeURI(rel)}`}>{rel}</Link>
+
+                    </li>)
+
+                  })}
+                </ul>
+              </sidebar>
+            </Columns.Column>) : null}
+          <Columns.Column size={7} offset={hasRelated ? 0 : 3}>
             {error?.length > 0 ? (<Content>{error}</Content>) : (
               <div>
                 {entries.map((item, index) => {
