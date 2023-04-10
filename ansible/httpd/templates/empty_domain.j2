@@ -75,8 +75,9 @@ server {
 
 
     {%else %}
-    location / {
-        return 301 https://{{ subdomain }}$request_uri;
-    }
+        location / {
+            return 301 https://{{ subdomain }}$request_uri;
+        }
+
     {% endif %}
 }
