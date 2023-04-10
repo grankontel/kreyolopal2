@@ -3,6 +3,7 @@ import AlsoList from './dictionnary/AlsoList'
 import SynonymList from './dictionnary/SynonymList'
 import Tranlations from './dictionnary/Translations'
 import VariationList from './dictionnary/VariationList'
+import UsageList from './dictionnary/UsageList'
 
 const DicoEntry = ({ item, kreyol, ...rest }) => {
     const nb_definitions = item.definitions.length
@@ -25,15 +26,7 @@ const DicoEntry = ({ item, kreyol, ...rest }) => {
                         </div>
                         <Tranlations meanings={def.meaning} />
                         {def.usage.length > 0 ? (
-                            <div className="usage">
-                                {def.usage.map((example, ex_index) =>
-                                    example !== null ? (
-                                        <div className="example " key={ex_index}>
-                                            {example}
-                                        </div>
-                                    ) : null
-                                )}
-                            </div>
+                            <UsageList usages={def.usage} />
                         ) : null}
 
                         {def.synonyms.length > 0 ? (
