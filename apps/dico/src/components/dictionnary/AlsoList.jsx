@@ -7,7 +7,7 @@ const AlsoList = ({also}) => {
         <Heading size={6} renderAs="h3">
             Voir aussi
         </Heading>
-        {also.map((example) => (
+        {also.map((example, ex_index) => (
             <span key={simpleHash(example)}>
                 <Link href={`/dictionary/gp/${encodeURI(example)}`}>{example}</Link>
                 {ex_index < also.length - 1 ? ', ' : null}
