@@ -39,13 +39,13 @@ const DicoPage = ({ kreyol, error, entries }) => {
 
           {hasRelated ? (
             <Columns.Column size={3}>
-              <sidebar>
+              <sidebar className='entry-sidebar'>
                 <Heading size={4} renderAs="h3" color="secondary">
                   Voir aussi
                 </Heading>
                 <ul className='also-list'>
                   {relatedList.map((rel, ex_index) => {
-                    return (<li key={ex_index}>
+                    return (<li key={ex_index}  className='also-listitem'>
                       <Link href={`/dictionary/gp/${encodeURI(rel)}`}>{rel}</Link>
 
                     </li>)
