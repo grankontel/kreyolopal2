@@ -1,23 +1,62 @@
+import { useRouter } from 'next/router'
 import DicoEntry from '@/components/DicoEntry'
-import { Content, Heading, Section } from 'react-bulma-components'
+import { Container, Content, Form, Heading, Section, Columns } from 'react-bulma-components'
+import { HeroSearchBox } from '@kreyolopal/web-ui'
+import EntrySidebar from '@/components/EntrySidebar'
 
 export const revalidate = 3600;
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index
+}
+
 
 const DicoPage = ({ kreyol, error, entries }) => {
+  const router = useRouter()
+  const relatedList = entries.map(entry => {
+    const syns = entry.definitions.map(def => {
+      return def.synonyms
+    }).flat()
+    const confer = entry.definitions.map(def => {
+      return def.confer
+    }).flat()
+    return syns.concat(confer)
+  }).flat().filter(onlyUnique)
+
+  const hasRelated = relatedList.length > 0
 
   return (
     <Section>
       <Heading size={2} renderAs="h1">
         Dictionnaire
       </Heading>
-      {error?.length > 0 ? (<Content>{error}</Content>) : (
-        <div>
-          {entries.map((item, index) => {
-            return (
-              <DicoEntry item={item} kreyol={kreyol} key={item.id} />
-            )
-          })}
-        </div>)}
+      <Container>
+        <Columns>
+          <Columns.Column size={8} offset={3} backgroundColor='primary-light'>
+            <Form.Field className="inner_field">
+              <Form.Control fullwidth>
+                <HeroSearchBox
+                  navigate={(destination) => router.push(destination)}
+                />
+              </Form.Control>
+            </Form.Field>
+          </Columns.Column>
+
+          {hasRelated ? (
+            <Columns.Column size={3}>
+              <EntrySidebar words={relatedList} />
+            </Columns.Column>) : null}
+          <Columns.Column size={7} offset={hasRelated ? 0 : 3}>
+            {error?.length > 0 ? (<Content>{error}</Content>) : (
+              <div>
+                {entries.map((item, index) => {
+                  return (
+                    <DicoEntry item={item} kreyol={kreyol} key={item.id} />
+                  )
+                })}
+              </div>)}
+          </Columns.Column>
+        </Columns>
+      </Container>
     </Section>
   )
 }

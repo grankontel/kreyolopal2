@@ -65,7 +65,7 @@
     path: "/var/www/{{ subdomain }}/_letsencrypt/.well-known/acme-challenge/"
     state: directory
     group: wheel
-    mode: o+r
+    mode: g+w,o+r
   when: not self_signed | bool
 
 - name: "Nginx | {{ subdomain }} | Get SSL certificates"

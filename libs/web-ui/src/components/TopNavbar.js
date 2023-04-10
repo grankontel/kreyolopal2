@@ -22,7 +22,7 @@ export const TopNavbar = ({ links }) => {
   })
 
   const rootUrl =
-    links.filter((item) => item.id == 0)?.url || 'https://kreyolopal.com'
+    links.filter((item) => item.id == 0)?.url || 'https://www.kreyolopal.com'
   const navs = links.filter((item) => item.id != 0) || []
 
   return (
