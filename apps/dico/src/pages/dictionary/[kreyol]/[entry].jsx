@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 import DicoEntry from '@/components/DicoEntry'
 import { Container, Content, Form, Heading, Section, Columns } from 'react-bulma-components'
-import { HeroSearchBox, simpleHash } from '@kreyolopal/web-ui'
+import { HeroSearchBox } from '@kreyolopal/web-ui'
+import EntrySidebar from '@/components/EntrySidebar'
 
 export const revalidate = 3600;
 function onlyUnique(value, index, self) {
@@ -43,20 +43,7 @@ const DicoPage = ({ kreyol, error, entries }) => {
 
           {hasRelated ? (
             <Columns.Column size={3}>
-              <sidebar className='entry-sidebar'>
-                <Heading size={4} renderAs="h3" color="secondary">
-                  Voir aussi
-                </Heading>
-                <ul className='also-list'>
-                  {relatedList.map((rel) => {
-                    return (<li key={simpleHash(rel)}  className='also-listitem'>
-                      <Link href={`/dictionary/gp/${encodeURI(rel)}`}>{rel}</Link>
-
-                    </li>)
-
-                  })}
-                </ul>
-              </sidebar>
+              <EntrySidebar words={relatedList} />
             </Columns.Column>) : null}
           <Columns.Column size={7} offset={hasRelated ? 0 : 3}>
             {error?.length > 0 ? (<Content>{error}</Content>) : (
