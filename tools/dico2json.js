@@ -178,6 +178,7 @@ while ((line = liner.next())) {
   definition.confer = values[CONFER_FIELD]?.split('/')
     .map((x) => x.trim())
     .filter((y) => y.length > 0)
+    .filter((s) => !curitem.variations.includes(s) && ! definition.synonyms.includes(s) )
   definition.quotes = []
 
   curitem.definitions.gp.push(definition)
