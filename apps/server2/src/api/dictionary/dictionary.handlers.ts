@@ -42,11 +42,8 @@ const getWord = async function (c: Context) {
       return c.json(data)
     }
 
-    throw createHttpException({
-      errorContent: { error: 'Not found.' },
-      status: 404,
-      statusText: 'Not found.',
-    })
+    return c.json( { error: 'Not Found.' }, 404)
+
   } catch (e) {
     logger.error(e.message)
     throw createHttpException({
