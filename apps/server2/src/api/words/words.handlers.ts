@@ -39,7 +39,7 @@ const getWords = async function (c: Context) {
 
   let filterObj = {}
   let nbDocs = 0
-  let [offset, limit] = [0, 10]
+  const [offset, limit] = [0, 10]
   const coll = client.db(config.mongodb.db).collection('words')
 
   if (filter) {
@@ -64,7 +64,7 @@ const getWords = async function (c: Context) {
     }
   }
 
-  let endRange = Math.min(nbDocs, offset + limit)
+  const endRange = Math.min(nbDocs, offset + limit)
   logger.info(`range is from ${offset} to ${limit}`)
   findPromise = offset > 0 ? findPromise.skip(offset) : findPromise
   findPromise = findPromise.limit(limit)
@@ -73,7 +73,7 @@ const getWords = async function (c: Context) {
     try {
       logger.info(`sort  = ${sort}`)
       const [field, order] = JSON.parse(sort)
-      let sortObj = {}
+      const sortObj = {}
       sortObj[field] = order == 'ASC' ? 1 : -1
       findPromise = findPromise.sort(sortObj)
       logger.info(`sorting by ${JSON.stringify(sortObj)}`)
@@ -86,11 +86,7 @@ const getWords = async function (c: Context) {
     .then(
       (results) => {
         if (results === null || results.length === 0)
-          throw createHttpException({
-            errorContent: { error: 'Not Found.' },
-            status: 404,
-            statusText: 'Not Found.',
-          })
+          return c.json({ error: 'Not Found.' }, 404)
 
         c.res.headers.append('Content-Range', `${offset}-${endRange}/${nbDocs}`)
         c.res.headers.append('X-Total-Count', nbDocs)
@@ -129,8 +125,7 @@ const getOneWord = async function (c: Context) {
     .findOne({ _id: new ObjectId(id) })
     .then(
       (results) => {
-        if (results === null)
-          return c.json( { error: 'Not Found.' }, 404)
+        if (results === null) return c.json({ error: 'Not Found.' }, 404)
 
         return c.json(toClient(results))
       },

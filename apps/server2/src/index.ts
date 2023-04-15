@@ -1,4 +1,4 @@
-import { createAdaptorServer, serve } from '@hono/node-server'
+import { createAdaptorServer } from '@hono/node-server'
 import { HTTPException } from 'hono/http-exception'
 import { MongoClient } from 'mongodb'
 import { logger } from './middlewares/logger'
@@ -6,7 +6,6 @@ import config from './config'
 import { createRouter } from './services/hono'
 import setRoutes from './routes'
 import { winston_logger } from './services/winston_logger'
-import { createHttpException } from './utils/createHttpException'
 
 const port: number = Number(config.app.port) || 3000
 
@@ -20,11 +19,7 @@ app.onError((err, c) => {
   }
   //...
   winston_logger.error(err.message, err)
-  throw createHttpException({
-    errorContent: { error: 'Unknown error..' },
-    status: 500,
-    statusText: 'Unknown error.',
-  })
+  return c.json({ status: 'error',error: 'Unknown error..' }, 500)
 })
 
 const mongoClient = new MongoClient(config.mongodb.uri, {
