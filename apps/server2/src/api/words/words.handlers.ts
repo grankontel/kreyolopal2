@@ -148,7 +148,129 @@ const getOneWord = async function (c: Context) {
     })
 }
 
+const deleteOneWord = async function (c: Context) {
+  const id = c.req.param('id')
+  const logger = c.get('logger')
+  const client = c.get('mongodb')
+  const coll = client.db(config.mongodb.db).collection('words')
+
+  return coll
+    .findOneAndDelete({ _id: new ObjectId(id) })
+    .then(
+      (results) => {
+        if (results === null) return c.json({ error: 'Not Found.' }, 404)
+
+        return c.json({
+          status: 'success',
+          data: {},
+        })
+      },
+      (reason) => {
+        logger.error(reason)
+        throw createHttpException({
+          errorContent: { status: 'error', error: [reason] },
+          status: 500,
+          statusText: 'Unknown error.',
+        })
+      }
+    )
+    .catch((_error) => {
+      logger.error(_error)
+      throw createHttpException({
+        errorContent: { status: 'error', error: [_error] },
+        status: 500,
+        statusText: 'Unknown error.',
+      })
+    })
+}
+
+const postWord = async function (c: Context) {
+  const src = sanitizeEntry(c.get('body'))
+  const logger = c.get('logger')
+  const client = c.get('mongodb')
+  const coll = client.db(config.mongodb.db).collection('words')
+
+  return coll
+    .insertOne(src)
+    .then(
+      (aWord) => {
+        return c.json(
+          {
+            status: 'success',
+            data: { id: aWord._id },
+          },
+          201
+        )
+      },
+      (err) => {
+
+        if (err.code === 11000) {
+          return c.json(
+            {
+              status: 'error',
+              error: `Entry '${src.entry}' already exists`,
+            },
+            409
+          )
+        }
+        logger.error('postWord failed', err)
+        return c.json({ status: 'error', error: 'Internal error' }, 500)
+      }
+    )
+    .catch((_error) => {
+      logger.error('postWord Exception', _error)
+      return c.json({ status: 'error', error: [_error] }, 500)
+    })
+}
+
+const replaceWord = async function (c: Context) {
+  const id = c.req.param('id')
+  const src = sanitizeEntry(c.get('body'))
+  const logger = c.get('logger')
+  const client = c.get('mongodb')
+  const coll = client.db(config.mongodb.db).collection('words')
+
+  console.log(JSON.stringify(src))
+
+  return coll
+    .findOneAndReplace({ _id: new ObjectId(id) }, src)
+    .then(
+      (results) => {
+        if (results === null) return c.json({ error: 'Not Found.' }, 404)
+        logger.debug('results', results)
+
+        return c.json(
+          {
+            status: 'success',
+            data: { id: results._id },
+          },
+          200
+        )
+      },
+      (reason) => {
+        if (reason.code === 11000) {
+          return c.json(
+            {
+              status: 'error',
+              error: `Entry '${src.entry}' already exists`,
+            },
+            409
+          )
+        }
+        logger.error('failed', reason)
+        return c.json({ status: 'error', error: [reason] }, 500)
+      }
+    )
+    .catch((_error) => {
+      logger.error(_error)
+      return c.json({ status: 'error', error: [_error] }, 500)
+    })
+}
+
 export default {
   getWords,
-  getOneWord /*, deleteOneWord, postWord, replaceWord */,
+  getOneWord,
+  deleteOneWord,
+  postWord,
+  replaceWord,
 }
