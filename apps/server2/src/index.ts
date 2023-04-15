@@ -1,4 +1,4 @@
-import { serve } from '@hono/node-server'
+import { createAdaptorServer, serve } from '@hono/node-server'
 import { HTTPException } from 'hono/http-exception'
 import { MongoClient } from 'mongodb'
 import { logger } from './middlewares/logger'
@@ -25,10 +25,8 @@ app.onError((err, c) => {
     status: 500,
     statusText: 'Unknown error.',
   })
-
 })
 
-console.log(config.mongodb.uri)
 const mongoClient = new MongoClient(config.mongodb.uri, {
   serverSelectionTimeoutMS: 5000,
 })
@@ -47,17 +45,19 @@ mongoClient
         await next()
       })
 
-      const server = setRoutes(app)
+      setRoutes(app)
       app.showRoutes()
 
       process.stdout.write(
         `\n🚀 Your server is ready on http://localhost:${port}\n\n`
       )
 
-      serve({
+      const server = createAdaptorServer({
         fetch: app.fetch,
         port: port,
       })
+
+      server.listen(port)
     },
     (reason) => {
       process.stdout.write(`\n❌ Cannot connect to mongo : ${reason}\n\n`)
@@ -65,6 +65,6 @@ mongoClient
     }
   )
   .catch((error) => {
-    console.log(error)
+    process.stderr.write(error)
     process.exit(1)
   })
