@@ -10,6 +10,7 @@ build({
     minify: process.env.NODE_ENV === 'production',
     platform: "node",
     loader: {".ts": "ts"},
+//    sourcemap: true,
     plugins: [
       replace({
           'process.env.NODE_ENV': `"${nodenv}"`,

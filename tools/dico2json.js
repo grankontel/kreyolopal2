@@ -139,30 +139,37 @@ while ((line = liner.next())) {
 
   // add definition
   let definition = {}
-  if (values[NATURE_FIELD].trim() == 'nom propre') {
-    definition.nature = ['nom propre']
-  } else {
-    let cleanats = values[NATURE_FIELD].trim().replace(' de ', ' ')
-    let nats = cleanats.split(' ')
-
-    let nat = cleanNature(nats[0])
-    definition.nature = [nat]
-    if (!natures.includes(nat)) {
-      console.log(`\t entry : ${entry}, line : ${lineNumber} ; ${nat} inconnu`)
-      errors++
-    } else if (nats[1]?.length > 0) {
-      let subnature = cleanSubNature(nats[1])
-
-      if (subnatures.includes(subnature)) {
-        definition.subnature = []
-        definition.subnature.push([nat, subnature].join(' '))
-      } else {
-        console.log(
-          `\t entry : ${entry}, line : ${lineNumber} ; ${values[NATURE_FIELD].trim()} inconnu`
-        )
+  try {
+    if (values[NATURE_FIELD].trim() == 'nom propre') {
+      definition.nature = ['nom propre']
+    } else {
+      let cleanats = values[NATURE_FIELD].trim().replace(' de ', ' ')
+      let nats = cleanats.split(' ')
+  
+      let nat = cleanNature(nats[0])
+      definition.nature = [nat]
+      if (!natures.includes(nat)) {
+        console.log(`\t entry : ${entry}, line : ${lineNumber} ; ${nat} inconnu`)
         errors++
+      } else if (nats[1]?.length > 0) {
+        let subnature = cleanSubNature(nats[1])
+  
+        if (subnatures.includes(subnature)) {
+          definition.subnature = []
+          definition.subnature.push([nat, subnature].join(' '))
+        } else {
+          console.log(
+            `\t entry : ${entry}, line : ${lineNumber} ; ${values[NATURE_FIELD].trim()} inconnu`
+          )
+          errors++
+        }
       }
     }
+  
+  } catch (e) {
+    console.error(`error at line ${lineNumber}`)
+    console.log(e)
+    process.exit(1)
   }
 
   definition.meaning = {}
@@ -178,6 +185,7 @@ while ((line = liner.next())) {
   definition.confer = values[CONFER_FIELD]?.split('/')
     .map((x) => x.trim())
     .filter((y) => y.length > 0)
+    .filter((s) => !curitem.variations.includes(s) && ! definition.synonyms.includes(s) )
   definition.quotes = []
 
   curitem.definitions.gp.push(definition)
