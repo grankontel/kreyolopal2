@@ -1,0 +1,8 @@
+---
+collections:
+# With just the collection name
+- community.general
+- community.docker
+- community.crypto
+- community.postgresql
+- community.mongodb
