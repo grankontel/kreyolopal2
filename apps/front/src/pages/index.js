@@ -33,7 +33,7 @@ export default function Home() {
               Entièrement revu !
             </FeatureList.Item>
             <FeatureList.Item icon="trending-up">
-              Définitions, synonymes, phrases d'usage...
+              Définitions, synonymes, phrases d&apos;usage...
             </FeatureList.Item>
             <FeatureList.Item icon="thumbs-up">
               Près de 10 000 entrées.
