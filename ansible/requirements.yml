@@ -1,4 +1,8 @@
 ---
+roles:
+- ansistrano.deploy
+- ansistrano.rollback
+
 collections:
 # With just the collection name
 - community.general
@@ -6,3 +10,4 @@ collections:
 - community.crypto
 - community.postgresql
 - community.mongodb
+

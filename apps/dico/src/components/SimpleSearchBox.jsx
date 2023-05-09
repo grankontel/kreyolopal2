@@ -39,6 +39,7 @@ export function SimpleSearchBox(props) {
   const renderItems = (getItemProps, highlightedIndex, selectedItem) => {
     return items.map((item, index) => (
       <li
+        key={item._id}
         className="search__option"
         {...getItemProps({
           key: item._id,
