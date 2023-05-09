@@ -37,6 +37,17 @@
     state: latest
     update_cache: true
 
+- name: DOCKER | Remove Docker python package
+  ansible.builtin.package:
+    name: python3-docker
+    state: absent
+
 - name: DOCKER | Install Docker Module for Python
-  pip:
+  ansible.builtin.pip:
     name: docker
+    state: latest
+
+- name: DOCKER | Install docker-compose Module for Python
+  ansible.builtin.pip:
+    name: docker-compose
+    state: latest
