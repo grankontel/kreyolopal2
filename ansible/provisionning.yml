@@ -69,6 +69,11 @@
         name: python3-psycopg2
         state: present
 
+    - name: Remove apt pymongo package
+      ansible.builtin.package:
+        name: python3-pymongo
+        state: absent
+
     - name: Install pymongo python package
       ansible.builtin.pip:
         name: pymongo

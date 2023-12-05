@@ -14,5 +14,9 @@ let rawdata = fs.readFileSync(fname);
 let pdata = JSON.parse(rawdata);
 
 delete pdata.devDependencies
+pdata.main = "server.js"
+pdata.scripts = {
+  start: "node ./server.js"
+}
 var content = JSON.stringify(pdata, null, '  ')
 fs.writeFileSync(fname, content);
