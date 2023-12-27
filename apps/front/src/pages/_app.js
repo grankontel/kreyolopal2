@@ -1,5 +1,5 @@
 import '@/styles/index.sass'
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, UserButton } from "@clerk/nextjs";
 import { StandardPage } from '@kreyolopal/web-ui'
 import FrontHead from '@/components/FrontHead'
 
@@ -18,7 +18,7 @@ const links = [
 export default function App({ Component, pageProps }) {
   return (
     <ClerkProvider {...pageProps}>
-      <StandardPage links={links} getHead={() => (<FrontHead />)}>
+      <StandardPage links={links} getHead={() => (<FrontHead />)} CustomItems={() =>(<UserButton afterSignOutUrl="/" />)}>
         <Component {...pageProps} />
       </StandardPage>
     </ClerkProvider>

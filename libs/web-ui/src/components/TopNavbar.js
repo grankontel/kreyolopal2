@@ -15,8 +15,9 @@ const useToggle = (initialState = false) => {
   return [state, toggle]
 }
 
-export const TopNavbar = ({ links }) => {
+export const TopNavbar = ({ links, CustomItems }) => {
   const [mobileOpen, openMobileMenu] = useToggle(false)
+  const hasItems = CustomItems !== undefined
   const navMenu = classNames({
     'is-active': mobileOpen,
   })
@@ -45,6 +46,9 @@ export const TopNavbar = ({ links }) => {
               </Navbar.Item>
             )
           })}
+          {hasItems ? <CustomItems /> : null}
+
+
         </Navbar.Container>
       </Navbar.Menu>
     </Navbar>
@@ -59,4 +63,5 @@ TopNavbar.propTypes = {
       text: PropTypes.string.isRequired,
     })
   ).isRequired,
+  CustomItems: PropTypes.func,
 }

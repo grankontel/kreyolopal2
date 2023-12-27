@@ -2,7 +2,7 @@ const nodeExternals = require('webpack-node-externals')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const Dotenv = require('dotenv-webpack');
 
-module.exports =  {
+module.exports = {
   entry: '/src/index.js',
   output: {
     filename: 'main.js',
@@ -40,7 +40,7 @@ module.exports =  {
       },
     ],
   },
-  plugins: [new Dotenv(),new NodePolyfillPlugin()],
+  plugins: [new Dotenv(), new NodePolyfillPlugin()],
   externals: [
     nodeExternals(),
     {
@@ -49,6 +49,7 @@ module.exports =  {
       'react-dom': 'react-dom', // Case matters here
       'react-bulma-components': 'react-bulma-components',
       'next': 'next',
+
     },
   ],
 }

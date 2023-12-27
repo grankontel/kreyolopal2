@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { TopNavbar } from '../components/TopNavbar'
 import { Content } from 'react-bulma-components'
 
-export function StandardPage({ children, links, getHead }) {
+export function StandardPage({ children, links, getHead, CustomItems }) {
   return (
     <>
       {getHead()}
       <header>
-        <TopNavbar links={links || []} />
+        <TopNavbar links={links || []} CustomItems={CustomItems} />
       </header>
       <main className="main">{children}</main>
       <footer className="page-footer has-text-centered">
@@ -26,4 +26,6 @@ StandardPage.propTypes = {
       text: PropTypes.string.isRequired,
     })
   ).isRequired,
+  CustomItems: PropTypes.func,
+
 }

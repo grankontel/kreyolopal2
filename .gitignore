@@ -38,6 +38,7 @@ sources
 
 .vagrant
 facts.json
+vagrant/*.log
 
 # Ansible
 ansible/credentials
