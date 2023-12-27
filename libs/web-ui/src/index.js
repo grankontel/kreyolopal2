@@ -5,5 +5,8 @@ export { FeatureList } from './components/FeatureList'
 export { ImageSet } from './components/ImageSet'
 export { simpleHash } from './components/simpleHash'
 
+// flags
+export { FlagGp } from './components/FlagGp'
+
 // Layouts
 export { StandardPage } from './layouts/StandardPage'
