@@ -2,8 +2,10 @@ import { ValidateFunction } from 'ajv'
 import winston from 'winston'
 import { Context, HonoRequest } from 'hono'
 import { createHttpException } from './createHttpException'
+import { Response } from 'node-fetch'
 
 export type paramChecker = (r: HonoRequest, logger: winston.Logger) => boolean
+export type requestHandler = (c: Context) => Response
 
 export const paramValidate = (c: Context, checker: paramChecker) =>
   new Promise<Context>((resolve, reject) => {
@@ -23,11 +25,35 @@ export const paramValidate = (c: Context, checker: paramChecker) =>
 
 export const setBody = (c: Context) =>
   new Promise<Context>((resolve, reject) => {
-    c.req.json().then((data) => {
-      c.set('body', data)
-      resolve(c), (reason) => reject(reason)
-    })
+    c.req
+      .json()
+      .then((data) => {
+        c.set('body', data)
+        resolve(c), (reason) => reject(reason)
+      })
+      .catch((e) => {
+        reject(`SetBody: ${e.message}`)
+      })
   })
+
+export const ValidateBody = (
+  c: Context,
+  checker: paramChecker,
+  handler: requestHandler
+) => {
+  return setBody(c).then(
+    (cx) => {
+      return paramValidate(cx, checker).then(handler, () => {
+        c.status(400)
+        return c.json('Bad request')
+      })
+    },
+    (reason) => {
+      c.status(400)
+      return c.text('Bad request.')
+    }
+  )
+}
 
 export const schemaValidator = (
   c: Context,
