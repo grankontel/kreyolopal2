@@ -1,5 +1,6 @@
 import { createAdaptorServer } from '@hono/node-server'
 import { HTTPException } from 'hono/http-exception'
+import { showRoutes } from 'hono/dev'
 import { MongoClient } from 'mongodb'
 import { logger } from './middlewares/logger'
 import config from './config'
@@ -41,7 +42,7 @@ mongoClient
       })
 
       setRoutes(app)
-      app.showRoutes()
+      showRoutes(app)
 
       process.stdout.write(
         `\n🚀 Your server is ready on http://localhost:${port}\n\n`

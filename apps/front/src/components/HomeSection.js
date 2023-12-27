@@ -22,8 +22,8 @@ const ImageColumn = ({ illustration }) => {
 }
 
 const TextColumn = ({ body, destination }) => {
-    const router = useRouter()
-    console.log(destination)
+  const router = useRouter()
+
   return (
     <Columns.Column size={8}>
       <Columns>
@@ -56,7 +56,7 @@ export const HomeSection = ({
   children,
 }) => {
 
-    return (
+  return (
     <Section>
       <Heading renderAs="h2" size={3}>
         {title}
