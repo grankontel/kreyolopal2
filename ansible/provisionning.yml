@@ -48,6 +48,9 @@
     - include_role:
         name: firewall
 
+    - include_role:
+        name: fail2ban
+
     - name: Ansible | Required packages
       apt:
         name: 

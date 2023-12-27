@@ -1,0 +1,12 @@
+---
+# tasks file for fail2ban
+- name: FAIL2BAN | Update apt and install fail2ban packages
+  apt:
+    pkg:
+      - fail2ban
+    state: latest
+    update_cache: true
+
+- name: FAIL2BAN | Restart
+  notify:
+    - restart_fail2ban
