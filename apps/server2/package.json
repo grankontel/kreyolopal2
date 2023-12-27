@@ -18,6 +18,8 @@
     "dotenv": "^16.0.3",
     "hono": "^3.1.5",
     "mongodb": "^5.2.0",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
     "validator": "^13.9.0",
     "winston": "^3.8.2",
     "winston-slack-webhook-transport": "^2.3.0"
