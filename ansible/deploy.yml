@@ -30,12 +30,12 @@
         "{{ item.key }}_port": "{{ item.value.port }}"
         "{{ item.key }}_domain": "{{ item.key }}.{{ domain }}"
       loop: "{{  apps | dict2items }}"
-    - debug:
+    - debug: 
         msg: "Api Port '{{ api_port }}'"
 
     - name: DEPLOY | Set restricted directory
       set_fact:
-        restricted_dir:  "/etc/nginx/{{ domain }}/conf"
+        restricted_dir:  "/etc/nginx/{{ domain }}/conf" 
 
     - name: "DEPLOY | Create restrited directory "
       file:
@@ -48,5 +48,5 @@
       include_role:
         name: httpd
 
-    - include_role:
+    - include_role: 
         name: ansistrano.deploy
