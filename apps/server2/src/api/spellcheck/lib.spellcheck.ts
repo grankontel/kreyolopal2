@@ -3,19 +3,34 @@ import NodeCache from 'node-cache'
 import bluebird from 'bluebird'
 import config from '../../config'
 import createSpellchecker from './facto.typo'
-import { MessageStatus, KreyolLang } from './spellcheck.types'
+import {
+  MessageStatus,
+  KreyolLang,
+  DicoFile,
+  DicoFileReader,
+} from './spellcheck.types'
 const myCache = new NodeCache()
 
 const puncRegex = /^[^A-Za-z0-9_]+$/g
 const withDigits = /^([A-Za-z]*)[0-9]+([A-Za-z]*)$/g
 const isSpace = /^s+$/g
 
+type spellElement = {
+  suggestions: string[]
+  word: string
+  isCorrect: boolean
+}
+
 /**
  * Verify spelling for a string
  * @param {string} src String to spellcheck
  * @param {string} kreyol Wich kreyol
  */
-async function nspell_spellcheck(src: string, kreyol: KreyolLang, dicoSource: DicoFileReader) {
+async function nspell_spellcheck(
+  src: string,
+  kreyol: KreyolLang,
+  dicoSource: DicoFileReader
+) {
   let affix = ''
   let dictionary = ''
 
@@ -36,7 +51,7 @@ async function nspell_spellcheck(src: string, kreyol: KreyolLang, dicoSource: Di
 
   // make an array from string
   const source = src.split(' ')
-  const hunspelled = []
+  const hunspelled = new Array<spellElement>()
 
   // build the hunspelled array
   for (let index = 0; index < source.length; index++) {
@@ -49,36 +64,35 @@ async function nspell_spellcheck(src: string, kreyol: KreyolLang, dicoSource: Di
 
     // non character
     if (puncRegex.test(word)) {
-      hunspelled.push({ word, isCorrect: true })
+      hunspelled.push({ word, isCorrect: true, suggestions: [] })
       continue
     }
 
     // non character
     if (withDigits.test(word)) {
-      hunspelled.push({ word, isCorrect: true })
+      hunspelled.push({ word, isCorrect: true, suggestions: [] })
       continue
     }
 
     const isCorrect = diko.check(word)
-    hunspelled.push({ word, isCorrect })
+    hunspelled.push({ word, isCorrect, suggestions: [] })
   }
 
   // add the suggestions
   for (let index = 0; index < hunspelled.length; index++) {
-    const element = hunspelled[index]
-
-    if (!element.isCorrect) {
-      const suggestions = diko.suggest(element.word)
-      element.suggestions = suggestions
+    if (!hunspelled[index].isCorrect) {
+      const suggestions = diko.suggest(hunspelled[index].word)
+      hunspelled[index].suggestions = suggestions
     }
   }
 
-  const rep_reducer = (acc, item) => {
+  const rep_reducer = (acc: string[], item: spellElement) => {
     let nl
+
     if (item.isCorrect) {
       nl = item.word
-    } else if (item.suggestions.length) {
-      ;[nl] = item.suggestions
+    } else if (item.suggestions?.length) {
+      [nl] = item.suggestions
     } else {
       nl = `~${item.word}~`
     }
@@ -91,7 +105,7 @@ async function nspell_spellcheck(src: string, kreyol: KreyolLang, dicoSource: Di
   const response = hunspelled.reduce(rep_reducer, []).join(' ')
 
   const errors = hunspelled
-    .filter((item) => !item.isCorrect && !item.suggestions.length)
+    .filter((item) => !item.isCorrect && !item.suggestions?.length)
     .map((el) => el.word)
 
   const reponse = {
@@ -109,9 +123,12 @@ const actualCheck = (message: DicoRequest, dicoSource: DicoFileReader) => {
   return new bluebird.Promise<MessageResponse>((resolve, reject) => {
     nspell_spellcheck(message.request, message.kreyol, dicoSource)
       .then((response) => {
-        const msgresponse:MessageResponse = {
+        const msgresponse: MessageResponse = {
           // status: '', success | warning | error
-          status: response.unknown_words.length > 0 ? MessageStatus.warning : MessageStatus.success,
+          status:
+            response.unknown_words.length > 0
+              ? MessageStatus.warning
+              : MessageStatus.success,
           kreyol: KreyolLang.GP, // message.request.kreyol,
           unknown_words: response.unknown_words,
           message: response.message,
@@ -127,7 +144,7 @@ const actualCheck = (message: DicoRequest, dicoSource: DicoFileReader) => {
   })
 }
 const spellchecker = {
-  check: (message:DicoRequest) => {
+  check: (message: DicoRequest) => {
     return new bluebird.Promise((resolve, reject) => {
       if (config.dico.useLocal) {
         import('./lib.fs-dicofile').then((dicoSource) => {

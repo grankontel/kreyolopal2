@@ -8,12 +8,12 @@ type DicoRequest = {
   request: string
 }
 
-type DicoFile = {
+export type DicoFile = {
   affix: Buffer
   dictionary: Buffer
 }
 
-type DicoFileReader = {
+export type DicoFileReader = {
   readDicoFiles: (kreyol: KreyolLang) => Promise<DicoFile>
 }
 
