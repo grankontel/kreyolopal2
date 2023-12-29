@@ -38,7 +38,7 @@ const client = new S3Client(s3Options)
 // https://kreyol-dico.s3.amazonaws.com/dico/cpf_GP.aff
 
 const createPutCommand = (file, content) =>
-  new Promise((reject, resolve) => {
+  new Promise((resolve, reject) => {
     let data = ''
     try {
       data = content.toString('utf-8')
