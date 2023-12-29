@@ -15,7 +15,9 @@ function setRoutes( app:AppRouter ) {
   app.route('/api/dictionary', dicoRoutes)
   app.route('/api/words', wordsRoutes)
   app.route('/api/spellcheck', spellRoutes)
- 
+
+  logger.info("All routes added")
+
   return app
 }
 

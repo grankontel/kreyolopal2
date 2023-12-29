@@ -1,24 +1,37 @@
 import { Context } from 'hono'
+import { getAuth } from '@hono/clerk-auth'
 import spellchecker from './lib.spellcheck'
 
 const postSpellCheck = async function (c: Context) {
   const logger = c.get('logger')
   const body = c.req.valid('json')
+  const auth = getAuth(c)
+
+  if (!auth?.userId) {
+    return c.json({
+      message: 'You are not logged in.'
+    }, 403)
+  }
 
   const lMessage = {
-    user: 1, // req.user.id,
+    user: auth?.userId, // req.user.id,
     tool: c.req.header('User-Agent'),
     service: 'spellcheck',
     kreyol: body.kreyol,
     request:body.request.replace(/ç/, 's'),
   }
-  console.log(lMessage)
+
   return spellchecker
   .check(lMessage)
   .then(async (msg) => {
-	console.log(msg)
+
 	lMessage.response = msg
+	console.log(lMessage)
 	return c.json(lMessage, 200)
+  })
+  .catch((_error) => {
+	logger.error('postSpellCheck Exception', _error)
+	return c.json({ status: 'error', error: [_error] }, 500)
   })
 }
 
