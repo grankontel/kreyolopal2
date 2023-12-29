@@ -19,7 +19,7 @@ const time = (start: number) => {
 }
 
 const parseIp = (req: HonoRequest) =>
-  req.headers['x-forwarded-for']?.split(',').shift() || undefined
+  req.header('x-forwarded-for')?.split(',').shift() || undefined
 
 export const logger = (): MiddlewareHandler => {
   return async (c, next) => {
