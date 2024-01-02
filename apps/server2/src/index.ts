@@ -2,6 +2,7 @@ import { createAdaptorServer } from '@hono/node-server'
 import { clerkMiddleware } from '@hono/clerk-auth'
 import { HTTPException } from 'hono/http-exception'
 import { MongoClient } from 'mongodb'
+import { createClient } from '@supabase/supabase-js'
 import { Client } from 'pg'
 import { logger } from './middlewares/logger'
 import config from './config'
@@ -25,14 +26,9 @@ app.onError((err, c) => {
   return c.json({ status: 'error', error: 'Unknown error..' }, 500)
 })
 
-const pgClient = new Client({
-  user: config.db.username,
-  password: config.db.password,
-  host: config.db.host,
-  port: config.db.port,
-  database: config.db.database,
-  connectionTimeoutMillis: 5000,
-})
+
+// Create a single supabase client for interacting with your database
+const supabase = createClient(config.supabase.url, config.supabase.key)
 
 const mongoClient = new MongoClient(config.mongodb.uri, {
   serverSelectionTimeoutMS: 5000,
@@ -40,15 +36,15 @@ const mongoClient = new MongoClient(config.mongodb.uri, {
 
 process.stdout.write('🔌 connecting to mongo database...')
 
-Promise.all([pgClient.connect(), mongoClient.connect()])
+Promise.all([/* pgClient.connect(), */ mongoClient.connect()])
   .then(
     (values) => {
-      const pgdb = values[0]
-      const mongo = values[1]
+      // const pgdb = values[0]
+      const mongo = values[0]
 
       process.stdout.write(' connected !\n')
       app.use('*', async (c, next) => {
-        c.set('pgdb', pgdb)
+        c.set('supabase', supabase)
         c.set('mongodb', mongo)
         c.set('logger', winston_logger)
         await next()

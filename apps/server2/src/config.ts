@@ -24,6 +24,10 @@ const config = {
     username: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
   },
+  supabase: {
+    url: process.env.SUPABASE_URL || '',
+    key: process.env.SUPABASE_KEY || '',
+  },
   mongodb: {
     // uri: process.env.MONGODB_URI,
     host: process.env.MONGODB_HOST,
