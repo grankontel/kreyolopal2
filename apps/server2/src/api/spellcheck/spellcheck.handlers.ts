@@ -41,8 +41,8 @@ const postSpellCheck = async function (c: Context) {
           },
         ])
         .select()
-        if (error === null)
-          lMessage.id = data[0].id
+      if (error === null)
+        lMessage.id = data[0].id
       /*
           {
     "user": "user_2a81lkpE2baBqFSNEKPfTv8yZyW",
@@ -72,11 +72,94 @@ const postSpellCheck = async function (c: Context) {
 
 const postRating = async function (c: Context) {
   const logger = c.get('logger')
+  const supabase = c.get('supabase')
   const id = parseInt(c.req.param('id'))
   const body = c.req.valid('json')
+  const { rating, user_correction, user_notes } = body
 
   console.log({ id, ...body })
-  return c.json({})
+  let { error: sp_error } = await supabase
+    .from('Spellcheckeds')
+    .select('1')
+    .eq('id', id)
+
+  if (sp_error !== null) {
+    logger.error(sp_error)
+    return c.json(
+      {
+        message: 'Bad request',
+      },
+      400
+    )
+  }
+
+  let { data: ratings, error: r_errors } = await supabase
+    .from('Ratings')
+    .select()
+    .eq('spellchecked_id', id)
+
+  if (r_errors !== null) {
+    logger.error(r_errors)
+    return c.json(
+      {
+        message: 'Internal Error',
+      },
+      500
+    )
+  }
+
+  if (ratings.length === 0) {
+
+    let value = { spellchecked_id: id, rating, user_correction, user_notes }
+    logger.info(`attempt to create rating ${value}`)
+
+    let { data, error } = await supabase
+      .from('Ratings')
+      .insert([
+        value,
+      ])
+      .select('id')
+
+    if (error !== null) {
+      logger.error(error)
+      return c.json(
+        {
+          message: 'Internal Error',
+        },
+        500
+      )
+    }
+
+    return c.json({ id: data[0].id },200)
+  }
+
+  let rating_id = ratings[ratings.length -1].id
+  let value = {}
+
+  value.rating = rating
+  if (user_correction !== undefined)
+    value.user_correction = user_correction
+  if (user_notes !== undefined) value.user_notes = user_notes
+
+
+  logger.info(`attempt to update rating ${value}`)
+let { data, error } = await supabase
+  .from('Ratings')
+  .update(value)
+  .eq('id', rating_id)
+  .select()
+          
+  if (error !== null) {
+    logger.error(error)
+    return c.json(
+      {
+        message: 'Internal Error',
+      },
+      500
+    )
+  }
+  return c.json({ id: data[0].id },200)
+
 }
 
 export default { postSpellCheck, postRating /*, getSpellChecks */ }
