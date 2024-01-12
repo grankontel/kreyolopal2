@@ -15,6 +15,35 @@ import { StarRating } from '@kreyolopal/web-ui'
 import * as feather from 'feather-icons'
 import { FlagGp } from '@kreyolopal/web-ui'
 
+function postRateCorrection(msgId, rating) {
+  console.log('postRateCorrection')
+  return fetch(`/api/spellcheck/${msgId}/rating`, {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(rating),
+  })
+    .then(
+      async (result) => {
+        if (!result.ok) {
+          return []
+        }
+
+        return result.json()
+      },
+      (reason) => {
+        console.log(reason)
+        return []
+      }
+    )
+    .catch((er) => {
+      console.log(er)
+      return []
+    })
+}
+
 function addEmphasis(src) {
   const strArray = Array.from(src)
 
@@ -77,9 +106,30 @@ export default function Spellcheck() {
 
   const eraseErrorMessage = () => setErrorMessage('')
 
+  const rateCorrection = (note) => {
+    console.log(`rateCorrection: ${JSON.stringify(response)}`)
+
+    if (response?.id === undefined) return
+    setIsLoading(true)
+    try {
+      const resp = postRateCorrection(response?.id, { rating: note })
+
+      resp.then((data) => {
+        setIsLoading(false)
+
+        if (data.errors !== undefined) {
+          setErrorMessage('Erreur de zakari')
+        }
+      })
+    } catch (error) {
+      setIsLoading(false)
+      setErrorMessage(error)
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("submitting...")
+    console.log('submitting...')
     setErrorMessage('')
     setResponse(null)
     setIsLoading(true)
@@ -94,6 +144,7 @@ export default function Spellcheck() {
         } else {
           const result = data.response
           result.html = addEmphasis(result.message)
+          result.id = data.id
 
           setResponse(result)
         }
@@ -164,7 +215,7 @@ export default function Spellcheck() {
                     }}
                   />
                 )}
-                <StarRating hidden={response === null} />
+                <StarRating hidden={response === null} onRated={rateCorrection} />
                 {/*                 <StarRating
                   hidden={response === null}
                   onRated={rateCorrection}
@@ -174,7 +225,7 @@ export default function Spellcheck() {
                   onCopy={() => setCopied(true)}
                 >
                   <Button
-                    type='button'
+                    type="button"
                     color={copied ? 'info' : 'light'}
                     disabled={response === null}
                   >
