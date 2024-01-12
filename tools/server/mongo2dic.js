@@ -44,7 +44,7 @@ async function main() {
     })
     .forEach((item) => {
         console.log(item.words)
-      const hasFlags = item.flags.length > 0
+      const hasFlags = false // item.flags.length > 0
       const flags = item.flags.join('')
       const elem = item.words
         .filter((a) => a.length > 0)
