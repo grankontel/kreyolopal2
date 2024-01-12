@@ -43,25 +43,10 @@ const postSpellCheck = async function (c: Context) {
         .select()
       if (error === null)
         lMessage.id = data[0].id
-      /*
-          {
-    "user": "user_2a81lkpE2baBqFSNEKPfTv8yZyW",
-    "tool": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "service": "spellcheck",
-    "kreyol": "GP",
-    "request": "an lass",
-    "response": {
-        "status": "success",
-        "kreyol": "GP",
-        "unknown_words": [],
-        "message": "an las"
-    }
-}
-          */
     })
     .then(async (msg) => {
       lMessage.response = msg
-      console.log(lMessage)
+      logger.debug(lMessage)
       return c.json(lMessage, 200)
     })
     .catch((_error) => {
@@ -77,13 +62,14 @@ const postRating = async function (c: Context) {
   const body = c.req.valid('json')
   const { rating, user_correction, user_notes } = body
 
-  console.log({ id, ...body })
-  let { error: sp_error } = await supabase
+  logger.debug({ id, ...body })
+  let { data: sp_data, error: sp_error } = await supabase
     .from('Spellcheckeds')
-    .select('1')
+    .select('id', {head: true})
     .eq('id', id)
 
-  if (sp_error !== null) {
+    logger.debug(sp_data)
+  if (sp_error !== null || sp_data?.count == 0) {
     logger.error(sp_error)
     return c.json(
       {

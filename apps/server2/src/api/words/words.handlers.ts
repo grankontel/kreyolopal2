@@ -230,7 +230,7 @@ const replaceWord = async function (c: Context) {
   const client = c.get('mongodb')
   const coll = client.db(config.mongodb.db).collection('words')
 
-  console.log(JSON.stringify(src))
+  logger.debug(JSON.stringify(src))
 
   return coll
     .findOneAndReplace({ _id: new ObjectId(id) }, src)
