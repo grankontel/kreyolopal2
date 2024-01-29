@@ -1,5 +1,6 @@
 import '@/styles/index.sass'
 import { ClerkProvider, SignedOut, UserButton, SignInButton } from '@clerk/nextjs'
+import { frFR } from "@clerk/localizations"
 import { StandardPage } from '@kreyolopal/web-ui'
 import FrontHead from '@/components/FrontHead'
 
@@ -17,7 +18,7 @@ const links = [
 ]
 export default function App({ Component, pageProps }) {
   return (
-    <ClerkProvider {...pageProps}>
+    <ClerkProvider localization={frFR} {...pageProps}>
       <StandardPage
         links={links}
         getHead={() => <FrontHead />}
