@@ -47,7 +47,7 @@ export default function Home() {
             alt: 'Application mockup',
           }}
           destination={{
-            url: '/spellcheck',
+            url: `${process.env.NEXT_PUBLIC_DICO_URL}/spellcheck`,
             text: 'Essayer',
           }}
         >
