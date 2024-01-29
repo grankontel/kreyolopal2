@@ -10,6 +10,10 @@ import {
   Notification,
   Icon,
 } from 'react-bulma-components'
+import {
+  RedirectToSignIn,
+  SignedOut,
+} from '@clerk/nextjs'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { StarRating } from '@kreyolopal/web-ui'
 import * as feather from 'feather-icons'
@@ -157,6 +161,9 @@ export default function Spellcheck() {
 
   return (
     <Section>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
       <Heading size={2} renderAs="h1">
         Correcteur orthographique
       </Heading>
