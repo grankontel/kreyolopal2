@@ -1,10 +1,56 @@
-import { useState } from "react"
 import { Icon, Section, Table } from "react-bulma-components";
 import { FlagGp } from '@kreyolopal/web-ui'
-import FeatherIcon from "@/components/FeatherIcon";
-import classNames from "classnames";
+import TableCell from "@/components/dictionnary/table/TableCell";
 
 /*
+{
+"user_id": "user_2a81lkpE2baBqFSNEKPfTv8yZyW",
+"birth_date" : 
+
+"words": [
+{  "entry": "braké",
+  "variations": [
+    "braké",
+    "bwaké"
+  ],
+  "definitions": {
+    "gp": [
+      {
+        "nature": [
+          "verbe"
+        ],
+        "meaning": {
+          "gp": "",
+          "fr": "braquer."
+        },
+        "usage": [
+          "zépòl a Jennvyèv ka fè-y mal, i pa néta braké gidon a loto-la."
+        ],
+        "synonyms": [],
+        "confer": [],
+        "quotes": []
+      },
+      {
+        "nature": [
+          "nom"
+        ],
+        "meaning": {
+          "gp": "",
+          "fr": "maniére de frapper en cadence avec deux baguettes sur le bord d'un tambour."
+        },
+        "usage": [
+          "ni moun ka ba-w on bèl koul boula, ni osi  lésèz yo ka ba-w on bèl braké."
+        ],
+        "synonyms": [],
+        "confer": [],
+        "quotes": []
+      }
+    ]
+  }
+}  
+]
+}
+
 entry
 variations
 definition_no
@@ -42,32 +88,7 @@ confere
   },
 */
 
-function TableCell({ entry, name, value, onAdd }) {
-  const [isCellHover, setCellHover] = useState(false)
-  const cellClassName = `dico-${name}-add-button`
-  const cellClass = classNames({
-    [cellClassName]: true,
-    'dico-add-button': true,
-    'line-hidden': !isCellHover
-  })
-
-  return (
-    <td onMouseEnter={() => setCellHover(true)} onMouseLeave={() => setCellHover(false)}>
-      {value}
-      <Icon className={cellClass} onClick={() => onAdd(entry)}>
-        <FeatherIcon iconName="plus-square" />
-      </Icon>
-    </td>
-  )
-}
-
 export default function MePage() {
-  const [isUsageHover, setUsageHover] = useState(false)
-  const usageClass = classNames({
-    'entry-add-button': true,
-    'line-hidden': !isUsageHover
-  })
-
   return (
     <Section>
       Me Page
