@@ -1,6 +1,6 @@
 import { Context } from 'hono'
 import config from '../../config'
-import { createHttpException } from '../../utils/createHttpException'
+import { createHttpException } from '#utils/createHttpException'
 
 const getWord = async function (c: Context) {
   const logger = c.get('logger')

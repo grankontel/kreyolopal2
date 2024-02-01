@@ -12,6 +12,11 @@
     "clean": "tsc --build --clean",
     "lint": "eslint . --ext .ts"
   },
+  "imports": {
+    "#services/*": "./src/services/*.ts",
+    "#utils/*": "./src/utils/*.ts",
+    "#config": "./src/config.ts"
+  },
   "dependencies": {
     "@clerk/backend": "^0.30.3",
     "@clerk/clerk-sdk-node": "^4.13.4",
