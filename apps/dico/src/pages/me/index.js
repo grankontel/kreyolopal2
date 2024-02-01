@@ -42,6 +42,25 @@ confere
   },
 */
 
+function TableCell({ entry, name, value, onAdd }) {
+  const [isCellHover, setCellHover] = useState(false)
+  const cellClassName = `dico-${name}-add-button`
+  const cellClass = classNames({
+    [cellClassName]: true,
+    'dico-add-button': true,
+    'line-hidden': !isCellHover
+  })
+
+  return (
+    <td onMouseEnter={() => setCellHover(true)} onMouseLeave={() => setCellHover(false)}>
+      {value}
+      <Icon className={cellClass} onClick={() => onAdd(entry)}>
+        <FeatherIcon iconName="plus-square" />
+      </Icon>
+    </td>
+  )
+}
+
 export default function MePage() {
   const [isUsageHover, setUsageHover] = useState(false)
   const usageClass = classNames({
@@ -112,13 +131,14 @@ export default function MePage() {
             <td>
               contrebraquer.
             </td>
-            <td onMouseEnter={() => setUsageHover(true)} onMouseLeave={() => setUsageHover(false)}>
-              <div>ou braké twòp, débraké tibwen avan  ou kyoulé.</div>
-              <Icon className={usageClass}>
-                <FeatherIcon iconName="plus-square" />
-              </Icon>
-
-            </td>
+            <TableCell entry={"débraké"} 
+              name="usage" 
+              value={<div>ou braké twòp, débraké tibwen avan  ou kyoulé.</div>} 
+              onAdd={(id) => console.log(id)} />
+            <TableCell entry={"débraké"} 
+              name="synonyms" 
+              value={<div></div>} 
+              onAdd={(id) => console.log(id)} />
           </tr>
         </tbody>
       </Table>
