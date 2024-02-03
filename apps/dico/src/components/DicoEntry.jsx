@@ -9,7 +9,6 @@ import UsageList from './dictionnary/UsageList'
 import FeatherIcon from './FeatherIcon'
 
 const DicoEntry = ({ item, kreyol, is_bookmarked, ...rest }) => {
-    console.log({ item, kreyol, is_bookmarked })
     const [isBookmarked, setBookmarked] = useState(is_bookmarked)
 
     const nb_definitions = item.definitions.length

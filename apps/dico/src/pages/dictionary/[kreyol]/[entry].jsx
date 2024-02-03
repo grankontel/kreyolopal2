@@ -4,6 +4,7 @@ import DicoEntry from '@/components/DicoEntry'
 import { Container, Content, Form, Heading, Section, Columns } from 'react-bulma-components'
 import { HeroSearchBox } from '@kreyolopal/web-ui'
 import EntrySidebar from '@/components/EntrySidebar'
+import { logger } from "@/logger"; // our logger import
 
 export const revalidate = 3600;
 function onlyUnique(value, index, self) {
@@ -66,7 +67,7 @@ export const getServerSideProps = async (ctx) => {
   const entry = ctx.params?.entry.toLowerCase()
   const { res, req } = ctx
   const { userId, getToken } = getAuth(req);
-  console.log(`userId: ${userId}`)
+  logger.debug(`userId: ${userId}`)
   const cacheMode = !userId ? 'public' : 'private'
   res.setHeader(
     'Cache-Control',
@@ -94,7 +95,7 @@ export const getServerSideProps = async (ctx) => {
       next: { revalidate: 3600 },
     }
   ).catch(function (error) {
-    console.log('Il y a eu un problème avec l\'opération fetch : ' + error.message);
+    logger.error('Il y a eu un problème avec l\'opération fetch : ' + error.message);
   });
 
   if (result.status === 404) {
@@ -103,7 +104,7 @@ export const getServerSideProps = async (ctx) => {
     }
   }
   if (!result?.ok) {
-    console.log('Mauvaise réponse du réseau');
+    logger.debug('Mauvaise réponse du réseau');
     return {
       props: {
         error: 'Mauvaise réponse du réseau',
@@ -134,7 +135,7 @@ export const getServerSideProps = async (ctx) => {
         next: { revalidate: 3600 },
       }
     ).catch(function (error) {
-      console.log('Il y a eu un problème avec l\'opération fetch : ' + error.message);
+      logger.error('Il y a eu un problème avec l\'opération fetch : ' + error.message);
     });
 
     if (result2?.ok) {
@@ -153,6 +154,7 @@ export const getServerSideProps = async (ctx) => {
     }
   }
 
+  logger.debug(JSON.stringify(response))
   return {
     props: response,
   }
