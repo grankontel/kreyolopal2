@@ -26,7 +26,6 @@ app.onError((err, c) => {
   return c.json({ status: 'error', error: 'Unknown error..' }, 500)
 })
 
-
 // Create a single supabase client for interacting with your database
 const supabase = createClient(config.supabase.url, config.supabase.key)
 
@@ -35,6 +34,13 @@ const mongoClient = new MongoClient(config.mongodb.uri, {
 })
 
 process.stdout.write('🔌 connecting to mongo database...')
+
+process.on('SIGINT', async () => {
+  console.log('Received SIGINT. ')
+  await mongoClient.close()
+
+  process.exit(0)
+})
 
 Promise.all([/* pgClient.connect(), */ mongoClient.connect()])
   .then(
