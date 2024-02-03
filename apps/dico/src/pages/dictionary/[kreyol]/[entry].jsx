@@ -69,7 +69,7 @@ export const getServerSideProps = async (ctx) => {
   const { res } = ctx
   res.setHeader(
     'Cache-Control',
-    'public, s-maxage=3600, stale-while-revalidate=59'
+    'public, maxage=3600, stale-while-revalidate=59'
   )
   if (
     kreyol.length == 0 ||

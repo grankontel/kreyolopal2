@@ -2,12 +2,13 @@ import { Context } from 'hono'
 import { getAuth } from '@hono/clerk-auth'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
+import { WordsRepository } from '#lib/words.repository'
 
 const getWord = async function (c: Context) {
-	const logger = c.get('logger')
-	const client = c.get('mongodb')
+  const logger = c.get('logger')
+  const client = c.get('mongodb')
   const auth = getAuth(c)
-/*
+
   if (!auth?.userId) {
     return c.json(
       {
@@ -16,57 +17,133 @@ const getWord = async function (c: Context) {
       403
     )
   }
-*/
-	const user_id = "user_2a81lkpE2baBqFSNEKPfTv8yZyW" // auth?.userId
-	const { language, word } = c.req.param()
 
-	logger.info(`getWord ${language} ${word}`)
+  const user_id = auth?.userId
+  const { word } = c.req.param()
 
-	try {
-		const filter = {
-			"user_id": user_id,
-			"words.entry": word,
-		}
-		const projection = {
-			"user_id": 1,
-			"words.entry": 1,
-			"words.variations": 1,
-			"words.definitions": 1,
-		}
+  logger.info(`me getWord  ${word}`)
 
-		// const client = getClient()
-		const coll = client.db(config.mongodb.db).collection('personal')
-		const cursor = coll.find(filter, { projection })
-		const result = await cursor.toArray()
-		console.log(result?.[0])
-		//client.close()
+  try {
+    const filter = {
+      user_id: user_id,
+      entry: word,
+    }
+    const projection = {
+      user_id: 1,
+      entry: 1,
+      variations: 1,
+      definitions: 1,
+    }
 
-		const data = result?.[0].words.map((item) => {
-			return {
-				id: item._id,
-				entry: item.entry,
-				variations: item.variations,
-				definitions: item.definitions[language],
-			}
-		})
+    // const client = getClient()
+    const coll = client.db(config.mongodb.db).collection('personal')
+    const cursor = coll.find(filter, { projection })
+    const result = await cursor.toArray()
+    logger.debug(JSON.stringify(result?.[0]))
+    //client.close()
 
-		if (data.length > 0) {
-			c.res.headers.append('Cache-Control', 's-maxage=86400')
+    const data = result?.map((item) => {
+      return {
+        id: item._id,
+        entry: item.entry,
+        variations: item.variations,
+        definitions: item.definitions,
+      }
+    })
 
-			c.status(200)
-			return c.json(data)
-		}
+    if (data.length > 0) {
+      c.res.headers.append('Cache-Control', 'private, maxage=86400')
 
-		return c.json({ error: 'Not Found.' }, 404)
+      c.status(200)
+      return c.json(data)
+    }
 
-	} catch (e) {
-		logger.error(e.message)
-		throw createHttpException({
-			errorContent: { error: 'Unknown error..' },
-			status: 500,
-			statusText: 'Unknown error.',
-		})
-	}
+    return c.json({ error: 'Not Found.' }, 404)
+  } catch (e) {
+    logger.error(e.message)
+    throw createHttpException({
+      errorContent: { error: 'Unknown error..' },
+      status: 500,
+      statusText: 'Unknown error.',
+    })
+  }
 }
 
-export default { getWord }
+const bookmarkWord = async function (c: Context) {
+  const logger = c.get('logger')
+  const client = c.get('mongodb')
+  const { word } = c.req.param()
+  const auth = getAuth(c)
+
+  if (!auth?.userId) {
+    return c.json(
+      {
+        message: 'You are not logged in.',
+      },
+      403
+    )
+  }
+
+  const user_id = auth?.userId
+
+  const query = { user_id: user_id, entry: word }
+
+  return WordsRepository.getInstance(c)
+    .GetOne(word, (item) => {
+      return {
+        entry: item.entry,
+        variations: item.variations,
+        definitions: item.definitions,
+      }
+    })
+    .then(
+      (data) => {
+        if (data.length === 0) return c.json({ error: 'Not Found.' }, 404)
+
+        const coll = client.db(config.mongodb.db).collection('personal')
+        const options = { upsert: true }
+        const update = { $set: { user_id: user_id, ...data[0] } }
+
+        return coll
+          .updateOne(query, update, options)
+          .then(
+            (aWord) => {
+              return c.json(
+                {
+                  status: 'success',
+                  data: { id: aWord._id },
+                },
+                201
+              )
+            },
+            (err) => {
+              if (err.code === 11000) {
+                return c.json(
+                  {
+                    status: 'error',
+                    error: `Entry '${word}' already exists`,
+                  },
+                  409
+                )
+              }
+              logger.error('postWord failed', err)
+              return c.json({ status: 'error', error: 'Internal error' }, 500)
+            }
+          )
+          .catch((_error) => {
+            logger.error('bookmarkWord Exception', _error)
+            return c.json({ status: 'error', error: [_error] }, 500)
+          })
+      },
+      (reason) => {
+        console.log('reason')
+        logger.error(reason?.message)
+        throw createHttpException({
+          errorContent: { error: 'Unknown error..' },
+          status: 500,
+          statusText: 'Unknown error.',
+        })
+      }
+    )
+}
+export default { getWord, bookmarkWord }
