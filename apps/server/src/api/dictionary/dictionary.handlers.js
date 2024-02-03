@@ -35,7 +35,7 @@ const getWord = async function (req, res) {
     })
 
     if (data.length > 0) {
-      res.set('Cache-Control', 's-maxage=86400')
+      res.set('Cache-Control', 'public, maxage=86400')
       res.set('Content-Type', 'application/json')
       return res.status(200).send(data)
     }

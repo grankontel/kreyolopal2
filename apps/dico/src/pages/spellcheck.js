@@ -10,23 +10,24 @@ import {
   Notification,
   Icon,
 } from 'react-bulma-components'
-import {
-  RedirectToSignIn,
-  SignedOut,
-} from '@clerk/nextjs'
+import { RedirectToSignIn, SignedOut, useAuth } from '@clerk/nextjs'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { StarRating } from '@kreyolopal/web-ui'
 import * as feather from 'feather-icons'
 import { FlagGp } from '@kreyolopal/web-ui'
 
-function postRateCorrection(msgId, rating) {
+async function postRateCorrection(getToken, msgId, rating) {
   console.log('postRateCorrection')
+  const token = await getToken()
+
+  const myHeaders = {
+    'Content-Type': 'application/json',
+  }
+  if (token) myHeaders['Authorization'] = `Bearer ${token}`
+
   return fetch(`/api/spellcheck/${msgId}/rating`, {
     method: 'POST',
-    credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: myHeaders,
     body: JSON.stringify(rating),
   })
     .then(
@@ -65,7 +66,7 @@ function addEmphasis(src) {
   return result
 }
 
-const postSpellCheck = (text) => {
+const postSpellCheck = async (getToken, text) => {
   const word = text.trim()
   if (word.length === 0) return Promise.resolve([])
 
@@ -74,12 +75,16 @@ const postSpellCheck = (text) => {
     request: word,
   }
 
+  const myHeaders = {
+    'Content-Type': 'application/json',
+  }
+  const token = await getToken()
+  if (token) myHeaders['Authorization'] = `Bearer ${token}`
+
   return fetch(`/api/spellcheck`, {
     method: 'POST',
     credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: myHeaders,
     body: JSON.stringify(query),
   })
     .then(
@@ -107,6 +112,7 @@ export default function Spellcheck() {
 
   const [errorMessage, setErrorMessage] = useState('')
   const [response, setResponse] = useState(null)
+  const { getToken } = useAuth()
 
   const eraseErrorMessage = () => setErrorMessage('')
 
@@ -116,7 +122,7 @@ export default function Spellcheck() {
     if (response?.id === undefined) return
     setIsLoading(true)
     try {
-      const resp = postRateCorrection(response?.id, { rating: note })
+      const resp = postRateCorrection(getToken, response?.id, { rating: note })
 
       resp.then((data) => {
         setIsLoading(false)
@@ -140,7 +146,7 @@ export default function Spellcheck() {
     setCopied(false)
 
     try {
-      postSpellCheck(request).then((data) => {
+      postSpellCheck(getToken, request).then((data) => {
         setIsLoading(false)
 
         if (data.errors !== undefined) {
@@ -222,7 +228,10 @@ export default function Spellcheck() {
                     }}
                   />
                 )}
-                <StarRating hidden={response === null} onRated={rateCorrection} />
+                <StarRating
+                  hidden={response === null}
+                  onRated={rateCorrection}
+                />
                 {/*                 <StarRating
                   hidden={response === null}
                   onRated={rateCorrection}

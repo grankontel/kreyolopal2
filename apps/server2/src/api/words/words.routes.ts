@@ -3,9 +3,9 @@ import validator from 'validator'
 import { HTTPException } from 'hono/http-exception'
 import { Context } from 'hono'
 import schema from './schema-entry.json'
-import { createRouter } from '../../services/hono'
+import { createRouter } from '#services/hono'
 import handlers from './words.handlers'
-import { paramValidate, schemaValidator, setBody } from '../../utils/apiHelpers'
+import { paramValidate, schemaValidator, setBody } from '#utils/apiHelpers'
 
 const ajv = new Ajv({ allErrors: true }) // options can be passed, e.g. {allErrors: true}
 

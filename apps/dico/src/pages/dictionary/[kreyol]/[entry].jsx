@@ -1,8 +1,10 @@
 import { useRouter } from 'next/router'
+import { getAuth } from "@clerk/nextjs/server";
 import DicoEntry from '@/components/DicoEntry'
 import { Container, Content, Form, Heading, Section, Columns } from 'react-bulma-components'
 import { HeroSearchBox } from '@kreyolopal/web-ui'
 import EntrySidebar from '@/components/EntrySidebar'
+import { logger } from "@/logger"; // our logger import
 
 export const revalidate = 3600;
 function onlyUnique(value, index, self) {
@@ -10,9 +12,9 @@ function onlyUnique(value, index, self) {
 }
 
 
-const DicoPage = ({ kreyol, error, entries }) => {
+const DicoPage = ({ kreyol, error, is_bookmarked, entry, bookmark }) => {
   const router = useRouter()
-  const relatedList = entries.map(entry => {
+  const relatedList = [entry].map(entry => {
     const syns = entry.definitions.map(def => {
       return def.synonyms
     }).flat()
@@ -24,6 +26,7 @@ const DicoPage = ({ kreyol, error, entries }) => {
 
   const hasRelated = relatedList.length > 0
 
+  const source = is_bookmarked ? bookmark : entry
   return (
     <Section>
       <Heading size={2} renderAs="h1">
@@ -48,11 +51,7 @@ const DicoPage = ({ kreyol, error, entries }) => {
           <Columns.Column size={7} offset={hasRelated ? 0 : 3}>
             {error?.length > 0 ? (<Content>{error}</Content>) : (
               <div>
-                {entries.map((item, index) => {
-                  return (
-                    <DicoEntry item={item} kreyol={kreyol} key={item.id} />
-                  )
-                })}
+                <DicoEntry is_bookmarked={is_bookmarked} item={source} kreyol={kreyol} key={source.id} />
               </div>)}
           </Columns.Column>
         </Columns>
@@ -66,10 +65,13 @@ export const getServerSideProps = async (ctx) => {
 
   const kreyol = ctx.params?.kreyol.toLowerCase()
   const entry = ctx.params?.entry.toLowerCase()
-  const { res } = ctx
+  const { res, req } = ctx
+  const { userId, getToken } = getAuth(req);
+  logger.debug(`userId: ${userId}`)
+  const cacheMode = !userId ? 'public' : 'private'
   res.setHeader(
     'Cache-Control',
-    'public, s-maxage=3600, stale-while-revalidate=59'
+    `${cacheMode}, maxage=3600, stale-while-revalidate=59`
   )
   if (
     kreyol.length == 0 ||
@@ -84,34 +86,78 @@ export const getServerSideProps = async (ctx) => {
   // Fetch data from external API
   const result = await fetch(
     `${process.env.API_SERVER}/api/dictionary/${kreyol}/${entry}`,
-    { next: { revalidate: 3600 } }
-  ).catch(function (error) {
-    console.log('Il y a eu un problème avec l\'opération fetch : ' + error.message);
-  });
-
-  if (result?.ok) {
-    const data = await result.json()
-
-    return {
-      props: {
-        entries: data,
-        kreyol,
+    {
+      method: 'GET',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      next: { revalidate: 3600 },
     }
-
-  }
+  ).catch(function (error) {
+    logger.error('Il y a eu un problème avec l\'opération fetch : ' + error.message);
+  });
 
   if (result.status === 404) {
     return {
       notFound: true, //redirects to 404 page
     }
   }
-
-  console.log('Mauvaise réponse du réseau');
-  return {
-    props: {
-      error: 'Mauvaise réponse du réseau',
-    },
+  if (!result?.ok) {
+    logger.debug('Mauvaise réponse du réseau');
+    return {
+      props: {
+        error: 'Mauvaise réponse du réseau',
+      },
+    }
   }
+
+  const data = await result.json()
+  const response = {
+    is_bookmarked: false,
+    entry: data[0],
+    kreyol,
+  }
+
+
+  if (userId) {
+    const token = await getToken();
+
+    const result2 = await fetch(
+      `${process.env.API_SERVER}/api/me/dictionary/${entry}`,
+      {
+        method: 'GET',
+
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        next: { revalidate: 3600 },
+      }
+    ).catch(function (error) {
+      logger.error('Il y a eu un problème avec l\'opération fetch : ' + error.message);
+    });
+
+    if (result2?.ok) {
+      const data2 = await result2.json()
+
+      const bookmarks = data2.map((item) => {
+        return {
+          id: item.id,
+          entry: item.entry,
+          variations: item.variations,
+          definitions: item.definitions[kreyol],
+        }
+      })
+      response.is_bookmarked = bookmarks.length > 0;
+      response.bookmark = bookmarks[0]
+    }
+  }
+
+  logger.debug(JSON.stringify(response))
+  return {
+    props: response,
+  }
+
 }
 export default DicoPage

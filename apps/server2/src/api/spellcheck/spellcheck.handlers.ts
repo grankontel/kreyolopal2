@@ -7,6 +7,7 @@ const postSpellCheck = async function (c: Context) {
   const supabase = c.get('supabase')
   const body = c.req.valid('json')
   const auth = getAuth(c)
+  logger.info('postSpellCheck')
 
   if (!auth?.userId) {
     return c.json(
@@ -24,6 +25,7 @@ const postSpellCheck = async function (c: Context) {
     kreyol: body.kreyol,
     request: body.request.replace(/ç/, 's'),
   }
+  logger.debug(JSON.stringify(lMessage))
 
   return spellchecker
     .check(lMessage)
@@ -59,10 +61,23 @@ const postRating = async function (c: Context) {
   const logger = c.get('logger')
   const supabase = c.get('supabase')
   const id = parseInt(c.req.param('id'))
+  const auth = getAuth(c)
   const body = c.req.valid('json')
   const { rating, user_correction, user_notes } = body
 
+  logger.info('postRating')
+
+  if (!auth?.userId) {
+    return c.json(
+      {
+        message: 'You are not logged in.',
+      },
+      403
+    )
+  }
+
   logger.debug({ id, ...body })
+
   let { data: sp_data, error: sp_error } = await supabase
     .from('Spellcheckeds')
     .select('id', {head: true})

@@ -1,6 +1,7 @@
 import { Context } from 'hono'
 import config from '../../config'
-import { createHttpException } from '../../utils/createHttpException'
+import { createHttpException } from '#utils/createHttpException'
+import { WordsRepository } from '#lib/words.repository'
 
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
@@ -9,24 +10,8 @@ const getWord = async function (c: Context) {
   const { language, word } = c.req.param()
 
   logger.info(`getWord ${language} ${word}`)
-
-  try {
-    const filter = {
-      entry: word,
-    }
-    const projection = {
-      entry: 1,
-      variations: 1,
-      definitions: 1,
-    }
-
-    // const client = getClient()
-    const coll = client.db(config.mongodb.db).collection('words')
-    const cursor = coll.find(filter, { projection })
-    const result = await cursor.toArray()
-    //client.close()
-
-    const data = result.map((item) => {
+  return WordsRepository.getInstance(c)
+    .GetOne(word, (item) => {
       return {
         id: item._id,
         entry: item.entry,
@@ -34,24 +19,35 @@ const getWord = async function (c: Context) {
         definitions: item.definitions[language],
       }
     })
+    .then(
+      (data) => {
+        if (data.length > 0) {
+          c.res.headers.append('Cache-Control', 'public, maxage=86400')
 
-    if (data.length > 0) {
-      c.res.headers.append('Cache-Control', 's-maxage=86400')
+          c.status(200)
+          return c.json(data)
+        }
 
-      c.status(200)
-      return c.json(data)
-    }
-
-    return c.json( { error: 'Not Found.' }, 404)
-
-  } catch (e) {
-    logger.error(e.message)
-    throw createHttpException({
-      errorContent: { error: 'Unknown error..' },
-      status: 500,
-      statusText: 'Unknown error.',
+        return c.json({ error: 'Not Found.' }, 404)
+      },
+      (reason) => {
+        console.log('reason')
+        logger.error(reason?.message)
+        throw createHttpException({
+          errorContent: { error: 'Unknown error..' },
+          status: 500,
+          statusText: 'Unknown error.',
+        })
+      }
+    )
+    .catch((e) => {
+      logger.error(e.message)
+      throw createHttpException({
+        errorContent: { error: 'Unknown error..' },
+        status: 500,
+        statusText: 'Unknown error.',
+      })
     })
-  }
 }
 
 const getSuggestion = async function (c: Context) {
@@ -95,6 +91,7 @@ const getSuggestion = async function (c: Context) {
       )
     })
 
+    c.res.headers.append('Cache-Control', 'public, maxage=86400')
     c.status(200)
     return c.json(result)
   } catch (e) {

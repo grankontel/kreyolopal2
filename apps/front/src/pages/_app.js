@@ -29,7 +29,7 @@ export default function App({ Component, pageProps }) {
             </span>
             <span className="navbar-item">
               <SignedOut>
-                <SignInButton className="button is-parimay" mode='modal'>
+                <SignInButton className="button is-primary" mode='modal'>
                   Login
                 </SignInButton>
               </SignedOut>

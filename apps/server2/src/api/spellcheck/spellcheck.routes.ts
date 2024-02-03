@@ -1,7 +1,7 @@
 import { Context } from 'hono'
 import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
-import { createRouter } from '../../services/hono'
+import { createRouter } from '#services/hono'
 import myHandlers from './spellcheck.handlers'
 
 const myRoutes = createRouter()
