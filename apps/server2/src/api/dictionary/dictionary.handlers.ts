@@ -48,8 +48,6 @@ const getWord = async function (c: Context) {
         statusText: 'Unknown error.',
       })
     })
-
-
 }
 
 const getSuggestion = async function (c: Context) {
@@ -93,6 +91,7 @@ const getSuggestion = async function (c: Context) {
       )
     })
 
+    c.res.headers.append('Cache-Control', 'public, maxage=86400')
     c.status(200)
     return c.json(result)
   } catch (e) {
