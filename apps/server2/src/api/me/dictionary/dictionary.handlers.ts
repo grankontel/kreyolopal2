@@ -8,8 +8,12 @@ const getWord = async function (c: Context) {
   const logger = c.get('logger')
   const client = c.get('mongodb')
   const auth = getAuth(c)
+  const { word } = c.req.param()
+
+  logger.info(`me getWord  ${word}`)
 
   if (!auth?.userId) {
+    logger.debug('user not logged in')
     return c.json(
       {
         message: 'You are not logged in.',
@@ -19,9 +23,6 @@ const getWord = async function (c: Context) {
   }
 
   const user_id = auth?.userId
-  const { word } = c.req.param()
-
-  logger.info(`me getWord  ${word}`)
 
   try {
     const filter = {

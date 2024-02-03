@@ -7,16 +7,17 @@ import VariationList from './dictionnary/VariationList'
 import UsageList from './dictionnary/UsageList'
 import FeatherIcon from './FeatherIcon'
 
-const DicoEntry = ({ item, kreyol, ...rest }) => {
+const DicoEntry = ({ item, kreyol, is_bookmarked, ...rest }) => {
     const nb_definitions = item.definitions.length
 
     return (
         <article className="dico_word" {...rest}>
             <div className='is-flex button-addword'>
                 <SignedIn>
-                    <Icon>
+                    {!is_bookmarked ? (<Icon>
                         <FeatherIcon iconName="plus-square" />
                     </Icon>
+                    ) : null}
                 </SignedIn>
                 <Heading size={3} renderAs="h2" className='inline-flex' >
                     {item.entry}
