@@ -13,6 +13,7 @@
     "lint": "eslint . --ext .ts"
   },
   "imports": {
+    "#lib/*": "./src/lib/*.ts",
     "#services/*": "./src/services/*.ts",
     "#utils/*": "./src/utils/*.ts",
     "#config": "./src/config.ts"
