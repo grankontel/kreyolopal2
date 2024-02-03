@@ -25,7 +25,6 @@ const DicoPage = ({ kreyol, error, is_bookmarked, entry, bookmark }) => {
 
   const hasRelated = relatedList.length > 0
 
-  console.log({entry, bookmark})
   const source = is_bookmarked ? bookmark : entry
   return (
     <Section>
@@ -51,7 +50,7 @@ const DicoPage = ({ kreyol, error, is_bookmarked, entry, bookmark }) => {
           <Columns.Column size={7} offset={hasRelated ? 0 : 3}>
             {error?.length > 0 ? (<Content>{error}</Content>) : (
               <div>
-                <DicoEntry is_bookmarked item={source} kreyol={kreyol} key={source.id} />
+                <DicoEntry is_bookmarked={is_bookmarked} item={source} kreyol={kreyol} key={source.id} />
               </div>)}
           </Columns.Column>
         </Columns>
@@ -140,7 +139,6 @@ export const getServerSideProps = async (ctx) => {
 
     if (result2?.ok) {
       const data2 = await result2.json()
-      response.is_bookmarked = true;
 
       const bookmarks = data2.map((item) => {
         return {
@@ -150,6 +148,7 @@ export const getServerSideProps = async (ctx) => {
           definitions: item.definitions[kreyol],
         }
       })
+      response.is_bookmarked = bookmarks.length > 0;
       response.bookmark = bookmarks[0]
     }
   }
