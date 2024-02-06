@@ -1,5 +1,4 @@
-import { Context } from 'hono'
-import { getAuth } from '@hono/clerk-auth'
+import type { Context } from 'hono'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import { WordsRepository } from '#lib/words.repository'

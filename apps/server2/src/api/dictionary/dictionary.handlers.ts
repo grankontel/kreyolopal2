@@ -1,7 +1,7 @@
-import { Context } from 'hono'
-import config from '../../config'
+import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import { WordsRepository } from '#lib/words.repository'
+import type { Context } from 'hono'
 
 const getWord = async function (c: Context) {
   const logger = c.get('logger')

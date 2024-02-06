@@ -1,5 +1,4 @@
-import { Context } from 'hono'
-import { getAuth } from '@hono/clerk-auth'
+import type { Context } from 'hono'
 import spellchecker from './lib.spellcheck'
 
 const postSpellCheck = async function (c: Context) {

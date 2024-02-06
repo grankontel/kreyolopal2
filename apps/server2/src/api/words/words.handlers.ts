@@ -1,4 +1,4 @@
-import { Context } from 'hono'
+import type { Context } from 'hono'
 import config from '../../config'
 import { createHttpException } from '../../utils/createHttpException'
 import { ObjectId } from 'mongodb'

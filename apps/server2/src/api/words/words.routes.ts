@@ -1,7 +1,7 @@
 import Ajv from 'ajv'
 import validator from 'validator'
 import { HTTPException } from 'hono/http-exception'
-import { Context } from 'hono'
+import type { Context } from 'hono'
 import schema from './schema-entry.json'
 import { createRouter } from '#services/hono'
 import handlers from './words.handlers'

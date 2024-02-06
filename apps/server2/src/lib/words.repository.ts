@@ -1,4 +1,4 @@
-import { Context } from 'hono'
+import type { Context } from 'hono'
 import winston from 'winston'
 import { MongoClient } from 'mongodb'
 import config from '#config'
