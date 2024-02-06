@@ -1,20 +1,21 @@
 import { createAdaptorServer } from '@hono/node-server'
-import { clerkMiddleware } from '@hono/clerk-auth'
 import { HTTPException } from 'hono/http-exception'
 import { MongoClient } from 'mongodb'
-import { createClient } from '@supabase/supabase-js'
-import { Client } from 'pg'
 import { logger } from './middlewares/logger'
 import config from './config'
 import { createRouter } from './services/hono'
 import setRoutes from './routes'
 import { winston_logger } from './services/winston_logger'
+import { pgPool } from './lib/db'
+import { csrfMiddleware } from './middlewares/csrf'
+import { sessionMiddleware } from './middlewares/session'
 
 const port: number = Number(config.app.port) || 3000
 
 const app = createRouter()
 app.use('*', logger())
-app.use('*', clerkMiddleware())
+app.use('*', csrfMiddleware())
+app.use('*', sessionMiddleware())
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
@@ -26,9 +27,6 @@ app.onError((err, c) => {
   return c.json({ status: 'error', error: 'Unknown error..' }, 500)
 })
 
-// Create a single supabase client for interacting with your database
-const supabase = createClient(config.supabase.url, config.supabase.key)
-
 const mongoClient = new MongoClient(config.mongodb.uri, {
   serverSelectionTimeoutMS: 5000,
 })
@@ -37,20 +35,20 @@ process.stdout.write('🔌 connecting to mongo database...')
 
 process.on('SIGINT', async () => {
   console.log('Received SIGINT. ')
-  await mongoClient.close()
+  await Promise.all([ mongoClient.close(), pgPool.end()])
 
   process.exit(0)
 })
 
-Promise.all([/* pgClient.connect(), */ mongoClient.connect()])
+Promise.all([mongoClient.connect()])
   .then(
     (values) => {
-      // const pgdb = values[0]
+      //const pgdb = values[0]
       const mongo = values[0]
 
       process.stdout.write(' connected !\n')
       app.use('*', async (c, next) => {
-        c.set('supabase', supabase)
+        //c.set('pgdb', pgdb)
         c.set('mongodb', mongo)
         c.set('logger', winston_logger)
         await next()

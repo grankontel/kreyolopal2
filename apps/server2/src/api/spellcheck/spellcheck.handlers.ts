@@ -5,10 +5,10 @@ const postSpellCheck = async function (c: Context) {
   const logger = c.get('logger')
   const supabase = c.get('supabase')
   const body = c.req.valid('json')
-  const auth = getAuth(c)
+  // const auth = getAuth(c)
   logger.info('postSpellCheck')
 
-  if (!auth?.userId) {
+  /*   if (!auth?.userId) {
     return c.json(
       {
         message: 'You are not logged in.',
@@ -16,9 +16,9 @@ const postSpellCheck = async function (c: Context) {
       403
     )
   }
-
+ */
   const lMessage = {
-    user: auth?.userId, // req.user.id,
+    user: '1', // auth?.userId, // req.user.id,
     tool: c.req.header('User-Agent'),
     service: 'spellcheck',
     kreyol: body.kreyol,
@@ -42,8 +42,7 @@ const postSpellCheck = async function (c: Context) {
           },
         ])
         .select()
-      if (error === null)
-        lMessage.id = data[0].id
+      if (error === null) lMessage.id = data[0].id
     })
     .then(async (msg) => {
       lMessage.response = msg
@@ -60,29 +59,29 @@ const postRating = async function (c: Context) {
   const logger = c.get('logger')
   const supabase = c.get('supabase')
   const id = parseInt(c.req.param('id'))
-  const auth = getAuth(c)
+  //const auth = getAuth(c)
   const body = c.req.valid('json')
   const { rating, user_correction, user_notes } = body
 
   logger.info('postRating')
 
-  if (!auth?.userId) {
+/*   if (!auth?.userId) {
     return c.json(
       {
         message: 'You are not logged in.',
       },
       403
     )
-  }
+  } */
 
   logger.debug({ id, ...body })
 
   let { data: sp_data, error: sp_error } = await supabase
     .from('Spellcheckeds')
-    .select('id', {head: true})
+    .select('id', { head: true })
     .eq('id', id)
 
-    logger.debug(sp_data)
+  logger.debug(sp_data)
   if (sp_error !== null || sp_data?.count == 0) {
     logger.error(sp_error)
     return c.json(
@@ -109,15 +108,12 @@ const postRating = async function (c: Context) {
   }
 
   if (ratings.length === 0) {
-
     let value = { spellchecked_id: id, rating, user_correction, user_notes }
     logger.info(`attempt to create rating ${value}`)
 
     let { data, error } = await supabase
       .from('Ratings')
-      .insert([
-        value,
-      ])
+      .insert([value])
       .select('id')
 
     if (error !== null) {
@@ -130,25 +126,23 @@ const postRating = async function (c: Context) {
       )
     }
 
-    return c.json({ id: data[0].id },200)
+    return c.json({ id: data[0].id }, 200)
   }
 
-  let rating_id = ratings[ratings.length -1].id
+  let rating_id = ratings[ratings.length - 1].id
   let value = {}
 
   value.rating = rating
-  if (user_correction !== undefined)
-    value.user_correction = user_correction
+  if (user_correction !== undefined) value.user_correction = user_correction
   if (user_notes !== undefined) value.user_notes = user_notes
 
-
   logger.info(`attempt to update rating ${value}`)
-let { data, error } = await supabase
-  .from('Ratings')
-  .update(value)
-  .eq('id', rating_id)
-  .select()
-          
+  let { data, error } = await supabase
+    .from('Ratings')
+    .update(value)
+    .eq('id', rating_id)
+    .select()
+
   if (error !== null) {
     logger.error(error)
     return c.json(
@@ -158,8 +152,7 @@ let { data, error } = await supabase
       500
     )
   }
-  return c.json({ id: data[0].id },200)
-
+  return c.json({ id: data[0].id }, 200)
 }
 
 export default { postSpellCheck, postRating /*, getSpellChecks */ }

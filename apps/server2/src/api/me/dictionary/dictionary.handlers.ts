@@ -6,12 +6,12 @@ import { WordsRepository } from '#lib/words.repository'
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
   const client = c.get('mongodb')
-  const auth = getAuth(c)
+  // const auth = getAuth(c)
   const { word } = c.req.param()
 
   logger.info(`me getWord  ${word}`)
 
-  if (!auth?.userId) {
+/*   if (!auth?.userId) {
     logger.debug('user not logged in')
     return c.json(
       {
@@ -20,8 +20,8 @@ const getWord = async function (c: Context) {
       403
     )
   }
-
-  const user_id = auth?.userId
+ */
+  const user_id = "1" // auth?.userId
 
   try {
     const filter = {
