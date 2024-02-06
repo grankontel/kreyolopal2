@@ -1,18 +1,9 @@
-import { Context } from 'hono'
 import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
-import { createRouter } from '#services/hono'
+import { createRouter, sendBadRequest } from '#services/hono'
 import myHandlers from './spellcheck.handlers'
 
 const myRoutes = createRouter()
-
-const sendBadRequest = (result: any, c: Context) => {
-  if (!result.success) {
-    const logger = c.get('logger')
-    logger.error(result.error)
-    return c.text('Bad request', 400)
-  }
-}
 
 const postSpellCheckSchema = z
   .object({
