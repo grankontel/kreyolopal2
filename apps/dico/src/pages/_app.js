@@ -1,11 +1,4 @@
 import '@/styles/index.sass'
-import {
-  ClerkProvider,
-  SignedOut,
-  UserButton,
-  SignInButton,
-} from '@clerk/nextjs'
-import { frFR } from "@clerk/localizations"
 import { StandardPage } from '@kreyolopal/web-ui'
 import DicoHead from '@/components/DicoHead'
 
@@ -29,27 +22,18 @@ const links = [
 
 export default function App({ Component, pageProps }) {
   return (
-    <ClerkProvider localization={frFR} {...pageProps}>
-      <StandardPage
-        links={links}
-        getHead={() => <DicoHead />}
-        CustomItems={() => (
-          <>
-            <span className="navbar-item">
-              <UserButton afterSignOutUrl="/" />
+    <StandardPage
+      links={links}
+      getHead={() => <DicoHead />}
+      CustomItems={() => (
+        <>
+          <span className="navbar-item">
+            Connect
             </span>
-            <span className="navbar-item">
-              <SignedOut>
-                <SignInButton className="button is-primary" mode="modal">
-                  Login
-                </SignInButton>
-              </SignedOut>
-            </span>
-          </>
-        )}
-      >
-        <Component {...pageProps} />
-      </StandardPage>
-    </ClerkProvider>
+        </>
+      )}
+    >
+      <Component {...pageProps} />
+    </StandardPage>
   )
 }
