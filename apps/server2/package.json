@@ -21,7 +21,7 @@
   "dependencies": {
     "@hono/node-server": "^0.4.0",
     "@hono/zod-validator": "^0.1.11",
-    "@supabase/supabase-js": "^2.39.1",
+    "@lucia-auth/adapter-postgresql": "^3.1.0",
     "ajv": "^8.12.0",
     "bluebird": "^3.7.2",
     "dotenv": "^16.0.3",
