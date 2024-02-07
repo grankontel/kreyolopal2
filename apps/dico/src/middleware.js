@@ -2,6 +2,9 @@ import { verifyRequestOrigin } from "lucia";
 import { NextResponse } from "next/server";
 
 export async function middleware(request) {
+	const currentUser = request.cookies.get('wabap')?.value
+	// console.log(currentUser)
+
 	if (request.method === "GET") {
 		return NextResponse.next();
 	}

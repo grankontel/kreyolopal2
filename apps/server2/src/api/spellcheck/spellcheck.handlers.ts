@@ -1,9 +1,9 @@
 import type { Context } from 'hono'
 import spellchecker from './lib.spellcheck'
+import { pgPool } from '#lib/db'
 
 const postSpellCheck = async function (c: Context) {
   const logger = c.get('logger')
-  const supabase = c.get('supabase')
   const body = c.req.valid('json')
   const user = c.get("user");
   logger.info('postSpellCheck')
@@ -29,20 +29,14 @@ const postSpellCheck = async function (c: Context) {
   return spellchecker
     .check(lMessage)
     .tap(async (msg) => {
-      const { data, error } = await supabase
-        .from('Spellcheckeds')
-        .insert([
-          {
-            user_id: lMessage.user,
-            kreyol: lMessage.kreyol,
-            request: lMessage.request,
-            status: msg.status,
-            message: msg.message,
-            response: msg,
-          },
-        ])
-        .select()
-      if (error === null) lMessage.id = data[0].id
+      await pgPool.query(`INSERT INTO spellcheckeds
+      (user_id, kreyol, request, status, message, response) 
+      VALUES ($1, $2, $3, $4, $5, $6) RETURNIN id`,
+        [lMessage.user, lMessage.kreyol, lMessage.request, msg.status, msg.message, msg])
+        .then(res => {
+          console.log(res)
+          lMessage.id = res.rows[0].id
+        }, reason => logger.error(reason))
     })
     .then(async (msg) => {
       lMessage.response = msg
@@ -65,14 +59,14 @@ const postRating = async function (c: Context) {
 
   logger.info('postRating')
 
-     if (!user) {
-      return c.json(
-        {
-          message: 'You are not logged in.',
-        },
-        403
-      )
-    } 
+  if (!user) {
+    return c.json(
+      {
+        message: 'You are not logged in.',
+      },
+      403
+    )
+  }
 
   logger.debug({ id, ...body })
 

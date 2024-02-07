@@ -10,7 +10,6 @@ import {
   Notification,
   Icon,
 } from 'react-bulma-components'
-import { RedirectToSignIn, SignedOut, useAuth } from '@clerk/nextjs'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { StarRating } from '@kreyolopal/web-ui'
 import * as feather from 'feather-icons'
