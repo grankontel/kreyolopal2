@@ -35,7 +35,7 @@ export default function Page({ user }) {
 		<>
 			<h1>Hi, {user.username}!</h1>
 			<p>Your user ID is {user.id}.</p>
-			<form method="post" action="/api/logout" onSubmit={onSubmit}>
+			<form method="post" action="/api/auth/logout" onSubmit={onSubmit}>
 				<button>Sign out</button>
 			</form>
 		</>

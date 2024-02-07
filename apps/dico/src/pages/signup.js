@@ -2,6 +2,7 @@ import { validateRequest } from "@/lib/auth";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { Form, Section } from "react-bulma-components";
 
 export async function getServerSideProps(context) {
 	const { user } = await validateRequest(context.req, context.res);
@@ -41,11 +42,18 @@ export default function Page() {
 	}
 
 	return (
-		<>
+
+		<Section>
 			<h1>Create an account</h1>
-			<form method="post" action="/api/signup" onSubmit={onSubmit}>
-				<label htmlFor="username">Username</label>
-				<input name="username" id="username" />
+			<form method="post" action="/api/auth/signup" onSubmit={onSubmit}>
+				<Form.Field>
+					<Form.Label htmlFor="username">Username</Form.Label>
+					<Form.Input name="username" type="text" autocomplete="username" id="username" />
+				</Form.Field>
+				<Form.Field>
+					<Form.Label htmlFor="password">Password</Form.Label>
+					<Form.Input name="password" id="password" type="password" autocomplete="new-password" />
+				</Form.Field>
 				<br />
 				<label htmlFor="password">Password</label>
 				<input type="password" name="password" id="password" />
@@ -54,6 +62,6 @@ export default function Page() {
 				<p>{error}</p>
 			</form>
 			<Link href="/login">Sign in</Link>
-		</>
+		</Section>
 	);
 }
