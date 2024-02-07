@@ -50,6 +50,7 @@ const login = async function (c: Context) {
 
 const signup = async function (c: Context) {
   const logger = c.get('logger')
+  logger.info('signup')
   const body = c.req.valid('json')
   const { username, password, firstname, lastname, email } = body
 
