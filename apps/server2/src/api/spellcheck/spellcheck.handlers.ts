@@ -5,10 +5,10 @@ const postSpellCheck = async function (c: Context) {
   const logger = c.get('logger')
   const supabase = c.get('supabase')
   const body = c.req.valid('json')
-  // const auth = getAuth(c)
+  const user = c.get("user");
   logger.info('postSpellCheck')
 
-  /*   if (!auth?.userId) {
+  if (!user) {
     return c.json(
       {
         message: 'You are not logged in.',
@@ -16,9 +16,9 @@ const postSpellCheck = async function (c: Context) {
       403
     )
   }
- */
+
   const lMessage = {
-    user: '1', // auth?.userId, // req.user.id,
+    user: user.id, // req.user.id,
     tool: c.req.header('User-Agent'),
     service: 'spellcheck',
     kreyol: body.kreyol,
@@ -59,20 +59,20 @@ const postRating = async function (c: Context) {
   const logger = c.get('logger')
   const supabase = c.get('supabase')
   const id = parseInt(c.req.param('id'))
-  //const auth = getAuth(c)
+  const user = c.get("user");
   const body = c.req.valid('json')
   const { rating, user_correction, user_notes } = body
 
   logger.info('postRating')
 
-/*   if (!auth?.userId) {
-    return c.json(
-      {
-        message: 'You are not logged in.',
-      },
-      403
-    )
-  } */
+     if (!user) {
+      return c.json(
+        {
+          message: 'You are not logged in.',
+        },
+        403
+      )
+    } 
 
   logger.debug({ id, ...body })
 

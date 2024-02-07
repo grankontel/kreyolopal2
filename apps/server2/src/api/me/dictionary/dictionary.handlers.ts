@@ -6,12 +6,12 @@ import { WordsRepository } from '#lib/words.repository'
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
   const client = c.get('mongodb')
-  // const auth = getAuth(c)
+  const user = c.get("user");
   const { word } = c.req.param()
 
   logger.info(`me getWord  ${word}`)
 
-/*   if (!auth?.userId) {
+  if (!user) {
     logger.debug('user not logged in')
     return c.json(
       {
@@ -20,8 +20,8 @@ const getWord = async function (c: Context) {
       403
     )
   }
- */
-  const user_id = "1" // auth?.userId
+
+  const user_id = user.id
 
   try {
     const filter = {
@@ -73,9 +73,9 @@ const bookmarkWord = async function (c: Context) {
   const logger = c.get('logger')
   const client = c.get('mongodb')
   const { word } = c.req.param()
-  const auth = getAuth(c)
+  const user = c.get("user");
 
-  if (!auth?.userId) {
+  if (!user) {
     return c.json(
       {
         message: 'You are not logged in.',
@@ -84,7 +84,7 @@ const bookmarkWord = async function (c: Context) {
     )
   }
 
-  const user_id = auth?.userId
+  const user_id = user.id
 
   const query = { user_id: user_id, entry: word }
 
