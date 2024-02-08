@@ -2,7 +2,7 @@ import { generateId } from 'lucia'
 import { Argon2id } from 'oslo/password'
 import { setCookie } from 'hono/cookie'
 import { pgPool } from '#lib/db'
-import { lucia } from '#lib/auth'
+import { lucia, createCookie } from '#lib/auth'
 import { createHttpException } from '#utils/createHttpException'
 import config from '#config'
 
@@ -20,9 +20,11 @@ const login = async function (c: Context) {
   const body = c.req.valid('json')
   const { username, password } = body
 
-  const existingUser = db
-    .prepare('SELECT * FROM user WHERE username = ?')
-    .get(username) as DatabaseUser | undefined
+  const text = 'SELECT id, username, password FROM auth_user WHERE username = $1';
+  const values = [username]
+
+  const res = await pgPool.query(text, values)
+  const existingUser = res?.rows[0] as DatabaseUser | undefined
   if (!existingUser) {
     c.status(400)
     return c.json({
@@ -39,10 +41,8 @@ const login = async function (c: Context) {
   }
 
   return lucia.createSession(existingUser.id, {}).then((session) => {
-    c.res.headers.append(
-      'Set-Cookie',
-      lucia.createSessionCookie(session.id).serialize()
-    )
+    const theCookie = createCookie(session.id, existingUser.id)
+    setCookie(c, theCookie.name, theCookie.value, theCookie.attributes)
     c.status(200)
     return c.json({})
   })
@@ -69,7 +69,7 @@ const signup = async function (c: Context) {
           const createdUser = dbresult.rows[0] as DatabaseUser | undefined
 
           return lucia.createSession(createdUser.id, {}).then((session) => {
-            const theCookie = lucia.createSessionCookie(session.id)
+            const theCookie= createCookie(session.id, userId)
             setCookie(c, theCookie.name, theCookie.value, theCookie.attributes)
             // setCookie(c, 'delicious_cookie', 'macha')
             c.status(200)
@@ -106,3 +106,4 @@ const signup = async function (c: Context) {
 }
 
 export default { login, signup }
+
