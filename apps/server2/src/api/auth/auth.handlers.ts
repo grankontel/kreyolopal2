@@ -80,7 +80,12 @@ const signup = async function (c: Context) {
           console.log('reason')
           logger.error(reason?.message)
           if (reason?.severity == 'ERROR' && reason?.code == '23505') {
-            return c.text('Bad request', 400)
+            return c.json(
+              {
+                message: 'Bad request',
+              },
+              400
+            )
           }
           throw createHttpException({
             errorContent: { error: 'Unknown error..' },
