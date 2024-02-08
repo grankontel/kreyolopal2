@@ -14,12 +14,12 @@ function getDigest(source: string): string {
   return digest;
 }
 
-export function createCookie(session_id: string, user_id: string) {
+export function createCookie(session_id: string, user: DatabaseUser) {
   const now = new Date()
   // Add 30 days to now, and zero out hours, minutes, seconds, milliseconds
   now.setDate(now.getDate() + 30)
 
-  const info = { session_id: session_id, user_id: user_id, expiresAt: now }
+  const info = { session_id: session_id, user_id: user.id, username: user.username, expiresAt: now }
   const infob64 = Buffer.from(JSON.stringify(info)).toString('base64')
   const digest = getDigest(infob64);
 
@@ -30,7 +30,7 @@ export function createCookie(session_id: string, user_id: string) {
 }
 
 export function parseCookie(cookie: string) {
-  if (cookie === undefined)
+  if (cookie === null)
     return null
   const [data, digest] = cookie.split('.')
   const mydigest = getDigest(data)

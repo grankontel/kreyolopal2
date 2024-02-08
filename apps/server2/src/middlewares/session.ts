@@ -19,8 +19,8 @@ export const sessionMiddleware = (): MiddlewareHandler => {
     const { session, user } = await lucia.validateSession(sessionId)
     winston_logger.debug(JSON.stringify({ session, user }))
     if (session && session.fresh) {
-      const theCookie = createCookie(session.id, user.id)
-      setCookie(c, theCookie.name, theCookie.value, theCookie.attributes)
+      const theCookie = createCookie(session.id, user)
+      setCookie(c, theCookie.name, theCookie.value, {...theCookie.attributes, httpOnly: false})
 
     }
     if (!session) {

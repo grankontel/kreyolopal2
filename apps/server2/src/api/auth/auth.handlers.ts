@@ -41,8 +41,8 @@ const login = async function (c: Context) {
   }
 
   return lucia.createSession(existingUser.id, {}).then((session) => {
-    const theCookie = createCookie(session.id, existingUser.id)
-    setCookie(c, theCookie.name, theCookie.value, theCookie.attributes)
+    const theCookie = createCookie(session.id, existingUser)
+    setCookie(c, theCookie.name, theCookie.value, { ...theCookie.attributes, httpOnly: false })
     c.status(200)
     return c.json({})
   })
@@ -69,8 +69,8 @@ const signup = async function (c: Context) {
           const createdUser = dbresult.rows[0] as DatabaseUser | undefined
 
           return lucia.createSession(createdUser.id, {}).then((session) => {
-            const theCookie= createCookie(session.id, userId)
-            setCookie(c, theCookie.name, theCookie.value, theCookie.attributes)
+            const theCookie = createCookie(session.id, createdUser)
+            setCookie(c, theCookie.name, theCookie.value, { ...theCookie.attributes, httpOnly: false })
             // setCookie(c, 'delicious_cookie', 'macha')
             c.status(200)
             return c.json({})
@@ -105,5 +105,19 @@ const signup = async function (c: Context) {
   })
 }
 
-export default { login, signup }
+const logout = async function (c: Context) {
+  const session = c.get('session')
+  if (!session) {
+    c.status(401)
+    return c.json({})
+
+  }
+  await lucia.invalidateSession(session.id);
+  const theCookie = lucia.createBlankSessionCookie()
+  setCookie(c, theCookie.name, theCookie.value, { ...theCookie.attributes, httpOnly: false })
+  c.status(200)
+  return c.json({})
+
+}
+export default { login, signup, logout }
 
