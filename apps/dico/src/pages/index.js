@@ -1,9 +1,10 @@
+import { useAuth } from "@/AuthContext";
 import { parseCookie } from "@/lib/auth";
 import { useRouter } from "next/router";
 
 
-export async function getServerSideProps(context) {
-	const user = parseCookie(context.req.cookies?.wabap)
+/* export async function getServerSideProps(context) {
+	const user = parseCookie(context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME])
 	if (!user) {
 		return {
 			redirect: {
@@ -17,9 +18,11 @@ export async function getServerSideProps(context) {
 			user
 		}
 	};
-}
+} */
 
-export default function Page({ user }) {
+export default function Page(/* { user } */) {
+	const user = useAuth()
+	console.log(user)
 	const router = useRouter();
 
 	async function onSubmit(e) {
@@ -33,8 +36,8 @@ export default function Page({ user }) {
 
 	return (
 		<>
-			<h1>Hi, {user.username}!</h1>
-			<p>Your user ID is {user.user_id}.</p>
+			<h1>Hi, {user?.username}!</h1>
+			<p>Your user ID is {user?.user_id}.</p>
 			<form method="post" action="/api/auth/logout" onSubmit={onSubmit}>
 				<button>Sign out</button>
 			</form>

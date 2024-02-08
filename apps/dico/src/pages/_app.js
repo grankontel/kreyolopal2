@@ -1,6 +1,8 @@
+import Cookies from 'js-cookie'
 import '@/styles/index.sass'
 import { StandardPage } from '@kreyolopal/web-ui'
 import DicoHead from '@/components/DicoHead'
+import { AuthProvider } from '@/AuthContext'
 
 const dico_url = process.env.NEXT_PUBLIC_DICO_URL || `http://localhost:${process.env.PORT || 3000}`
 const links = [
@@ -23,18 +25,20 @@ const links = [
 
 export default function App({ Component, pageProps }) {
   return (
-    <StandardPage
-      links={links}
-      getHead={() => <DicoHead />}
-      CustomItems={() => (
-        <>
-          <span className="navbar-item">
-            Connect
-          </span>
-        </>
-      )}
-    >
-      <Component {...pageProps} />
-    </StandardPage>
+    <AuthProvider>
+      <StandardPage
+        links={links}
+        getHead={() => <DicoHead />}
+        CustomItems={() => (
+          <>
+            <span className="navbar-item">
+              Connect
+            </span>
+          </>
+        )}
+      >
+        <Component {...pageProps} />
+      </StandardPage>
+    </AuthProvider>
   )
 }
