@@ -2,7 +2,8 @@ import { validateRequest } from "@/lib/auth";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { Form, Section } from "react-bulma-components";
+import { Box, Button, Heading, Section } from "react-bulma-components";
+import { FormField } from "@/components/FormField";
 
 export async function getServerSideProps(context) {
 	const { user } = await validateRequest(context.req, context.res);
@@ -44,24 +45,27 @@ export default function Page() {
 	return (
 
 		<Section>
-			<h1>Create an account</h1>
-			<form method="post" action="/api/auth/signup" onSubmit={onSubmit}>
-				<Form.Field>
-					<Form.Label htmlFor="username">Username</Form.Label>
-					<Form.Input name="username" type="text" autocomplete="username" id="username" />
-				</Form.Field>
-				<Form.Field>
-					<Form.Label htmlFor="password">Password</Form.Label>
-					<Form.Input name="password" id="password" type="password" autocomplete="new-password" />
-				</Form.Field>
-				<br />
-				<label htmlFor="password">Password</label>
-				<input type="password" name="password" id="password" />
-				<br />
-				<button>Continue</button>
-				<p>{error}</p>
-			</form>
-			<Link href="/login">Sign in</Link>
+			<Heading size={3} renderAs="h1">
+				Create an account
+
+			</Heading>
+			<Box className="w-80">
+				<form method="post" action="/api/auth/signup" onSubmit={onSubmit}>
+					<FormField name="email" label="Email" autocomplete="email" type="text" />
+					<FormField name="username" label="Identifiant" autocomplete="username" type="text" />
+					<FormField name="password" label="Mot de passe" autocomplete="new-password" type="password" />
+					<br />
+					<FormField name="firstname" label="Prénom" autocomplete="give-name" type="text" />
+					<FormField name="lastname" label="Nom" autocomplete="family-name" type="text" />
+					<Button.Group align="center">
+						<Button color="primary">Continue</Button>
+
+					</Button.Group>
+					<p>{error}</p>
+				</form>
+				<hr />
+				<Link href="/login">Sign in</Link>
+			</Box>
 		</Section>
 	);
 }
