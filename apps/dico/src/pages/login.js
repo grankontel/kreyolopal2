@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { Section } from "react-bulma-components";
 
 export async function getServerSideProps(context) {
-	const user = parseCookie(context.req.cookies?.wabap)
+	const user = parseCookie(context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME])
 	console.log(user)
 	if (user) {
 		return {

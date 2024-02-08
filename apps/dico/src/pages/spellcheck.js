@@ -253,7 +253,7 @@ export default function Spellcheck({session}) {
 }
 
 export async function getServerSideProps(context) {
-	const session = parseCookie(context.req.cookies?.wabap)
+	const session = parseCookie(context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME])
 	if (!session) {
 		return {
 			redirect: {
