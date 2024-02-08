@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }) {
         <>
           <span className="navbar-item">
             Connect
-            </span>
+          </span>
         </>
       )}
     >

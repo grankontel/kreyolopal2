@@ -1,48 +1,18 @@
-import { Lucia } from "lucia";
-import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
-import { db } from "./db";
+export function parseCookie(cookie) {
+	'use server';
 
-const adapter = new BetterSqlite3Adapter(db, {
-	user: "user",
-	session: "session"
-});
+	if (cookie === undefined)
+		return null
+	const [data, digest] = cookie.split('.')
 
-export const lucia = new Lucia(adapter, {
-	sessionCookie: {
-		attributes: {
-			// set to `true` when using HTTPS
-			secure: process.env.NODE_ENV === "production"
-		}
-	},
-	getUserAttributes: (attributes) => {
-		return {
-			username: attributes.username
-		};
-	}
-});
+	const info = JSON.parse(Buffer.from(data, 'base64').toString('ascii'))
+	return info
+}
 
-// IMPORTANT!
-// declare module "lucia" {
-// 	interface Register {
-// 		Lucia: typeof lucia;
-// 		DatabaseUserAttributes: Omit<DatabaseUser, "id">;
-// 	}
-// }
+export function getUser(useCookies) {
+	'use client';
 
-export async function validateRequest(req,res) {
-	const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
-	if (!sessionId) {
-		return {
-			user: null,
-			session: null
-		};
-	}
-	const result = await lucia.validateSession(sessionId);
-	if (result.session && result.session.fresh) {
-		res.appendHeader("Set-Cookie", lucia.createSessionCookie(result.session.id).serialize());
-	}
-	if (!result.session) {
-		res.appendHeader("Set-Cookie", lucia.createBlankSessionCookie().serialize());
-	}
-	return result;
+	const data = document.cookie
+	console.log(`cookies: ${data}`)
+	return parseCookie(cookies)?.user_id
 }

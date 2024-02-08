@@ -1,11 +1,12 @@
-import { validateRequest } from "@/lib/auth";
+import { parseCookie } from "@/lib/auth";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { Section } from "react-bulma-components";
 
 export async function getServerSideProps(context) {
-	const { user } = await validateRequest(context.req, context.res);
+	const user = parseCookie(context.req.cookies?.wabap)
+	console.log(user)
 	if (user) {
 		return {
 			redirect: {

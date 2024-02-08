@@ -1,9 +1,9 @@
-import { validateRequest } from "@/lib/auth";
+import { parseCookie } from "@/lib/auth";
 import { useRouter } from "next/router";
 
 
 export async function getServerSideProps(context) {
-	const { user } = await validateRequest(context.req, context.res);
+	const user = parseCookie(context.req.cookies?.wabap)
 	if (!user) {
 		return {
 			redirect: {
@@ -34,7 +34,7 @@ export default function Page({ user }) {
 	return (
 		<>
 			<h1>Hi, {user.username}!</h1>
-			<p>Your user ID is {user.id}.</p>
+			<p>Your user ID is {user.user_id}.</p>
 			<form method="post" action="/api/auth/logout" onSubmit={onSubmit}>
 				<button>Sign out</button>
 			</form>
