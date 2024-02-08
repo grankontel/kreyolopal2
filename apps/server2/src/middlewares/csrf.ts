@@ -27,7 +27,7 @@ export function verifyRequestOrigin(origin: string, allowedDomains: string[]): b
     } else {
 			host = safeURL("https://" + domain)?.host ?? null;
 		}
-    console.log({originDomain: domain_from_url(originHost), hostDomain: domain_from_url(originHost)})
+    winston_logger.debug(JSON.stringify({originDomain: domain_from_url(originHost), hostDomain: domain_from_url(originHost)}))
 		if (domain_from_url(originHost) === domain_from_url(host)) return true;
 	}
 	return false;

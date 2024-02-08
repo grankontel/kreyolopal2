@@ -33,8 +33,8 @@ pgPool.connect().then((client) => {
     "email_verif_token" character varying(255),
     "reset_pwd_token" character varying(255),
     "is_admin" boolean DEFAULT false NOT NULL,
-    "createdAt" timestamptz DEFAULT now() NOT NULL,
-    "updatedAt" timestamptz DEFAULT now() NOT NULL,
+    "created_at" timestamptz DEFAULT now() NOT NULL,
+    "updated_at" timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT "auth_user_email_key" UNIQUE ("email"),
     CONSTRAINT "auth_user_pkey" PRIMARY KEY ("id")
 ) WITH (oids = false);`)
@@ -50,8 +50,8 @@ pgPool.connect().then((client) => {
         "id" TEXT PRIMARY KEY,
         "expires_at" timestamptz DEFAULT now() NOT NULL,
         user_id TEXT NOT NULL REFERENCES auth_user(id) ON DELETE CASCADE,
-        "createdAt" timestamptz DEFAULT now() NOT NULL,
-        "updatedAt" timestamptz DEFAULT now() NOT NULL
+        "created_at" timestamptz DEFAULT now() NOT NULL,
+        "updated_at" timestamptz DEFAULT now() NOT NULL
     ) WITH (oids = false);`)
 
   client.query(`CREATE OR REPLACE TRIGGER "set_timestamp" 
@@ -66,8 +66,8 @@ pgPool.connect().then((client) => {
     "status" character varying(255) NOT NULL,
     "message" character varying(255),
     "response" jsonb,
-    "createdAt" timestamptz DEFAULT now() NOT NULL,
-    "updatedAt" timestamptz DEFAULT now() NOT NULL,
+    "created_at" timestamptz DEFAULT now() NOT NULL,
+    "updated_at" timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT "spellcheckeds_pkey" PRIMARY KEY ("id"),
     CONSTRAINT "spellcheckeds_user_id_fkey" FOREIGN KEY ("user_id") 
     REFERENCES "auth_user"(id) ON DELETE CASCADE NOT DEFERRABLE
@@ -83,8 +83,8 @@ BEFORE UPDATE ON "public"."spellcheckeds" FOR EACH ROW EXECUTE FUNCTION trigger_
         "user_notes" character varying(255),
         "admin_correction" character varying(255),
         "admin_notes" character varying(255),
-        "createdAt" timestamptz DEFAULT now() NOT NULL,
-        "updatedAt" timestamptz DEFAULT now() NOT NULL,
+        "created_at" timestamptz DEFAULT now() NOT NULL,
+        "updated_at" timestamptz DEFAULT now() NOT NULL,
         CONSTRAINT "ratings_pkey" PRIMARY KEY ("spellchecked_id"),
         CONSTRAINT "ratings_spellchecked_fkey" FOREIGN KEY ("spellchecked_id") 
         REFERENCES "spellcheckeds"(id) ON DELETE CASCADE NOT DEFERRABLE
