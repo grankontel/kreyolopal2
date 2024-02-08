@@ -2,15 +2,16 @@ import '@/styles/index.sass'
 import { StandardPage } from '@kreyolopal/web-ui'
 import DicoHead from '@/components/DicoHead'
 
+const dico_url = process.env.NEXT_PUBLIC_DICO_URL || `http://localhost:${process.env.PORT || 3000}`
 const links = [
   {
     id: 1,
-    url: process.env.NEXT_PUBLIC_DICO_URL,
+    url: dico_url,
     text: 'Dictionnaire',
   },
   {
     id: 2,
-    url: `${process.env.NEXT_PUBLIC_DICO_URL}/spellcheck`,
+    url: `${dico_url}/spellcheck`,
     text: 'Correcteur',
   },
   {
