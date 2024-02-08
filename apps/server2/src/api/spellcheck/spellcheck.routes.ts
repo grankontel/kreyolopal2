@@ -25,9 +25,7 @@ const postRatingSchema = z
 
 const postRatingParam = z.object({
   id: z
-    .string()
-    .transform((v) => parseInt(v))
-    .refine((v) => !isNaN(v), { message: 'not a number' }),
+    .string().uuid(),
 })
 
 myRoutes.post(
