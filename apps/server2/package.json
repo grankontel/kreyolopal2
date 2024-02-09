@@ -19,6 +19,7 @@
     "#config": "./src/config.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.509.0",
     "@hono/node-server": "^0.4.0",
     "@hono/zod-validator": "^0.1.11",
     "@lucia-auth/adapter-postgresql": "^3.1.0",
