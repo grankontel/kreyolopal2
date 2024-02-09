@@ -1,6 +1,7 @@
 import React from 'react';
 import { createContext, useEffect, useState , useContext} from 'react';
 import { useCookies } from 'react-cookie';
+import PropTypes from 'prop-types'
 
 const AuthContext = createContext(null)
 
@@ -13,18 +14,18 @@ function parseCookie(cookie) {
 	return info
 }
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ cookieName, children }) => {
 	const [cookies, setCookies, removeCookie] = useCookies();
 	const [session, setSession] = useState(null)
 
 	useEffect(() => {
-		const x = parseCookie(cookies[process.env.NEXT_PUBLIC_COOKIE_NAME] ?? null)
+		const x = parseCookie(cookies[cookieName] ?? null)
 		if (x === null) return
 		const expires = new Date(x.expiresAt)
 		const now = new Date()
 		if (expires < now) {
 			console.log('session expired')
-			removeCookie(process.env.NEXT_PUBLIC_COOKIE_NAME)
+			removeCookie(cookieName)
 		}
 		setSession(x)
 	}, [])
@@ -38,3 +39,11 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
 	return useContext(AuthContext)
 };
+
+AuthProvider.propTypes = {
+	cookieName: PropTypes.string.isRequired
+}
+
+AuthProvider.defaultProps = {
+	cookieName: 'wabap'
+}
