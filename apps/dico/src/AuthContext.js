@@ -25,9 +25,8 @@ export const AuthProvider = ({ children }) => {
 			console.log('session expired')
 			removeCookie(process.env.NEXT_PUBLIC_COOKIE_NAME)
 		}
-		console.log(x)
 		setSession(x)
-	}, [cookies])
+	}, [])
 	return (
 		<AuthContext.Provider value={session}>
 			{children}
