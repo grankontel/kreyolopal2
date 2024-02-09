@@ -1,6 +1,5 @@
-import { StandardPage } from '@kreyolopal/web-ui'
+import { StandardPage, useAuth } from '@kreyolopal/web-ui'
 import DicoHead from '@/components/DicoHead'
-import { useAuth } from '@/AuthContext'
 import { useEffect } from 'react'
 
 const dico_url = process.env.NEXT_PUBLIC_DICO_URL || `http://localhost:${process.env.PORT || 3000}`
