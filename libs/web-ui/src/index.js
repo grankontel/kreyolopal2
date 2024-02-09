@@ -5,6 +5,8 @@ export { FeatureList } from './components/FeatureList'
 export { ImageSet } from './components/ImageSet'
 export { simpleHash } from './components/simpleHash'
 export { StarRating } from './components/StarRating'
+export { AuthProvider, useAuth } from './components/AuthContext'
+
 // flags
 export { FlagGp } from './components/FlagGp'
 

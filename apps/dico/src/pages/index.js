@@ -1,4 +1,4 @@
-import { useAuth } from "@/AuthContext";
+import {useAuth} from '@kreyolopal/web-ui'
 import { parseCookie } from "@/lib/auth";
 import { useRouter } from "next/router";
 

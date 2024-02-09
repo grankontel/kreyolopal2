@@ -1,8 +1,6 @@
-import Cookies from 'js-cookie'
 import '@/styles/index.sass'
-import { StandardPage } from '@kreyolopal/web-ui'
+import { AuthProvider, StandardPage } from '@kreyolopal/web-ui'
 import DicoHead from '@/components/DicoHead'
-import { AuthProvider } from '@/AuthContext'
 
 const dico_url = process.env.NEXT_PUBLIC_DICO_URL || `http://localhost:${process.env.PORT || 3000}`
 const links = [
