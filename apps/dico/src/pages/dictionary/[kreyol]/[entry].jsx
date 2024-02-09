@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { getAuth } from "@clerk/nextjs/server";
 import DicoEntry from '@/components/DicoEntry'
 import { Container, Content, Form, Heading, Section, Columns } from 'react-bulma-components'
 import { HeroSearchBox } from '@kreyolopal/web-ui'

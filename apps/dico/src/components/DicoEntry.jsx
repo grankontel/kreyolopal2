@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Heading, Icon } from 'react-bulma-components'
-import { SignedIn, useAuth } from '@clerk/nextjs'
 import AlsoList from './dictionnary/AlsoList'
 import SynonymList from './dictionnary/SynonymList'
 import Tranlations from './dictionnary/Translations'
@@ -10,9 +9,10 @@ import FeatherIcon from './FeatherIcon'
 
 const DicoEntry = ({ item, kreyol, is_bookmarked, ...rest }) => {
     const [isBookmarked, setBookmarked] = useState(is_bookmarked)
+    const auth = useAuth()
 
     const nb_definitions = item.definitions.length
-    const { getToken } = useAuth()
+    // const { getToken } = useAuth()
 
     const addBookmark = async (e) => {
         e.preventDefault()
@@ -47,12 +47,10 @@ const DicoEntry = ({ item, kreyol, is_bookmarked, ...rest }) => {
     return (
         <article className="dico_word" {...rest}>
             <div className='is-flex button-addword'>
-                <SignedIn>
-                    {!isBookmarked ? (<Icon className='dico-add-button' onClick={addBookmark}>
-                        <FeatherIcon iconName="plus-square" />
-                    </Icon>
-                    ) : null}
-                </SignedIn>
+                {(auth && !isBookmarked) ? (<Icon className='dico-add-button' onClick={addBookmark}>
+                    <FeatherIcon iconName="plus-square" />
+                </Icon>
+                ) : null}
                 <Heading size={3} renderAs="h2" className='inline-flex' >
                     {item.entry}
                 </Heading>
