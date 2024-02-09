@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import FeatherIcon from '@/components/FeatherIcon'
 import { Button, Container, Form, Heading, Icon } from 'react-bulma-components'
 import { HeroSearchBox } from '@kreyolopal/web-ui'
+import Standard from '@/layouts/Standard'
 
 export default function Home() {
   const router = useRouter()
@@ -29,5 +30,13 @@ export default function Home() {
         </Form.Field>
       </div>
     </Container>
+  )
+}
+
+Home.getLayout = function getLayout(page) {
+  return (
+    <Standard>
+      {page}
+    </Standard>
   )
 }

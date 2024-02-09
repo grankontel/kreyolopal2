@@ -1,6 +1,6 @@
-import { useAuth } from "@/AuthContext";
-import { parseCookie } from "@/lib/auth";
 import { useRouter } from "next/router";
+import { useAuth } from "@/AuthContext";
+import Standard from '@/layouts/Standard'
 
 
 /* export async function getServerSideProps(context) {
@@ -43,4 +43,12 @@ export default function Page(/* { user } */) {
 			</form>
 		</>
 	);
+}
+
+Page.getLayout = function getLayout(page) {
+  return (
+    <Standard>
+      {page}
+    </Standard>
+  )
 }
