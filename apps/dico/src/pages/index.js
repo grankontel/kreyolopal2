@@ -1,50 +1,39 @@
-import {useAuth} from '@kreyolopal/web-ui'
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation'
+import FeatherIcon from '@/components/FeatherIcon'
+import { Button, Container, Form, Heading, Icon } from 'react-bulma-components'
+import { HeroSearchBox } from '@kreyolopal/web-ui'
 import Standard from '@/layouts/Standard'
 
+export default function Home() {
+  const router = useRouter()
 
-/* export async function getServerSideProps(context) {
-	const user = parseCookie(context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME])
-	if (!user) {
-		return {
-			redirect: {
-				permanent: false,
-				destination: "/login"
-			}
-		};
-	}
-	return {
-		props: {
-			user
-		}
-	};
-} */
+  return (
+    <Container className="search_hero">
+      <div className="w-100">
+        <Heading textColor="primary" colorVariant="light" textAlign="center">
+          Diksyonnè{' '}
+        </Heading>
 
-export default function Page(/* { user } */) {
-	const user = useAuth()?.session
-	const router = useRouter();
-
-	async function onSubmit(e) {
-		e.preventDefault();
-		const formElement = e.target;
-		await fetch(formElement.action, {
-			method: formElement.method
-		});
-		router.push("/login");
-	}
-
-	return (
-		<>
-			<h1>Hi, {user?.username}!</h1>
-			<p>Your user ID is {user?.user_id}.</p>
-			<form method="post" action="/api/auth/logout" onSubmit={onSubmit}>
-				<button>Sign out</button>
-			</form>
-		</>
-	);
+        <Form.Field className="inner_field" kind="addons">
+          <Form.Control fullwidth>
+            <HeroSearchBox
+              navigate={(destination) => router.push(destination)}
+            />
+          </Form.Control>
+          <Form.Control>
+            <Button color="primary" size="medium">
+              <Icon>
+                <FeatherIcon iconName="search" />
+              </Icon>
+            </Button>
+          </Form.Control>
+        </Form.Field>
+      </div>
+    </Container>
+  )
 }
 
-Page.getLayout = function getLayout(page) {
+Home.getLayout = function getLayout(page) {
   return (
     <Standard>
       {page}
