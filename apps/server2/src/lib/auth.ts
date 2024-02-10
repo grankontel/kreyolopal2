@@ -6,7 +6,7 @@ import config from '#config'
 
 
 function getDigest(source: string): string {
-  var hmac = createHmac('sha512', config.security.token);
+  const hmac = createHmac('sha512', config.security.token);
   //passing the data to be hashed
   const data = hmac.update(source);
   //Creating the hmac in the required format
@@ -52,6 +52,7 @@ export const lucia = new Lucia(adapter, {
   getUserAttributes: (attributes) => {
     return {
       username: attributes.username,
+      is_admin: attributes.is_admin,
     }
   },
 })

@@ -1,10 +1,10 @@
 // import { verifyRequestOrigin } from 'lucia'
 import type { MiddlewareHandler } from 'hono'
-import { winston_logger } from '#services/winston_logger'
+import { winston_logger as logger } from '#services/winston_logger'
 
 function domain_from_url(url) {
-  var result
-  var match
+  let result
+  let match
   if (match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
       result = match[1]
       if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
@@ -27,7 +27,7 @@ export function verifyRequestOrigin(origin: string, allowedDomains: string[]): b
     } else {
 			host = safeURL("https://" + domain)?.host ?? null;
 		}
-    winston_logger.debug(JSON.stringify({originDomain: domain_from_url(originHost), hostDomain: domain_from_url(originHost)}))
+    logger.debug(JSON.stringify({originDomain: domain_from_url(originHost), hostDomain: domain_from_url(originHost)}))
 		if (domain_from_url(originHost) === domain_from_url(host)) return true;
 	}
 	return false;
@@ -55,7 +55,7 @@ export const csrfMiddleware = (): MiddlewareHandler => {
       !hostHeader ||
       !verifyRequestOrigin(originHeader, [hostHeader])
     ) {
-      winston_logger.warning(`invalid request origin from host: ${hostHeader}, origin: ${originHeader}`)
+      logger.warn(`invalid request origin from host: ${hostHeader}, origin: ${originHeader}`)
       return c.body(null, 403)
     }
     return next()

@@ -9,13 +9,15 @@ import { winston_logger } from './services/winston_logger'
 import { pgPool } from './lib/db'
 import { csrfMiddleware } from './middlewares/csrf'
 import { sessionMiddleware } from './middlewares/session'
+import { adminMiddleware } from './middlewares/admin'
 
 const port: number = Number(config.app.port) || 3000
 
 const app = createRouter()
 app.use('*', logger())
-app.use('*', csrfMiddleware())
+// app.use('*', csrfMiddleware())
 app.use('*', sessionMiddleware())
+app.use('/api/admin/*', adminMiddleware())
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {

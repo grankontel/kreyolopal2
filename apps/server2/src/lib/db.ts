@@ -105,4 +105,5 @@ export interface DatabaseUser {
 	id: string;
 	username: string;
 	password: string;
+  is_admin: boolean;
 }
