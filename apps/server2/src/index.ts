@@ -37,7 +37,7 @@ process.stdout.write('🔌 connecting to mongo database...')
 
 process.on('SIGINT', async () => {
   console.log('Received SIGINT. ')
-  await Promise.all([ mongoClient.close(), pgPool.end()])
+  await Promise.all([mongoClient.close(), pgPool.end()])
 
   process.exit(0)
 })

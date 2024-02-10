@@ -5,14 +5,24 @@ import { zValidator } from '@hono/zod-validator'
 
 const postLoginSchema = z
   .object({
-    username: z.string().trim().min(3).max(31).regex(/^[a-z0-9_-]+$/),
+    username: z
+      .string()
+      .trim()
+      .min(3)
+      .max(31)
+      .regex(/^[a-z0-9_-]+$/),
     password: z.string().trim().min(8).max(200),
   })
   .required()
 
 const postSignupSchema = z
   .object({
-    username: z.string().trim().min(3).max(31).regex(/^[a-z0-9_-]+$/, 'invalid username'),
+    username: z
+      .string()
+      .trim()
+      .min(3)
+      .max(31)
+      .regex(/^[a-z0-9_-]+$/, 'invalid username'),
     password: z.string().trim().min(8).max(200),
     firstname: z.string().trim().min(2),
     lastname: z.string().trim().min(2),

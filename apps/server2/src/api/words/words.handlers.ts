@@ -203,7 +203,6 @@ const postWord = async function (c: Context) {
         )
       },
       (err) => {
-
         if (err.code === 11000) {
           return c.json(
             {

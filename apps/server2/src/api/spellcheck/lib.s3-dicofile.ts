@@ -1,7 +1,7 @@
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
 import config from '../../config'
 
-const streamToString = (stream):Promise<string> =>
+const streamToString = (stream): Promise<string> =>
   new Promise((resolve, reject) => {
     const chunks = []
     stream.on('data', (chunk) => chunks.push(chunk))
@@ -43,7 +43,6 @@ const getObjectContent = (client: S3Client, command: GetObjectCommand) =>
  */
 // eslint-disable-next-line no-unused-vars
 async function readDicoFiles(kreyol: KreyolLang) {
-
   const s3Options = {
     credentials: {
       accessKeyId: config.aws.keyId,

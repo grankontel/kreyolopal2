@@ -6,8 +6,8 @@ export const adminMiddleware = (): MiddlewareHandler => {
     const user = c.get('user')
     logger.debug(user)
     if (!user || !user.is_admin) {
-        logger.warn('user is not admin')
-        return c.body(null, 403)
+      logger.warn('user is not admin')
+      return c.body(null, 403)
     }
     return next()
   }

@@ -1,17 +1,16 @@
 import { Lucia } from 'lucia'
-const { createHmac } = require('node:crypto');
+const { createHmac } = require('node:crypto')
 import { adapter } from './db'
 import type { DatabaseUser } from './db'
 import config from '#config'
 
-
 function getDigest(source: string): string {
-  const hmac = createHmac('sha512', config.security.token);
+  const hmac = createHmac('sha512', config.security.token)
   //passing the data to be hashed
-  const data = hmac.update(source);
+  const data = hmac.update(source)
   //Creating the hmac in the required format
-  const digest = data.digest('base64');
-  return digest;
+  const digest = data.digest('base64')
+  return digest
 }
 
 export function createCookie(session_id: string, user: DatabaseUser) {
@@ -19,24 +18,26 @@ export function createCookie(session_id: string, user: DatabaseUser) {
   // Add 30 days to now, and zero out hours, minutes, seconds, milliseconds
   now.setDate(now.getDate() + 30)
 
-  const info = { session_id: session_id, user_id: user.id, username: user.username, expiresAt: now }
+  const info = {
+    session_id: session_id,
+    user_id: user.id,
+    username: user.username,
+    expiresAt: now,
+  }
   const infob64 = Buffer.from(JSON.stringify(info)).toString('base64')
-  const digest = getDigest(infob64);
+  const digest = getDigest(infob64)
 
   const cookieValue = `${infob64}.${digest}`
   const theCookie = lucia.createSessionCookie(cookieValue)
   return theCookie
-
 }
 
 export function parseCookie(cookie: string) {
-  if (cookie === null)
-    return null
+  if (cookie === null) return null
   const [data, digest] = cookie.split('.')
   const mydigest = getDigest(data)
 
-  if (mydigest != digest)
-    return null
+  if (mydigest != digest) return null
 
   const info = JSON.parse(Buffer.from(data, 'base64').toString('ascii'))
   return info
@@ -44,7 +45,7 @@ export function parseCookie(cookie: string) {
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
-    name: "wabap",
+    name: 'wabap',
     attributes: {
       secure: process.env.NODE_ENV === 'production',
     },
@@ -63,5 +64,3 @@ declare module 'lucia' {
     DatabaseUserAttributes: Omit<DatabaseUser, 'id'>
   }
 }
-
-

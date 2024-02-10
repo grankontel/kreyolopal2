@@ -6,7 +6,7 @@ import { WordsRepository } from '#lib/words.repository'
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
   const client = c.get('mongodb')
-  const user = c.get("user");
+  const user = c.get('user')
   const { word } = c.req.param()
 
   logger.info(`me getWord  ${word}`)
@@ -73,7 +73,7 @@ const bookmarkWord = async function (c: Context) {
   const logger = c.get('logger')
   const client = c.get('mongodb')
   const { word } = c.req.param()
-  const user = c.get("user");
+  const user = c.get('user')
 
   if (!user) {
     return c.json(

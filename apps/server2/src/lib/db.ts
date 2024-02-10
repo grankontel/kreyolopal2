@@ -90,9 +90,9 @@ BEFORE UPDATE ON "public"."spellcheckeds" FOR EACH ROW EXECUTE FUNCTION trigger_
         REFERENCES "spellcheckeds"(id) ON DELETE CASCADE NOT DEFERRABLE
     ) WITH (oids = false);`)
 
-    client.query(`CREATE OR REPLACE TRIGGER "set_timestamp" 
+  client.query(`CREATE OR REPLACE TRIGGER "set_timestamp" 
     BEFORE UPDATE ON "public"."ratings" FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp()`)
-    
+
   client.release()
 })
 
@@ -102,8 +102,8 @@ export const adapter = new NodePostgresAdapter(pgPool, {
 })
 
 export interface DatabaseUser {
-	id: string;
-	username: string;
-	password: string;
-  is_admin: boolean;
+  id: string
+  username: string
+  password: string
+  is_admin: boolean
 }

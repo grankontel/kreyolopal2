@@ -5,7 +5,7 @@ import { pgPool } from '#lib/db'
 const postSpellCheck = async function (c: Context) {
   const logger = c.get('logger')
   const body = c.req.valid('json')
-  const user = c.get("user");
+  const user = c.get('user')
   logger.info('postSpellCheck')
 
   if (!user) {
@@ -30,20 +30,38 @@ const postSpellCheck = async function (c: Context) {
     .check(lMessage)
     .tap(async (msg) => {
       logger.debug('attempt to save message')
-      logger.debug([lMessage.user, lMessage.kreyol, lMessage.request, msg.status, msg.message])
-      await pgPool.query(`INSERT INTO spellcheckeds
+      logger.debug([
+        lMessage.user,
+        lMessage.kreyol,
+        lMessage.request,
+        msg.status,
+        msg.message,
+      ])
+      await pgPool
+        .query(
+          `INSERT INTO spellcheckeds
       (user_id, kreyol, request, status, message, response) 
       VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
-        [lMessage.user, lMessage.kreyol, lMessage.request, msg.status, msg.message, msg])
-        .then(res => {
-          logger.info('msg save success')
-          lMessage.id = res.rows[0].id
-
-        }, reason => {
-          logger.error('msg save failed')
-          logger.error(reason)
-        })
-        .catch(error => {
+          [
+            lMessage.user,
+            lMessage.kreyol,
+            lMessage.request,
+            msg.status,
+            msg.message,
+            msg,
+          ]
+        )
+        .then(
+          (res) => {
+            logger.info('msg save success')
+            lMessage.id = res.rows[0].id
+          },
+          (reason) => {
+            logger.error('msg save failed')
+            logger.error(reason)
+          }
+        )
+        .catch((error) => {
           logger.error(error)
         })
     })
@@ -61,7 +79,7 @@ const postSpellCheck = async function (c: Context) {
 const postRating = async function (c: Context) {
   const logger = c.get('logger')
   const id = c.req.param('id')
-  const user = c.get("user");
+  const user = c.get('user')
   const body = c.req.valid('json')
   const { rating, user_correction, user_notes } = body
 
@@ -77,54 +95,63 @@ const postRating = async function (c: Context) {
   }
 
   logger.debug(JSON.stringify({ id, ...body }))
-  return pgPool.connect().then(async (client) => {
-    let res = await client.query('SELECT 1 from spellcheckeds WHERE user_id = $1 AND id=$2', [user.id, id])
-
-    if (res.rows.length === 0) {
-      return c.json(
-        {
-          message: 'Forbidden',
-        },
-        403
+  return pgPool
+    .connect()
+    .then(async (client) => {
+      let res = await client.query(
+        'SELECT 1 from spellcheckeds WHERE user_id = $1 AND id=$2',
+        [user.id, id]
       )
-    }
 
-    logger.debug('Spellechecked exists')
+      if (res.rows.length === 0) {
+        return c.json(
+          {
+            message: 'Forbidden',
+          },
+          403
+        )
+      }
 
-    const extra_fields = []
-    if (user_correction)
-      extra_fields.push({ name: 'user_correction', value: user_correction })
-    if (user_notes)
-      extra_fields.push({ name: 'user_notes', value: user_notes })
+      logger.debug('Spellechecked exists')
 
-    const columns = ['spellchecked_id', 'rating'].concat(extra_fields.map(item => item.name))
-    const values = [id, rating].concat(extra_fields.map(item => item.value))
+      const extra_fields = []
+      if (user_correction)
+        extra_fields.push({
+          name: 'user_correction',
+          value: user_correction,
+        })
+      if (user_notes)
+        extra_fields.push({ name: 'user_notes', value: user_notes })
 
-    let text = `INSERT INTO ratings (${columns.join(', ')})
+      const columns = ['spellchecked_id', 'rating'].concat(
+        extra_fields.map((item) => item.name)
+      )
+      const values = [id, rating].concat(extra_fields.map((item) => item.value))
+
+      let text = `INSERT INTO ratings (${columns.join(', ')})
       VALUES(${columns.map((item, index) => `$${index + 1}`).join(', ')})
       ON CONFLICT(spellchecked_id) 
       DO UPDATE SET
       rating = EXCLUDED.rating
         `
-    text = text + (user_correction ? ',user_correction = EXCLUDED.user_correction' : '')
-    text = text + (user_notes ? ', user_notes = EXCLUDED.user_notes' : '')
+      text =
+        text +
+        (user_correction ? ',user_correction = EXCLUDED.user_correction' : '')
+      text = text + (user_notes ? ', user_notes = EXCLUDED.user_notes' : '')
 
-    text = text + `RETURNING spellchecked_id;`
-    logger.debug(text)
-    res = await client.query(text, values)
-    const retour_id = res.rows[0].spellchecked_id
-    client.end()
+      text = text + `RETURNING spellchecked_id;`
+      logger.debug(text)
+      res = await client.query(text, values)
+      const retour_id = res.rows[0].spellchecked_id
+      client.end()
 
-    logger.debug(retour_id)
-    return c.json({ id: retour_id }, 200)
-
-  })
+      logger.debug(retour_id)
+      return c.json({ id: retour_id }, 200)
+    })
     .catch((_error) => {
       logger.error('postRating Exception', _error)
       return c.json({ status: 'error', error: [_error] }, 500)
     })
-
-
 }
 
 export default { postSpellCheck, postRating /*, getSpellChecks */ }

@@ -41,8 +41,10 @@ export class WordsRepository {
       //client.close()
 
       const data = result?.map(mapCallback)
-      WordsRepository.logger.info(`WordsRepository.GetOne: ${data.length} results`)
- 
+      WordsRepository.logger.info(
+        `WordsRepository.GetOne: ${data.length} results`
+      )
+
       return data
     } catch (e) {
       WordsRepository.logger.error(e.message)

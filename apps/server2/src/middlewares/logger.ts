@@ -37,7 +37,7 @@ export const logger = (): MiddlewareHandler => {
       host: c.req.header('Host'),
       'user-agent': c.req.header('User-Agent'),
     }
-//    winston_logger.info(`request : ${method} ${path}`, extra)
+    //    winston_logger.info(`request : ${method} ${path}`, extra)
 
     const start = Date.now()
 

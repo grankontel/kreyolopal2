@@ -10,7 +10,7 @@ import { paramValidate, schemaValidator, setBody } from '#utils/apiHelpers'
 const ajv = new Ajv({ allErrors: true }) // options can be passed, e.g. {allErrors: true}
 
 const validate = ajv.compile(schema)
-const schemaValidate = (c: Context) =>schemaValidator(c, validate)
+const schemaValidate = (c: Context) => schemaValidator(c, validate)
 
 // get suggestion
 const routes = createRouter()

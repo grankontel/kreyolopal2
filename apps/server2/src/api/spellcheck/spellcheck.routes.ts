@@ -24,8 +24,7 @@ const postRatingSchema = z
   })
 
 const postRatingParam = z.object({
-  id: z
-    .string().uuid(),
+  id: z.string().uuid(),
 })
 
 myRoutes.post(

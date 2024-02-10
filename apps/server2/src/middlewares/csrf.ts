@@ -5,40 +5,51 @@ import { winston_logger as logger } from '#services/winston_logger'
 function domain_from_url(url) {
   let result
   let match
-  if (match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
+  if (
+    (match = url.match(
+      /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im
+    ))
+  ) {
+    result = match[1]
+    if ((match = result.match(/^[^\.]+\.(.+\..+)$/))) {
       result = match[1]
-      if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
-          result = match[1]
-      }
+    }
   }
   return result
 }
 
-export function verifyRequestOrigin(origin: string, allowedDomains: string[]): boolean {
-	if (!origin || allowedDomains.length === 0) return false;
-	const originHost = safeURL(origin)?.host ?? null;
+export function verifyRequestOrigin(
+  origin: string,
+  allowedDomains: string[]
+): boolean {
+  if (!origin || allowedDomains.length === 0) return false
+  const originHost = safeURL(origin)?.host ?? null
 
-  if (!originHost) return false;
-	for (const domain of allowedDomains) {
-		let host: string | null;
-		if (domain.startsWith("http://") || domain.startsWith("https://")) {
-			host = safeURL(domain)?.host ?? null;
-
+  if (!originHost) return false
+  for (const domain of allowedDomains) {
+    let host: string | null
+    if (domain.startsWith('http://') || domain.startsWith('https://')) {
+      host = safeURL(domain)?.host ?? null
     } else {
-			host = safeURL("https://" + domain)?.host ?? null;
-		}
-    logger.debug(JSON.stringify({originDomain: domain_from_url(originHost), hostDomain: domain_from_url(originHost)}))
-		if (domain_from_url(originHost) === domain_from_url(host)) return true;
-	}
-	return false;
+      host = safeURL('https://' + domain)?.host ?? null
+    }
+    logger.debug(
+      JSON.stringify({
+        originDomain: domain_from_url(originHost),
+        hostDomain: domain_from_url(originHost),
+      })
+    )
+    if (domain_from_url(originHost) === domain_from_url(host)) return true
+  }
+  return false
 }
 
 function safeURL(url: URL | string): URL | null {
-	try {
-		return new URL(url);
-	} catch {
-		return null;
-	}
+  try {
+    return new URL(url)
+  } catch {
+    return null
+  }
 }
 
 export const csrfMiddleware = (): MiddlewareHandler => {
@@ -55,7 +66,9 @@ export const csrfMiddleware = (): MiddlewareHandler => {
       !hostHeader ||
       !verifyRequestOrigin(originHeader, [hostHeader])
     ) {
-      logger.warn(`invalid request origin from host: ${hostHeader}, origin: ${originHeader}`)
+      logger.warn(
+        `invalid request origin from host: ${hostHeader}, origin: ${originHeader}`
+      )
       return c.body(null, 403)
     }
     return next()

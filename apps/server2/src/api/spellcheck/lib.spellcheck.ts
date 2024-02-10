@@ -92,7 +92,7 @@ async function nspell_spellcheck(
     if (item.isCorrect) {
       nl = item.word
     } else if (item.suggestions?.length) {
-      [nl] = item.suggestions
+      ;[nl] = item.suggestions
     } else {
       nl = `~${item.word}~`
     }

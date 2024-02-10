@@ -1,8 +1,7 @@
-import { lucia, createCookie, parseCookie } from "#lib/auth";
-import { getCookie, setCookie } from "hono/cookie";
+import { lucia, createCookie, parseCookie } from '#lib/auth'
+import { getCookie, setCookie } from 'hono/cookie'
 import type { MiddlewareHandler } from 'hono'
 import { winston_logger } from '#services/winston_logger'
-
 
 export const sessionMiddleware = (): MiddlewareHandler => {
   return async (c, next) => {
@@ -20,8 +19,10 @@ export const sessionMiddleware = (): MiddlewareHandler => {
     winston_logger.debug(JSON.stringify({ session, user }))
     if (session && session.fresh) {
       const theCookie = createCookie(session.id, user)
-      setCookie(c, theCookie.name, theCookie.value, {...theCookie.attributes, httpOnly: false})
-
+      setCookie(c, theCookie.name, theCookie.value, {
+        ...theCookie.attributes,
+        httpOnly: false,
+      })
     }
     if (!session) {
       c.header('Set-Cookie', lucia.createBlankSessionCookie().serialize(), {

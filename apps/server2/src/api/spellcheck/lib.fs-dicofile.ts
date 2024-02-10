@@ -10,7 +10,6 @@ const readFile = promisify(fs.readFile)
  */
 // eslint-disable-next-line no-unused-vars
 async function readDicoFiles(kreyol: KreyolLang): Promise<DicoFile> {
-
   const readAff = readFile(
     path.resolve(__dirname, `../../dico/cpf_${kreyol}.aff`),
     'utf8'

@@ -17,18 +17,18 @@ export type DicoFileReader = {
   readDicoFiles: (kreyol: KreyolLang) => Promise<DicoFile>
 }
 
-export enum MessageStatus  {
-    success = 'success',
-    warning = 'warning',
-    error = 'error'
+export enum MessageStatus {
+  success = 'success',
+  warning = 'warning',
+  error = 'error',
 }
 
 type MessageResponse = {
-    // status: '', success | warning | error
-    status: MessageStatus,
-    kreyol: KreyolLang, // message.request.kreyol,
-    unknown_words: string[],
-    message: string,
-    user_evaluation: undefined,
-    admin_evaluation: undefined,
-  }
+  // status: '', success | warning | error
+  status: MessageStatus
+  kreyol: KreyolLang // message.request.kreyol,
+  unknown_words: string[]
+  message: string
+  user_evaluation: undefined
+  admin_evaluation: undefined
+}
