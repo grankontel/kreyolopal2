@@ -5,7 +5,6 @@ import type { Context } from 'hono'
 
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
-  const client = c.get('mongodb')
 
   const { language, word } = c.req.param()
 

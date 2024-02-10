@@ -60,7 +60,6 @@ const postSpellCheck = async function (c: Context) {
 
 const postRating = async function (c: Context) {
   const logger = c.get('logger')
-  const supabase = c.get('supabase')
   const id = c.req.param('id')
   const user = c.get("user");
   const body = c.req.valid('json')
