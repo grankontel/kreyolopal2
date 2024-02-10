@@ -18,6 +18,7 @@ const argon2 = new Argon2id({
 })
 
 const login = async function (c: Context) {
+  const logger = c.get('logger')
   const body = c.req.valid('json')
   const { username, password } = body
 
@@ -25,41 +26,55 @@ const login = async function (c: Context) {
     'SELECT id, username, password, is_admin FROM auth_user WHERE username = $1'
   const values = [username]
 
-  const res = await pgPool.query(text, values)
-  const existingUser = res?.rows[0] as DatabaseUser | undefined
-  if (!existingUser) {
-    c.status(400)
-    return c.json({
-      error: 'Incorrect username or password',
-    })
-  }
-
-  const validPassword = await argon2.verify(existingUser.password, password)
-  if (!validPassword) {
-    c.status(400)
-    return c.json({
-      error: 'Incorrect username or password',
-    })
-  }
-
-  return lucia.createSession(existingUser.id, {}).then((session) => {
-    const theCookie = createCookie(session.id, existingUser)
-    setCookie(c, theCookie.name, theCookie.value, {
-      ...theCookie.attributes,
-      httpOnly: false,
-    })
-    c.status(200)
-    let response = {}
-    if (existingUser.is_admin) {
-      response = {
-        token: jwt_sign(
-          { role: 'postgrest', username: existingUser.username },
-          config.security.adminSecret
-        ),
+  return pgPool
+    .connect()
+    .then(async (client) => {
+      const res = await client.query(text, values)
+      const existingUser = res?.rows[0] as DatabaseUser | undefined
+      if (!existingUser) {
+        c.status(400)
+        return c.json({
+          error: 'Incorrect username or password',
+        })
       }
-    }
-    return c.json(response)
-  })
+
+      const validPassword = await argon2.verify(existingUser.password, password)
+      if (!validPassword) {
+        c.status(400)
+        return c.json({
+          error: 'Incorrect username or password',
+        })
+      }
+
+      return client
+        .query('UPDATE auth_user SET lastlogin= NOW() WHERE id = $1 ', [
+          existingUser.id,
+        ])
+        .then(() => {
+          return lucia.createSession(existingUser.id, {}).then((session) => {
+            const theCookie = createCookie(session.id, existingUser)
+            setCookie(c, theCookie.name, theCookie.value, {
+              ...theCookie.attributes,
+              httpOnly: false,
+            })
+            c.status(200)
+            let response = {}
+            if (existingUser.is_admin) {
+              response = {
+                token: jwt_sign(
+                  { role: 'postgrest', username: existingUser.username },
+                  config.security.adminSecret
+                ),
+              }
+            }
+            return c.json(response)
+          })
+        })
+    })
+    .catch((_error) => {
+      logger.error('login Exception', _error)
+      return c.json({ status: 'error', error: [_error] }, 500)
+    })
 }
 
 const signup = async function (c: Context) {
