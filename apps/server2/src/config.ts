@@ -24,6 +24,7 @@ const config = {
     database: process.env.POSTGRES_DB,
     username: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
+    health: process.env.PGRST_HEALTH
   },
   mongodb: {
     // uri: process.env.MONGODB_URI,

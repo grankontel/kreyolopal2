@@ -41,8 +41,10 @@ services:
       # Needs to be 32 characters minimum. 
       # echo "PGRST_JWT_SECRET = \"$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c32)\""
       - PGRST_JWT_SECRET=${PGRST_JWT_SECRET}
+      - PGRST_ADMIN_SERVER_PORT=3001
     ports:
       - "127.0.0.1:9000:3000"
+      - "127.0.0.1:9010:3001"
     depends_on:
       - db
 
