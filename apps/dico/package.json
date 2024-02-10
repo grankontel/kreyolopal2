@@ -26,6 +26,7 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
+    "@creativebulma/bulma-tooltip": "^1.2.0",
     "@kreyolopal/web-ui": "*",
     "sass": "^1.58.3"
   }

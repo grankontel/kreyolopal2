@@ -21,6 +21,7 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@creativebulma/bulma-tooltip": "^1.2.0",
     "@kreyolopal/web-ui": "*",
     "http-server": "^14.1.1",
     "sass": "^1.58.3"
