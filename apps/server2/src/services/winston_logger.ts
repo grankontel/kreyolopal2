@@ -1,6 +1,6 @@
-import winston from 'winston';
+import winston from 'winston'
 const SlackHook = require('winston-slack-webhook-transport')
-import config from '../config';
+import config from '../config'
 
 const alignedWithColorsAndTime = winston.format.combine(
   winston.format.colorize(),
@@ -17,21 +17,23 @@ const alignedWithColorsAndTime = winston.format.combine(
 )
 
 const standardObjectFormat = winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json(),
+  winston.format.timestamp(),
+  winston.format.json()
 )
 
 const options = {
   console: {
     level: config.log.level,
-    format: config.log.prettyPrint ? alignedWithColorsAndTime: standardObjectFormat, // alignedWithColorsAndTime,
+    format: config.log.prettyPrint
+      ? alignedWithColorsAndTime
+      : standardObjectFormat, // alignedWithColorsAndTime,
   },
 }
 
 const transports = [
   // Allow the use the console to print the messages
   new winston.transports.Console(options.console),
-/*
+  /*
   // Allow to print all the error level messages inside the error.log file
   new winston.transports.File({
     filename: 'logs/error.log',
@@ -62,6 +64,6 @@ if (!config.slack.noSend)
  */
 
 export const winston_logger = winston.createLogger({
-    transports,
-    exitOnError: false, // do not exit on handled exceptions
-  })
+  transports,
+  exitOnError: false, // do not exit on handled exceptions
+})

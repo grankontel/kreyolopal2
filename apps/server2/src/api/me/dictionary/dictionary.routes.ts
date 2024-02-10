@@ -1,4 +1,4 @@
-import { createRouter } from "#services/hono";
+import { createRouter } from '#services/hono'
 import handlers from './dictionary.handlers'
 
 const myDicoRoutes = createRouter()

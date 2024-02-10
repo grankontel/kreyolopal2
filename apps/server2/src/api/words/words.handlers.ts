@@ -1,4 +1,4 @@
-import { Context } from 'hono'
+import type { Context } from 'hono'
 import config from '../../config'
 import { createHttpException } from '../../utils/createHttpException'
 import { ObjectId } from 'mongodb'
@@ -203,7 +203,6 @@ const postWord = async function (c: Context) {
         )
       },
       (err) => {
-
         if (err.code === 11000) {
           return c.json(
             {

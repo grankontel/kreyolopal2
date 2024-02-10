@@ -1,33 +1,53 @@
-import { useRouter } from 'next/router'
-import FeatherIcon from '@/components/FeatherIcon'
-import { Button, Container, Form, Heading, Icon } from 'react-bulma-components'
-import { HeroSearchBox } from '@kreyolopal/web-ui'
+import {useAuth} from '@kreyolopal/web-ui'
+import { useRouter } from "next/router";
+import Standard from '@/layouts/Standard'
 
-export default function Home() {
-  const router = useRouter()
 
+/* export async function getServerSideProps(context) {
+	const user = parseCookie(context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME])
+	if (!user) {
+		return {
+			redirect: {
+				permanent: false,
+				destination: "/login"
+			}
+		};
+	}
+	return {
+		props: {
+			user
+		}
+	};
+} */
+
+export default function Page(/* { user } */) {
+	const user = useAuth()?.session
+	const router = useRouter();
+
+	async function onSubmit(e) {
+		e.preventDefault();
+		const formElement = e.target;
+		await fetch(formElement.action, {
+			method: formElement.method
+		});
+		router.push("/login");
+	}
+
+	return (
+		<>
+			<h1>Hi, {user?.username}!</h1>
+			<p>Your user ID is {user?.user_id}.</p>
+			<form method="post" action="/api/auth/logout" onSubmit={onSubmit}>
+				<button>Sign out</button>
+			</form>
+		</>
+	);
+}
+
+Page.getLayout = function getLayout(page) {
   return (
-    <Container className="search_hero">
-      <div className="w-100">
-        <Heading textColor="primary" colorVariant="light" textAlign="center">
-          Diksyonnè{' '}
-        </Heading>
-
-        <Form.Field className="inner_field" kind="addons">
-          <Form.Control fullwidth>
-            <HeroSearchBox
-              navigate={(destination) => router.push(destination)}
-            />
-          </Form.Control>
-          <Form.Control>
-            <Button color="primary" size="medium">
-              <Icon>
-                <FeatherIcon iconName="search" />
-              </Icon>
-            </Button>
-          </Form.Control>
-        </Form.Field>
-      </div>
-    </Container>
+    <Standard>
+      {page}
+    </Standard>
   )
 }

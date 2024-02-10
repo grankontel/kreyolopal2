@@ -10,15 +10,15 @@ import {
   Notification,
   Icon,
 } from 'react-bulma-components'
-import { RedirectToSignIn, SignedOut, useAuth } from '@clerk/nextjs'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { StarRating } from '@kreyolopal/web-ui'
 import * as feather from 'feather-icons'
 import { FlagGp } from '@kreyolopal/web-ui'
+import { getUser, parseCookie } from '@/lib/auth'
 
-async function postRateCorrection(getToken, msgId, rating) {
+
+async function postRateCorrection(token, msgId, rating) {
   console.log('postRateCorrection')
-  const token = await getToken()
 
   const myHeaders = {
     'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ function addEmphasis(src) {
   return result
 }
 
-const postSpellCheck = async (getToken, text) => {
+const postSpellCheck = async (token, text) => {
   const word = text.trim()
   if (word.length === 0) return Promise.resolve([])
 
@@ -78,7 +78,6 @@ const postSpellCheck = async (getToken, text) => {
   const myHeaders = {
     'Content-Type': 'application/json',
   }
-  const token = await getToken()
   if (token) myHeaders['Authorization'] = `Bearer ${token}`
 
   return fetch(`/api/spellcheck`, {
@@ -105,14 +104,13 @@ const postSpellCheck = async (getToken, text) => {
       return []
     })
 }
-export default function Spellcheck() {
+export default function Spellcheck({session}) {
   const [request, setRequest] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [copied, setCopied] = useState(false)
 
   const [errorMessage, setErrorMessage] = useState('')
   const [response, setResponse] = useState(null)
-  const { getToken } = useAuth()
 
   const eraseErrorMessage = () => setErrorMessage('')
 
@@ -122,7 +120,7 @@ export default function Spellcheck() {
     if (response?.id === undefined) return
     setIsLoading(true)
     try {
-      const resp = postRateCorrection(getToken, response?.id, { rating: note })
+      const resp = postRateCorrection(session.session_id, response?.id, { rating: note })
 
       resp.then((data) => {
         setIsLoading(false)
@@ -146,7 +144,7 @@ export default function Spellcheck() {
     setCopied(false)
 
     try {
-      postSpellCheck(getToken, request).then((data) => {
+      postSpellCheck(session.session_id, request).then((data) => {
         setIsLoading(false)
 
         if (data.errors !== undefined) {
@@ -167,9 +165,6 @@ export default function Spellcheck() {
 
   return (
     <Section>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
       <Heading size={2} renderAs="h1">
         Correcteur orthographique
       </Heading>
@@ -255,4 +250,21 @@ export default function Spellcheck() {
       </Container>
     </Section>
   )
+}
+
+export async function getServerSideProps(context) {
+	const session = parseCookie(context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME])
+	if (!session) {
+		return {
+			redirect: {
+				permanent: false,
+				destination: "/login"
+			}
+		};
+	}
+	return {
+		props: {
+			session
+		}
+	};
 }

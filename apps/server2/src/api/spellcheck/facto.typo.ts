@@ -1,5 +1,5 @@
 // const Typo = require('typo-js')
-import Typo from 'typo-js';
+import Typo from 'typo-js'
 
 const createSpellchecker = (affix, dictionary) => {
   const diko = new Typo('cpf_GP', affix.toString(), dictionary.toString())

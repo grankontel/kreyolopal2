@@ -1,15 +1,14 @@
-import { Context } from 'hono'
-import { getAuth } from '@hono/clerk-auth'
+import type { Context } from 'hono'
 import spellchecker from './lib.spellcheck'
+import { pgPool } from '#lib/db'
 
 const postSpellCheck = async function (c: Context) {
   const logger = c.get('logger')
-  const supabase = c.get('supabase')
   const body = c.req.valid('json')
-  const auth = getAuth(c)
+  const user = c.get('user')
   logger.info('postSpellCheck')
 
-  if (!auth?.userId) {
+  if (!user) {
     return c.json(
       {
         message: 'You are not logged in.',
@@ -19,7 +18,7 @@ const postSpellCheck = async function (c: Context) {
   }
 
   const lMessage = {
-    user: auth?.userId, // req.user.id,
+    user: user.id, // req.user.id,
     tool: c.req.header('User-Agent'),
     service: 'spellcheck',
     kreyol: body.kreyol,
@@ -30,25 +29,45 @@ const postSpellCheck = async function (c: Context) {
   return spellchecker
     .check(lMessage)
     .tap(async (msg) => {
-      const { data, error } = await supabase
-        .from('Spellcheckeds')
-        .insert([
-          {
-            user_id: lMessage.user,
-            kreyol: lMessage.kreyol,
-            request: lMessage.request,
-            status: msg.status,
-            message: msg.message,
-            response: msg,
+      logger.debug('attempt to save message')
+      logger.debug([
+        lMessage.user,
+        lMessage.kreyol,
+        lMessage.request,
+        msg.status,
+        msg.message,
+      ])
+      await pgPool
+        .query(
+          `INSERT INTO spellcheckeds
+      (user_id, kreyol, request, status, message, response) 
+      VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
+          [
+            lMessage.user,
+            lMessage.kreyol,
+            lMessage.request,
+            msg.status,
+            msg.message,
+            msg,
+          ]
+        )
+        .then(
+          (res) => {
+            logger.info('msg save success')
+            lMessage.id = res.rows[0].id
           },
-        ])
-        .select()
-      if (error === null)
-        lMessage.id = data[0].id
+          (reason) => {
+            logger.error('msg save failed')
+            logger.error(reason)
+          }
+        )
+        .catch((error) => {
+          logger.error(error)
+        })
     })
     .then(async (msg) => {
       lMessage.response = msg
-      logger.debug(lMessage)
+      logger.debug(JSON.stringify(lMessage))
       return c.json(lMessage, 200)
     })
     .catch((_error) => {
@@ -59,15 +78,14 @@ const postSpellCheck = async function (c: Context) {
 
 const postRating = async function (c: Context) {
   const logger = c.get('logger')
-  const supabase = c.get('supabase')
-  const id = parseInt(c.req.param('id'))
-  const auth = getAuth(c)
+  const id = c.req.param('id')
+  const user = c.get('user')
   const body = c.req.valid('json')
   const { rating, user_correction, user_notes } = body
 
   logger.info('postRating')
 
-  if (!auth?.userId) {
+  if (!user) {
     return c.json(
       {
         message: 'You are not logged in.',
@@ -76,91 +94,64 @@ const postRating = async function (c: Context) {
     )
   }
 
-  logger.debug({ id, ...body })
-
-  let { data: sp_data, error: sp_error } = await supabase
-    .from('Spellcheckeds')
-    .select('id', {head: true})
-    .eq('id', id)
-
-    logger.debug(sp_data)
-  if (sp_error !== null || sp_data?.count == 0) {
-    logger.error(sp_error)
-    return c.json(
-      {
-        message: 'Bad request',
-      },
-      400
-    )
-  }
-
-  let { data: ratings, error: r_errors } = await supabase
-    .from('Ratings')
-    .select()
-    .eq('spellchecked_id', id)
-
-  if (r_errors !== null) {
-    logger.error(r_errors)
-    return c.json(
-      {
-        message: 'Internal Error',
-      },
-      500
-    )
-  }
-
-  if (ratings.length === 0) {
-
-    let value = { spellchecked_id: id, rating, user_correction, user_notes }
-    logger.info(`attempt to create rating ${value}`)
-
-    let { data, error } = await supabase
-      .from('Ratings')
-      .insert([
-        value,
-      ])
-      .select('id')
-
-    if (error !== null) {
-      logger.error(error)
-      return c.json(
-        {
-          message: 'Internal Error',
-        },
-        500
+  logger.debug(JSON.stringify({ id, ...body }))
+  return pgPool
+    .connect()
+    .then(async (client) => {
+      let res = await client.query(
+        'SELECT 1 from spellcheckeds WHERE user_id = $1 AND id=$2',
+        [user.id, id]
       )
-    }
 
-    return c.json({ id: data[0].id },200)
-  }
+      if (res.rows.length === 0) {
+        return c.json(
+          {
+            message: 'Forbidden',
+          },
+          403
+        )
+      }
 
-  let rating_id = ratings[ratings.length -1].id
-  let value = {}
+      logger.debug('Spellechecked exists')
 
-  value.rating = rating
-  if (user_correction !== undefined)
-    value.user_correction = user_correction
-  if (user_notes !== undefined) value.user_notes = user_notes
+      const extra_fields = []
+      if (user_correction)
+        extra_fields.push({
+          name: 'user_correction',
+          value: user_correction,
+        })
+      if (user_notes)
+        extra_fields.push({ name: 'user_notes', value: user_notes })
 
+      const columns = ['spellchecked_id', 'rating'].concat(
+        extra_fields.map((item) => item.name)
+      )
+      const values = [id, rating].concat(extra_fields.map((item) => item.value))
 
-  logger.info(`attempt to update rating ${value}`)
-let { data, error } = await supabase
-  .from('Ratings')
-  .update(value)
-  .eq('id', rating_id)
-  .select()
-          
-  if (error !== null) {
-    logger.error(error)
-    return c.json(
-      {
-        message: 'Internal Error',
-      },
-      500
-    )
-  }
-  return c.json({ id: data[0].id },200)
+      let text = `INSERT INTO ratings (${columns.join(', ')})
+      VALUES(${columns.map((item, index) => `$${index + 1}`).join(', ')})
+      ON CONFLICT(spellchecked_id) 
+      DO UPDATE SET
+      rating = EXCLUDED.rating
+        `
+      text =
+        text +
+        (user_correction ? ',user_correction = EXCLUDED.user_correction' : '')
+      text = text + (user_notes ? ', user_notes = EXCLUDED.user_notes' : '')
 
+      text = text + `RETURNING spellchecked_id;`
+      logger.debug(text)
+      res = await client.query(text, values)
+      const retour_id = res.rows[0].spellchecked_id
+      client.end()
+
+      logger.debug(retour_id)
+      return c.json({ id: retour_id }, 200)
+    })
+    .catch((_error) => {
+      logger.error('postRating Exception', _error)
+      return c.json({ status: 'error', error: [_error] }, 500)
+    })
 }
 
 export default { postSpellCheck, postRating /*, getSpellChecks */ }
