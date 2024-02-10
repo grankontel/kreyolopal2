@@ -11,16 +11,33 @@ import postgrestRestProvider,
     defaultPrimaryKeys,
     defaultSchema
 } from '@raphiniert/ra-data-postgrest';
+import adminAuthProvider from "@/lib/adminAuthProvider";
+
+const httpClient = (url, options = {}) => {
+    const data = localStorage.getItem('auth')
+    if (data !== null) {
+        const auth = JSON.parse(data)
+        if (auth?.token) {
+            options.user = {
+                authenticated: true,
+                token: `Bearer ${auth.token}`,
+            }
+
+        }
+    }
+
+    return fetchUtils.fetchJson(url, options);
+};
 
 const config = {
     apiUrl: '/postgrest',
-    httpClient: fetchUtils.fetchJson,
+    httpClient: httpClient, // fetchUtils.fetchJson,
     defaultListOp: 'eq',
     primaryKeys: defaultPrimaryKeys,
     schema: defaultSchema
 }
 const AdminApp = () => (
-    <Admin dataProvider={postgrestRestProvider(config)}>
+    <Admin dataProvider={postgrestRestProvider(config)} authProvider={adminAuthProvider}>
         <Resource
             name="auth_user"
             list={Auth_userList}

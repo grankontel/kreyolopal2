@@ -1,6 +1,7 @@
 import { generateId } from 'lucia'
 import { Argon2id } from 'oslo/password'
 import { setCookie } from 'hono/cookie'
+import { sign as jwt_sign } from 'jsonwebtoken'
 import { pgPool } from '#lib/db'
 import { lucia, createCookie } from '#lib/auth'
 import { createHttpException } from '#utils/createHttpException'
@@ -21,7 +22,7 @@ const login = async function (c: Context) {
   const { username, password } = body
 
   const text =
-    'SELECT id, username, password FROM auth_user WHERE username = $1'
+    'SELECT id, username, password, is_admin FROM auth_user WHERE username = $1'
   const values = [username]
 
   const res = await pgPool.query(text, values)
@@ -48,7 +49,16 @@ const login = async function (c: Context) {
       httpOnly: false,
     })
     c.status(200)
-    return c.json({})
+    let response = {}
+    if (existingUser.is_admin) {
+      response = {
+        token: jwt_sign(
+          { role: 'postgrest', username: existingUser.username },
+          config.security.adminSecret
+        ),
+      }
+    }
+    return c.json(response)
   })
 }
 

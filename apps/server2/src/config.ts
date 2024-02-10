@@ -25,10 +25,6 @@ const config = {
     username: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
   },
-  supabase: {
-    url: process.env.SUPABASE_URL || '',
-    key: process.env.SUPABASE_KEY || '',
-  },
   mongodb: {
     // uri: process.env.MONGODB_URI,
     host: process.env.MONGODB_HOST,
@@ -54,6 +50,7 @@ const config = {
   security: {
     salt: process.env.API_SALT,
     token: process.env.TOKEN_SALT,
+    adminSecret: process.env.PGRST_JWT_SECRET,
     memoryCost: Number(process.env.ARGON_MEMORYCOST || 24),
     hashLength: Number(process.env.ARGON_LENGTH || 24),
     iterations: Number(process.env.ARGON_ITERATIONS || 2),
