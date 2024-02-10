@@ -2,7 +2,7 @@ import { StandardPage, useAuth } from '@kreyolopal/web-ui'
 import DicoHead from '@/components/DicoHead'
 import { useEffect, useState } from 'react'
 import { Button, Modal } from 'react-bulma-components'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import classNames from 'classnames'
 
 const dico_url = process.env.NEXT_PUBLIC_DICO_URL || `http://localhost:${process.env.PORT || 3000}`

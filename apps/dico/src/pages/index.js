@@ -1,5 +1,5 @@
 import {useAuth} from '@kreyolopal/web-ui'
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Standard from '@/layouts/Standard'
 
 

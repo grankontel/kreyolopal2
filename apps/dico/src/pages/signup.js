@@ -1,7 +1,7 @@
 import { validateRequest } from "@/lib/auth";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Box, Button, Heading, Section } from "react-bulma-components";
 import { FormField } from "@/components/FormField";
 

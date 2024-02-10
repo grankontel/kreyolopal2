@@ -1,7 +1,7 @@
 import { parseCookie } from "@/lib/auth";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Section } from "react-bulma-components";
 
 export async function getServerSideProps(context) {

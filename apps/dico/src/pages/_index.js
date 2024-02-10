@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import FeatherIcon from '@/components/FeatherIcon'
 import { Button, Container, Form, Heading, Icon } from 'react-bulma-components'
 import { HeroSearchBox } from '@kreyolopal/web-ui'
