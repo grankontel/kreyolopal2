@@ -26,11 +26,12 @@ export const AuthProvider = ({ cookieName, children }) => {
 		if (expires < now) {
 			console.log('session expired')
 			removeCookie(cookieName)
+			setSession(null)
 		}
 		setSession(x)
 	}, [])
 	return (
-		<AuthContext.Provider value={session}>
+		<AuthContext.Provider value={{session, setSession}}>
 			{children}
 		</AuthContext.Provider>
 	)

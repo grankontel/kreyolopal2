@@ -13,6 +13,5 @@ export function getUser(useCookies) {
 	'use client';
 
 	const data = document.cookie
-	console.log(`cookies: ${data}`)
 	return parseCookie(cookies)?.user_id
 }

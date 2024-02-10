@@ -21,7 +21,7 @@ import Standard from '@/layouts/Standard'
 } */
 
 export default function Page(/* { user } */) {
-	const user = useAuth()
+	const user = useAuth()?.session
 	const router = useRouter();
 
 	async function onSubmit(e) {

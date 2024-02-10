@@ -4,6 +4,8 @@ import { Container, Content, Form, Heading, Section, Columns } from 'react-bulma
 import { HeroSearchBox } from '@kreyolopal/web-ui'
 import EntrySidebar from '@/components/EntrySidebar'
 import { logger } from "@/logger"; // our logger import
+import { parseCookie } from '@/lib/auth'
+import Standard from '@/layouts/Standard'
 
 export const revalidate = 3600;
 function onlyUnique(value, index, self) {
@@ -59,15 +61,25 @@ const DicoPage = ({ kreyol, error, is_bookmarked, entry, bookmark }) => {
   )
 }
 
+DicoPage.getLayout = function getLayout(page) {
+  return (
+    <Standard>
+      {page}
+    </Standard>
+  )
+}
+
+
 export const getServerSideProps = async (ctx) => {
+  const auth = parseCookie(ctx.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME])
   const allowedKreyol = ['gp']
 
   const kreyol = ctx.params?.kreyol.toLowerCase()
   const entry = ctx.params?.entry.toLowerCase()
   const { res, req } = ctx
-  const { userId, getToken } = getAuth(req);
-  logger.debug(`userId: ${userId}`)
-  const cacheMode = !userId ? 'public' : 'private'
+  const { user_id, session_id } = auth || {user_id: null, session_id: null} ;
+  logger.debug(`userId: ${user_id}`)
+  const cacheMode = !user_id ? 'public' : 'private'
   res.setHeader(
     'Cache-Control',
     `${cacheMode}, maxage=3600, stale-while-revalidate=59`
@@ -119,9 +131,8 @@ export const getServerSideProps = async (ctx) => {
   }
 
 
-  if (userId) {
-    const token = await getToken();
-
+  if (user_id) {
+    const token = session_id
     const result2 = await fetch(
       `${process.env.API_SERVER}/api/me/dictionary/${entry}`,
       {
