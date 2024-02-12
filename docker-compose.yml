@@ -4,14 +4,17 @@ version: '3.1'
 services:
 
   db:
-    image: postgres:14.2-alpine
+    image: postgres:16.1-alpine
     container_name: "my_postgres"
     environment:
+      DB_SCHEMA: ${DB_SCHEMA}
+      DB_ANON_ROLE: ${DB_ANON_ROLE}
+      DB_API_ROLE: ${DB_API_ROLE}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
     restart: always
     volumes:
       - ./data/db:/var/lib/postgresql/data
-      - "./initdb:/docker-entrypoint-initdb.d"
+      - "./initdb:/docker-entrypoint-initdb.d:ro"
     ports:
       - "5432:5432"
       
