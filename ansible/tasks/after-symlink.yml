@@ -33,6 +33,7 @@
     - "create database {{ db_name }};"
     - "create user {{ db_user }} with encrypted password '{{ db_password }}';"
     -  "grant all privileges on database {{ db_name }} to {{ db_user }};"
+    -  "grant all on schema public to {{ db_user }};"
   no_log: true
   when: not dbresult.is_available
 
