@@ -1,0 +1,21 @@
+{
+  "name": "@kreyolopal/mails",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/main.js",
+  "scripts": {
+    "build": "rm -rf dist && node esbuild.js && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thierry Malo",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "esbuild": "^0.20.0",
+    "esbuild-node-externals": "^1.13.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3"
+  }
+}
