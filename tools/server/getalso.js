@@ -4,7 +4,6 @@ const { EOL } = require('os')
 const { MongoClient } = require('mongodb')
 const config = require('./mongoconfig')
 
-
 const outputFile = path.join(__dirname, `../../sources/converted/missing.txt`)
 
 function onlyUnique(value, index, self) {
@@ -36,10 +35,10 @@ const projection = {
   'definitions.gp.confer': 1,
 }
 
-const client = new MongoClient(
-  config.mongodb.uri,
-  { useNewUrlParser: true, useUnifiedTopology: true }
-)
+const client = new MongoClient(config.mongodb.uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
 
 const missing = []
 async function main() {
@@ -72,7 +71,7 @@ async function main() {
   await cursA
     .toArray()
     .then((isFound) => {
-        console.log(isFound)
+      console.log(isFound)
       if (isFound === null || isFound.length === 0) {
         console.log(`obò seems missing`)
         // missing.push(item)

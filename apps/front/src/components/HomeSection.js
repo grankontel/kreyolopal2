@@ -55,7 +55,6 @@ export const HomeSection = ({
   orientation,
   children,
 }) => {
-
   return (
     <Section>
       <Heading renderAs="h2" size={3}>

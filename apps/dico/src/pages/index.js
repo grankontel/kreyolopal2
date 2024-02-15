@@ -34,9 +34,5 @@ export default function Home() {
 }
 
 Home.getLayout = function getLayout(page) {
-  return (
-    <Standard>
-      {page}
-    </Standard>
-  )
+  return <Standard>{page}</Standard>
 }

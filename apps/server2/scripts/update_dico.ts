@@ -1,4 +1,4 @@
-// npx babel-node scripts/update_dico.js 
+// npx babel-node scripts/update_dico.js
 
 /* eslint-disable no-console */
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'

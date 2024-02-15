@@ -30,7 +30,8 @@ while ((line = liner.next())) {
   let syns = values[1]
     .split(',')
     .map((x) => x.replaceAll(' ', ' ').trim())
-    .filter(onlyUnique).sort()
+    .filter(onlyUnique)
+    .sort()
     .join(',')
   entries.push({
     entry: ent,
@@ -48,7 +49,8 @@ fs.promises
     entries.forEach(async (item) => {
       await handle.write(`${item.entry};${item.synonyms};\n`)
     })
-    return handle;
-  }).then(h => h.close())
+    return handle
+  })
+  .then((h) => h.close())
 
-  console.log('destination file written')
+console.log('destination file written')

@@ -146,7 +146,7 @@ const actualCheck = (message: DicoRequest, dicoSource: DicoFileReader) => {
   })
 }
 const spellchecker = {
-  check: (message: DicoRequest):bluebird<MessageResponse> => {
+  check: (message: DicoRequest): bluebird<MessageResponse> => {
     return new bluebird.Promise((resolve, reject) => {
       if (config.dico.useLocal) {
         import('./lib.fs-dicofile').then((dicoSource) => {

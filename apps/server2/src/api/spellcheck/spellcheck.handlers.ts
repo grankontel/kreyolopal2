@@ -20,7 +20,7 @@ const postSpellCheck = async function (c: Context) {
     )
   }
 
-  let lMessage: DicoRequest & {[k: string]: any}  = {
+  let lMessage: DicoRequest & { [k: string]: any } = {
     user: user.id, // req.user.id,
     tool: c.req.header('User-Agent'),
     service: 'spellcheck',

@@ -116,7 +116,7 @@ function cleanSubNature(nat) {
 while ((line = liner.next())) {
   // console.log('Line ' + lineNumber)
   const values = line.toString('utf8').split(';')
-  let ent = values[ENTRY_FIELD].replaceAll(' ',' ').trim()
+  let ent = values[ENTRY_FIELD].replaceAll(' ', ' ').trim()
   if (ent === '' || values[VARIATIONS_FIELD] === 'variations') {
     lineNumber++
     continue
@@ -132,7 +132,9 @@ while ((line = liner.next())) {
     }
     entry = ent
     curitem.entry = entry
-    curitem.variations = values[VARIATIONS_FIELD].split('/').map((x) => x.trim())
+    curitem.variations = values[VARIATIONS_FIELD].split('/').map((x) =>
+      x.trim()
+    )
     curitem.definitions = {}
     curitem.definitions.gp = []
   }
@@ -145,15 +147,17 @@ while ((line = liner.next())) {
     } else {
       let cleanats = values[NATURE_FIELD].trim().replace(' de ', ' ')
       let nats = cleanats.split(' ')
-  
+
       let nat = cleanNature(nats[0])
       definition.nature = [nat]
       if (!natures.includes(nat)) {
-        console.log(`\t entry : ${entry}, line : ${lineNumber} ; ${nat} inconnu`)
+        console.log(
+          `\t entry : ${entry}, line : ${lineNumber} ; ${nat} inconnu`
+        )
         errors++
       } else if (nats[1]?.length > 0) {
         let subnature = cleanSubNature(nats[1])
-  
+
         if (subnatures.includes(subnature)) {
           definition.subnature = []
           definition.subnature.push([nat, subnature].join(' '))
@@ -165,7 +169,6 @@ while ((line = liner.next())) {
         }
       }
     }
-  
   } catch (e) {
     console.error(`error at line ${lineNumber}`)
     console.log(e)
@@ -175,8 +178,7 @@ while ((line = liner.next())) {
   definition.meaning = {}
   definition.meaning.gp = ''
   definition.meaning.fr = values[MEANING_FR_FIELD]?.trim().replaceAll(' ', '')
-  definition.usage = values[USAGE_FIELD]
-    .split('/')
+  definition.usage = values[USAGE_FIELD].split('/')
     .map((x) => x.trim().replaceAll(' ', ''))
     .filter((y) => y.length > 0)
   definition.synonyms = values[SYNONYMS_FIELD].split(',')
@@ -185,7 +187,9 @@ while ((line = liner.next())) {
   definition.confer = values[CONFER_FIELD]?.split('/')
     .map((x) => x.trim())
     .filter((y) => y.length > 0)
-    .filter((s) => !curitem.variations.includes(s) && ! definition.synonyms.includes(s) )
+    .filter(
+      (s) => !curitem.variations.includes(s) && !definition.synonyms.includes(s)
+    )
   definition.quotes = []
 
   curitem.definitions.gp.push(definition)

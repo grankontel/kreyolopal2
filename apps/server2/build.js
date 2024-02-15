@@ -31,10 +31,7 @@ build({
   ],
 })
   .then(() => {
-    fs.writeFileSync(
-      './build/package.json',
-      JSON.stringify(pdata, null, '  ')
-    )
+    fs.writeFileSync('./build/package.json', JSON.stringify(pdata, null, '  '))
     console.log('⚡ Done')
   })
   .catch(() => process.exit(1))

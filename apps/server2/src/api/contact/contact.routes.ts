@@ -13,7 +13,7 @@ const postContactSchema = z
   })
   .required()
 
-	const contactRoutes = createRouter()
+const contactRoutes = createRouter()
 // login
 contactRoutes.post(
   '/contact',

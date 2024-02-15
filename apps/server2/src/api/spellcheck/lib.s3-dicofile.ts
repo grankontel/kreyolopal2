@@ -74,7 +74,10 @@ async function readDicoFiles(kreyol: KreyolLang): Promise<DicoFile> {
   return { affix: affix, dictionary: dictionary }
  */
   const values = await Promise.all([affixP, dicP])
-  const dicofiles = { affix: values[0] as string, dictionary: values[1] as string }
+  const dicofiles = {
+    affix: values[0] as string,
+    dictionary: values[1] as string,
+  }
 
   return dicofiles
 }

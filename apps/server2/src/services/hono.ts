@@ -23,9 +23,15 @@ interface RequestResult {
   error?: any
 }
 
-export const sendBadRequest = (result: RequestResult, c: Context): Response & TypedResponse<{
-  message: string;
-}> | undefined => {
+export const sendBadRequest = (
+  result: RequestResult,
+  c: Context
+):
+  | (Response &
+      TypedResponse<{
+        message: string
+      }>)
+  | undefined => {
   if (!result.success) {
     const logger = c.get('logger')
     logger.error(result.error)
@@ -36,5 +42,4 @@ export const sendBadRequest = (result: RequestResult, c: Context): Response & Ty
       400
     )
   }
-
 }

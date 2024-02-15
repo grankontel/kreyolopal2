@@ -75,8 +75,9 @@ fs.promises
     mydico.forEach(async (item) => {
       await handle.write(`${item.entry};${item.synonyms};\n`)
     })
-    return handle;
-  }).then(h => h.close())
+    return handle
+  })
+  .then((h) => h.close())
 
 // write JSON string to a file
 /* 

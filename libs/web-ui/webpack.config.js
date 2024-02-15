@@ -1,6 +1,6 @@
 const nodeExternals = require('webpack-node-externals')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
-const Dotenv = require('dotenv-webpack');
+const Dotenv = require('dotenv-webpack')
 
 module.exports = {
   entry: '/src/index.js',
@@ -44,12 +44,11 @@ module.exports = {
   externals: [
     nodeExternals(),
     {
-      'classnames': 'classnames',
-      'react': 'react', // Case matters here
+      classnames: 'classnames',
+      react: 'react', // Case matters here
       'react-dom': 'react-dom', // Case matters here
       'react-bulma-components': 'react-bulma-components',
-      'next': 'next',
-
+      next: 'next',
     },
   ],
 }

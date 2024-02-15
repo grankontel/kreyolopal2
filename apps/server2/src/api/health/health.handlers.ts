@@ -62,14 +62,12 @@ const healthcheck = async function (c: Context) {
   logger.info('checking postgresql')
   try {
     // Use the connection pool to acquire a connection
-    await pgPool.connect()
-      .then(client => {
-        database.status = 'pass'
-        logger.debug('postgresql is responding')
+    await pgPool.connect().then((client) => {
+      database.status = 'pass'
+      logger.debug('postgresql is responding')
 
-        client.release()
-
-      })
+      client.release()
+    })
   } catch (err) {
     database.status = 'fail'
     response.status = 'fail'
