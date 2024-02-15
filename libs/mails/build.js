@@ -30,19 +30,22 @@ function createComponent(srcFile) {
 	import mustache from 'mustache';
 	import mjml from 'mjml'
 	import { htmlToText } from 'html-to-text'
+	import type { mailTemplateFunction } from './types';
 	
 	const template = \`
 	${content}
 	\`
 	
-	export const ${componentName} = (templateData: object) => {
+	export const ${componentName}: mailTemplateFunction = (templateData: any) => {
 		const renderedMjml = mustache.render(template, templateData)
 	
 		const { html } = mjml(renderedMjml)
 		const text = htmlToText(html, { wordwrap: 130 })
 	
-		return text;
+		return { html, text };
 	}
+
+	${componentName}.sourceName = '${srcFile}'
 	`
 
 	fs.writeFileSync(dstFilePath, dstContent)
@@ -68,13 +71,31 @@ function build(isInitial) {
 				return createComponent(file)
 			});
 
-		const indexPath = path.join(componentsPath, '/', 'index.ts')
+
+		// create types.ts
+		const typesPath = path.join(componentsPath, '/', 'types.ts')
+		fs.writeFileSync(typesPath, `
+		export interface mailResult {
+			html: string;
+			text: string
+		}
+		
+		export type mailTemplateFunction = {
+			(templateData: any): {
+				html: string;
+				text: string;
+			};
+			sourceName?: string;
+		}
+`)
 
 		// create index.ts
+		const indexPath = path.join(componentsPath, '/', 'index.ts')
 		const indexContent = components.map(item => {
 			return `export { ${item.component} } from "./${item.file}";`
-		}).join('\r\n')
-		fs.writeFileSync(indexPath, indexContent)
+		})
+		indexContent.push('export type {mailTemplateFunction, mailResult} from "./types.ts";')
+		fs.writeFileSync(indexPath, indexContent.join('\r\n'))
 
 	});
 }

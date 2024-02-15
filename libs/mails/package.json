@@ -9,6 +9,7 @@
     "dev:mail": "node ./build.js --watch",
     "dev:bundle": "tsup --watch --config tsup.config.ts",
     "build": "node ./build.js && tsup --config tsup.config.ts",
+    "clean": "rm -rf build && rm -rf dist",
     "dev": "concurrently 'npm:dev:*'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
