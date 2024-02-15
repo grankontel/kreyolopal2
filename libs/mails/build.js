@@ -1,49 +1,88 @@
 //requiring path and fs modules
-const path = require('path');
-const fs = require('fs');
+const path = require('path')
+const fs = require('fs')
+const chokidar = require('chokidar');
+
 //joining path of directory 
 const directoryPath = path.join(__dirname, './src');
 const componentsPath = path.join(__dirname, './build');
 
-/* fs.mkdir(componentsPath, function (err, files) {
-	//handling error
-	if (err) {
-		if (err) throw err;
-	}
-})
- */
+if (!fs.existsSync(componentsPath)) {
+	fs.mkdir(componentsPath, function (err, files) {
+		//handling error
+		if (err) {
+			if (err) throw err;
+		}
+	})
+}
+
 function createComponent(srcFile) {
 	const sourceFilePath = path.join(directoryPath, '/', srcFile)
-	const radix = srcFile.substr(0, srcFile.lastIndexOf("."))
-	const componentName = radix[0].toUpperCase() + radix.slice(1);
-	const dstFileName = componentName + ".tsx";
+	const radix = srcFile.substring(0, srcFile.lastIndexOf("."))
+	const componentName = 'get' + radix[0]?.toUpperCase() + radix.slice(1);
+	const dstFileName = radix + ".ts";
 	const dstFilePath = path.join(componentsPath, '/', dstFileName)
 
 	const content = fs.readFileSync(sourceFilePath,
 		{ encoding: 'utf8', flag: 'r' });
 
-	const dstContent = `export function ${componentName}() {
-		return (${content})
+	const dstContent = `
+	import mustache from 'mustache';
+	import mjml from 'mjml'
+	import { htmlToText } from 'html-to-text'
+	
+	const template = \`
+	${content}
+	\`
+	
+	export const ${componentName} = (templateData: object) => {
+		const renderedMjml = mustache.render(template, templateData)
+	
+		const { html } = mjml(renderedMjml)
+		const text = htmlToText(html, { wordwrap: 130 })
+	
+		return text;
 	}
 	`
 
 	fs.writeFileSync(dstFilePath, dstContent)
+	return ({ component: componentName, file: radix })
 }
 
-//passsing directoryPath and callback function
-fs.readdir(directoryPath, function (err, files) {
-	//handling error
-	if (err) {
-		return console.log('Unable to scan directory: ' + err);
-	}
-	//listing all files using forEach
-	files
-		.filter(file => {
-			return path.extname(file).toLocaleLowerCase() === '.mjml'
-		})
-		.forEach(function (file) {
-			// Do whatever you want to do with the file
-			console.log(file);
-			createComponent(file)
-		});
-});
+function build(isInitial) {
+	//passsing directoryPath and callback function
+	fs.readdir(directoryPath, function (err, files) {
+		//handling error
+		if (err) {
+			return console.log('Unable to scan directory: ' + err);
+		}
+
+		//listing all files using forEach
+		const components = files
+			.filter((file) => {
+				return path.extname(file).toLocaleLowerCase() === '.mjml'
+			})
+			.map(function (file) {
+				// Do whatever you want to do with the file
+				if (isInitial) console.log(file);
+				return createComponent(file)
+			});
+
+		const indexPath = path.join(componentsPath, '/', 'index.ts')
+
+		// create index.ts
+		const indexContent = components.map(item => {
+			return `export { ${item.component} } from "./${item.file}";`
+		}).join('\r\n')
+		fs.writeFileSync(indexPath, indexContent)
+
+	});
+}
+
+build(true)
+if (process.argv.indexOf('--watch') > 0) {
+	chokidar.watch('./src', { ignoreInitial: true }).on('all', (event, path) => {
+		console.log(event, path);
+		build(false)
+	});
+}

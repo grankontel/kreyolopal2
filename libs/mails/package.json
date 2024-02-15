@@ -1,21 +1,30 @@
 {
   "name": "@kreyolopal/mails",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
-  "main": "./dist/main.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist && node esbuild.js && tsc",
+    "dev:mail": "node ./build.js --watch",
+    "dev:bundle": "tsup --watch --config tsup.config.ts",
+    "build": "node ./build.js && tsup --config tsup.config.ts",
+    "dev": "concurrently 'npm:dev:*'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Thierry Malo",
   "license": "ISC",
   "devDependencies": {
+    "@types/html-to-text": "^9.0.4",
+    "@types/mjml": "^4.7.4",
+    "@types/mustache": "^4.2.5",
     "@types/node": "^20.11.17",
-    "esbuild": "^0.20.0",
-    "esbuild-node-externals": "^1.13.0",
-    "react": "^18",
-    "react-dom": "^18",
-    "tsx": "^4.7.1",
+    "chokidar": "^3.6.0",
+    "concurrently": "^8.2.2",
+    "html-to-text": "^9.0.5",
+    "mjml": "^4.15.3",
+    "mustache": "^4.2.0",
+    "tsup": "^8.0.2",
     "typescript": "^5.3.3"
   }
 }
