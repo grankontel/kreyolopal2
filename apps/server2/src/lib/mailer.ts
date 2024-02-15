@@ -1,7 +1,7 @@
-import fetch from 'node-fetch';
 import FormData from 'form-data';
 import config from '#config';
 import { winston_logger as logger } from '#services/winston_logger'
+const fetch = require('node-fetch')
 
 export interface SendMailResult {
 	status: number;
@@ -33,10 +33,10 @@ export const mailer = {
 			if (resp.status <= 201) {
 				// Success
 				const output = await resp.json();
-				logger.info("mailer:uccess", output);
+				logger.info(`"mailer success", ${output}`);
 				return { status: 201, data: output }
 			} else {
-				logger.error(resp.status, resp.statusText);
+				logger.error(`mailer error, ${resp.status}, ${resp.statusText}`);
 				// pass the Mailgun error to the REST API client
 				return { status: resp.status, error: resp.statusText }
 			}

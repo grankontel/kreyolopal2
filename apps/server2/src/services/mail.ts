@@ -1,10 +1,12 @@
-import type { mailTemplateFunction } from '@kreyolopal/mails'
+import bluebird from 'bluebird'
 import { mailer, SendMailResult } from '#lib/mailer';
 import config from '#config';
 import { winston_logger as logger } from '#services/winston_logger'
 
-function sendMail(message: any, sourceName: string) {
-	return new Promise(async (resolve, reject) => {
+import type { mailTemplateFunction } from '@kreyolopal/mails'
+
+function send(message: any, sourceName: string | undefined) {
+	return new bluebird.Promise(async (resolve, reject) => {
 		await mailer.sendMail(message)
 			.then((result: SendMailResult) => {
 				if (result.error) {
@@ -38,12 +40,12 @@ export const sendFromEmail = (
 		html: email.html,
 	}
 
-	return sendMail(message, templateFunction.sourceName)
+	return send(message, templateFunction.sourceName)
 
 }
 
 export const sendEmail = (templateFunction: mailTemplateFunction,
-	templateData: any, recipient: string, subject: string) => {
+	templateData: any, subject: string, recipient: string) => {
 	const email = templateFunction(templateData)
 
 	const message = {
@@ -54,6 +56,6 @@ export const sendEmail = (templateFunction: mailTemplateFunction,
 		html: email.html,
 	}
 
-	return sendMail(message, templateFunction.sourceName)
+	return send(message, templateFunction.sourceName)
 }
 

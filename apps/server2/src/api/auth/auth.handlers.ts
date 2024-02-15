@@ -9,7 +9,7 @@ import config from '#config'
 
 import type { Context } from 'hono'
 import type { DatabaseUser } from '#lib/db'
-import type { Client } from 'pg'
+import type { Client, PoolClient } from 'pg'
 
 const argon2 = new Argon2id({
   memorySize: config.security.memoryCost,
@@ -19,6 +19,8 @@ const argon2 = new Argon2id({
 
 const login = async function (c: Context) {
   const logger = c.get('logger')
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const body = c.req.valid('json')
   const { username, password } = body
 
@@ -80,6 +82,8 @@ const login = async function (c: Context) {
 const signup = async function (c: Context) {
   const logger = c.get('logger')
   logger.info('signup')
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const body = c.req.valid('json')
   const { username, password, firstname, lastname, email } = body
 
@@ -90,12 +94,12 @@ const signup = async function (c: Context) {
     'INSERT INTO auth_user (id, username, password, firstname, lastname, email) VALUES($1, $2, $3, $4, $5, $6) RETURNING *'
   const values = [userId, username, hashedPassword, firstname, lastname, email]
 
-  return pgPool.connect().then(async (client: Client) => {
+  return pgPool.connect().then(async (client: PoolClient) => {
     return client
       .query(text, values)
       .then(
         (dbresult) => {
-          const createdUser = dbresult.rows[0] as DatabaseUser | undefined
+          const createdUser = dbresult.rows[0] as DatabaseUser
 
           return lucia.createSession(createdUser.id, {}).then((session) => {
             const theCookie = createCookie(session.id, createdUser)

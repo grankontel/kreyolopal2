@@ -17,18 +17,20 @@ function toClient(obj) {
   return obj
 }
 
+//
 const sanitizeEntry = (src) => {
   src.entry = src.entry.trim()
   src.variations = src.variations.map((item) => item.trim().toLowerCase())
   if (!src.variations.includes(src.entry))
     src.variations = src.variations.unshift(src.entry)
 
-  for (const [key, value] of Object.entries(src.definitions)) {
+  Object.entries(src.definitions).forEach((item) => {
+    const [, value] = item as [string, { nature: string[], synonyms: string[] }[]]
     value.forEach((el) => {
       el.nature = el.nature.map((item) => item.trim().toLowerCase())
       el.synonyms = el.synonyms.map((item) => item.trim().toLowerCase())
     })
-  }
+  })
   return src
 }
 
@@ -39,7 +41,7 @@ const getWords = async function (c: Context) {
 
   let filterObj = {}
   let nbDocs = 0
-  const [offset, limit] = [0, 10]
+  let [offset, limit] = [0, 10]
   const coll = client.db(config.mongodb.db).collection('words')
 
   if (filter) {
@@ -58,7 +60,8 @@ const getWords = async function (c: Context) {
   let findPromise = coll.find(filterObj)
   if (range) {
     try {
-      logger.info(`range  = ${range}`)[(offset, limit)] = JSON.parse(range)
+      logger.info(`range  = ${range}`);
+      [offset, limit] = JSON.parse(range)
     } catch (e) {
       logger.error(`Error on parsing range query elements : ${e}`)
     }
@@ -89,7 +92,7 @@ const getWords = async function (c: Context) {
           return c.json({ error: 'Not Found.' }, 404)
 
         c.res.headers.append('Content-Range', `${offset}-${endRange}/${nbDocs}`)
-        c.res.headers.append('X-Total-Count', nbDocs)
+        c.res.headers.append('X-Total-Count', nbDocs.toString())
 
         c.status(200)
         const data = results.map((x) => toClient(x))

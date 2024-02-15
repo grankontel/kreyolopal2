@@ -1,9 +1,10 @@
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
 import config from '../../config'
+import { DicoFile, KreyolLang } from './spellcheck.types'
 
 const streamToString = (stream): Promise<string> =>
   new Promise((resolve, reject) => {
-    const chunks = []
+    const chunks: Uint8Array[] = []
     stream.on('data', (chunk) => chunks.push(chunk))
     stream.on('error', reject)
     stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')))
@@ -42,7 +43,7 @@ const getObjectContent = (client: S3Client, command: GetObjectCommand) =>
  * @param {string} kreyol Wich kreyol
  */
 // eslint-disable-next-line no-unused-vars
-async function readDicoFiles(kreyol: KreyolLang) {
+async function readDicoFiles(kreyol: KreyolLang): Promise<DicoFile> {
   const s3Options = {
     credentials: {
       accessKeyId: config.aws.keyId,
@@ -50,6 +51,8 @@ async function readDicoFiles(kreyol: KreyolLang) {
     },
     region: config.aws.region,
   }
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const client = new S3Client(s3Options)
   const affixParams = {
     Bucket: config.aws.bucketName,
@@ -71,7 +74,7 @@ async function readDicoFiles(kreyol: KreyolLang) {
   return { affix: affix, dictionary: dictionary }
  */
   const values = await Promise.all([affixP, dicP])
-  const dicofiles = { affix: values[0], dictionary: values[1] }
+  const dicofiles = { affix: values[0] as string, dictionary: values[1] as string }
 
   return dicofiles
 }

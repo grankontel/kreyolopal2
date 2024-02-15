@@ -2,7 +2,6 @@ import { ValidateFunction } from 'ajv'
 import winston from 'winston'
 import { Context, HonoRequest } from 'hono'
 import { createHttpException } from './createHttpException'
-import { Response } from 'node-fetch'
 import { winston_logger as logger } from '#services/winston_logger'
 
 export type paramChecker = (r: HonoRequest, logger: winston.Logger) => boolean
