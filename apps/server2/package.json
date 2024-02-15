@@ -21,8 +21,8 @@
     "#config": "./src/config.ts"
   },
   "peerDependencies": {
-		"@node-rs/argon2": "^1",
-		"@node-rs/bcrypt": "^1",
+    "@node-rs/argon2": "^1",
+    "@node-rs/bcrypt": "^1",
     "uglify-js": "^3"
   },
   "dependencies": {
@@ -42,6 +42,7 @@
     "oslo": "^1.1.0",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
+    "sha3": "^2.1.4",
     "typo-js": "^1.2.3",
     "uglify-js": "^3",
     "validator": "^13.9.0",
