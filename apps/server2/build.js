@@ -7,6 +7,8 @@ pdata.main = 'server.js'
 pdata.scripts = {
   start: "NODE_ENV='production' node server.js",
 }
+pdata.dependencies = pdata.peerDependencies
+delete pdata.peerDependencies
 delete pdata.devDependencies
 delete pdata.imports
 
@@ -19,8 +21,8 @@ build({
   minify: process.env.NODE_ENV === 'production',
   platform: 'node',
   loader: { '.ts': 'ts' },
-  packages: 'external',
-  // external: ['@node-rs/*'],
+  // packages: 'external',
+  external: ['@node-rs', 'uglify-js'],
   sourcemap: nodenv === 'development',
   plugins: [
     replace({
