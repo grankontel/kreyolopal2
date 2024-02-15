@@ -4,10 +4,11 @@ import dicoRoutes from './api/dictionary'
 import wordsRoutes from './api/words'
 import spellRoutes from './api/spellcheck'
 import myDicoRoutes from './api/me/dictionary'
+import contactRoutes from './api/contact/contact.routes'
 import healthRoutes from './api/health/health.routes'
 
-import { AppRouter } from './services/hono'
-import { winston_logger as logger } from './services/winston_logger'
+import { AppRouter } from '#services/hono'
+import { winston_logger as logger } from '#services/winston_logger'
 
 function setRoutes(app: AppRouter) {
   // wire up to the routes
@@ -21,6 +22,7 @@ function setRoutes(app: AppRouter) {
   app.route('/api/spellcheck', spellRoutes)
 
   app.route('/api/me/dictionary', myDicoRoutes)
+  app.route('/api/contact', contactRoutes)
 
   logger.info('All routes added')
 

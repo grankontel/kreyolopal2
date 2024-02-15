@@ -1,5 +1,5 @@
 import type { HonoRequest, MiddlewareHandler } from 'hono'
-import { winston_logger } from '../services/winston_logger'
+import { winston_logger } from '#services/winston_logger'
 
 const humanize = (times: string[]) => {
   const [delimiter, separator] = [',', '.']
