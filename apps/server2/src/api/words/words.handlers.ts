@@ -25,7 +25,10 @@ const sanitizeEntry = (src) => {
     src.variations = src.variations.unshift(src.entry)
 
   Object.entries(src.definitions).forEach((item) => {
-    const [, value] = item as [string, { nature: string[], synonyms: string[] }[]]
+    const [, value] = item as [
+      string,
+      { nature: string[]; synonyms: string[] }[],
+    ]
     value.forEach((el) => {
       el.nature = el.nature.map((item) => item.trim().toLowerCase())
       el.synonyms = el.synonyms.map((item) => item.trim().toLowerCase())
@@ -60,8 +63,8 @@ const getWords = async function (c: Context) {
   let findPromise = coll.find(filterObj)
   if (range) {
     try {
-      logger.info(`range  = ${range}`);
-      [offset, limit] = JSON.parse(range)
+      logger.info(`range  = ${range}`)
+      ;[offset, limit] = JSON.parse(range)
     } catch (e) {
       logger.error(`Error on parsing range query elements : ${e}`)
     }

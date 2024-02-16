@@ -13,8 +13,8 @@ const postContactSchema = z
   })
   .required()
 
-	const contactRoutes = createRouter()
-// login
+const contactRoutes = createRouter()
+// contact
 contactRoutes.post(
   '/contact',
   zValidator('json', postContactSchema, sendBadRequest),

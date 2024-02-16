@@ -7,7 +7,7 @@ export class WordsRepository {
   private static instance: WordsRepository
   private static logger: winston.Logger
   private static client: MongoClient
-  private constructor() { }
+  private constructor() {}
 
   public static getInstance(c: Context): WordsRepository {
     if (!WordsRepository.instance) {
