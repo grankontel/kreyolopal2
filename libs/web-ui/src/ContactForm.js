@@ -1,7 +1,9 @@
-import { useReducer } from 'react'
-import { Box, Button, Container, Form, Heading, Icon } from 'react-bulma-components'
+import { useReducer, useState } from 'react'
+import { Box, Button, Container, Form, Heading, Icon, Notification } from 'react-bulma-components'
 
 export default function ContactPage() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [notif, setNotif] = useState({ color: 'warning', message: '' })
   const [messageInfo, dispatch] = useReducer(messageReducer, {
     firstname: '',
     lastname: '',
