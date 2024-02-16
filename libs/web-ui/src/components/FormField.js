@@ -2,17 +2,19 @@ import { Form } from 'react-bulma-components'
 import PropTypes from 'prop-types'
 
 export const FormField = (props) => {
-  const { label, value, name, type, autoComplete, setValue } = props
+  const { label, value, name, type, autoComplete, onChange } = props
   return (
     <Form.Field>
-      <Form.Label>{label}</Form.Label>
+      <Form.Label htmlFor={name}>{label}</Form.Label>
       <Form.Control>
         <Form.Input
           name={name}
+          placeholder={label}
           type={type}
           value={value}
+          id={name}
           autoComplete={autoComplete || ''}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={onChange}
           required
         />
       </Form.Control>
@@ -26,7 +28,7 @@ FormField.propTypes = {
   name: PropTypes.string,
   type: PropTypes.oneOf(['text', 'email', 'password']).isRequired,
   autoComplete: PropTypes.string,
-  setValue: PropTypes.func,
+  onChange: PropTypes.func,
   required: PropTypes.bool,
 }
 
@@ -34,7 +36,7 @@ FormField.defaultProps = {
   type: 'text',
   required: false,
   autoComplete: 'on',
-  setValue: (e) => e.preventDefault(),
+  onChange: (e) => e.preventDefault(),
 }
 
 export default FormField
