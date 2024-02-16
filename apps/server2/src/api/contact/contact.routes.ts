@@ -14,7 +14,7 @@ const postContactSchema = z
   .required()
 
 const contactRoutes = createRouter()
-// login
+// contact
 contactRoutes.post(
   '/contact',
   zValidator('json', postContactSchema, sendBadRequest),

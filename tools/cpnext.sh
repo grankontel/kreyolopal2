@@ -30,7 +30,7 @@ echo "The shared directory path is" $SHARED_PATH
 # cd ${BUILD_PATH}/
 # npm install --omit=dev
 
-cp -R ${APP_PATH}/.next/standalone ${BUILD_PATH}/
+cp -R ${APP_PATH}/.next/standalone/apps/${APP} ${BUILD_PATH}/
 cp -R ${SHARED_PATH}/public ${BUILD_PATH}/
 cp -R ${APP_PATH}/.next/static ${BUILD_PATH}/.next/static
 

@@ -14,16 +14,24 @@ mkdir -p ${BUILD_PATH}/data/db
 mkdir -p ${BUILD_PATH}/data/mongodb
 
 ${DIR_PATH}/cpnext.sh dico
+${DIR_PATH}/cpnext.sh admin
 ${DIR_PATH}/cpdist.sh server
+${DIR_PATH}/cpdist.sh server2
 
 cd  ${BUILD_PATH}/dico
+NODE_ENV='production' npm install --omit=dev --package-lock-only
+
+cd  ${BUILD_PATH}/admin
 NODE_ENV='production' npm install --omit=dev --package-lock-only
 
 cd  ${BUILD_PATH}/server
 NODE_ENV='production' npm install --omit=dev --package-lock-only
 
+cd  ${BUILD_PATH}/server2
+NODE_ENV='production' npm install --omit=dev --package-lock-only
+
 cp -R ${FRONT_PATH}/build ${BUILD_PATH}/www/
 
-cp -R ${SRV2_PATH}/build ${BUILD_PATH}/server2/
-cp -R ${SRV2_PATH}/package.json ${BUILD_PATH}/server2/package.json
-node ${DIR_PATH}/remove_all.js ${BUILD_PATH}/server2/package.json
+# cp -R ${SRV2_PATH}/build ${BUILD_PATH}/server2/
+# cp -R ${SRV2_PATH}/package.json ${BUILD_PATH}/server2/package.json
+# node ${DIR_PATH}/remove_all.js ${BUILD_PATH}/server2/package.json

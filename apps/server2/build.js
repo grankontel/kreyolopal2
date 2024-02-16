@@ -16,7 +16,7 @@ const nodenv = process.env.NODE_ENV || 'development'
 
 build({
   entryPoints: ['src/index.ts'],
-  outfile: 'build/server.js',
+  outfile: 'dist/server.js',
   bundle: true,
   minify: process.env.NODE_ENV === 'production',
   platform: 'node',
@@ -31,7 +31,10 @@ build({
   ],
 })
   .then(() => {
-    fs.writeFileSync('./build/package.json', JSON.stringify(pdata, null, '  '))
+    fs.writeFileSync(
+      './dist/package.json',
+      JSON.stringify(pdata, null, '  ')
+    )
     console.log('⚡ Done')
   })
   .catch(() => process.exit(1))
