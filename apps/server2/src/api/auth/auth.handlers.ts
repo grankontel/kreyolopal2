@@ -67,7 +67,8 @@ const signup = async function (c: Context) {
   const userId = generateId(15)
 
   const text =
-    'INSERT INTO auth_user (id, username, password, firstname, lastname, email) VALUES($1, $2, $3, $4, $5, $6) RETURNING *'
+    `INSERT INTO auth_user (id, username, password, firstname, lastname, email) 
+    VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`
   const values = [userId, username, hashedPassword, firstname, lastname, email]
 
   return pgPool.connect().then(async (client: PoolClient) => {
