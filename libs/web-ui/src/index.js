@@ -7,6 +7,8 @@ export { simpleHash } from './components/simpleHash'
 export { StarRating } from './components/StarRating'
 export { AuthProvider, useAuth } from './components/AuthContext'
 
+export {FormField} from './components/FormField'
+
 // flags
 export { FlagGp } from './components/FlagGp'
 
