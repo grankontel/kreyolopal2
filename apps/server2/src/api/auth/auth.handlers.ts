@@ -1,21 +1,14 @@
 import { generateId } from 'lucia'
-import { Argon2id } from 'oslo/password'
 import { setCookie } from 'hono/cookie'
-import { sign as jwt_sign } from 'jsonwebtoken'
 import { pgPool } from '#lib/db'
 import { lucia, createCookie } from '#lib/auth'
 import { createHttpException } from '#utils/createHttpException'
-import config from '#config'
 
 import type { Context } from 'hono'
 import type { DatabaseUser } from '#lib/db'
-import type { Client, PoolClient } from 'pg'
-
-const argon2 = new Argon2id({
-  memorySize: config.security.memoryCost,
-  tagLength: config.security.hashLength,
-  iterations: config.security.iterations,
-})
+import type { PoolClient } from 'pg'
+import { logUserIn } from '#utils/apiHelpers'
+import { argon2 } from '#utils/argon'
 
 const login = async function (c: Context) {
   const logger = c.get('logger')
@@ -53,24 +46,7 @@ const login = async function (c: Context) {
           existingUser.id,
         ])
         .then(() => {
-          return lucia.createSession(existingUser.id, {}).then((session) => {
-            const theCookie = createCookie(session.id, existingUser)
-            setCookie(c, theCookie.name, theCookie.value, {
-              ...theCookie.attributes,
-              httpOnly: false,
-            })
-            c.status(200)
-            let response = {}
-            if (existingUser.is_admin) {
-              response = {
-                token: jwt_sign(
-                  { role: 'postgrest', username: existingUser.username },
-                  config.security.adminSecret
-                ),
-              }
-            }
-            return c.json(response)
-          })
+          return logUserIn(c, existingUser)
         })
     })
     .catch((_error) => {
