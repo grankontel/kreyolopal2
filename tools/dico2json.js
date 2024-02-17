@@ -62,6 +62,7 @@ const subnatures = [
   'postposé',
   'pronominale',
   'subordination',
+  'sériel',
 ]
 
 let line
