@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { Form } from 'react-bulma-components'
 import PropTypes from 'prop-types'
 
@@ -39,4 +41,3 @@ FormField.defaultProps = {
   onChange: (e) => e.preventDefault(),
 }
 
-export default FormField
