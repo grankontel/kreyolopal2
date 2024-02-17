@@ -16,7 +16,7 @@ const postContactSchema = z
 const contactRoutes = createRouter()
 // contact
 contactRoutes.post(
-  '/contact',
+  '/',
   zValidator('json', postContactSchema, sendBadRequest),
   handlers.contact
 )

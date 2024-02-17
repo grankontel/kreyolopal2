@@ -17,7 +17,8 @@
     <mj-section background-color="#fff" padding-bottom="20px" padding-top="20px">
       <mj-column>
         <mj-text>
-          {{message}}
+        <p>De : {{user.firstname}} {{user.lastname}} &lt;{{user.email}}&gt;</p>
+          <p>{{message}}</p>
         </mj-text>
       </mj-column>
     </mj-section>

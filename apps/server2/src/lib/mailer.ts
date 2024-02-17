@@ -1,7 +1,7 @@
 import FormData from 'form-data'
 import config from '#config'
 import { winston_logger as logger } from '#services/winston_logger'
-const fetch = require('node-fetch')
+import fetch from 'node-fetch'
 
 export interface SendMailResult {
   status: number
