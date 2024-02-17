@@ -46,7 +46,7 @@ export class WordsRepository {
       )
 
       return data
-    } catch (e) {
+    } catch (e: any) {
       WordsRepository.logger.error(e.message)
       throw new Error(e.message)
     }

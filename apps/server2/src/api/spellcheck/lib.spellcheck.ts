@@ -1,13 +1,15 @@
 /* eslint-disable no-plusplus, no-continue */
 import NodeCache from 'node-cache'
 import bluebird from 'bluebird'
-import config from '../../config'
-import createSpellchecker from './facto.typo'
+import config from '#config'
+import createSpellchecker, { Spellchecker } from './facto.typo'
 import {
   MessageStatus,
   KreyolLang,
   DicoFile,
   DicoFileReader,
+  DicoRequest,
+  MessageResponse,
 } from './spellcheck.types'
 const myCache = new NodeCache()
 
@@ -36,18 +38,18 @@ async function nspell_spellcheck(
 
   let value = myCache.get<DicoFile>('dicofiles')
   if (value !== undefined) {
-    affix = value.affix
-    dictionary = value.dictionary
+    affix = value.affix.toString()
+    dictionary = value.dictionary.toString()
   } else {
     value = await dicoSource.readDicoFiles(kreyol)
     if (!config.dico.useLocal) {
       myCache.set('dicofiles', value)
     }
-    affix = value.affix
-    dictionary = value.dictionary
+    affix = value.affix.toString()
+    dictionary = value.dictionary.toString()
   }
 
-  let diko = createSpellchecker(affix, dictionary)
+  let diko: Spellchecker | undefined = createSpellchecker(affix, dictionary)
 
   // make an array from string
   const source = src.split(' ')
@@ -144,7 +146,7 @@ const actualCheck = (message: DicoRequest, dicoSource: DicoFileReader) => {
   })
 }
 const spellchecker = {
-  check: (message: DicoRequest) => {
+  check: (message: DicoRequest): bluebird<MessageResponse> => {
     return new bluebird.Promise((resolve, reject) => {
       if (config.dico.useLocal) {
         import('./lib.fs-dicofile').then((dicoSource) => {

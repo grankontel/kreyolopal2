@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-const fs = require('fs');
+const fs = require('fs')
 const { argv } = require('node:process')
 const fname = argv[2]
 
@@ -10,14 +10,14 @@ if (!fname?.length > 0) {
 }
 
 console.log(`strip devDependencies from ${fname}`)
-let rawdata = fs.readFileSync(fname);
-let pdata = JSON.parse(rawdata);
+let rawdata = fs.readFileSync(fname)
+let pdata = JSON.parse(rawdata)
 
 delete pdata.devDependencies
 delete pdata.dependencies
-pdata.main = "server.js"
+pdata.main = 'server.js'
 pdata.scripts = {
-  start: "NODE_ENV='production' node ./server.js"
+  start: "NODE_ENV='production' node ./server.js",
 }
 var content = JSON.stringify(pdata, null, '  ')
-fs.writeFileSync(fname, content);
+fs.writeFileSync(fname, content)

@@ -13,6 +13,10 @@ const nextConfig = {
           source: '/api/:path*',
           destination: `${process.env.API_SERVER}/api/:path*`,
         },
+        {
+          source: '/postgrest/:path*',
+          destination: `${process.env.POSTGREST_SERVER}/:path*`,
+        },
       ],
     }
   },

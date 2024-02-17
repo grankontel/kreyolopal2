@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import {
   Button,
   Columns,
@@ -55,7 +55,6 @@ export const HomeSection = ({
   orientation,
   children,
 }) => {
-
   return (
     <Section>
       <Heading renderAs="h2" size={3}>

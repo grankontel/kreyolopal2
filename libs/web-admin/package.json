@@ -1,0 +1,35 @@
+{
+  "name": "@kreyolopal/web-admin",
+  "version": "0.1.0",
+  "description": "admin components",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/main.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "webpack --mode development -w",
+    "build": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thierry Malo",
+  "license": "ISC",
+  "dependencies": {
+    "@raphiniert/ra-data-postgrest": "^2.0.0",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "react": "^18",
+    "react-admin": "^4.16.10",
+    "react-dom": "^18"
+  },
+  "peerDependencies": {
+    "@raphiniert/ra-data-postgrest": "^2.0.0",
+    "react": "^18",
+    "react-admin": "^4.16.10",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3"
+  }
+}

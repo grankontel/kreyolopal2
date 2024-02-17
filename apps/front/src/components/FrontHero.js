@@ -12,8 +12,8 @@ export const FrontHero = () => {
             </Heading>
             <Heading subtitle renderAs="div">
               Kreyolopal est né de l&apos;envie d&apos;utiliser les technologies
-              d&apos;aujourd&apos;hui pour encourager, améliorer et diffuser l&apos;écriture du
-              créole.
+              d&apos;aujourd&apos;hui pour encourager, améliorer et diffuser
+              l&apos;écriture du créole.
             </Heading>
           </Hero.Body>
         </Columns.Column>

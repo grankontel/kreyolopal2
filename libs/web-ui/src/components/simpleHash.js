@@ -10,7 +10,7 @@ import React from 'react'
  * of the given string, n is the length of the string,
  * and ^ indicates exponentiation.
  * (The hash value of the empty string is zero.)
- * 
+ *
  * @param {string} str The string to hash
  * @returns A 32 bit hash of the string
  */

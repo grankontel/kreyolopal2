@@ -14,8 +14,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { StarRating } from '@kreyolopal/web-ui'
 import * as feather from 'feather-icons'
 import { FlagGp } from '@kreyolopal/web-ui'
-import { getUser, parseCookie } from '@/lib/auth'
-
+import { parseCookie } from '@/lib/auth'
+import Standard from '@/layouts/Standard'
 
 async function postRateCorrection(token, msgId, rating) {
   console.log('postRateCorrection')
@@ -104,7 +104,7 @@ const postSpellCheck = async (token, text) => {
       return []
     })
 }
-export default function Spellcheck({session}) {
+export default function Spellcheck({ session }) {
   const [request, setRequest] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -120,7 +120,9 @@ export default function Spellcheck({session}) {
     if (response?.id === undefined) return
     setIsLoading(true)
     try {
-      const resp = postRateCorrection(session.session_id, response?.id, { rating: note })
+      const resp = postRateCorrection(session.session_id, response?.id, {
+        rating: note,
+      })
 
       resp.then((data) => {
         setIsLoading(false)
@@ -252,19 +254,25 @@ export default function Spellcheck({session}) {
   )
 }
 
+Spellcheck.getLayout = function getLayout(page) {
+  return <Standard>{page}</Standard>
+}
+
 export async function getServerSideProps(context) {
-	const session = parseCookie(context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME])
-	if (!session) {
-		return {
-			redirect: {
-				permanent: false,
-				destination: "/login"
-			}
-		};
-	}
-	return {
-		props: {
-			session
-		}
-	};
+  const session = parseCookie(
+    context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME]
+  )
+  if (!session) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/login',
+      },
+    }
+  }
+  return {
+    props: {
+      session,
+    },
+  }
 }

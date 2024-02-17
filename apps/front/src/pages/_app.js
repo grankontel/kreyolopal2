@@ -17,7 +17,7 @@ const links = [
 ]
 export default function App({ Component, pageProps }) {
   return (
-    <AuthProvider>
+    <AuthProvider cookieName={process.env.NEXT_PUBLIC_COOKIE_NAME}>
       <StandardPage
         links={links}
         getHead={() => <FrontHead />}

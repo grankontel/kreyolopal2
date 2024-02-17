@@ -93,7 +93,7 @@ const getSuggestion = async function (c: Context) {
     c.res.headers.append('Cache-Control', 'public, maxage=86400')
     c.status(200)
     return c.json(result)
-  } catch (e) {
+  } catch (e: any) {
     logger.error(e.message)
     throw createHttpException({
       errorContent: { error: 'Unknown error..' },

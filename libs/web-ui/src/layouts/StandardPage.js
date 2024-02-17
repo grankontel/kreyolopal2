@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import { TopNavbar } from '../components/TopNavbar'
 import { Content } from 'react-bulma-components'
 
@@ -27,5 +27,4 @@ StandardPage.propTypes = {
     })
   ).isRequired,
   CustomItems: PropTypes.func,
-
 }

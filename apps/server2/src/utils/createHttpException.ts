@@ -1,4 +1,3 @@
-import { Response } from 'node-fetch'
 import { HTTPException } from 'hono/http-exception'
 import { StatusCode } from 'hono/utils/http-status'
 

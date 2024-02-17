@@ -26,6 +26,7 @@ tmp
 test.rest
 
 data/db/*
+data/old.db
 data/mongodb/*
 !data/db/.gitkeep
 !data/mongodb/.gitkeep

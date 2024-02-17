@@ -3,17 +3,17 @@ export enum KreyolLang {
   MQ = 'MQ',
 }
 
-type DicoRequest = {
+export interface DicoRequest {
   kreyol: KreyolLang
   request: string
 }
 
 export type DicoFile = {
-  affix: Buffer
-  dictionary: Buffer
+  affix: Buffer | string
+  dictionary: Buffer | string
 }
 
-export type DicoFileReader = {
+export interface DicoFileReader {
   readDicoFiles: (kreyol: KreyolLang) => Promise<DicoFile>
 }
 
@@ -23,7 +23,9 @@ export enum MessageStatus {
   error = 'error',
 }
 
-type MessageResponse = {
+export type MessageResponse = {
+  id?: undefined
+  user?: string
   // status: '', success | warning | error
   status: MessageStatus
   kreyol: KreyolLang // message.request.kreyol,
