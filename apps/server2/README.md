@@ -49,7 +49,7 @@ open http://localhost:3000
           as: 's_entry',
           cond: { $ne: ['$$s_entry', 'poul']}
         }
-        } 
+        }
       },
   }
 ]

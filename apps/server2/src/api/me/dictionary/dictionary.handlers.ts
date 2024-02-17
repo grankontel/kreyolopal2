@@ -59,7 +59,7 @@ const getWord = async function (c: Context) {
     }
 
     return c.json({ error: 'Not Found.' }, 404)
-  } catch (e) {
+  } catch (e: any) {
     logger.error(e.message)
     throw createHttpException({
       errorContent: { error: 'Unknown error..' },
@@ -102,7 +102,7 @@ const bookmarkWord = async function (c: Context) {
 
         const coll = client.db(config.mongodb.db).collection('personal')
         const options = { upsert: true }
-        const update = { $set: { user_id: user_id, ...data[0] } }
+        const update = { $set: { user_id: user_id, ...(data[0] as object) } }
 
         return coll
           .updateOne(query, update, options)

@@ -32,7 +32,7 @@ export function createCookie(session_id: string, user: DatabaseUser) {
   return theCookie
 }
 
-export function parseCookie(cookie: string) {
+export function parseCookie(cookie: string | null) {
   if (cookie === null) return null
   const [data, digest] = cookie.split('.')
   if (data === null || digest === null) return null

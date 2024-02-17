@@ -1,9 +1,14 @@
 import { ValidateFunction } from 'ajv'
 import winston from 'winston'
-import { Context, HonoRequest } from 'hono'
+import { sign as jwt_sign } from 'jsonwebtoken'
 import { createHttpException } from './createHttpException'
-import { Response } from 'node-fetch'
+import config from '#config'
 import { winston_logger as logger } from '#services/winston_logger'
+
+import { setCookie } from 'hono/cookie'
+import { lucia, createCookie } from '#lib/auth'
+import type { Context, HonoRequest, TypedResponse } from 'hono'
+import type { DatabaseUser } from '#lib/db'
 
 export type paramChecker = (r: HonoRequest, logger: winston.Logger) => boolean
 export type requestHandler = (c: Context) => Response
@@ -87,3 +92,27 @@ export const schemaValidator = (
 
     resolve(c)
   })
+
+export function logUserIn(
+  c: Context,
+  existingUser: DatabaseUser
+): Promise<Response & TypedResponse<{}>> {
+  return lucia.createSession(existingUser.id, {}).then((session) => {
+    const theCookie = createCookie(session.id, existingUser)
+    setCookie(c, theCookie.name, theCookie.value, {
+      ...theCookie.attributes,
+      httpOnly: false,
+    })
+    c.status(200)
+    let response = {}
+    if (existingUser.is_admin) {
+      response = {
+        token: jwt_sign(
+          { role: 'postgrest', username: existingUser.username },
+          config.security.adminSecret
+        ),
+      }
+    }
+    return c.json(response)
+  })
+}

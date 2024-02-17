@@ -9,5 +9,4 @@ export default function App({ Component, pageProps }) {
       {getLayout(<Component {...pageProps} />)}
     </AuthProvider>
   )
-
 }

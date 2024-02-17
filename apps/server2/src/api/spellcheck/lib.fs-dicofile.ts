@@ -1,6 +1,7 @@
 import { promisify } from 'util'
 import fs from 'fs'
 import path from 'path'
+import { DicoFile, KreyolLang } from './spellcheck.types'
 
 const readFile = promisify(fs.readFile)
 

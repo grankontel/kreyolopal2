@@ -46,7 +46,7 @@ export function verifyRequestOrigin(
 
 function safeURL(url: URL | string): URL | null {
   try {
-    return new URL(url)
+    return new URL(url.toString())
   } catch {
     return null
   }

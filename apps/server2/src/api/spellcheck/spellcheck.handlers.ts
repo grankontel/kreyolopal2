@@ -1,10 +1,13 @@
 import type { Context } from 'hono'
 import spellchecker from './lib.spellcheck'
 import { pgPool } from '#lib/db'
+import { DicoRequest, KreyolLang, MessageResponse } from './spellcheck.types'
 
 const postSpellCheck = async function (c: Context) {
   const logger = c.get('logger')
-  const body = c.req.valid('json')
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const body = c.req.valid('json') as Record<string, string>
   const user = c.get('user')
   logger.info('postSpellCheck')
 
@@ -17,11 +20,11 @@ const postSpellCheck = async function (c: Context) {
     )
   }
 
-  const lMessage = {
+  let lMessage: DicoRequest & { [k: string]: any } = {
     user: user.id, // req.user.id,
     tool: c.req.header('User-Agent'),
     service: 'spellcheck',
-    kreyol: body.kreyol,
+    kreyol: body.kreyol as KreyolLang,
     request: body.request.replace(/ç/, 's'),
   }
   logger.debug(JSON.stringify(lMessage))
@@ -80,7 +83,10 @@ const postRating = async function (c: Context) {
   const logger = c.get('logger')
   const id = c.req.param('id')
   const user = c.get('user')
-  const body = c.req.valid('json')
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const body = c.req.valid('json') as Record<string, string>
   const { rating, user_correction, user_notes } = body
 
   logger.info('postRating')
@@ -114,7 +120,7 @@ const postRating = async function (c: Context) {
 
       logger.debug('Spellechecked exists')
 
-      const extra_fields = []
+      const extra_fields: { name: string; value: string }[] = []
       if (user_correction)
         extra_fields.push({
           name: 'user_correction',
@@ -143,7 +149,7 @@ const postRating = async function (c: Context) {
       logger.debug(text)
       res = await client.query(text, values)
       const retour_id = res.rows[0].spellchecked_id
-      client.end()
+      client.release()
 
       logger.debug(retour_id)
       return c.json({ id: retour_id }, 200)

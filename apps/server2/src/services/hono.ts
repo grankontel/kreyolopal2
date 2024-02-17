@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { MongoClient } from 'mongodb'
 import { Client } from 'pg'
 import { Logger } from 'winston'
-import type { Context } from 'hono'
+import type { Context, TypedResponse } from 'hono'
 
 export type HonoVariables = {
   mongodb: MongoClient
@@ -18,7 +18,20 @@ export function createRouter(): AppRouter {
   })
 }
 
-export const sendBadRequest = (result: never, c: Context) => {
+interface RequestResult {
+  success?: any
+  error?: any
+}
+
+export const sendBadRequest = (
+  result: RequestResult,
+  c: Context
+):
+  | (Response &
+      TypedResponse<{
+        message: string
+      }>)
+  | undefined => {
   if (!result.success) {
     const logger = c.get('logger')
     logger.error(result.error)

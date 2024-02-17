@@ -20,11 +20,11 @@ const config = {
   },
   db: {
     host: process.env.POSTGRES_HOST,
-    port: process.env.POSTGRES_PORT || 5432,
+    port: Number(process.env.POSTGRES_PORT || 5432),
     database: process.env.POSTGRES_DB,
     username: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
-    health: process.env.PGRST_HEALTH
+    health: process.env.PGRST_HEALTH as string,
   },
   mongodb: {
     // uri: process.env.MONGODB_URI,
@@ -40,7 +40,7 @@ const config = {
     db: process.env.REDIS_DB,
   },
   mail: {
-    webmaster: process.env.MAINTAINTER_EMAIL,
+    webmaster: process.env.MAINTAINTER_EMAIL as string,
     apiKey: process.env.MAILGUN_API_KEY,
     domain: process.env.MAILGUN_DOMAIN,
     host: process.env.MAILGUN_HOST,
@@ -51,7 +51,7 @@ const config = {
   security: {
     salt: process.env.API_SALT,
     token: process.env.TOKEN_SALT,
-    adminSecret: process.env.PGRST_JWT_SECRET,
+    adminSecret: process.env.PGRST_JWT_SECRET as string,
     memoryCost: Number(process.env.ARGON_MEMORYCOST || 24),
     hashLength: Number(process.env.ARGON_LENGTH || 24),
     iterations: Number(process.env.ARGON_ITERATIONS || 2),

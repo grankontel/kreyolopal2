@@ -15,7 +15,8 @@
     "deploy": "cd ansible && ansible-playbook -i hosts.yml deploy.yml --ask-vault-password",
     "dev": "turbo run dev --parallel",
     "dev:admin": "turbo run dev --filter=server2 --filter=admin --parallel",
-    "dev:dico": "turbo run dev --filter=server2 --filter=dico --parallel",
+    "dev:dico": "turbo run dev --filter=server2 --filter=@kreyolopal/web-ui --filter=dico --parallel",
+    "dev:front": "turbo run dev --filter=@kreyolopal/web-ui --filter=front --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{js,ts,tsx,md}\""
   },
@@ -31,6 +32,6 @@
     "prettier": "latest",
     "rimraf": "^4.4.1",
     "sharp": "^0.33.1",
-    "turbo": "^1.12.3"
+    "turbo": "^1.12.4"
   }
 }

@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'
 import { body, param } from 'express-validator'
 import handlers from './profile.handlers'
 const routes = express.Router()

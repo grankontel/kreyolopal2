@@ -1,6 +1,6 @@
-import { Icon, Section, Table } from "react-bulma-components";
+import { Icon, Section, Table } from 'react-bulma-components'
 import { FlagGp } from '@kreyolopal/web-ui'
-import TableCell from "@/components/dictionnary/table/TableCell";
+import TableCell from '@/components/dictionnary/table/TableCell'
 
 /*
 {
@@ -92,74 +92,47 @@ export default function MePage() {
   return (
     <Section>
       Me Page
-
       <Table size="fullwidth">
         <thead>
           <tr>
-            <th>
-              Entr&eacute;e
-            </th>
-            <th>
-              Kr&eacute;y&ograve;l
-            </th>
-            <th>
-              Variations
-            </th>
-            <th>
-              Nature
-            </th>
-            <th>
-              D&eacute;finition
-            </th>
-            <th>
-              D&eacute;finition (FR)
-            </th>
-            <th>
-              Usage
-            </th>
-            <th>
-              Synonyme
-            </th>
-            <th>
-              Voir aussi
-            </th>
+            <th>Entr&eacute;e</th>
+            <th>Kr&eacute;y&ograve;l</th>
+            <th>Variations</th>
+            <th>Nature</th>
+            <th>D&eacute;finition</th>
+            <th>D&eacute;finition (FR)</th>
+            <th>Usage</th>
+            <th>Synonyme</th>
+            <th>Voir aussi</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>
-              d&eacute;brak&eacute;
-            </td>
+            <td>d&eacute;brak&eacute;</td>
             <td>
               <Icon>
                 <FlagGp />
               </Icon>
             </td>
             <td>
-              <div>
-                d&eacute;brak&eacute;
-              </div>
-              <div>
-                d&eacute;bwak&eacute;
-              </div>
+              <div>d&eacute;brak&eacute;</div>
+              <div>d&eacute;bwak&eacute;</div>
             </td>
-            <td>
-              Vèwb
-            </td>
-            <td>
-
-            </td>
-            <td>
-              contrebraquer.
-            </td>
-            <TableCell entry={"débraké"} 
-              name="usage" 
-              value={<div>ou braké twòp, débraké tibwen avan  ou kyoulé.</div>} 
-              onAdd={(id) => console.log(id)} />
-            <TableCell entry={"débraké"} 
-              name="synonyms" 
-              value={<div></div>} 
-              onAdd={(id) => console.log(id)} />
+            <td>Vèwb</td>
+            <td></td>
+            <td>contrebraquer.</td>
+            <TableCell
+              entry={'débraké'}
+              name="usage"
+              value={<div>ou braké twòp, débraké tibwen avan ou kyoulé.</div>}
+              onAdd={(id) => console.log(id)}
+            />
+            <TableCell
+              entry={'débraké'}
+              name="synonyms"
+              value={<div></div>}
+              onAdd={(id) => console.log(id)}
+            />
           </tr>
         </tbody>
       </Table>

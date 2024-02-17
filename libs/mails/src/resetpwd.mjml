@@ -1,0 +1,58 @@
+<mjml>
+  <mj-head>
+    <mj-title>Vérifyé imél a-w</mj-title>
+    <mj-font name="Noto Serif" href="https://fonts.googleapis.com/css?family=Noto+Serif" />
+    <mj-font name="Titillium Web" href="https://fonts.googleapis.com/css?family=Titillium+Web:400,600" />
+    <mj-attributes>
+      <mj-class name="title" font-family="Titillium Web" font-weight="600" font-size="20px" />
+      <mj-class name="code" font-family="Titillium Web" font-weight="400" font-size="12px" />
+      <mj-all font-family="Noto Serif" font-size="13px" line-height="17px" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#ccd3e0">
+    <!-- header -->
+    <mj-section background-color="#422B8F">
+    </mj-section>
+
+    <mj-section background-color="#fff" padding-bottom="20px" padding-top="20px">
+      <mj-column>
+        <mj-text mj-class="title">
+          {{user.firstname}}, ou obliyé modpas a-w ?
+        </mj-text>
+        <mj-text>
+        <p>
+Nou ka voyé lyen-lasa davwa ou pa ka sonjé ki modpas ou té mèt lèwvwè ou té enskri-w asi Kreyolopal.
+        </p>
+        <p>
+        Si a pa vou ki mandé-sa, pa okipé-w dè mésaj-lasa. Si sé vou, pijé si bouton-la pou mèt ondòt modpas.
+        </p>
+        </mj-text>
+        <mj-button background-color="#422B8F" href="{{confirm_url}}">Chanjé modpas</mj-button>
+        <mj-text>
+          Si bouton-la pa ka maché, ou ké ni a kopyé lyen-lasa :
+        </mj-text>
+        <mj-text mj-class="code">
+          {{confirm_url}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#f7f7fc">
+      <mj-column>
+        <mj-social>
+          <mj-social-element href="#" name="facebook" />
+          <mj-social-element href="#" name="twitter" />
+        </mj-social>
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#141414">
+      <mj-column>
+        <mj-text color="#e7e7e7" align="center" font-size="9px">
+          &copy; Plume Magique 2020
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>

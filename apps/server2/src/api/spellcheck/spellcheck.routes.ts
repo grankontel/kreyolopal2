@@ -34,7 +34,7 @@ myRoutes.post(
 )
 
 // get spellChecks
-myRoutes.get('/', myHandlers.getSpellChecks)
+// myRoutes.get('/', myHandlers.getSpellChecks)
 
 // rate spellchecking
 myRoutes.post(

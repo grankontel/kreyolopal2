@@ -25,6 +25,8 @@ routes.post('/', (c) =>
 )
 routes.get('/:id', (c) =>
   paramValidate(c, (r, logger) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     if (validator.isEmpty(r.param('id'))) {
       logger.warn('id is empty')
       return false
@@ -36,6 +38,8 @@ routes.get('/:id', (c) =>
 )
 routes.delete('/:id', (c) =>
   paramValidate(c, (r, logger) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     if (validator.isEmpty(r.param('id'))) {
       logger.warn('id is empty')
       return false
@@ -52,6 +56,8 @@ routes.delete('/:id', (c) =>
 )
 routes.put('/:id', (c) =>
   paramValidate(c, (r, logger) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     if (validator.isEmpty(r.param('id'))) {
       logger.warn('id is empty')
       return false

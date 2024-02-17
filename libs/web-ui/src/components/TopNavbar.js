@@ -47,8 +47,6 @@ export const TopNavbar = ({ links, CustomItems }) => {
             )
           })}
           {hasItems ? <CustomItems /> : null}
-
-
         </Navbar.Container>
       </Navbar.Menu>
     </Navbar>

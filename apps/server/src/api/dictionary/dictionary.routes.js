@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'
 import dicoHandlers from './dictionary.handlers'
 const dicoRoutes = express.Router()
 

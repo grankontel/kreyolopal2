@@ -43,7 +43,7 @@ async function main() {
       }
     })
     .forEach((item) => {
-        console.log(item.words)
+      console.log(item.words)
       const hasFlags = false // item.flags.length > 0
       const flags = item.flags.join('')
       const elem = item.words

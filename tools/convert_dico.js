@@ -13,7 +13,6 @@ if (!fname?.length > 0) {
 const dico = require(path.resolve(fname))
 const datafile = path.resolve(__dirname, '../import/var/dicofile.json')
 
-
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index
 }
@@ -153,16 +152,12 @@ const needUpdate = merged.filter((item) => {
 */
 
 // write JSON string to a file
-fs.writeFile(
-  datafile,
-  JSON.stringify(merged),
-  (err) => {
-    if (err) {
-      throw err
-    }
-    console.log('Dico data is saved.')
+fs.writeFile(datafile, JSON.stringify(merged), (err) => {
+  if (err) {
+    throw err
   }
-)
+  console.log('Dico data is saved.')
+})
 
 /*
 fs.writeFile(
