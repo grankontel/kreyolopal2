@@ -69,6 +69,20 @@ const getWord = async function (c: Context) {
   }
 }
 
+function formatDate(date) {
+  if (date === null) return null
+
+  let d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear()
+
+  if (month.length < 2) month = '0' + month
+  if (day.length < 2) day = '0' + day
+
+  return [year, month, day].join('-')
+}
+
 const bookmarkWord = async function (c: Context) {
   const logger = c.get('logger')
   const client = c.get('mongodb')
@@ -87,7 +101,7 @@ const bookmarkWord = async function (c: Context) {
   const user_id = user.id
 
   const query = { user_id: user_id, entry: word }
-
+  const bdate = formatDate(user.birth_date)
   return WordsRepository.getInstance(c)
     .GetOne(word, (item) => {
       return {
@@ -102,7 +116,13 @@ const bookmarkWord = async function (c: Context) {
 
         const coll = client.db(config.mongodb.db).collection('personal')
         const options = { upsert: true }
-        const update = { $set: { user_id: user_id, ...(data[0] as object) } }
+        const update = {
+          $set: {
+            user_id: user_id,
+            user_birthdate: bdate,
+            ...(data[0] as object),
+          },
+        }
 
         return coll
           .updateOne(query, update, options)

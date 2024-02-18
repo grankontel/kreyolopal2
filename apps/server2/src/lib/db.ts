@@ -29,6 +29,7 @@ pgPool.connect().then((client) => {
     "lastname" character varying(255) NOT NULL,
     "email" character varying(255) NOT NULL,
     "password" TEXT NOT NULL,
+    "birth_date" DATE NULL,
     "lastlogin" timestamptz,
     "email_verif_token" character varying(255),
     "reset_pwd_token" character varying(255),
@@ -106,4 +107,5 @@ export interface DatabaseUser {
   username: string
   password: string
   is_admin: boolean
+  birth_date: Date
 }
