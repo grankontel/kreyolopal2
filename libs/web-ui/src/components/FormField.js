@@ -40,4 +40,3 @@ FormField.defaultProps = {
   autoComplete: 'on',
   onChange: (e) => e.preventDefault(),
 }
-

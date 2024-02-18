@@ -1,4 +1,3 @@
-
 export { TopNavbar } from './components/TopNavbar'
 export { HeroSearchBox } from './components/HeroSearchBox'
 export { findByType, findAllByType } from './components/FindByType'
@@ -9,7 +8,7 @@ export { StarRating } from './components/StarRating'
 export { AuthProvider, useAuth } from './components/AuthContext'
 
 export { FormField } from './components/FormField'
-export {ContactForm} from './ContactForm'
+export { ContactForm } from './ContactForm'
 
 // flags
 export { FlagGp } from './components/FlagGp'

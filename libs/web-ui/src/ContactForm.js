@@ -50,7 +50,10 @@ export function ContactForm({ endpoint }) {
         })
         .catch((error) => {
           console.log(error)
-          setNotif({ color: 'danger', message: error?.error || error.toString() })
+          setNotif({
+            color: 'danger',
+            message: error?.error || error.toString(),
+          })
           console.log(notif)
         })
     } catch (error) {
