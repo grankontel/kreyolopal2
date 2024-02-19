@@ -3,7 +3,6 @@ import DicoEntry from '@/components/DicoEntry'
 import { Container, Content, Form, Heading, Section, Columns } from 'react-bulma-components'
 import { HeroSearchBox } from '@kreyolopal/web-ui'
 import EntrySidebar from '@/components/EntrySidebar'
-import { logger } from "@/logger"; // our logger import
 import { parseCookie } from '@/lib/auth'
 import Standard from '@/layouts/Standard'
 
@@ -69,6 +68,9 @@ DicoPage.getLayout = function getLayout(page) {
   )
 }
 
+export const config = {
+  runtime: 'experimental-edge',
+}
 
 export const getServerSideProps = async (ctx) => {
   const auth = parseCookie(ctx.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME])
@@ -78,7 +80,7 @@ export const getServerSideProps = async (ctx) => {
   const entry = ctx.params?.entry.toLowerCase()
   const { res, req } = ctx
   const { user_id, session_id } = auth || {user_id: null, session_id: null} ;
-  logger.debug(`userId: ${user_id}`)
+
   const cacheMode = !user_id ? 'public' : 'private'
   res.setHeader(
     'Cache-Control',
@@ -106,7 +108,7 @@ export const getServerSideProps = async (ctx) => {
       next: { revalidate: 3600 },
     }
   ).catch(function (error) {
-    logger.error('Il y a eu un problème avec l\'opération fetch : ' + error.message);
+    console.log('Il y a eu un problème avec l\'opération fetch : ' + error.message);
   });
 
   if (result.status === 404) {
@@ -115,7 +117,7 @@ export const getServerSideProps = async (ctx) => {
     }
   }
   if (!result?.ok) {
-    logger.debug('Mauvaise réponse du réseau');
+    console.log('Mauvaise réponse du réseau');
     return {
       props: {
         error: 'Mauvaise réponse du réseau',
@@ -145,7 +147,7 @@ export const getServerSideProps = async (ctx) => {
         next: { revalidate: 3600 },
       }
     ).catch(function (error) {
-      logger.error('Il y a eu un problème avec l\'opération fetch : ' + error.message);
+      console.log('Il y a eu un problème avec l\'opération fetch : ' + error.message);
     });
 
     if (result2?.ok) {
@@ -164,7 +166,6 @@ export const getServerSideProps = async (ctx) => {
     }
   }
 
-  logger.debug(JSON.stringify(response))
   return {
     props: response,
   }

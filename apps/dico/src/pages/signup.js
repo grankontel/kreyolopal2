@@ -5,6 +5,10 @@ import { useRouter } from 'next/navigation'
 import { Box, Button, Heading, Section } from 'react-bulma-components'
 import { FormField } from '@/components/FormField'
 
+export const config = {
+  runtime: 'experimental-edge',
+}
+
 export async function getServerSideProps(context) {
   const user = parseCookie(
     context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME]
