@@ -39,11 +39,13 @@ AWS_ACCESS_KEY_ID='{{ aws_access_key_id }}'
 AWS_SECRET_ACCESS_KEY='{{ aws_secret_access_key }}'
 AWS_BUCKET_REGION='us-east-1'
 AWS_BUCKET_NAME='kreyol-dico'
+COOKIE_NAME='{{ cookie_name }}'
 
 
-MAINTAINTER_EMAIL='thierry.malo@gmail.com'
+MAINTAINTER_EMAIL='kreyolopal@protonmail.com'
 
 SLACK_WEBHOOK_URL='{{ slack_webhook_url }}'
 
-REDIS_URL='redis://localhost:6379'
-REDIS_DB=1
+PGRST_JWT_SECRET='{{ pgrst_jwt_secret }}'
+
+PGRST_HEALTH='http://localhost:{{ postgrest_health_port }}/live'

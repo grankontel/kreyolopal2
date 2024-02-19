@@ -45,31 +45,13 @@
   environment:
     NODE_ENV: 'production'
 
-- name: APP DICO | npm install
+- name: APP ADMIN | npm install
   command: 
     cmd: npm ci --omit=dev
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}/dico"
+    chdir: "{{ ansistrano_release_path.stdout }}/admin"
   environment:
     NODE_ENV: 'production'
-
-- name: APP SERVER | write proper config.json
-  template:
-    src: config_json.j2
-    dest: "{{ ansistrano_release_path.stdout }}/server/database/config/config.json"
-
-- name: APP SERVER | migrate db
-  command: 
-    cmd: npm run migrate
-  args:
-    chdir: "{{ ansistrano_release_path.stdout }}/server"
-  environment:
-    NODE_ENV: 'production'
-  register: migrate_result
-
-- name: Print return information from the previous task
-  ansible.builtin.debug:
-    var: migrate_result.stdout_lines | last
 
 - name: Include task list in play
   ansible.builtin.include_tasks:

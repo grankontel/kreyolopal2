@@ -5,11 +5,11 @@
   args:
     chdir: "{{ ansistrano_release_path.stdout }}/server"
 
-- name: APP | start dico
+- name: APP | start admin
   command:
-    cmd: pm2 start npm --name "dico.{{ domain }}" -- start
+    cmd: pm2 start npm --name "admin.{{ domain }}" -- start
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}/dico"
+    chdir: "{{ ansistrano_release_path.stdout }}/admin"
 
 - name: APP | saving app list
   command: pm2 save
