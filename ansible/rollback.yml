@@ -5,6 +5,7 @@
   remote_user: '{{ user }}'
   tasks:
     - include_vars:
+        file: vars_ansistrano.yml
         file: vars.yml
 
     - include_role:
