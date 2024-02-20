@@ -10,8 +10,8 @@ server {
 
     # SSL
     {%if self_signed == true %}
-    ssl_certificate /etc/ssl/certs/{{ subdomain }}.crt;
-    ssl_certificate_key /etc/ssl/private/{{ subdomain }}.pem;
+    ssl_certificate /etc/ssl/certs/{{ domain }}.crt;
+    ssl_certificate_key /etc/ssl/private/{{ domain }}.key;
     {% else %}
     include                 /etc/nginx/nginxconfig.io/{{ domainhost }}_letsencrypt.conf;
     ssl_certificate         /etc/letsencrypt/live/{{ subdomain }}/fullchain.pem;

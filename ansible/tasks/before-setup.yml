@@ -10,3 +10,13 @@
     path: "{{ ansistrano_shared_path }}/data/mongodb"
     owner: "{{ user }}"
     state: directory
+
+- name: DEPLOY | Copy ssl crt file
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../ssl/{{ domain }}.crt"
+    dest: /etc/ssl/certs/{{ domain }}.crt
+
+- name: DEPLOY | Copy ssl private file
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../ssl/{{ domain }}.key"
+    dest: /etc/ssl/certs/private/{{ domain }}.key
