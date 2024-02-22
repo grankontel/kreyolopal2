@@ -7,6 +7,5 @@
     state: latest
     update_cache: true
 
-- name: FAIL2BAN | Restart
   notify:
     - restart_fail2ban
