@@ -4,10 +4,15 @@
     src: env_docker.j2
     dest: "{{ ansistrano_shared_path }}/.env"
 
-- name: DEPLOY | Create API .env
+- name: DEPLOY | Create API .env (old server)
   template:
     src: env_api.j2
     dest: "{{ ansistrano_shared_path }}/server/.env"
+
+- name: DEPLOY | Create API .env (server2)
+  template:
+    src: env_api.j2
+    dest: "{{ ansistrano_shared_path }}/server2/.env"
 
 - name: DEPLOY | Create ADMIN .env
   template:

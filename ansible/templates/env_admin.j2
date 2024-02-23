@@ -4,4 +4,5 @@ API_SERVER=http://localhost:{{ api_port }}
 POSTGREST_SERVER=http://localhost:{{ postgrest_port }}
 
 NEXT_PUBLIC_COOKIE_NAME='{{ cookie_name }}'
+DATABASE_URL='mongodb://{{ mongodb_user }}:{{ "{}".format(mongodb_password) | urlencode }}@localhost:27017/{{ mongodb_name }}'
 
