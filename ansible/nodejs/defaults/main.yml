@@ -3,5 +3,6 @@
 npm_globals:
   - npm@latest
   - pm2@latest
-nodejs_version: 18
+  - dotenv
+nodejs_version: 20
   

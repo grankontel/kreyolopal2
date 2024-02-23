@@ -2,14 +2,20 @@
 apps:
   dico:
     port: 3000
+    directory: dico
     restricted: true
+    pm2start: false
   admin:
     port: 3010
+    directory: admin
     restricted: true
+    pm2start: true
   api:
     port: 5000
+    directory: server2
     restricted: false
-
+    pm2start: true
+ 
 # api config
 cookie_name: wabap
 postgrest_port: 9000

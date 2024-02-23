@@ -1,15 +1,25 @@
 ---
+- name: APP | get root modules path
+  command:
+    cmd: npm root --quiet -g
+  register: npm_root_path
+
+- debug: 
+    msg: "npm root path '{{ npm_root_path.stdout }}'"
+
 - name: APP | start api
   command:
     cmd: pm2 start npm --name "api.{{ domain }}" -- start
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}/server"
+    chdir: "{{ ansistrano_release_path.stdout }}/server2"
 
 - name: APP | start admin
   command:
-    cmd: pm2 start npm --name "admin.{{ domain }}" -- start
+    cmd: pm2 start npm --node-args="-r dotenv/config" --name "admin.{{ domain }}" -- start
   args:
     chdir: "{{ ansistrano_release_path.stdout }}/admin"
+  environment:
+    NODE_PATH: "{{ npm_root_path.stdout }}"
 
 - name: APP | saving app list
   command: pm2 save
