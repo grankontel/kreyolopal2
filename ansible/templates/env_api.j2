@@ -23,11 +23,17 @@ MAILIST_LISTID='{{ mailist_listid }}'
 
 CAPTCHA_SECRET_KEY='{{ captcha_secret_key }}'
 
-
+# server 1
 PROD_POSTGRES_HOST='localhost'
 PROD_POSTGRES_DB='{{ db_name }}'
 PROD_POSTGRES_USERNAME='{{ db_user }}'
 PROD_POSTGRES_PASSWORD='{{ db_password }}'
+
+# server 2
+POSTGRES_HOST='localhost'
+POSTGRES_DB='{{ db_name }}'
+POSTGRES_USERNAME='{{ db_user }}'
+POSTGRES_PASSWORD='{{ db_password }}'
 
 MONGODB_HOST='localhost' # 'localhost'
 MONGODB_USER='{{ mongodb_user }}'

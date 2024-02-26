@@ -17,7 +17,7 @@
 - name: DEPLOY | Create ADMIN .env
   template:
     src: env_admin.j2
-    dest: "{{ ansistrano_shared_path }}/admin/.env.local"
+    dest: "{{ ansistrano_shared_path }}/admin/.env"
 
 - name: DEPLOY | Create docker-compose
   template:

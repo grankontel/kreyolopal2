@@ -1,4 +1,4 @@
-import { pgPool } from '#lib/db'
+// import { pgPool } from '#lib/db'
 import type { Context } from 'hono'
 import type { MongoClient } from 'mongodb'
 import config from '#config'
@@ -14,6 +14,7 @@ const ping = async function (c: Context) {
 
 const healthcheck = async function (c: Context) {
   const logger = c.get('logger')
+  const pgPool = c.get('pgPool')
   const client = c.get('mongodb') as MongoClient
   logger.debug('healthcheck')
 

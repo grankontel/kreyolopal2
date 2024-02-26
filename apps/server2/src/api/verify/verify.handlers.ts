@@ -1,6 +1,6 @@
 import type { Context } from 'hono'
 import type { PoolClient } from 'pg'
-import { DatabaseUser, pgPool } from '#lib/db'
+import { DatabaseUser } from '#lib/db'
 import { logUserIn } from '#utils/apiHelpers'
 import { createHttpException } from '#utils/createHttpException'
 import { argon2 } from '#utils/argon'
@@ -10,6 +10,7 @@ import { sendEmail } from '#services/mail'
 
 const verifyMail = async function (c: Context) {
   const logger = c.get('logger')
+  const pgPool = c.get('pgPool')
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const token = c.req.param('token')
@@ -36,6 +37,7 @@ const verifyMail = async function (c: Context) {
 
 const postResetPwdToken = async function (c: Context) {
   const logger = c.get('logger')
+  const pgPool = c.get('pgPool')
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const { password, token } = c.req.valid('json') as Record<string, string>
@@ -96,6 +98,7 @@ const postResetPwdToken = async function (c: Context) {
 
 const postResetPwd = async function (c: Context) {
   const logger = c.get('logger')
+  const pgPool = c.get('pgPool')
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const { email } = c.req.valid('json') as Record<string, string>

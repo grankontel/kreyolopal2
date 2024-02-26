@@ -1,8 +1,8 @@
 import { createAdaptorServer } from '@hono/node-server'
 import { HTTPException } from 'hono/http-exception'
 import { MongoClient } from 'mongodb'
-import { logger } from './middlewares/logger'
 import config from './config'
+import { logger } from './middlewares/logger'
 import { createRouter } from '#services/hono'
 import setRoutes from './routes'
 import { winston_logger } from '#services/winston_logger'
@@ -50,7 +50,7 @@ Promise.all([mongoClient.connect()])
 
       process.stdout.write(' connected !\n')
       app.use('*', async (c, next) => {
-        //c.set('pgdb', pgdb)
+        c.set('pgPool', pgPool)
         c.set('mongodb', mongo)
         c.set('logger', winston_logger)
         await next()
