@@ -5,6 +5,8 @@
   remote_user: '{{ user }}'
   tasks:
     - include_vars:
+        file: vars_ansistrano.yml
+    - include_vars:
         file: vars.yml
     - name: IMPORT |  salts & keys
       set_fact:

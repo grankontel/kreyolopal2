@@ -23,11 +23,17 @@ MAILIST_LISTID='{{ mailist_listid }}'
 
 CAPTCHA_SECRET_KEY='{{ captcha_secret_key }}'
 
-
+# server 1
 PROD_POSTGRES_HOST='localhost'
 PROD_POSTGRES_DB='{{ db_name }}'
 PROD_POSTGRES_USERNAME='{{ db_user }}'
 PROD_POSTGRES_PASSWORD='{{ db_password }}'
+
+# server 2
+POSTGRES_HOST='localhost'
+POSTGRES_DB='{{ db_name }}'
+POSTGRES_USERNAME='{{ db_user }}'
+POSTGRES_PASSWORD='{{ db_password }}'
 
 MONGODB_HOST='localhost' # 'localhost'
 MONGODB_USER='{{ mongodb_user }}'
@@ -39,11 +45,13 @@ AWS_ACCESS_KEY_ID='{{ aws_access_key_id }}'
 AWS_SECRET_ACCESS_KEY='{{ aws_secret_access_key }}'
 AWS_BUCKET_REGION='us-east-1'
 AWS_BUCKET_NAME='kreyol-dico'
+COOKIE_NAME='{{ cookie_name }}'
 
 
-MAINTAINTER_EMAIL='thierry.malo@gmail.com'
+MAINTAINTER_EMAIL='kreyolopal@protonmail.com'
 
 SLACK_WEBHOOK_URL='{{ slack_webhook_url }}'
 
-REDIS_URL='redis://localhost:6379'
-REDIS_DB=1
+PGRST_JWT_SECRET='{{ pgrst_jwt_secret }}'
+
+PGRST_HEALTH='http://localhost:{{ postgrest_health_port }}/live'

@@ -1,6 +1,6 @@
 import { generateId } from 'lucia'
 import { setCookie } from 'hono/cookie'
-import { pgPool } from '#lib/db'
+// import { pgPool } from '#lib/db'
 import { lucia, createCookie } from '#lib/auth'
 import { createHttpException } from '#utils/createHttpException'
 
@@ -12,6 +12,7 @@ import { argon2 } from '#utils/argon'
 
 const login = async function (c: Context) {
   const logger = c.get('logger')
+  const pgPool = c.get('pgPool')
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const body = c.req.valid('json')
@@ -57,6 +58,7 @@ const login = async function (c: Context) {
 
 const signup = async function (c: Context) {
   const logger = c.get('logger')
+  const pgPool = c.get('pgPool')
   logger.info('signup')
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore

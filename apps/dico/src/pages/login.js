@@ -4,6 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Section } from 'react-bulma-components'
 
+export const config = {
+  runtime: 'experimental-edge',
+}
+
 export async function getServerSideProps(context) {
   const user = parseCookie(
     context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME]

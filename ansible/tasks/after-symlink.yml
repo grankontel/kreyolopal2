@@ -30,10 +30,18 @@
       PGPASSWORD: "{{ pwd_postgres | string }}"
     command: psql -U postgres -c "{{ item }}" 
   loop:
-    - "create database {{ db_name }};"
     - "create user {{ db_user }} with encrypted password '{{ db_password }}';"
-    -  "grant all privileges on database {{ db_name }} to {{ db_user }};"
-    -  "grant all on schema public to {{ db_user }};"
+    - "GRANT ALL ON SCHEMA public TO {{ db_user }};"
+    - "create database {{ db_name }};"
+    - "alter database {{ db_name }} OWNER TO {{ db_user }};"
+    - "CREATE USER anon;"
+    - "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO anon;"
+    - "GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO anon;"
+    - "GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon;"
+    - "CREATE ROLE {{ db_api_role }};"
+    - "GRANT USAGE ON SCHEMA public TO {{ db_api_role }};"
+    - "GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO {{ db_api_role }};"
+    - "GRANT ALL ON ALL TABLES IN SCHEMA public TO {{ db_api_role }};"
   no_log: true
   when: not dbresult.is_available
 
@@ -41,35 +49,25 @@
   command: 
     cmd: npm ci --omit=dev
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}/server"
+    chdir: "{{ ansistrano_release_path.stdout }}/server2"
   environment:
     NODE_ENV: 'production'
 
-- name: APP DICO | npm install
+- name: APP ADMIN | npm install
   command: 
-    cmd: npm ci --omit=dev
+    cmd: npm ci 
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}/dico"
+    chdir: "{{ ansistrano_release_path.stdout }}/admin"
   environment:
     NODE_ENV: 'production'
 
-- name: APP SERVER | write proper config.json
-  template:
-    src: config_json.j2
-    dest: "{{ ansistrano_release_path.stdout }}/server/database/config/config.json"
-
-- name: APP SERVER | migrate db
+- name: APP ADMIN | npx prisma generate
   command: 
-    cmd: npm run migrate
+    cmd: npx prisma generate 
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}/server"
+    chdir: "{{ ansistrano_release_path.stdout }}/admin"
   environment:
     NODE_ENV: 'production'
-  register: migrate_result
-
-- name: Print return information from the previous task
-  ansible.builtin.debug:
-    var: migrate_result.stdout_lines | last
 
 - name: Include task list in play
   ansible.builtin.include_tasks:

@@ -258,6 +258,10 @@ Spellcheck.getLayout = function getLayout(page) {
   return <Standard>{page}</Standard>
 }
 
+export const config = {
+  runtime: 'experimental-edge',
+}
+
 export async function getServerSideProps(context) {
   const session = parseCookie(
     context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME]

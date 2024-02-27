@@ -14,6 +14,17 @@ let rawdata = fs.readFileSync(fname)
 let pdata = JSON.parse(rawdata)
 
 delete pdata.devDependencies
+
+/* const prismaVersion = pdata.devDependencies.prisma
+
+delete pdata.devDependencies
+
+if (prismaVersion !== undefined) {
+  pdata.devDependencies = {
+    prisma: prismaVersion
+  }
+}
+ */
 pdata.main = 'server.js'
 pdata.scripts = {
   start: 'node ./server.js',

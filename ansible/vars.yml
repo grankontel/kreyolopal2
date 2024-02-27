@@ -1,27 +1,25 @@
-# ansistrano
-ansistrano_deploy_from: "{{ playbook_dir }}/../build/"
-ansistrano_deploy_to: "/home/{{ user }}/{{ domain }}"
-ansistrano_deploy_via: rsync
-ansistrano_keep_releases: 3
-ansistrano_shared_paths: ["data", "server/dico"]
-ansistrano_shared_files: [".env", "docker-compose.yml", "server/.env", "dico/.env.local"]
-
-ansistrano_before_setup_tasks_file: "{{ playbook_dir }}/tasks/before-setup.yml"
-ansistrano_before_update_code_tasks_file: "{{ playbook_dir }}/tasks/before-update-code.yml"
-ansistrano_before_symlink_shared_tasks_file: "{{ playbook_dir }}/tasks/before-symlink.yml"
-ansistrano_after_symlink_tasks_file: "{{ playbook_dir }}/tasks/after-symlink.yml"
-ansistrano_rollback_after_symlink_tasks_file: "{{ playbook_dir }}/tasks/start-apps.yml"
-
 # app config
 apps:
   dico:
     port: 3000
+    directory: dico
     restricted: true
+    pm2start: false
+  admin:
+    port: 3010
+    directory: admin
+    restricted: true
+    pm2start: false
   api:
     port: 5000
+    directory: server2
     restricted: false
-
+    pm2start: true
+ 
 # api config
+cookie_name: wabap
+postgrest_port: 9000
+postgrest_health_port: 9010
 
 #database variables
 db_name: kreyol

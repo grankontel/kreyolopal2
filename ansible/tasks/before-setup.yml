@@ -10,3 +10,4 @@
     path: "{{ ansistrano_shared_path }}/data/mongodb"
     owner: "{{ user }}"
     state: directory
+

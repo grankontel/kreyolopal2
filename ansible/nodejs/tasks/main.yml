@@ -20,6 +20,20 @@
     global: yes
   with_items: "{{ npm_globals }}"
 
+- name: NODEJS | get root modules path
+  command:
+    cmd: npm root --quiet -g
+  register: npm_root_path
+
+- debug: 
+    msg: "npm root path '{{ npm_root_path.stdout }}'"
+
+- name: NODEJS | Ensure node module path is in .bashrc
+  ansible.builtin.lineinfile:
+    path: "/home/{{ user }}/.bashrc"
+    regexp: '^export NODE_PATH='
+    line: "export NODE_PATH={{ npm_root_path.stdout }}"
+
 - name: PM2 | prepare startup
   command: "env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{ user }} --hp /home/{{ user }} "
   args:
