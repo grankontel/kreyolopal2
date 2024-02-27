@@ -11,3 +11,10 @@
 - name: Include task list in play
   ansible.builtin.include_tasks:
     file: domain_tasks.yml
+  when: item.value.pm2start
+
+- name: "Nginx | {{ subdomain }} | Deactivate site"
+  file:
+    path: "/etc/nginx/sites-enabled/{{ subdomain }}"
+    state: absent
+  when: not item.value.pm2start

@@ -9,7 +9,7 @@ apps:
     port: 3010
     directory: admin
     restricted: true
-    pm2start: true
+    pm2start: false
   api:
     port: 5000
     directory: server2
