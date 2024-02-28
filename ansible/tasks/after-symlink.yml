@@ -53,21 +53,21 @@
   environment:
     NODE_ENV: 'production'
 
-- name: APP ADMIN | npm install
-  command: 
-    cmd: npm ci 
-  args:
-    chdir: "{{ ansistrano_release_path.stdout }}/admin"
-  environment:
-    NODE_ENV: 'production'
+# - name: APP ADMIN | npm install
+#   command: 
+#     cmd: npm ci 
+#   args:
+#     chdir: "{{ ansistrano_release_path.stdout }}/admin"
+#   environment:
+#     NODE_ENV: 'production'
 
-- name: APP ADMIN | npx prisma generate
-  command: 
-    cmd: npx prisma generate 
-  args:
-    chdir: "{{ ansistrano_release_path.stdout }}/admin"
-  environment:
-    NODE_ENV: 'production'
+# - name: APP ADMIN | npx prisma generate
+#   command: 
+#     cmd: npx prisma generate 
+#   args:
+#     chdir: "{{ ansistrano_release_path.stdout }}/admin"
+#   environment:
+#     NODE_ENV: 'production'
 
 - name: Include task list in play
   ansible.builtin.include_tasks:
