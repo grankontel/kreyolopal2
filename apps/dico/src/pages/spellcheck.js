@@ -82,7 +82,7 @@ const postSpellCheck = async (token, text) => {
 
   return fetch(`/api/spellcheck`, {
     method: 'POST',
-    credentials: 'same-origin',
+//    credentials: 'same-origin',
     headers: myHeaders,
     body: JSON.stringify(query),
   })

@@ -98,10 +98,11 @@ export const getServerSideProps = async (ctx) => {
 
   // Fetch data from external API
   const result = await fetch(
-    `${process.env.API_SERVER}/api/dictionary/${kreyol}/${entry}`,
+//    `${process.env.API_SERVER}/api/dictionary/${kreyol}/${entry}`,
+    `/api/dictionary/${kreyol}/${entry}`,
     {
       method: 'GET',
-      credentials: 'same-origin',
+//      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',
       },
