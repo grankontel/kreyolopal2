@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "wrangler pages deploy build --project-name www"
+    "deploy": "wrangler pages deploy build --project-name www",
+    "deploy:prod": "NODE_ENV='production' npm run build && wrangler pages deploy build --project-name www --branch=main"
   },
   "dependencies": {
     "bulma": "^0.9.4",
