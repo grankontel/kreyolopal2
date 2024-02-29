@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Box, Button, Columns, Form, Notification } from 'react-bulma-components'
+import { Turnstile } from '@marsidev/react-turnstile'
 import { FormField } from './components/FormField'
 import PropTypes from 'prop-types'
 
-export function ContactForm({ endpoint }) {
+export function ContactForm({ endpoint, turnstileKey }) {
   const [isLoading, setIsLoading] = useState(false)
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
@@ -11,6 +12,7 @@ export function ContactForm({ endpoint }) {
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
   const [notif, setNotif] = useState({ color: 'warning', message: '' })
+  const formRef = useRef()
 
   const clearMessage = () => {
     setNotif({ color: notif.color, message: '' })
@@ -24,10 +26,25 @@ export function ContactForm({ endpoint }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    const formData = new FormData(formRef.current)
+    const token = formData.get('cf-turnstile-response')
 
     try {
       setIsLoading(true)
       clearMessage()
+
+      const res = await fetch('/api/cloudflare', {
+        method: 'POST',
+        body: JSON.stringify({ token }),
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+      const cfData = await res.json()
+      if (!cfData.success) {
+        // the token has not been validated
+        throw new Error('Token not verified')
+      }
 
       await fetch(endpoint, {
         method: 'POST',
@@ -64,7 +81,7 @@ export function ContactForm({ endpoint }) {
   }
   return (
     <Box className="contact_form">
-      <form onSubmit={handleSubmit}>
+      <form ref={formRef} onSubmit={handleSubmit}>
         <Columns>
           <Columns.Column size="half">
             <FormField
@@ -132,6 +149,7 @@ export function ContactForm({ endpoint }) {
             Voyé-y
           </Button>
         </Button.Group>
+        <Turnstile siteKey={turnstileKey} />
       </form>
     </Box>
   )
@@ -139,6 +157,7 @@ export function ContactForm({ endpoint }) {
 
 ContactForm.propTypes = {
   endpoint: PropTypes.string.isRequired,
+  turnstileKey: PropTypes.string
 }
 
 ContactForm.defaultProps = {

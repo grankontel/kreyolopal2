@@ -4,8 +4,11 @@ import { useEffect, useState } from 'react'
 import { Button, Modal } from 'react-bulma-components'
 import { useRouter } from 'next/navigation'
 import classNames from 'classnames'
+import { Turnstile } from '@marsidev/react-turnstile'
 
 const dico_url = process.env.NEXT_PUBLIC_DICO_URL || `http://localhost:${process.env.PORT || 3000}`
+const apiServer = process.env.API_SERVER || 'https://api.kreyolopal.com'
+
 const links = [
   {
     id: 1,
@@ -25,7 +28,7 @@ const links = [
 ]
 
 const logout = async (auth) => {
-  return fetch(`/api/auth/logout`, {
+  return fetch(apiServer + `/api/auth/logout`, {
     method: 'POST',
 //    credentials: 'same-origin',
   }).then(() => {
@@ -76,8 +79,6 @@ export default function Standard({ children }) {
           </footer>
         </div>
       </div>
-
-
       {children}
     </StandardPage>
   )
