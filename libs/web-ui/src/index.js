@@ -15,3 +15,6 @@ export { FlagGp } from './components/FlagGp'
 
 // Layouts
 export { StandardPage } from './layouts/StandardPage'
+
+// functions
+export { getTurnstileHandler } from './turnstile'
