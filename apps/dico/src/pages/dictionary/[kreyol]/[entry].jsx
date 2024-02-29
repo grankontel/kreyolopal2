@@ -73,7 +73,9 @@ export const config = {
 }
 
 export const getServerSideProps = async (ctx) => {
-  const auth = parseCookie(ctx.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME])
+  const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
+  const apiServer = process.env.API_SERVER || 'https://api.kreyolopal.com'
+  const auth = parseCookie(ctx.req.cookies?.[cookieName])
   const allowedKreyol = ['gp']
 
   const kreyol = ctx.params?.kreyol.toLowerCase()
@@ -98,10 +100,10 @@ export const getServerSideProps = async (ctx) => {
 
   // Fetch data from external API
   const result = await fetch(
-    `${process.env.API_SERVER}/api/dictionary/${kreyol}/${entry}`,
+    `${apiServer}/api/dictionary/${kreyol}/${entry}`,
     {
       method: 'GET',
-      credentials: 'same-origin',
+//      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -136,7 +138,7 @@ export const getServerSideProps = async (ctx) => {
   if (user_id) {
     const token = session_id
     const result2 = await fetch(
-      `${process.env.API_SERVER}/api/me/dictionary/${entry}`,
+      `${apiServer}/api/me/dictionary/${entry}`,
       {
         method: 'GET',
 

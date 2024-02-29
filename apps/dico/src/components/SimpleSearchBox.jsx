@@ -10,7 +10,7 @@ const getEntries = (w) => {
 
   return fetch(`/api/dictionary/suggest/${encodeURIComponent(word)}`, {
     method: 'GET',
-    credentials: 'same-origin',
+//    credentials: 'same-origin',
   })
     .then(
       async (result) => {
