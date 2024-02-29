@@ -8,9 +8,11 @@ export const config = {
   runtime: 'experimental-edge',
 }
 
+
 export async function getServerSideProps(context) {
+  const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
   const user = parseCookie(
-    context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME]
+    context.req.cookies?.[cookieName]
   )
   console.log(user)
   if (user) {

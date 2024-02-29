@@ -27,7 +27,7 @@ const links = [
 const logout = async (auth) => {
   return fetch(`/api/auth/logout`, {
     method: 'POST',
-    credentials: 'same-origin',
+//    credentials: 'same-origin',
   }).then(() => {
     auth?.setSession(null)
   })

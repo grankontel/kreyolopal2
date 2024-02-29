@@ -10,8 +10,9 @@ export const config = {
 }
 
 export async function getServerSideProps(context) {
+  const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
   const user = parseCookie(
-    context.req.cookies?.[process.env.NEXT_PUBLIC_COOKIE_NAME]
+    context.req.cookies?.[cookieName]
   )
   if (user) {
     return {

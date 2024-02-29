@@ -5,6 +5,6 @@ web:
       ansible_connection: ssh
       user: kreyol
       domain: kreyolopal.com
-      self_signed: false
+      self_signed: true
       listen_http: false
   
