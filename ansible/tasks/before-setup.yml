@@ -1,0 +1,13 @@
+---
+- name: DEPLOY | Create postgres data file
+  file:
+    path: "{{ ansistrano_shared_path }}/data/db"
+    owner: "{{ user }}"
+    state: directory
+
+- name: DEPLOY | Create mongodb data file
+  file:
+    path: "{{ ansistrano_shared_path }}/data/mongodb"
+    owner: "{{ user }}"
+    state: directory
+

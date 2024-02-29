@@ -1,0 +1,56 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres:16.2-bookworm
+    container_name: "my_postgres"
+    user: "{{ user_id }}:{{ user_gid }}"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
+    restart: always
+    volumes:
+      - {{ ansistrano_shared_path }}/data/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  postgrest:
+    image: postgrest/postgrest
+    container_name: "postgrest"
+    environment:
+      # The standard connection URI format, documented at
+      # https://www.postgresql.org/docs/current/static/libpq-connect.html#LIBPQ-CONNSTRING
+      - PGRST_DB_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      # The name of which database schema to expose to REST clients
+      - PGRST_DB_SCHEMA=${DB_SCHEMA}
+      # The database role to use when no client authentication is provided
+      - PGRST_DB_ANON_ROLE=${DB_ANON_ROLE}
+      # Overrides the base URL used within the OpenAPI self-documentation hosted at the API root path
+      - PGRST_OPENAPI_SERVER_PROXY_URI=http://localhost:9000
+      # The secret to verify the JWT for authenticated requests with.
+      - PGRST_JWT_SECRET=${PGRST_JWT_SECRET}
+      - PGRST_ADMIN_SERVER_PORT=3001
+    ports:
+      - "127.0.0.1:{{ postgrest_port }}:3000"
+      - "127.0.0.1:{{ postgrest_health_port }}:3001"
+    depends_on:
+      - db
+
+  mongo:
+    image: mongo
+    restart: always
+    container_name: "mongo"
+    user: "{{ user_id }}:{{ user_gid }}"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - {{ ansistrano_shared_path }}/data/mongodb:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  db:
+
+

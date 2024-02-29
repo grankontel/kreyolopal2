@@ -10,7 +10,7 @@ const getEntries = (w) => {
 
   return fetch(`/api/dictionary/suggest/${encodeURIComponent(word)}`, {
     method: 'GET',
-    credentials: 'same-origin',
+//    credentials: 'same-origin',
   })
     .then(
       async (result) => {
@@ -39,6 +39,7 @@ export function SimpleSearchBox(props) {
   const renderItems = (getItemProps, highlightedIndex, selectedItem) => {
     return items.map((item, index) => (
       <li
+        key={item._id}
         className="search__option"
         {...getItemProps({
           key: item._id,

@@ -1,0 +1,98 @@
+---
+# tasks file for nginx
+- name: Nginx configure nginx
+  block:
+    - name: Nginx | Diffie-Hellman keys
+      command: openssl dhparam -out /etc/nginx/dhparam.pem 2048
+      args:
+        creates: /etc/nginx/dhparam.pem
+    - name: Nginx | Diffie-Hellman permissions
+      file:
+        path: /etc/nginx/dhparam.pem
+        state: file
+        group: wheel
+        mode: o=r
+    - name: Nginx |  Get stats of sites-enabled
+      ansible.builtin.stat:
+        path: /etc/nginx/sites-enabled
+      register: sten
+    - name: Nginx |  Get stats of sites-available
+      ansible.builtin.stat:
+        path: /etc/nginx/sites-available
+      register: stav
+
+    - name: Nginx | Creates sites-enabled directory
+      file:
+        path: /etc/nginx/sites-enabled
+        state: directory
+        group: wheel
+        mode: o=r
+      when: sten.stat.gr_name != 'wheel'
+
+    - name: Nginx | Configuration basics
+      template:
+        src: nginx.j2
+        dest: "/etc/nginx/nginx.conf"
+        group: wheel
+        mode: o=r
+    - name: Nginx | Creates sites-available directory
+      file:
+        path: /etc/nginx/sites-available
+        state: directory
+        group: wheel
+        mode: o=r
+      when: stav.stat.gr_name != 'wheel'
+      
+    - name: Nginx | Creates nginxconfig.io directory
+      file:
+        path: /etc/nginx/nginxconfig.io
+        state: directory
+        group: wheel
+        mode: o=r
+    - name: "Nginx | Configuration SSL"
+      template:
+        src: ssl.j2
+        dest: "/etc/nginx/nginxconfig.io/ssl.conf"
+        group: wheel
+        mode: o=r
+    - name: "Nginx | Configuration security"
+      template:
+        src: security.j2
+        dest: "/etc/nginx/nginxconfig.io/security.conf"
+        group: wheel
+        mode: o=r
+    - name: "Nginx | Configuration general"
+      template:
+        src: general.j2
+        dest: "/etc/nginx/nginxconfig.io/general.conf"
+        group: wheel
+        mode: o=r
+    - name: "Nginx | Configuration proxy"
+      template:
+        src: proxy.j2
+        dest: "/etc/nginx/nginxconfig.io/proxy.conf"
+        group: wheel
+        mode: o=r
+
+    - name: "Nginx | Create subdomains"
+      include_tasks: onedomain.yml
+      loop: "{{  apps | dict2items }}"
+
+    # - name: Nginx | Set www subdomain
+    #   block:
+    #   - name: Nginx | Set www facts
+    #     set_fact:
+    #       domainhost: www
+    #       subdomain: "www.{{ domain }}"
+    #       is_restricted: true
+    #       domain_template: empty_domain.j2
+
+    #   - name: Include task list in play for www
+    #     ansible.builtin.include_tasks:
+    #       file: domain_tasks.yml
+
+    - name: "Nginx | Configuration default"
+      template:
+        src: default.j2
+        dest: "/etc/nginx/sites-available/default"
+

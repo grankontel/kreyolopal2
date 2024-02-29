@@ -1,0 +1,58 @@
+<mjml>
+  <mj-head>
+    <mj-title>Nou wousouvwè mésaj a-w</mj-title>
+    <mj-font name="Noto Serif" href="https://fonts.googleapis.com/css?family=Noto+Serif" />
+    <mj-font name="Titillium Web" href="https://fonts.googleapis.com/css?family=Titillium+Web:400,600" />
+    <mj-attributes>
+      <mj-class name="title" font-family="Titillium Web" font-weight="600" font-size="20px" />
+      <mj-class name="code" font-family="Titillium Web" font-weight="400" font-size="12px" />
+      <mj-all font-family="Noto Serif" font-size="13px" line-height="17px" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#ccd3e0">
+    <!-- header -->
+    <mj-section background-color="#422B8F">
+    </mj-section>
+    <mj-section background-color="#fff" padding-bottom="20px" padding-top="20px">
+      <mj-column>
+        <mj-text mj-class="title">
+          <h1>Byen rivé !</h1>
+        </mj-text>
+        <mj-text color="#525252" line-height="20px" font-size="16px">
+          Nou byen wousouvwè mésaj a-w, {{user.firstname}}.
+          Nou ka pòté mannèv pou réponn vitman-présé.</mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#fff" padding-bottom="20px">
+      <mj-column width="80%" background-color="#eeebea">
+
+        <mj-text color="#525252" line-height="15px" font-size="14px">
+          <p>De : {{user.firstname}} {{user.lastname}} &lt;{{user.email}}&gt;
+          </p>
+          <p>{{subject}}</p>
+          <p> {{message}} </p>
+        </mj-text>
+
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#f7f7fc">
+      <mj-column>
+        <mj-social>
+          <mj-social-element href="#" name="facebook" />
+          <mj-social-element href="#" name="twitter" />
+        </mj-social>
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#141414">
+      <mj-column>
+        <mj-text color="#e7e7e7" align="center" font-size="9px">
+          &copy; Plume Magique 2020
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>

@@ -1,0 +1,57 @@
+SKIP_PREFLIGHT_CHECK=true
+
+PORT={{ api_port }}
+
+LOGLEVEL='debug'
+
+SESSION_SECRET='{{ session_secret }}'
+SESSION_DURATION=3600
+
+API_SALT='{{ api_salt }}'
+TOKEN_SALT='{{ token_salt }}'
+ARGON_MEMORYCOST=24
+ARGON_LENGTH=24
+ARGON_ITERATIONS=3
+
+MAILGUN_API_KEY='{{ mailgun_api_key }}'
+MAILGUN_DOMAIN='mg.kreyolopal.com'
+MAILGUN_HOST='api.eu.mailgun.net'
+MAILGUN_FROM='no-reply@kreyolopal.com'
+
+MAILIST_API_KEY='{{ mailist_api_key }}'
+MAILIST_LISTID='{{ mailist_listid }}'
+
+CAPTCHA_SECRET_KEY='{{ captcha_secret_key }}'
+
+# server 1
+PROD_POSTGRES_HOST='localhost'
+PROD_POSTGRES_DB='{{ db_name }}'
+PROD_POSTGRES_USERNAME='{{ db_user }}'
+PROD_POSTGRES_PASSWORD='{{ db_password }}'
+
+# server 2
+POSTGRES_HOST='localhost'
+POSTGRES_DB='{{ db_name }}'
+POSTGRES_USERNAME='{{ db_user }}'
+POSTGRES_PASSWORD='{{ db_password }}'
+
+MONGODB_HOST='localhost' # 'localhost'
+MONGODB_USER='{{ mongodb_user }}'
+MONGODB_PASSWORD='{{ mongodb_password }}'
+MONGODB_PORT=27017
+MONGODB_DB='{{ mongodb_name }}'
+
+AWS_ACCESS_KEY_ID='{{ aws_access_key_id }}'
+AWS_SECRET_ACCESS_KEY='{{ aws_secret_access_key }}'
+AWS_BUCKET_REGION='us-east-1'
+AWS_BUCKET_NAME='kreyol-dico'
+COOKIE_NAME='{{ cookie_name }}'
+
+
+MAINTAINTER_EMAIL='kreyolopal@protonmail.com'
+
+SLACK_WEBHOOK_URL='{{ slack_webhook_url }}'
+
+PGRST_JWT_SECRET='{{ pgrst_jwt_secret }}'
+
+PGRST_HEALTH='http://localhost:{{ postgrest_health_port }}/live'

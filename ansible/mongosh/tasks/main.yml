@@ -1,0 +1,50 @@
+---
+# tasks file for mongosh
+- name: MongoSH | Install required system packages
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+    state: latest
+    update_cache: true
+
+- name: MongoSH | Add MongoDB GPG apt Key
+  apt_key:
+    url: "https://www.mongodb.org/static/pgp/server-{{ my_package_version }}.asc"
+    state: present
+
+- name: MongoSH | Add MongoSH Repository
+  apt_repository:
+    repo: "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/{{ my_package_version }} multiverse"
+    state: present
+
+- name: MongoSH | Update apt and install mongosh
+  apt:
+    pkg:
+      - libssl3
+      - mongodb-mongosh-shared-openssl3
+    state: latest
+    update_cache: true
+
+- name: MongoSH | Check if mongodb-database-tools is installed
+  command: dpkg-query -W mongodb-database-tools
+  register: my_package_check_deb
+  failed_when: my_package_check_deb.rc > 1
+  changed_when: my_package_check_deb.rc == 1
+
+- name: "MongoSH | Create downloads directory "
+  file:
+    path: /root/downloads
+    state: directory
+
+- name: "MongoSH | Download {{ my_package_name }}"
+  get_url: 
+    url="{{ my_package_url }}"
+    dest="/root/downloads/{{ my_package_name }}.deb"
+  when: my_package_check_deb.rc == 1
+
+- name: "MongoSH | Install {{ my_package_name }}"
+  apt: deb="/root/downloads/{{ my_package_name }}.deb"
+  when: my_package_check_deb.rc == 1

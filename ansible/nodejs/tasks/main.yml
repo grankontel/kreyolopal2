@@ -1,0 +1,40 @@
+---
+# tasks file for nodejs
+- name: NODEJS | Download Install
+  get_url:
+    url: "https://deb.nodesource.com/setup_{{ nodejs_version }}.x"
+    dest: ~/nodejs
+    mode: 0755
+- name: NODEJS | Package
+  command: ~/nodejs
+  args:
+    creates: /etc/apt/sources.list.d/nodesource.list
+- name: NODEJS | Install
+  apt:
+    name: 
+      - nodejs
+    update_cache: true
+- name: NODEJS | npm globals packages
+  npm:
+    name: "{{ item }}"
+    global: yes
+  with_items: "{{ npm_globals }}"
+
+- name: NODEJS | get root modules path
+  command:
+    cmd: npm root --quiet -g
+  register: npm_root_path
+
+- debug: 
+    msg: "npm root path '{{ npm_root_path.stdout }}'"
+
+- name: NODEJS | Ensure node module path is in .bashrc
+  ansible.builtin.lineinfile:
+    path: "/home/{{ user }}/.bashrc"
+    regexp: '^export NODE_PATH='
+    line: "export NODE_PATH={{ npm_root_path.stdout }}"
+
+- name: PM2 | prepare startup
+  command: "env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u {{ user }} --hp /home/{{ user }} "
+  args:
+    creates: "/etc/systemd/system/pm2-{{ user }}.service"

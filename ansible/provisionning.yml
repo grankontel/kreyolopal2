@@ -1,0 +1,138 @@
+
+---
+- name : Installation du serveur
+  hosts: all
+  gather_facts: true
+  remote_user: root
+  tasks:
+    - include_vars:
+        file: vars.yml
+    - name: Make sure we have a 'wheel' group
+      group:
+        name: wheel
+        state: present
+    - name: USER | creation
+      user: 
+        name: "{{ user }}"
+        group: wheel
+        shell: /bin/bash
+
+    - name: Give access to home
+      file:
+        path: "/home/{{ user }}"
+        state: directory
+        owner: "{{user }}"
+        group: wheel
+        mode: o+rx
+
+    - name: USER | cle ssh
+      authorized_key:
+        user: "{{ user }}"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+    - name: USER | Allow some privileges
+      community.general.sudoers:
+        name: wheel-nginx
+        group: wheel
+        commands:
+          - /bin/systemctl restart nginx
+          - /bin/systemctl reload nginx
+        nopassword: true
+
+    - name: APT | upgrade & update
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - include_role:
+        name: firewall
+
+    - include_role:
+        name: fail2ban
+
+    - name: Ansible | Required packages
+      apt:
+        name: 
+          - python3
+          - python3-pip
+        state: present
+
+    - name: Nginx | Required packages
+      apt:
+        name: 
+          - openssl
+          - certbot
+          - nginx
+          - python3-passlib
+        state: present
+
+    - name: Postgresql | Utility present
+      ansible.builtin.package:
+        name: python3-psycopg2
+        state: present
+
+    - name: Remove apt pymongo package
+      ansible.builtin.package:
+        name: python3-pymongo
+        state: absent
+
+    - name: Install pymongo python package
+      ansible.builtin.pip:
+        name: pymongo
+        state: latest
+
+    - name: Wheel Group | Permissions /etc/nginx
+      ansible.builtin.file:
+        path: /etc/nginx
+        owner: root
+        group: wheel
+        recurse: true
+        mode: g=rw
+    - name: Wheel Group | Ensure nginx subdirectories can be open
+      command: find /etc/nginx -type d -exec chmod g+x {} \;
+
+    - name: Wheel Group | Permissions /etc/ssl
+      ansible.builtin.file:
+        path: /etc/ssl
+        owner: root
+        group: wheel
+        recurse: true
+        mode: g=rw
+    - name: Wheel Group | Ensure ssl subdirectories can be open
+      command: find /etc/ssl -type d -exec chmod g+x {} \;
+
+    - name: Wheel Group | Permissions /var/www
+      ansible.builtin.file:
+        path: /var/www
+        owner: root
+        group: wheel
+        recurse: true
+        mode: g=rw
+    - name: Wheel Group | Ensure /var/www subdirectories can be open
+      command: find /var/www -type d -exec chmod g+x {} \;
+
+    - name: Wheel Group | Permissions /etc/letsencrypt
+      ansible.builtin.file:
+        path: /etc/letsencrypt
+        owner: root
+        group: wheel
+        recurse: true
+        mode: g=rw
+    - name: Wheel Group | Ensure ssl subdirectories can be open
+      command: find /etc/letsencrypt -type d -exec chmod g+x {} \;
+
+    - include_role:
+        name: docker
+
+    - include_role:
+        name: mongosh
+
+    - name: USER | add to docker group
+      user: 
+        name: "{{ user }}"
+        groups: docker
+        append: true
+
+    - include_role:
+        name: nodejs

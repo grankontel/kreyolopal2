@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'
 import { check, param } from 'express-validator'
 import handlers from './spellcheck.handlers'
 const routes = express.Router()

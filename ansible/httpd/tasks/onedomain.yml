@@ -1,0 +1,20 @@
+---
+# onedomain.yml
+- name: Nginx | Set subdomain
+  set_fact:
+    domainhost: "{{ item.key }}"
+    subdomain: "{{ item.key }}.{{ domain }}"
+    domainport: "{{ item.value.port }}"
+    is_restricted: "{{ item.value.restricted | bool }}"
+    domain_template: domain.j2
+
+- name: Include task list in play
+  ansible.builtin.include_tasks:
+    file: domain_tasks.yml
+  when: item.value.pm2start
+
+- name: "Nginx | {{ subdomain }} | Deactivate site"
+  file:
+    path: "/etc/nginx/sites-enabled/{{ subdomain }}"
+    state: absent
+  when: not item.value.pm2start

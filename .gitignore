@@ -17,6 +17,7 @@ node_modules
 .env*
 
 # compiled output
+ssl/
 build
 dist
 tmp
@@ -26,7 +27,22 @@ tmp
 test.rest
 
 data/db/*
+data/old.db
 data/mongodb/*
 !data/db/.gitkeep
 !data/mongodb/.gitkeep
 
+# import file
+import/var 
+sources
+
+# Vagrant
+
+.vagrant
+facts.json
+vagrant/*.log
+
+# Ansible
+ansible/credentials
+
+shared/public/images/w*

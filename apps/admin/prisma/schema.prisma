@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type PersonalWords {
+  definitions WordsDefinitions
+  entry       String
+  variations  String[]
+}
+
+type AQuote {
+  text   String
+  from   String
+  author String
+}
+
+type WordsDefinitions {
+  gp WordsDefinitionsGp[]
+}
+
+type WordsDefinitionsGp {
+  confer    String[]
+  meaning   WordsDefinitionsGpMeaning
+  nature    String[]
+  quotes    AQuote[]
+  subnature String[]
+  synonyms  String[]
+  usage     String[]
+}
+
+type WordsDefinitionsGpMeaning {
+  fr String
+  gp String
+}
+
+model personal {
+  id         String          @id @default(auto()) @map("_id") @db.ObjectId
+  birth_date DateTime        @db.Date
+  user_id    String
+  words      PersonalWords[]
+}
+
+model words {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  definitions WordsDefinitions
+  entry       String           @unique(map: "entry_1")
+  /// Field referred in an index, but found no data to define the type.
+  publishedAt DateTime?        @db.Date
+  variations  String[]
+
+  @@index([publishedAt], map: "publishedAt_1")
+  @@index([variations], map: "variations_1")
+}

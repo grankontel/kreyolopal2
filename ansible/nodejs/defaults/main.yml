@@ -1,0 +1,8 @@
+---
+# defaults file for nodejs
+npm_globals:
+  - npm@latest
+  - pm2@latest
+  - dotenv
+nodejs_version: 20
+  

@@ -1,0 +1,145 @@
+---
+- name: "Nginx | {{ subdomain }} | Configuration letsencrypt"
+  template:
+    src: domain_letsencrypt.j2
+    dest: "/etc/nginx/nginxconfig.io/{{ domainhost }}_letsencrypt.conf"
+    group: wheel
+    mode: o=r
+
+- name: "Nginx | {{ subdomain }} | Password directory "
+  file:
+    path: "{{ restricted_dir }}/{{ domainhost }}"
+    state: directory
+    group: wheel
+    mode: o=rx
+  when: is_restricted
+
+- name: "Nginx | {{ subdomain }} | Restrict Access "
+  community.general.htpasswd:
+    path: "{{ restricted_dir }}/{{ domainhost }}/htpasswd"
+    name: wabap
+    password: '5edKreyol!'
+    group: wheel
+    mode: o=r
+  when: is_restricted
+
+- name: "Nginx | {{ subdomain }} | Check certificate file "
+  stat:
+    path: "/etc/ssl/certs/{{ subdomain }}.crt"
+  register: cert_file
+
+- name: "Nginx | {{ subdomain }} | Configuration "
+  template:
+    src: "{{ domain_template }}"
+    dest: "/etc/nginx/sites-available/{{ subdomain }}.conf"
+- name: "Nginx | {{ subdomain }} | Activate site"
+  file:
+    src: "/etc/nginx/sites-available/{{ subdomain }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ subdomain }}"
+    group: wheel
+    mode: o+r
+    state: link
+- name: "Nginx | {{ subdomain }} | Comment listen SSL"
+  replace:
+    path: "/etc/nginx/sites-available/{{ subdomain }}.conf"
+    regexp: '(listen .+443 ssl .+)$'
+    replace: '# \1'
+- name: "Nginx | {{ subdomain }} | Comment SSL directives"
+  replace:
+    path: "/etc/nginx/sites-available/{{ subdomain }}.conf"
+    regexp: '(\w*ssl_.+)$'
+    replace: '# \1'
+
+- name: "Nginx | {{ subdomain }} | Comment Restrict directives"
+  replace:
+    path: "/etc/nginx/sites-available/{{ subdomain }}.conf"
+    regexp: '(\w*auth_.+)$'
+    replace: '# \1'
+  when: is_restricted
+
+  notify:
+    - restart_nginx
+    
+- name: "Nginx | {{ subdomain }} | Creates lets encrypt directory"
+  file:
+    path: "/var/www/{{ subdomain }}/_letsencrypt/.well-known/acme-challenge/"
+    state: directory
+    group: wheel
+    mode: g+w,o+r
+  when: not self_signed | bool
+
+- name: "Nginx | {{ subdomain }} | Get SSL certificates"
+  command: "certbot certonly --webroot --work-dir {{ ansistrano_deploy_to }}/letsencrypt/lib  --logs-dir {{ ansistrano_deploy_to }}/letsencrypt/log -d {{ subdomain }} --email info@{{ domain }} -w /var/www/{{ subdomain }}/_letsencrypt -n --agree-tos"
+  when: not self_signed | bool
+
+- name: "Nginx | {{ subdomain }} | Automatic certificate renewal"
+  copy:
+    dest: "/etc/letsencrypt/renewal-hooks/post/nginx-reload.sh"
+    content: |
+      #!/bin/bash
+      nginx -t && systemctl reload nginx
+    mode: a+x
+    force: false
+  when: not self_signed | bool
+
+- name: "SSL | {{ subdomain }} | Creates ssl directory"
+  file:
+    path: "/home/{{ user }}/{{ domain }}/ssl"
+    state: directory
+    owner: "{{user }}"
+    group: wheel
+    mode: a+rx
+  when: self_signed | bool
+- name: "SSL | {{ subdomain }} | Create private key with the default values (4096 bits, RSA)"
+  community.crypto.openssl_privatekey:
+    path: "/etc/ssl/private/{{ subdomain }}.pem"    
+    group: wheel
+    mode: a+r
+  when: 
+    - not cert_file.stat.exists
+    - self_signed | bool
+
+- name: "SSL | {{ subdomain }} | Generate an OpenSSL Certificate Signing Request"
+  community.crypto.openssl_csr:
+    path: "/home/{{ user }}/{{ domain }}/ssl/{{ subdomain }}.csr"
+    privatekey_path: "/etc/ssl/private/{{ subdomain }}.pem"
+    country_name: FR
+    organization_name: Kreyolopal
+    email_address: "contact@{{ domain }}"
+    common_name: "{{ subdomain }}"
+  when: 
+    - not cert_file.stat.exists
+    - self_signed | bool
+
+- name: "SSL | {{ subdomain }} | Generate a Self Signed OpenSSL certificate"
+  openssl_certificate:
+    path: "/etc/ssl/certs/{{ subdomain }}.crt"
+    privatekey_path: "/etc/ssl/private/{{ subdomain }}.pem"
+    csr_path: "/home/{{ user }}/{{ domain }}/ssl/{{ subdomain }}.csr"
+    provider: selfsigned
+    group: wheel
+    mode: o+r
+  when: 
+    - not cert_file.stat.exists
+    - self_signed | bool
+
+- name: "Nginx | {{ subdomain }} | Uncomment SSL directives"
+  replace:
+    path: "/etc/nginx/sites-available/{{ subdomain }}.conf"
+    regexp: '# (\w*ssl_.+)$'
+    replace: '\1'
+- name: "Nginx | {{ subdomain }} | Uncomment listen SSL"
+  replace:
+    path: "/etc/nginx/sites-available/{{ subdomain }}.conf"
+    regexp: '# (listen .+443 ssl .+)$'
+    replace: '\1'
+
+- name: "Nginx | {{ subdomain }} | Uncomment Restrict access"
+  replace:
+    path: "/etc/nginx/sites-available/{{ subdomain }}.conf"
+    regexp: '# (\w*auth_.+)$'
+    replace: '\1'
+  when: is_restricted
+
+  notify:
+    - restart_nginx

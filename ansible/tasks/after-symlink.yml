@@ -1,0 +1,74 @@
+
+---
+- name: DOCKER | ensure docker is up
+  community.docker.docker_compose:
+    project_src: "{{ ansistrano_shared_path }}"
+    state: present
+
+- name: MONGO | Create 'zakari' database user with name 'zakari' and secret password.
+  community.mongodb.mongodb_user:
+    login_user: root
+    login_password: "{{ pwd_mongo }}"
+    database: zakari
+    name: zakari
+    password: "{{ mongodb_password }}"
+    roles: readWrite,dbAdmin
+    state: present
+
+- name: POSTGRESQL | Ensure database exists
+  community.postgresql.postgresql_ping:
+    db: "{{ db_name }}"
+    login_host: localhost
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+  register: dbresult
+
+- name: DOCKER | create database and user
+  community.docker.docker_container_exec:
+    container: my_postgres
+    env: 
+      PGPASSWORD: "{{ pwd_postgres | string }}"
+    command: psql -U postgres -c "{{ item }}" 
+  loop:
+    - "create user {{ db_user }} with encrypted password '{{ db_password }}';"
+    - "GRANT ALL ON SCHEMA public TO {{ db_user }};"
+    - "create database {{ db_name }};"
+    - "alter database {{ db_name }} OWNER TO {{ db_user }};"
+    - "CREATE USER anon;"
+    - "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO anon;"
+    - "GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO anon;"
+    - "GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon;"
+    - "CREATE ROLE {{ db_api_role }};"
+    - "GRANT USAGE ON SCHEMA public TO {{ db_api_role }};"
+    - "GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO {{ db_api_role }};"
+    - "GRANT ALL ON ALL TABLES IN SCHEMA public TO {{ db_api_role }};"
+  no_log: true
+  when: not dbresult.is_available
+
+- name: APP SERVER | npm install
+  command: 
+    cmd: npm ci --omit=dev
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}/server2"
+  environment:
+    NODE_ENV: 'production'
+
+# - name: APP ADMIN | npm install
+#   command: 
+#     cmd: npm ci 
+#   args:
+#     chdir: "{{ ansistrano_release_path.stdout }}/admin"
+#   environment:
+#     NODE_ENV: 'production'
+
+# - name: APP ADMIN | npx prisma generate
+#   command: 
+#     cmd: npx prisma generate 
+#   args:
+#     chdir: "{{ ansistrano_release_path.stdout }}/admin"
+#   environment:
+#     NODE_ENV: 'production'
+
+- name: Include task list in play
+  ansible.builtin.include_tasks:
+    file: "{{ playbook_dir }}/tasks/start-apps.yml"

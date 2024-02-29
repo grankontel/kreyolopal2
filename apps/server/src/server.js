@@ -61,6 +61,7 @@ app.use(
 
 setRoutes({ app })
 
+/*
 const CLIENT_BUILD_PATH = path.join(__dirname, '../public')
 
 // serve static assets
@@ -73,6 +74,7 @@ app.get(
 app.get(/^(?!\/(api|backend))(.+)/, (request, response) => {
   response.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'))
 })
+*/
 
 // errors
 app.use(function (err, req, res, next) {
@@ -118,7 +120,7 @@ app.use((req, res) =>
 });
  */
 
-mongoose.set('strictQuery', true);
+mongoose.set('strictQuery', true)
 process.stdout.write('🔌 connecting to mongo database...')
 mongoose
   .connect(config.mongodb.uri, {
@@ -126,23 +128,25 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
-    process.stdout.write(' connected !\n')
-    app.listen(port, (err) => {
-      if (err) {
-        process.stdout.write(`\n❌ An error occured : ${err}\n\n`)
-        process.exit(1)
-      }
-      process.stdout.write(
-        `\n🚀 Your server is ready on http://localhost:${port}\n\n`
-      )
-    })
-  },
-  reason => {
-    process.stdout.write(`\n❌ Cannot connect to mongo : ${reason}\n\n`)
-    process.exit(1)
-
-  }).catch((error) => {
+  .then(
+    () => {
+      process.stdout.write(' connected !\n')
+      app.listen(port, (err) => {
+        if (err) {
+          process.stdout.write(`\n❌ An error occured : ${err}\n\n`)
+          process.exit(1)
+        }
+        process.stdout.write(
+          `\n🚀 Your server is ready on http://localhost:${port}\n\n`
+        )
+      })
+    },
+    (reason) => {
+      process.stdout.write(`\n❌ Cannot connect to mongo : ${reason}\n\n`)
+      process.exit(1)
+    }
+  )
+  .catch((error) => {
     console.log(error)
     process.exit(1)
-  }) 
+  })

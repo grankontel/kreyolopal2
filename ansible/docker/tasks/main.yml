@@ -1,0 +1,58 @@
+---
+# tasks file for docker
+- name: DOCKER | Install required system packages
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - python3-pip
+      - virtualenv
+      - python3-setuptools
+    state: latest
+    update_cache: true
+
+- name: DOCKER | Install SSL Module for Python
+  ansible.builtin.pip:
+    name: pyOpenSSL
+    state: latest
+
+- name: DOCKER | Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: DOCKER | Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: absent
+
+- name: DOCKER | Add Docker Repository
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+    
+
+- name: DOCKER | Update apt and install docker-ce
+  apt:
+    pkg:
+      - docker-ce
+      - docker-compose
+    state: latest
+    update_cache: true
+
+- name: DOCKER | Remove Docker python package
+  ansible.builtin.package:
+    name: python3-docker
+    state: absent
+
+- name: DOCKER | Install Docker Module for Python
+  ansible.builtin.pip:
+    name: docker==6.1.3
+    state: latest
+
+- name: DOCKER | Install docker-compose Module for Python
+  ansible.builtin.pip:
+    name: docker-compose
+    state: latest
