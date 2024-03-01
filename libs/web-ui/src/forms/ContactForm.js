@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react'
 import { Box, Button, Columns, Form, Notification } from 'react-bulma-components'
 import { Turnstile } from '@marsidev/react-turnstile'
-import { FormField } from './components/FormField'
+import { FormField } from '#components/FormField'
 import PropTypes from 'prop-types'
-import { siteVerify } from './turnstile'
+import { siteVerify } from '../turnstile'
 
 export function ContactForm({ endpoint, turnstileKey }) {
   const [isLoading, setIsLoading] = useState(false)

@@ -6,6 +6,10 @@
     "dist"
   ],
   "main": "./dist/main.js",
+  "imports": {
+    "#components/*": "./src/components/*.js",
+    "#forms/*": "./src/forms/*.js"
+  },
   "scripts": {
     "dev": "webpack --mode development -w",
     "build": "webpack --mode production",

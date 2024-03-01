@@ -8,7 +8,7 @@ export { StarRating } from './components/StarRating'
 export { AuthProvider, useAuth } from './components/AuthContext'
 
 export { FormField } from './components/FormField'
-export { ContactForm } from './ContactForm'
+export { ContactForm } from './forms/ContactForm'
 
 // flags
 export { FlagGp } from './components/FlagGp'
