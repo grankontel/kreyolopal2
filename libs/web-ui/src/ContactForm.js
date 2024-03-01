@@ -3,6 +3,7 @@ import { Box, Button, Columns, Form, Notification } from 'react-bulma-components
 import { Turnstile } from '@marsidev/react-turnstile'
 import { FormField } from './components/FormField'
 import PropTypes from 'prop-types'
+import { siteVerify } from './turnstile'
 
 export function ContactForm({ endpoint, turnstileKey }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -33,18 +34,7 @@ export function ContactForm({ endpoint, turnstileKey }) {
       setIsLoading(true)
       clearMessage()
 
-      const res = await fetch('/api/cloudflare', {
-        method: 'POST',
-        body: JSON.stringify({ token }),
-        headers: {
-          'content-type': 'application/json'
-        }
-      })
-      const cfData = await res.json()
-      if (!cfData.success) {
-        // the token has not been validated
-        throw new Error('Token not verified')
-      }
+      await siteVerify(token)
 
       await fetch(endpoint, {
         method: 'POST',
