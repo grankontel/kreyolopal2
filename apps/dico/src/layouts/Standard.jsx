@@ -32,7 +32,7 @@ const logout = async (auth) => {
     method: 'POST',
 //    credentials: 'same-origin',
   }).then(() => {
-    auth?.setSession(null)
+    auth?.closeSession()
   })
 }
 
@@ -64,18 +64,18 @@ export default function Standard({ children }) {
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Modal title</p>
+            <p className="modal-card-title">Déconnexion</p>
             <button className="delete" aria-label="close" onClick={() => setOpenLogout(false)}></button>
           </header>
           <section className="modal-card-body">
-            content
+            Êtes-vous sûr(e) ?
           </section>
           <footer className="modal-card-foot">
             <button className="button is-success" onClick={(e) => {
               e.preventDefault()
               logout(auth).then(() => setOpenLogout(false))
             }}>Save changes</button>
-            <button className="button" onClick={() => setOpenLogout(false)}>Cancel</button>
+            <button className="button" onClick={() => setOpenLogout(false)}>Annuler</button>
           </footer>
         </div>
       </div>
