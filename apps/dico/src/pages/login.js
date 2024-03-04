@@ -1,19 +1,16 @@
+import { Section, Heading } from 'react-bulma-components'
 import { parseCookie } from '@/lib/auth'
-import Link from 'next/link'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Section } from 'react-bulma-components'
+import { LoginForm } from '@kreyolopal/web-ui'
+import Standard from '@/layouts/Standard'
 
+const apiServer = process.env.API_SERVER || 'https://api.kreyolopal.com'
 export const config = {
   runtime: 'experimental-edge',
 }
 
-
 export async function getServerSideProps(context) {
   const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
-  const user = parseCookie(
-    context.req.cookies?.[cookieName]
-  )
+  const user = parseCookie(context.req.cookies?.[cookieName])
   console.log(user)
   if (user) {
     return {
@@ -28,44 +25,18 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function Page() {
-  const router = useRouter()
-  const [error, setError] = useState(null)
-
-  async function onSubmit(e) {
-    e.preventDefault()
-    setError(null)
-    const formElement = e.target
-    const response = await fetch(formElement.action, {
-      method: formElement.method,
-      body: JSON.stringify(
-        Object.fromEntries(new FormData(formElement).entries())
-      ),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    if (response.ok) {
-      router.push('/')
-    } else {
-      setError((await response.json()).error)
-    }
-  }
-
+export default function LoginPage() {
   return (
     <Section>
-      <h1>Sign in</h1>
-      <form method="post" action="/api/auth/login" onSubmit={onSubmit}>
-        <label htmlFor="username">Username</label>
-        <input name="username" id="username" />
-        <br />
-        <label htmlFor="password">Password</label>
-        <input type="password" name="password" id="password" />
-        <br />
-        <button>Continue</button>
-        <p>{error}</p>
-      </form>
-      <Link href="/signup">Create an account</Link>
+      <Heading size={2} renderAs="h1">Sign in</Heading>
+      <LoginForm
+        endpoint={apiServer + '/api/auth/login'}
+        turnstileKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY}
+      />
     </Section>
   )
+}
+
+LoginPage.getLayout = function getLayout(page) {
+  return <Standard>{page}</Standard>
 }

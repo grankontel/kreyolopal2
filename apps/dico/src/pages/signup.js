@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Box, Button, Heading, Section } from 'react-bulma-components'
 import { FormField } from '@/components/FormField'
+import Standard from '@/layouts/Standard'
 
 export const config = {
   runtime: 'experimental-edge',
@@ -27,7 +28,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function Page() {
+export default function SignupPage() {
   const router = useRouter()
   const [error, setError] = useState(null)
 
@@ -56,7 +57,7 @@ export default function Page() {
       <Heading size={3} renderAs="h1">
         Create an account
       </Heading>
-      <Box className="w-80">
+      <Box className="register_form">
         <form method="post" action="/api/auth/signup" onSubmit={onSubmit}>
           <FormField
             name="email"
@@ -99,4 +100,8 @@ export default function Page() {
       </Box>
     </Section>
   )
+}
+
+SignupPage.getLayout = function getLayout(page) {
+  return <Standard>{page}</Standard>
 }
