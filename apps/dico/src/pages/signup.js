@@ -2,9 +2,22 @@ import { parseCookie } from '@/lib/auth'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Box, Button, Heading, Section } from 'react-bulma-components'
+import { Box, Button, Heading, Section, Form } from 'react-bulma-components'
 import { FormField } from '@/components/FormField'
+import { SignupForm } from '@kreyolopal/web-ui'
 import Standard from '@/layouts/Standard'
+import DatePicker, { registerLocale } from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import { fr } from 'date-fns/locale/fr'
+import { addDays, addYears } from 'date-fns'
+registerLocale('fr', fr)
+
+const apiServer = process.env.API_SERVER || 'https://api.kreyolopal.com'
+
+// import 'react-datepicker/dist/react-datepicker.css'
+
+// CSS Modules, react-datepicker-cssmodules.css
+// import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 
 export const config = {
   runtime: 'experimental-edge',
@@ -12,9 +25,7 @@ export const config = {
 
 export async function getServerSideProps(context) {
   const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
-  const user = parseCookie(
-    context.req.cookies?.[cookieName]
-  )
+  const user = parseCookie(context.req.cookies?.[cookieName])
   if (user) {
     return {
       redirect: {
@@ -31,6 +42,8 @@ export async function getServerSideProps(context) {
 export default function SignupPage() {
   const router = useRouter()
   const [error, setError] = useState(null)
+  const maxDate = addYears(new Date(), -12)
+  const [startDate, setStartDate] = useState(addDays(maxDate, 1))
 
   async function onSubmit(e) {
     e.preventDefault()
@@ -38,9 +51,7 @@ export default function SignupPage() {
     const formElement = e.target
     const response = await fetch(formElement.action, {
       method: formElement.method,
-      body: JSON.stringify(
-        Object.fromEntries(new FormData(formElement).entries())
-      ),
+      body: JSON.stringify(Object.fromEntries(new FormData(formElement).entries())),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -57,47 +68,10 @@ export default function SignupPage() {
       <Heading size={3} renderAs="h1">
         Create an account
       </Heading>
-      <Box className="register_form">
-        <form method="post" action="/api/auth/signup" onSubmit={onSubmit}>
-          <FormField
-            name="email"
-            label="Email"
-            autocomplete="email"
-            type="text"
-          />
-          <FormField
-            name="username"
-            label="Identifiant"
-            autocomplete="username"
-            type="text"
-          />
-          <FormField
-            name="password"
-            label="Mot de passe"
-            autocomplete="new-password"
-            type="password"
-          />
-          <br />
-          <FormField
-            name="firstname"
-            label="Prénom"
-            autocomplete="give-name"
-            type="text"
-          />
-          <FormField
-            name="lastname"
-            label="Nom"
-            autocomplete="family-name"
-            type="text"
-          />
-          <Button.Group align="center">
-            <Button color="primary">Continue</Button>
-          </Button.Group>
-          <p>{error}</p>
-        </form>
-        <hr />
-        <Link href="/login">Sign in</Link>
-      </Box>
+      <SignupForm 
+       endpoint={apiServer + '/api/auth/signup'}
+       turnstileKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY}
+     />
     </Section>
   )
 }

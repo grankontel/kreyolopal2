@@ -9,8 +9,10 @@ export { AuthProvider, useAuth } from './components/AuthContext'
 
 //forms
 export { FormField } from './components/FormField'
+export { FormFieldWrapper } from './components/FormFieldWrapper'
 export { ContactForm } from './forms/ContactForm'
 export { LoginForm } from './forms/LoginForm'
+export { SignupForm } from './forms/SignupForm'
 
 // flags
 export { FlagGp } from './components/FlagGp'
