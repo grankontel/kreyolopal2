@@ -12,7 +12,7 @@ import { fr } from 'date-fns/locale/fr'
 import { addDays, addYears } from 'date-fns'
 registerLocale('fr', fr)
 
-const apiServer = process.env.API_SERVER || 'https://api.kreyolopal.com'
+const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 
 // import 'react-datepicker/dist/react-datepicker.css'
 

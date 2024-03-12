@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { Box, Button, Columns, Form, Notification } from 'react-bulma-components'
 import { Turnstile } from '@marsidev/react-turnstile'
@@ -43,7 +43,11 @@ export function SignupForm({ endpoint, turnstileKey, destination }) {
       setIsLoading(true)
       clearMessage()
 
-      await siteVerify(token)
+      await siteVerify(token).catch((error)=>{
+        setNotif({ color: 'danger', message: 'Invalid token' })
+        setIsLoading(false)
+        router.reload()
+      })
 
       await fetch(endpoint, {
         method: 'POST',
@@ -55,6 +59,7 @@ export function SignupForm({ endpoint, turnstileKey, destination }) {
         .then((response) => {
           if (!response.ok) {
             console.log('not ok')
+            console.log(response)
             throw Error(response.statusText)
           }
 

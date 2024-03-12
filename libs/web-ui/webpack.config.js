@@ -50,6 +50,7 @@ module.exports = {
       'react-bulma-components': 'react-bulma-components',
       next: 'next',
       'next/navigation': 'next/navigation',
+      'next/router': 'next/router',
       'next/link': 'next/link',
     },
   ],

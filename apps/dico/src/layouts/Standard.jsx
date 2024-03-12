@@ -7,7 +7,7 @@ import classNames from 'classnames'
 import { Turnstile } from '@marsidev/react-turnstile'
 
 const dico_url = process.env.NEXT_PUBLIC_DICO_URL || `http://localhost:${process.env.PORT || 3000}`
-const apiServer = process.env.API_SERVER || 'https://api.kreyolopal.com'
+const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 
 const links = [
   {
