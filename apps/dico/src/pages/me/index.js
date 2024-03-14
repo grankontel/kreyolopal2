@@ -1,6 +1,6 @@
 import { Icon, Section, Table } from 'react-bulma-components'
 import { FlagGp } from '@kreyolopal/web-ui'
-import TableCell from '@/components/dictionnary/table/TableCell'
+import TableCell from '@/components/dictionary/table/TableCell'
 
 /*
 {
