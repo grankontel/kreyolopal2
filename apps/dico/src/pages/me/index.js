@@ -156,7 +156,7 @@ export default function MePage() {
                   {ligne.entry_rowspan === 0 ? null : (
                     <td rowSpan={ligne.entry_rowspan}>
                       {ligne.variations.map((variation) => {
-                        return <div>{variation}</div>
+                        return <div key={btoa(funhash(variation))}>{variation}</div>
                       })}
                     </td>
                   )}
@@ -172,7 +172,7 @@ export default function MePage() {
                     entry={ligne.entry}
                     name="usage"
                     value={ligne.usage.map((txt) => (
-                      <div>{txt}</div>
+                      <div key={btoa(funhash(txt))}>{txt}</div>
                     ))}
                     onAdd={(id) => console.log(id)}
                   />
@@ -180,7 +180,7 @@ export default function MePage() {
                     entry={ligne.entry}
                     name="synonyms"
                     value={ligne.synonyms.map((txt) => (
-                      <div>{txt}</div>
+                      <div  key={btoa(funhash(txt))}>{txt}</div>
                     ))}
                     onAdd={(id) => console.log(id)}
                   />
