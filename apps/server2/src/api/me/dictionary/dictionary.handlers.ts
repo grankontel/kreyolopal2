@@ -1,5 +1,6 @@
 import type { Context } from 'hono'
-import { MongoClient, ObjectId } from 'mongodb'
+import type { MongoClient, ObjectId } from 'mongodb'
+import type winston from 'winston'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import { WordsRepository } from '#lib/words.repository'
@@ -170,14 +171,14 @@ const bookmarkWord = async function (c: Context) {
     )
 }
 
-const getWordId = (c: Context, client: MongoClient, logger) => new Promise((resolve, reject) => {
+const getWordId = (c: Context, client: MongoClient, logger: winston.Logger) => new Promise<ObjectId>(async (resolve, reject) => {
   const user = c.get('user')
   const { word } = c.req.param()
 
   if (!user) {
     reject(createHttpException({
       errorContent: { error: 'You are not logged in.' },
-      status: 500,
+      status: 403,
       statusText: 'You are not logged in.',
     }, 403, 'You are not logged in.'))
     return
@@ -186,9 +187,9 @@ const getWordId = (c: Context, client: MongoClient, logger) => new Promise((reso
   if (word.trim().length === 0) {
     reject(createHttpException({
       errorContent: { error: 'Bad  request.' },
-      status: 403,
+      status: 400,
       statusText: 'Bad  request.',
-    }, 403, 'Bad  request.'))
+    }, 400, 'Bad  request.'))
     return
   }
 
@@ -211,7 +212,7 @@ const getWordId = (c: Context, client: MongoClient, logger) => new Promise((reso
     if (result?.length === 0) {
       reject(createHttpException({
         errorContent: { error: 'Not Found.' },
-        status: 403,
+        status: 404,
         statusText: 'Not Found.',
       }, 404, 'Not Found.'))
       return
