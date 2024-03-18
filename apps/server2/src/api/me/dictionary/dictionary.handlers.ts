@@ -1,7 +1,9 @@
 import type { Context } from 'hono'
+import { MongoClient, ObjectId } from 'mongodb'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import { WordsRepository } from '#lib/words.repository'
+import { HTTPException } from 'hono/http-exception'
 
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
@@ -88,6 +90,7 @@ const bookmarkWord = async function (c: Context) {
   const client = c.get('mongodb')
   const { word } = c.req.param()
   const user = c.get('user')
+  logger.info(`me bookmarkWord ${word}`)
 
   if (!user) {
     return c.json(
@@ -166,4 +169,124 @@ const bookmarkWord = async function (c: Context) {
       }
     )
 }
-export default { getWord, bookmarkWord }
+
+const getWordId = (c: Context, client: MongoClient, logger) => new Promise((resolve, reject) => {
+  const user = c.get('user')
+  const { word } = c.req.param()
+
+  if (!user) {
+    reject(createHttpException({
+      errorContent: { error: 'You are not logged in.' },
+      status: 500,
+      statusText: 'You are not logged in.',
+    }, 403, 'You are not logged in.'))
+    return
+  }
+
+  if (word.trim().length === 0) {
+    reject(createHttpException({
+      errorContent: { error: 'Bad  request.' },
+      status: 403,
+      statusText: 'Bad  request.',
+    }, 403, 'Bad  request.'))
+    return
+  }
+
+  const user_id = user.id
+  const coll = client.db(config.mongodb.db).collection('personal')
+  const filter = {
+    entry: word,
+    user_id: user_id,
+  }
+  const projection = {
+    entry: 1,
+  }
+
+  try {
+
+    // const client = getClient()
+    const cursor = coll.find(filter, { projection })
+    const result = await cursor.toArray()
+
+    if (result?.length === 0) {
+      reject(createHttpException({
+        errorContent: { error: 'Not Found.' },
+        status: 403,
+        statusText: 'Not Found.',
+      }, 404, 'Not Found.'))
+      return
+    }
+
+    resolve(result[0]._id)
+
+  } catch (e: any) {
+    logger.error(e.message)
+    throw createHttpException({
+      errorContent: { error: 'Unknown error..' },
+      status: 500,
+      statusText: 'Unknown error.',
+    })
+  }
+
+})
+
+const addUsage = async function (c: Context) {
+  const logger = c.get('logger')
+  const client: MongoClient = c.get('mongodb')
+
+  const { word } = c.req.param()
+  const { kreyol, rank, text } = c.req.valid('json')
+  logger.info(`me addUsage ${word}`)
+
+  return getWordId(c, client, logger)
+    .then((wordId) => {
+      const coll = client.db(config.mongodb.db).collection('personal')
+
+      const fieldObj = {}
+      fieldObj[`definitions[${kreyol}][${rank}].usage`] = text
+
+      return coll.updateOne(
+        { _id: wordId },
+        { $push: fieldObj }
+      ).then(
+        (aWord) => {
+          return c.json(
+            {
+              status: 'success',
+              data: { nb: aWord.modifiedCount },
+            },
+            201
+          )
+        },
+        (err) => {
+          if (err.code === 11000) {
+            return c.json(
+              {
+                status: 'error',
+                error: `Could not add usage for '${word}'`,
+              },
+              409
+            )
+          }
+          logger.error('postWord failed', err)
+          return c.json({ status: 'error', error: 'Internal error' }, 500)
+        }
+      )
+    },
+      err => {
+        if (err instanceof HTTPException) {
+          // Get the custom response
+          return err.getResponse()
+        }
+        //...
+        logger.error(err.message, err)
+        return c.json({ status: 'error', error: 'Unknown error..' }, 500)
+      }
+    ).catch((_error) => {
+      logger.error('addUsage Exception', _error)
+      return c.json({ status: 'error', error: [_error] }, 500)
+    })
+}
+
+
+export default { getWord, bookmarkWord, addUsage }
