@@ -290,5 +290,34 @@ const addSubField = async function (c: Context, subField: string) {
     })
 }
 
+/*
+// Get all params at once
+app.get('/search', (c) => {
+  const { q, limit, offset } = c.req.query()
+  ...
+})
+*/
+const listWords = async function (c: Context) {
+  const { limit, offset } = c.req.query()
+  const logger = c.get('logger')
+  const client = c.get('mongodb')
+  const user = c.get('user')
+
+  logger.info(`me listWords`)
+
+  if (!user) {
+    logger.debug('user not logged in')
+    return c.json(
+      {
+        message: 'You are not logged in.',
+      },
+      403
+    )
+  }
+
+  const user_id = user.id
+  // https://stackoverflow.com/questions/13935733/mongoose-limit-offset-and-count-query
+
+}
 
 export default { getWord, bookmarkWord, addSubField }

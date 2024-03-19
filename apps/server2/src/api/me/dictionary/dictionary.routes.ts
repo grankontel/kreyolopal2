@@ -17,6 +17,10 @@ const postTextSchema = z
 
 const myDicoRoutes = createRouter()
 
+//get list of words
+// GET http://localhost:5010/api/me/dictionary/?limit=20&offset=100
+myDicoRoutes.get('/', handlers.listWords)
+
 // get specific word
 myDicoRoutes.get('/:word', handlers.getWord)
 
