@@ -244,7 +244,8 @@ const addUsage = async function (c: Context) {
       const coll = client.db(config.mongodb.db).collection('personal')
 
       const fieldObj = {}
-      fieldObj[`definitions[${kreyol}][${rank}].usage`] = text
+      fieldObj[`definitions.${kreyol}.${rank}.usage`] = text
+      logger.info(JSON.stringify(fieldObj))
 
       return coll.updateOne(
         { _id: wordId },

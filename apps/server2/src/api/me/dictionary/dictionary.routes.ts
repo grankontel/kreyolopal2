@@ -8,8 +8,7 @@ const postTextSchema = z
 	.object({
 		kreyol: z
 			.string()
-			.min(3)
-			.max(31)
+			.min(2)
 			.regex(/^[a-z]{2}$/),
 		rank: z.number().int().nonnegative(),
 		text: z.string().trim().min(3)
