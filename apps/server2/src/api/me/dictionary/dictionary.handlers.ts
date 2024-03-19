@@ -231,20 +231,20 @@ const getWordId = (c: Context, client: MongoClient, logger: winston.Logger) => n
 
 })
 
-const addUsage = async function (c: Context) {
+const addSubField = async function (c: Context, subField: string) {
   const logger = c.get('logger')
   const client: MongoClient = c.get('mongodb')
 
   const { word } = c.req.param()
   const { kreyol, rank, text } = c.req.valid('json')
-  logger.info(`me addUsage ${word}`)
+  logger.info(`me add ${subField} for ${word}`)
 
   return getWordId(c, client, logger)
     .then((wordId) => {
       const coll = client.db(config.mongodb.db).collection('personal')
 
       const fieldObj = {}
-      fieldObj[`definitions.${kreyol}.${rank}.usage`] = text
+      fieldObj[`definitions.${kreyol}.${rank}.${subField}`] = text
       logger.info(JSON.stringify(fieldObj))
 
       return coll.updateOne(
@@ -265,12 +265,12 @@ const addUsage = async function (c: Context) {
             return c.json(
               {
                 status: 'error',
-                error: `Could not add usage for '${word}'`,
+                error: `Could not add ${subField} for '${word}'`,
               },
               409
             )
           }
-          logger.error('postWord failed', err)
+          logger.error(`addSubField ${subField} failed`, err)
           return c.json({ status: 'error', error: 'Internal error' }, 500)
         }
       )
@@ -285,10 +285,10 @@ const addUsage = async function (c: Context) {
         return c.json({ status: 'error', error: 'Unknown error..' }, 500)
       }
     ).catch((_error) => {
-      logger.error('addUsage Exception', _error)
+      logger.error(`addSubField ${subField} Exception`, _error)
       return c.json({ status: 'error', error: [_error] }, 500)
     })
 }
 
 
-export default { getWord, bookmarkWord, addUsage }
+export default { getWord, bookmarkWord, addSubField }

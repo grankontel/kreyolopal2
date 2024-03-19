@@ -22,7 +22,9 @@ myDicoRoutes.get('/:word', handlers.getWord)
 
 myDicoRoutes.put('/:word', handlers.bookmarkWord)
 
-myDicoRoutes.post('/:word/usage', zValidator('json', postTextSchema, sendBadRequest),handlers.addUsage)
+myDicoRoutes.post('/:word/usage', zValidator('json', postTextSchema, sendBadRequest), c => handlers.addSubField(c, 'usage'))
+
+myDicoRoutes.post('/:word/synonyms', zValidator('json', postTextSchema, sendBadRequest), c => handlers.addSubField(c, 'synonyms'))
 
 export default myDicoRoutes
 
