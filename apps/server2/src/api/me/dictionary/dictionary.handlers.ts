@@ -120,12 +120,18 @@ const bookmarkWord = async function (c: Context) {
 
         const coll = client.db(config.mongodb.db).collection('personal')
         const options = { upsert: true }
+        const updateObj = {
+          user_id: user_id,
+          user_birthdate: bdate,
+          ...(data[0] as object),
+        }
+
+        if (user.birth_date === undefined || user.birth_date === null) {
+          delete updateObj.user_birthdate
+        }
+
         const update = {
-          $set: {
-            user_id: user_id,
-            user_birthdate: bdate,
-            ...(data[0] as object),
-          },
+          $set: updateObj,
         }
 
         return coll
@@ -295,8 +301,8 @@ const addConfer = async function (c: Context) {
   const client: MongoClient = c.get('mongodb')
 
   let { word } = c.req.param()
-  let { kreyol, rank, text } = c.req.valid('json') 
-  
+  let { kreyol, rank, text } = c.req.valid('json')
+
   word = word.trim()
   text = text.trim()
 
