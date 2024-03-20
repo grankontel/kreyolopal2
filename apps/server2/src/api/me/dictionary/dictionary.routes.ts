@@ -3,6 +3,11 @@ import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
 import handlers from './dictionary.handlers'
 
+const queryListSchema = z
+	.object({
+		offset: z.coerce.number().int().nonnegative(),
+		limit: z.coerce.number().int().nonnegative(),
+	})
 
 const postTextSchema = z
 	.object({
@@ -19,7 +24,7 @@ const myDicoRoutes = createRouter()
 
 //get list of words
 // GET http://localhost:5010/api/me/dictionary/?limit=20&offset=100
-myDicoRoutes.get('/', handlers.listWords)
+myDicoRoutes.get('/', zValidator('query', queryListSchema, sendBadRequest), handlers.listWords)
 
 // get specific word
 myDicoRoutes.get('/:word', handlers.getWord)

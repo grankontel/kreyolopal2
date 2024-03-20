@@ -290,20 +290,15 @@ const addSubField = async function (c: Context, subField: string) {
     })
 }
 
-/*
-// Get all params at once
-app.get('/search', (c) => {
-  const { q, limit, offset } = c.req.query()
-  ...
-})
-*/
 const listWords = async function (c: Context) {
-  const { limit, offset } = c.req.query()
+  const { limit = 20, offset = 0 } = c.req.valid('query')
+  const pagesize = Math.min(limit, 25)
   const logger = c.get('logger')
   const client = c.get('mongodb')
   const user = c.get('user')
 
   logger.info(`me listWords`)
+  logger.debug(JSON.stringify({limit, offset}))
 
   if (!user) {
     logger.debug('user not logged in')
@@ -316,8 +311,52 @@ const listWords = async function (c: Context) {
   }
 
   const user_id = user.id
-  // https://stackoverflow.com/questions/13935733/mongoose-limit-offset-and-count-query
+  const filter = {
+    user_id: user_id,
+  }
+  const projection = {
+    user_id: 1,
+    entry: 1,
+    variations: 1,
+    definitions: 1,
+  }
+
+  try {
+    // const client = getClient()
+    const coll = client.db(config.mongodb.db).collection('personal')
+    const cursor = coll.find(filter, { projection }).skip(offset).limit(pagesize)
+    const result = await cursor.toArray()
+
+    const data = result?.map((item) => {
+      return {
+        id: item._id,
+        entry: item.entry,
+        variations: item.variations,
+        definitions: item.definitions,
+      }
+    })
+
+    if (data.length > 0) {
+      const nb = await client.db(config.mongodb.db).collection('personal').count(filter)
+      console.log(nb)
+      c.res.headers.append('Cache-Control', 'private, maxage=86400')
+      c.res.headers.append('X-Total-Count', nb)
+
+      c.status(200)
+      return c.json(data)
+    }
+
+    return c.json({ error: 'Not Found.' }, 404)
+  } catch (e: any) {
+    logger.error(e.message)
+    throw createHttpException({
+      errorContent: { error: 'Unknown error..' },
+      status: 500,
+      statusText: 'Unknown error.',
+    })
+
+  }
 
 }
 
-export default { getWord, bookmarkWord, addSubField }
+export default { getWord, bookmarkWord, addSubField, listWords }
