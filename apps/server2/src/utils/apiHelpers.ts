@@ -104,14 +104,14 @@ export function logUserIn(
       httpOnly: false,
     })
     c.status(200)
-    let response = {}
+    let response = {
+      cookie: theCookie.value,
+    }
     if (existingUser.is_admin) {
-      response = {
-        token: jwt_sign(
-          { role: 'postgrest', username: existingUser.username },
-          config.security.adminSecret
-        ),
-      }
+      response.token = jwt_sign(
+        { role: 'postgrest', username: existingUser.username },
+        config.security.adminSecret
+      )
     }
     return c.json(response)
   })

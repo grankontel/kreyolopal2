@@ -5,8 +5,8 @@ import handlers from './dictionary.handlers'
 
 const queryListSchema = z
 	.object({
-		offset: z.coerce.number().int().nonnegative(),
-		limit: z.coerce.number().int().nonnegative(),
+		offset: z.coerce.number().int().nonnegative().optional(),
+		limit: z.coerce.number().int().nonnegative().optional(),
 	})
 
 const postTextSchema = z

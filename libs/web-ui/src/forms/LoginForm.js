@@ -5,7 +5,7 @@ import { FormField } from '#components/FormField'
 import PropTypes from 'prop-types'
 import { siteVerify } from '../turnstile'
 
-export function LoginForm({ endpoint, turnstileKey, destination }) {
+export function LoginForm({ endpoint, turnstileKey, onLogin }) {
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [pwd, setPwd] = useState('')
@@ -44,7 +44,8 @@ export function LoginForm({ endpoint, turnstileKey, destination }) {
         },
       })
       if (response.ok) {
-        router.push(destination)
+        const data = await response.json()
+        onLogin(data)
       } else {
         const error = (await response.json()).error
         setNotif({
@@ -101,10 +102,9 @@ export function LoginForm({ endpoint, turnstileKey, destination }) {
 LoginForm.propTypes = {
   endpoint: PropTypes.string.isRequired,
   turnstileKey: PropTypes.string,
-  destination: PropTypes.string.isRequired,
+  onLogin: PropTypes.func.isRequired,
 }
 
 LoginForm.defaultProps = {
   endpoint: '/api/auth/login',
-  destination: '/',
 }
