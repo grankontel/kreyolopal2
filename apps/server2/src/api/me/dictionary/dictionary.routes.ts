@@ -35,5 +35,7 @@ myDicoRoutes.post('/:word/usage', zValidator('json', postTextSchema, sendBadRequ
 
 myDicoRoutes.post('/:word/synonyms', zValidator('json', postTextSchema, sendBadRequest), c => handlers.addSubField(c, 'synonyms'))
 
+myDicoRoutes.post('/:word/confer', zValidator('json', postTextSchema, sendBadRequest), handlers.addConfer)
+
 export default myDicoRoutes
 

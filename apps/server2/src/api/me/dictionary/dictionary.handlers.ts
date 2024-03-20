@@ -290,6 +290,88 @@ const addSubField = async function (c: Context, subField: string) {
     })
 }
 
+const addConfer = async function (c: Context) {
+  const logger = c.get('logger')
+  const client: MongoClient = c.get('mongodb')
+
+  let { word } = c.req.param()
+  let { kreyol, rank, text } = c.req.valid('json') 
+  
+  word = word.trim()
+  text = text.trim()
+
+  logger.info(`me addConfer for ${word}`)
+
+
+  if (word === text) {
+    logger.error('attempt to add confer to same word')
+    return c.json(
+      {
+        status: 'error',
+        error: `'Unprocessable Entity'`,
+      },
+      422
+    )
+
+  }
+
+  return WordsRepository.getInstance(c).Exists(text).then(exists => {
+    if (!exists) {
+      logger.error(`${text} is not in dictionnary`)
+      return c.json(
+        {
+          status: 'error',
+          error: `'Unprocessable Entity'`,
+        },
+        422
+      )
+    }
+
+    return getWordId(c, client, logger)
+      .then((wordId) => {
+        const coll = client.db(config.mongodb.db).collection('personal')
+
+        const fieldObj = {}
+        fieldObj[`definitions.${kreyol}.${rank}.confer`] = text
+        logger.info(JSON.stringify(fieldObj))
+
+        return coll.updateOne(
+          { _id: wordId },
+          { $addToSet: fieldObj }
+        ).then(
+          (aWord) => {
+            return c.json(
+              {
+                status: 'success',
+                data: { nb: aWord.modifiedCount },
+              },
+              201
+            )
+          },
+          (err) => {
+            if (err.code === 11000) {
+              return c.json(
+                {
+                  status: 'error',
+                  error: `Could not addConfer for '${word}'`,
+                },
+                409
+              )
+            }
+            logger.error(`addConfer failed`, err)
+            return c.json({ status: 'error', error: 'Internal error' }, 500)
+          }
+        )
+
+      }).catch((_error) => {
+        logger.error(`addConfer ${word} Exception`, _error)
+        return c.json({ status: 'error', error: [_error] }, 500)
+      })
+  })
+
+
+}
+
 const listWords = async function (c: Context) {
   const { limit = 20, offset = 0 } = c.req.valid('query')
   const pagesize = Math.min(limit, 25)
@@ -298,7 +380,7 @@ const listWords = async function (c: Context) {
   const user = c.get('user')
 
   logger.info(`me listWords`)
-  logger.debug(JSON.stringify({limit, offset}))
+  logger.debug(JSON.stringify({ limit, offset }))
 
   if (!user) {
     logger.debug('user not logged in')
@@ -337,7 +419,7 @@ const listWords = async function (c: Context) {
     })
 
     if (data.length > 0) {
-      const nb = await client.db(config.mongodb.db).collection('personal').count(filter)
+      const nb = await client.db(config.mongodb.db).collection('personal').countDocuments(filter)
       console.log(nb)
       c.res.headers.append('Cache-Control', 'private, maxage=86400')
       c.res.headers.append('X-Total-Count', nb)
@@ -359,4 +441,4 @@ const listWords = async function (c: Context) {
 
 }
 
-export default { getWord, bookmarkWord, addSubField, listWords }
+export default { getWord, bookmarkWord, addSubField, addConfer, listWords }
