@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react'
-import { Box, Button, Columns, Form, Notification } from 'react-bulma-components'
+import { Box, Button, Notification } from 'react-bulma-components'
 import { Turnstile } from '@marsidev/react-turnstile'
-import { FormField } from '#components/FormField'
 import PropTypes from 'prop-types'
 import { siteVerify } from '../turnstile'
+import { FormField } from '#components/FormField'
+import { useAuth } from '#components/AuthContext'
 
 export function LoginForm({ endpoint, turnstileKey, onLogin }) {
+  const auth = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [pwd, setPwd] = useState('')
@@ -45,6 +47,7 @@ export function LoginForm({ endpoint, turnstileKey, onLogin }) {
       })
       if (response.ok) {
         const data = await response.json()
+        auth.LoggedIn(data)
         onLogin(data)
       } else {
         const error = (await response.json()).error

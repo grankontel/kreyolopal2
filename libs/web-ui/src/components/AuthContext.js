@@ -27,6 +27,9 @@ export const AuthProvider = ({ cookieName, children }) => {
     setSession(null)
   }
 
+  const LoggedIn = (data) => {
+    setCookies(cookieName, data.cookie)
+  }
   useEffect(() => {
     const x = parseCookie(cookies[cookieName] ?? null)
     if (x === null) return
@@ -40,7 +43,7 @@ export const AuthProvider = ({ cookieName, children }) => {
     setSession(x)
   }, [])
   return (
-    <AuthContext.Provider value={{ session, closeSession }}>
+    <AuthContext.Provider value={{ session, closeSession, LoggedIn }}>
       {children}
     </AuthContext.Provider>
   )
