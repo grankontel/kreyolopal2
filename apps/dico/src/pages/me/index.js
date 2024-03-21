@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Icon, Section, Table } from 'react-bulma-components'
-import { KreyolFlag } from '@kreyolopal/web-ui'
+import { KreyolFlag, useAuth } from '@kreyolopal/web-ui'
 import TableCell from '@/components/dictionary/table/TableCell'
 import Standard from '@/layouts/Standard'
-import { parseCookie } from '@/lib/auth'
-import Cookies from "js-cookie"
 
 const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
-const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
 /* const words = [
   {
@@ -137,46 +134,59 @@ function wordsToRow(words) {
   return lignes
 }
 
-export default function MePage() {
-  const router = useRouter()
-  const [words, setWords] = useState([])
-  const lignes = wordsToRow(words)
-  const cookieValue = Cookies.get(cookieName)
-  const auth = parseCookie(cookieValue)
+const fetchPersonalDico = ({ auth, page = 0 }) => new Promise(async (resolve, reject) => {
+  const PAGE_SIZE = 20
+  const [offset, limit] = [page * PAGE_SIZE, PAGE_SIZE]
   const { user_id, session_id } = auth || { user_id: null, session_id: null };
 
-  useEffect(() => {
-    async function fetchData() {
-      const fetchHeaders = {
-        'Content-Type': 'application/json',
-      }
-      if (user_id != null)
-        fetchHeaders['Authorization'] = `Bearer ${session_id}`
+  const fetchHeaders = {
+    'Content-Type': 'application/json',
+  }
+  if (user_id != null)
+    fetchHeaders['Authorization'] = `Bearer ${session_id}`
 
-      const result = await fetch(
-        `${apiServer}/api/me/dictionary`,
-        {
-          method: 'GET',
-          //      credentials: 'same-origin',
-          headers: fetchHeaders,
-          next: { revalidate: 3600 },
-        }
-      ).catch(function (error) {
-        console.log('Il y a eu un problème avec l\'opération fetch : ' + error.message);
-      });
-
-      if (!result.ok) {
-        console.log(result)
-/*         if (result.status === 403) {
-          router.push('/login')
-        }
- */      }
-      const data = await result.json()
-      return data
+  const result = await fetch(
+    `${apiServer}/api/me/dictionary?offset=${offset}&limit=${limit}`,
+    {
+      method: 'GET',
+      //      credentials: 'same-origin',
+      headers: fetchHeaders,
+      next: { revalidate: 3600 },
     }
+  ).catch(function (error) {
+    console.log('Il y a eu un problème avec l\'opération fetch : ' + error.message);
+    reject(error)
+  });
 
-    fetchData().then(data => setWords(data))
-  }, [])
+  for (const pair of result.headers.entries()) {
+    console.log(`${pair[0]}: ${pair[1]}`);
+  }
+
+  if (!result.ok) {
+    reject(new Error('could not fetch data', { response: result }))
+  }
+  const total = result.headers.get('X-Total-Count')
+  const data = await result.json()
+  const maxPages = Math.ceil(total / PAGE_SIZE)
+  resolve({ count: parseInt(total), maxPages, data })
+
+})
+
+export default function MePage() {
+  const router = useRouter()
+  const auth = useAuth()
+  const [words, setWords] = useState([])
+  const lignes = wordsToRow(words)
+
+  useEffect(() => {
+
+    if (auth?.session) {
+      fetchPersonalDico({ auth: auth.session, page: 0 }).then(rep => {
+        console.log(rep)
+        setWords(rep.data)
+      }, setWords([]))
+    }
+  }, [auth])
 
   return (
     <Section>
