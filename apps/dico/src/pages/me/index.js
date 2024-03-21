@@ -50,6 +50,18 @@ function wordsToRow(words) {
   return lignes
 }
 
+const TableHeaders = () => (<tr>
+  <th>Entr&eacute;e</th>
+  <th>Variations</th>
+  <th>Kr&eacute;y&ograve;l</th>
+  <th>Nature</th>
+  <th>D&eacute;finition</th>
+  <th>D&eacute;finition (FR)</th>
+  <th>Usage</th>
+  <th>Synonyme</th>
+  <th>Voir aussi</th>
+</tr>)
+
 export default function MePage() {
   const router = useRouter()
   const auth = useAuth()
@@ -72,17 +84,7 @@ export default function MePage() {
       <Table.Container>
         <Table striped size="fullwidth">
           <thead>
-            <tr>
-              <th>Entr&eacute;e</th>
-              <th>Variations</th>
-              <th>Kr&eacute;y&ograve;l</th>
-              <th>Nature</th>
-              <th>D&eacute;finition</th>
-              <th>D&eacute;finition (FR)</th>
-              <th>Usage</th>
-              <th>Synonyme</th>
-              <th>Voir aussi</th>
-            </tr>
+            <TableHeaders />
           </thead>
           <tbody>
             {lignes.map((ligne) => {
@@ -135,17 +137,7 @@ export default function MePage() {
             })}
           </tbody>
           <tfoot>
-            <tr>
-              <th>Entr&eacute;e</th>
-              <th>Variations</th>
-              <th>Kr&eacute;y&ograve;l</th>
-              <th>Nature</th>
-              <th>D&eacute;finition</th>
-              <th>D&eacute;finition (FR)</th>
-              <th>Usage</th>
-              <th>Synonyme</th>
-              <th>Voir aussi</th>
-            </tr>
+            <TableHeaders />
           </tfoot>
         </Table>
       </Table.Container>
