@@ -426,7 +426,6 @@ const listWords = async function (c: Context) {
 
     if (data.length > 0) {
       const nb = await client.db(config.mongodb.db).collection('personal').countDocuments(filter)
-      console.log(nb)
       var endRange = Math.min(nb, offset + limit)
       c.res.headers.append('Cache-Control', 'private, maxage=86400')
       c.res.headers.append('Access-Control-Expose-Headers', 'X-Total-Count, Content-Range');

@@ -17,7 +17,7 @@ export default function Home() {
         <Form.Field className="inner_field" kind="addons">
           <Form.Control fullwidth>
             <HeroSearchBox
-              navigate={(destination) => router.push(destination)}
+              onSelect={(elem) => router.push(elem.url)}
             />
           </Form.Control>
           <Form.Control>
