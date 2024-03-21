@@ -37,8 +37,7 @@ export default function LoginPage() {
         endpoint={apiServer + '/api/auth/login'}
         turnstileKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY}
         onLogin={(data) => {
-          console.log(data)
-          // router.push('/')
+          router.push('/')
         }}
       />
     </Section>
