@@ -1,0 +1,52 @@
+$sidebar-size: 12rem
+
+#dashboard
+	color: #4a4a4a
+	background-color: #f8f8f8
+
+	&:has(aside.is-expanded)
+		padding-left: $sidebar-size
+	.navbar
+		z-index: 60
+
+	.aside
+			display: none
+			position: fixed
+			top: 0
+			left: 0
+			z-index: 40
+			height: 100vh
+			padding: 0
+			padding-top: 1.75rem
+			box-shadow: none
+			background: $grey-lighter
+
+			&.is-expanded
+				width: $sidebar-size
+			&.is-placed-left
+				display: block
+
+			.aside-tools 
+				display: flex
+				flex-direction: row
+				width: 100%
+				background-color: $grey-lighter
+				color: #fff
+				line-height: 3.25rem
+				height: 3.25rem
+				padding-left: .75rem
+				flex: 1
+
+			.menu-label
+				padding: 0 .75rem
+				margin-top: .75rem
+				margin-bottom: .75rem
+
+	section
+		padding: 1.5rem
+
+	.section
+		&.title-bar 
+			padding: 1.5rem
+			border-bottom: 1px solid rgba(24,28,33,.06)
+	

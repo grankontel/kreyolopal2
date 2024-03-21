@@ -1,10 +1,9 @@
 import { StandardPage, useAuth } from '@kreyolopal/web-ui'
 import DicoHead from '@/components/DicoHead'
-import { useEffect, useState } from 'react'
-import { Button, Modal } from 'react-bulma-components'
+import { useState } from 'react'
+import { Button } from 'react-bulma-components'
 import { useRouter } from 'next/navigation'
 import classNames from 'classnames'
-import { Turnstile } from '@marsidev/react-turnstile'
 
 const dico_url = process.env.NEXT_PUBLIC_DICO_URL || `http://localhost:${process.env.PORT || 3000}`
 const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
@@ -30,7 +29,7 @@ const links = [
 const logout = async (auth) => {
   return fetch(apiServer + `/api/auth/logout`, {
     method: 'POST',
-//    credentials: 'same-origin',
+    //    credentials: 'same-origin',
   }).then(() => {
     auth?.closeSession()
   })

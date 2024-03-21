@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Icon, Section, Table } from 'react-bulma-components'
+import {  Icon, Section, Table } from 'react-bulma-components'
 import { KreyolFlag, useAuth } from '@kreyolopal/web-ui'
 import TableCell from '@/components/dictionary/table/TableCell'
 import Standard from '@/layouts/Standard'
 import { fetchPersonalDico } from '@/lib/fetchDico'
+import Dashboard from '@/layouts/Dashboard'
 
 var funhash = function (s) {
   for (var i = 0, h = 0xdeadbeef; i < s.length; i++)
@@ -59,7 +60,7 @@ const TableHeaders = () => (<tr>
   <th>D&eacute;finition (FR)</th>
   <th>Usage</th>
   <th>Synonyme</th>
-  <th>Voir aussi</th>
+  <th>Voir&nbsp;aussi</th>
 </tr>)
 
 export default function MePage() {
@@ -146,6 +147,6 @@ export default function MePage() {
 }
 
 MePage.getLayout = function getLayout(page) {
-  return <Standard>{page}</Standard>
+  return <Dashboard>{page}</Dashboard>
 }
 

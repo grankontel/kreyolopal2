@@ -1,9 +1,9 @@
 import React from 'react'
 import * as feather from 'feather-icons'
 
-export const FeatherIcon = ({iconName}) => {
+export const FeatherIcon = ({iconName, ...props}) => {
   return (
-    <i
+    <i {...props}
       dangerouslySetInnerHTML={{
         __html: feather.icons[iconName].toSvg({
           height: '1em',
