@@ -4,92 +4,8 @@ import { Icon, Section, Table } from 'react-bulma-components'
 import { KreyolFlag, useAuth } from '@kreyolopal/web-ui'
 import TableCell from '@/components/dictionary/table/TableCell'
 import Standard from '@/layouts/Standard'
+import { fetchPersonalDico } from '@/lib/fetchDico'
 
-const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
-
-/* const words = [
-  {
-    entry: 'rat',
-    definitions: {
-      gp: [
-        {
-          nature: ['nom'],
-          meaning: {
-            gp: '',
-            fr: 'rat.',
-          },
-          usage: [
-            'lèwvwè chat pa la, rat ka bay bal',
-            'sé pisa a rat ka ba moun on maladi non a-y sé lèptospiwòz',
-          ],
-          synonyms: [],
-          confer: [],
-          quotes: [],
-        },
-        {
-          nature: ['nom'],
-          meaning: {
-            gp: '',
-            fr: 'prostituée.',
-          },
-          usage: ['anmafwèz,manawa'],
-          synonyms: [],
-          confer: [],
-          quotes: [],
-        },
-        {
-          nature: ['nom'],
-          meaning: {
-            gp: '',
-            fr: 'pensée obsessionnelle.',
-          },
-          usage: ['ou mété on rat an tèt an-mwen'],
-          synonyms: [],
-          confer: [],
-          quotes: [],
-        },
-      ],
-    },
-    variations: ['rat'],
-  },
-  {
-    _id: {
-      $oid: '65d12cc39c20b5542990c3e3',
-    },
-    entry: 'débraké',
-    variations: ['débraké', 'débwaké'],
-    definitions: {
-      gp: [
-        {
-          nature: ['verbe'],
-          meaning: {
-            gp: '',
-            fr: 'contrebraquer.',
-          },
-          usage: ['ou braké twòp, débraké tibwen avan  ou kyoulé.'],
-          synonyms: [],
-          confer: [],
-          quotes: [],
-        },
-      ],
-
-      mq: [
-        {
-          nature: ['verbe'],
-          meaning: {
-            gp: '',
-            fr: 'contrebraquer.',
-          },
-          usage: ['ou braké twòp, débraké tibwen avan  ou kyoulé.'],
-          synonyms: [],
-          confer: [],
-          quotes: [],
-        },
-      ],
-    },
-  },
-]
- */
 var funhash = function (s) {
   for (var i = 0, h = 0xdeadbeef; i < s.length; i++)
     h = Math.imul(h ^ s.charCodeAt(i), 2654435761)
@@ -133,44 +49,6 @@ function wordsToRow(words) {
   })
   return lignes
 }
-
-const fetchPersonalDico = ({ auth, page = 0 }) => new Promise(async (resolve, reject) => {
-  const PAGE_SIZE = 20
-  const [offset, limit] = [page * PAGE_SIZE, PAGE_SIZE]
-  const { user_id, session_id } = auth || { user_id: null, session_id: null };
-
-  const fetchHeaders = {
-    'Content-Type': 'application/json',
-  }
-  if (user_id != null)
-    fetchHeaders['Authorization'] = `Bearer ${session_id}`
-
-  const result = await fetch(
-    `${apiServer}/api/me/dictionary?offset=${offset}&limit=${limit}`,
-    {
-      method: 'GET',
-      //      credentials: 'same-origin',
-      headers: fetchHeaders,
-      next: { revalidate: 3600 },
-    }
-  ).catch(function (error) {
-    console.log('Il y a eu un problème avec l\'opération fetch : ' + error.message);
-    reject(error)
-  });
-
-  for (const pair of result.headers.entries()) {
-    console.log(`${pair[0]}: ${pair[1]}`);
-  }
-
-  if (!result.ok) {
-    reject(new Error('could not fetch data', { response: result }))
-  }
-  const total = result.headers.get('X-Total-Count')
-  const data = await result.json()
-  const maxPages = Math.ceil(total / PAGE_SIZE)
-  resolve({ count: parseInt(total), maxPages, data })
-
-})
 
 export default function MePage() {
   const router = useRouter()
