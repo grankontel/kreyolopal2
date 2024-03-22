@@ -16,6 +16,15 @@
     --logo: 270 58% 23%;
     --logo-foreground: 270 1.16% 92.3%;
 
+    --success: 141, 71%, 48%;
+    --success-foreground: 0 0% 3.9%;
+    --info: 204, 86%, 53%;
+    --info-foreground: 0 0% 3.9%;
+    --warning: 48, 100%, 67%;
+    --warning-foreground: 0 0% 3.9%;
+    --danger: 348, 100%, 61%;
+    --danger-foreground: 0 0% 98%;
+
     --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
 
@@ -30,7 +39,7 @@
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-
+  
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 0 0% 3.9%;
@@ -51,8 +60,14 @@
     --logo: 270 58% 23%;
     --logo-foreground: 270 1.16% 92.3%;
 
-    --special: 270 43.6% 92.3%;
-    --special-foreground: 270 5.8% 1.1500000000000001%;
+    --success: 141, 71%, 48%;
+    --success-foreground: 0 0% 3.9%;
+    --info: 204, 86%, 53%;
+    --info-foreground: 0 0% 3.9%;
+    --warning: 48, 100%, 67%;
+    --warning-foreground: 0 0% 3.9%;
+    --danger: 348, 100%, 61%;
+    --danger-foreground: 0 0% 98%;
 
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 9%;
