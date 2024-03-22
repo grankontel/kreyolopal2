@@ -13,6 +13,9 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
 
+    --logo: 270 58% 23%;
+    --logo-foreground: 270 1.16% 92.3%;
+
     --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
 
@@ -44,6 +47,12 @@
 
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
+
+    --logo: 270 58% 23%;
+    --logo-foreground: 270 1.16% 92.3%;
+
+    --special: 270 43.6% 92.3%;
+    --special-foreground: 270 5.8% 1.1500000000000001%;
 
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 9%;

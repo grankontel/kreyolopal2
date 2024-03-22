@@ -7,80 +7,18 @@ import { Button } from "@/components/ui/button"
 import { BreadcrumbLink, BreadcrumbItem, BreadcrumbSeparator, BreadcrumbList, Breadcrumb } from "@/components/ui/breadcrumb"
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu"
 import { ModeToggle } from "@/components/mode-toogle";
+import Sidebar from "@/components/dashboard/sidebar";
+import SideMenu from "@/components/dashboard/side-menu";
+import DashboardPath from "@/components/dashboard/dashboard-path";
 
 export default function DashboardLayout({ children }: Readonly<{
 	children: React.ReactNode;
 }>) {
 	return (
 		<div className="grid h-screen w-full lg:grid-cols-[280px_1fr]">
-			<aside className="sidebar hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
-				<div className="flex h-full max-h-screen flex-col gap-2">
-					<div className="flex h-[60px] items-center border-b px-6">
-						<Link className="flex items-center gap-2 font-semibold" href="#">
-							<Package2Icon className="h-6 w-6" />
-							<span className="">Kreyolopal</span>
-						</Link>
-						<Button className="ml-auto h-8 w-8" size="icon" variant="outline">
-							<BellIcon className="h-4 w-4" />
-							<span className="sr-only">Toggle notifications</span>
-						</Button>
-					</div>
-					<nav className="menu grid items-start px-4 text-sm font-medium">
-						<ul>
-							<li>
-								<Link
-									className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900  transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
-									href="#"
-								>
-									<HomeIcon className="h-4 w-4" />
-									Home
-								</Link>
-							</li>
-							<li>
-								<Link
-									className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-									href="#"
-								>
-									<PackageIcon className="h-4 w-4" />
-									Products
-								</Link>
-
-							</li>
-							<li>
-								<Link
-									className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-									href="#"
-								>
-									<UsersIcon className="h-4 w-4" />
-									Customers
-								</Link>
-								<ul className="pl-3">
-										<li>
-										<Link
-									className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-									href="#"
-								>
-											Newest
-											</Link>
-										</li>
-									</ul>
-							</li>
-							<li>
-								<Link
-									className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-									href="#"
-								>
-									<LineChartIcon className="h-4 w-4" />
-									Analytics
-								</Link>
-
-
-							</li>
-						</ul>
-					</nav>
-				</div>
-			</aside>
-
+			<Sidebar>
+				<SideMenu />
+			</Sidebar>
 			<div className="flex flex-col">
 				<header className="flex h-14 items-center justify-between px-6 bg-gray-100/40 dark:bg-gray-800/40">
 					<div className="flex items-center gap-4">
@@ -88,17 +26,7 @@ export default function DashboardLayout({ children }: Readonly<{
 							<Package2Icon className="h-6 w-6" />
 							<span className="sr-only">Home</span>
 						</Link>
-						<Breadcrumb className="breadcrumb">
-							<BreadcrumbList>
-								<BreadcrumbItem>
-									<BreadcrumbLink href="/">Home</BreadcrumbLink>
-								</BreadcrumbItem>
-								<BreadcrumbSeparator />
-								<BreadcrumbItem>
-									<BreadcrumbLink href="/products">Products</BreadcrumbLink>
-								</BreadcrumbItem>
-							</BreadcrumbList>
-						</Breadcrumb>
+						<DashboardPath />
 					</div>
 					<div className="flex items-center gap-4">
 						<DropdownMenu>
@@ -123,6 +51,9 @@ export default function DashboardLayout({ children }: Readonly<{
 						<Button>Logout</Button>
 					</div>
 				</header>
+				<section className="flex p-6 bg-gray-100 border-y-gray-200 border-y-2">
+					<h1 className="font-bold text-2xl">Produits</h1>
+				</section>
 				<main className="flex-1 p-4 md:p-6">
 					{children}
 				</main>
@@ -173,94 +104,6 @@ function BellIcon(props) {
 		>
 			<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
 			<path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-		</svg>
-	)
-}
-
-
-function HomeIcon(props) {
-	return (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-			<polyline points="9 22 9 12 15 12 15 22" />
-		</svg>
-	)
-}
-
-
-function PackageIcon(props) {
-	return (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<path d="m7.5 4.27 9 5.15" />
-			<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-			<path d="m3.3 7 8.7 5 8.7-5" />
-			<path d="M12 22V12" />
-		</svg>
-	)
-}
-
-
-function UsersIcon(props) {
-	return (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-			<circle cx="9" cy="7" r="4" />
-			<path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-			<path d="M16 3.13a4 4 0 0 1 0 7.75" />
-		</svg>
-	)
-}
-
-
-function LineChartIcon(props) {
-	return (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<path d="M3 3v18h18" />
-			<path d="m19 9-5 5-4-4-3 3" />
 		</svg>
 	)
 }
