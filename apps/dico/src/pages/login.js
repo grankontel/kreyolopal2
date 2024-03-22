@@ -32,7 +32,9 @@ export default function LoginPage() {
 
   return (
     <Section>
-      <Heading size={2} renderAs="h1">Sign in</Heading>
+      <Heading size={2} renderAs="h1">
+        Sign in
+      </Heading>
       <LoginForm
         endpoint={apiServer + '/api/auth/login'}
         turnstileKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY}

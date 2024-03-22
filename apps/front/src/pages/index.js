@@ -20,24 +20,19 @@ export default function Home() {
           }}
         >
           <p>
-            La nouvelle édition du dictionnaire Créole-Français revue et
-            corrigée par Hector Poullet.
+            La nouvelle édition du dictionnaire Créole-Français revue et corrigée par
+            Hector Poullet.
           </p>
           <p>
-            Il est particulièrement utile pour ceux qui écrivent le créole de
-            façon occasionnelle et veulent éviter les erreurs de graphie
-            grossières.
+            Il est particulièrement utile pour ceux qui écrivent le créole de façon
+            occasionnelle et veulent éviter les erreurs de graphie grossières.
           </p>
           <FeatureList>
-            <FeatureList.Item icon="edit-3">
-              Entièrement revu !
-            </FeatureList.Item>
+            <FeatureList.Item icon="edit-3">Entièrement revu !</FeatureList.Item>
             <FeatureList.Item icon="trending-up">
               Définitions, synonymes, phrases d&apos;usage...
             </FeatureList.Item>
-            <FeatureList.Item icon="thumbs-up">
-              Près de 10 000 entrées.
-            </FeatureList.Item>
+            <FeatureList.Item icon="thumbs-up">Près de 10 000 entrées.</FeatureList.Item>
           </FeatureList>
         </HomeSection>
         <HomeSection
@@ -52,13 +47,12 @@ export default function Home() {
           }}
         >
           <p>
-            Le correcteur orthographique en ligne repere les erreurs dans la
-            graphie du créole.
+            Le correcteur orthographique en ligne repere les erreurs dans la graphie du
+            créole.
           </p>
           <p>
-            Il est particulièrement utile pour ceux qui écrivent le créole de
-            façon occasionnelle et veulent éviter les erreurs de graphie
-            grossières.
+            Il est particulièrement utile pour ceux qui écrivent le créole de façon
+            occasionnelle et veulent éviter les erreurs de graphie grossières.
           </p>
           <FeatureList>
             <FeatureList.Item icon="thumbs-up">

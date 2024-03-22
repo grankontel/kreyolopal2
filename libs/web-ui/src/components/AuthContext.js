@@ -9,13 +9,13 @@ function parseCookie(cookie) {
   if (cookie === null) return null
   const [data, digest] = cookie.split('.')
 
-try {
+  try {
     const info = JSON.parse(Buffer.from(data, 'base64').toString('ascii'))
     return info
-  
-} catch (error) {
-  return null
-}}
+  } catch (error) {
+    return null
+  }
+}
 
 export const AuthProvider = ({ cookieName, children }) => {
   const [cookies, setCookies, removeCookie] = useCookies()

@@ -145,7 +145,7 @@ export function ContactForm({ endpoint, turnstileKey }) {
 
 ContactForm.propTypes = {
   endpoint: PropTypes.string.isRequired,
-  turnstileKey: PropTypes.string
+  turnstileKey: PropTypes.string,
 }
 
 ContactForm.defaultProps = {

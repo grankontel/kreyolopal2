@@ -68,10 +68,10 @@ export default function SignupPage() {
       <Heading size={3} renderAs="h1">
         Create an account
       </Heading>
-      <SignupForm 
-       endpoint={apiServer + '/api/auth/signup'}
-       turnstileKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY}
-     />
+      <SignupForm
+        endpoint={apiServer + '/api/auth/signup'}
+        turnstileKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY}
+      />
     </Section>
   )
 }

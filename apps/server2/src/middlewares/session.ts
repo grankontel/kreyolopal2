@@ -8,8 +8,8 @@ export const sessionMiddleware = (): MiddlewareHandler => {
     const cookie = getCookie(c, lucia.sessionCookieName) ?? null
 
     let sessionId = parseCookie(cookie)?.session_id
-    const authorizationHeader = c.req.header("Authorization");
-    sessionId = sessionId ?? lucia.readBearerToken(authorizationHeader ?? "");
+    const authorizationHeader = c.req.header('Authorization')
+    sessionId = sessionId ?? lucia.readBearerToken(authorizationHeader ?? '')
     winston_logger.debug(`sessionId = ${sessionId}`)
 
     if (!sessionId) {

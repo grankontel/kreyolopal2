@@ -16,8 +16,8 @@ const addYears = (aDate, nbYears) => {
 }
 
 const nextDay = (aDate) => {
-  let tomorrow = new Date();
-  tomorrow.setDate(aDate.getDate() + 1);
+  let tomorrow = new Date()
+  tomorrow.setDate(aDate.getDate() + 1)
   return tomorrow
 }
 
@@ -43,7 +43,7 @@ export function SignupForm({ endpoint, turnstileKey, destination }) {
       setIsLoading(true)
       clearMessage()
 
-      await siteVerify(token).catch((error)=>{
+      await siteVerify(token).catch((error) => {
         setNotif({ color: 'danger', message: 'Invalid token' })
         setIsLoading(false)
         router.reload()

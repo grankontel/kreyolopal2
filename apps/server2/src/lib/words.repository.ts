@@ -7,7 +7,7 @@ export class WordsRepository {
   private static instance: WordsRepository
   private static logger: winston.Logger
   private static client: MongoClient
-  private constructor() { }
+  private constructor() {}
 
   public static getInstance(c: Context): WordsRepository {
     if (!WordsRepository.instance) {
@@ -23,12 +23,14 @@ export class WordsRepository {
     const coll = WordsRepository.client
       .db(config.mongodb.db)
       .collection('words')
-    return  coll.countDocuments({
-      entry: word,
-    }).then(val => {
-      WordsRepository.logger.debug(val)
-      return (val != 0)})
-
+    return coll
+      .countDocuments({
+        entry: word,
+      })
+      .then((val) => {
+        WordsRepository.logger.debug(val)
+        return val != 0
+      })
   }
 
   public async GetOne(word: string, mapCallback) {

@@ -13,9 +13,7 @@ export const FormFieldWrapper = (props) => {
 }
 
 FormFieldWrapper.propTypes = {
-    label: PropTypes.string.isRequired,
-    name: PropTypes.string,
-    children: PropTypes.node.isRequired
-  }
-  
-  
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  children: PropTypes.node.isRequired,
+}

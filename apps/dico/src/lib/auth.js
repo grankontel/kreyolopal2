@@ -6,7 +6,6 @@ export function parseCookie(cookie) {
   try {
     const info = JSON.parse(Buffer.from(data, 'base64').toString('ascii'))
     return info
-
   } catch (error) {
     return null
   }

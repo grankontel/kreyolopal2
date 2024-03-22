@@ -64,7 +64,7 @@ const getWords = async function (c: Context) {
   if (range) {
     try {
       logger.info(`range  = ${range}`)
-        ;[offset, limit] = JSON.parse(range)
+      ;[offset, limit] = JSON.parse(range)
     } catch (e) {
       logger.error(`Error on parsing range query elements : ${e}`)
     }
@@ -94,7 +94,10 @@ const getWords = async function (c: Context) {
         if (results === null || results.length === 0)
           return c.json({ error: 'Not Found.' }, 404)
 
-        c.res.headers.append('Access-Control-Expose-Headers', 'X-Total-Count, Content-Range');
+        c.res.headers.append(
+          'Access-Control-Expose-Headers',
+          'X-Total-Count, Content-Range'
+        )
         c.res.headers.append('Content-Range', `${offset}-${endRange}/${nbDocs}`)
         c.res.headers.append('X-Total-Count', nbDocs.toString())
 
