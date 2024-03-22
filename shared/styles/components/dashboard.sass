@@ -1,7 +1,7 @@
 $sidebar-size: 12rem
 
 #dashboard
-	color: #4a4a4a
+	color: $grey-dark
 	background-color: #f8f8f8
 
 	&:has(aside.is-expanded)
@@ -37,6 +37,11 @@ $sidebar-size: 12rem
 				padding-left: .75rem
 				flex: 1
 
+			.menu-list
+				a.is-active 
+					background-color: $secondary
+					color: $text-invert
+			
 			.menu-label
 				padding: 0 .75rem
 				margin-top: .75rem
@@ -49,4 +54,24 @@ $sidebar-size: 12rem
 		&.title-bar 
 			padding: 1.5rem
 			border-bottom: 1px solid rgba(24,28,33,.06)
-	
+			ul
+				li
+					display: inline-block
+					padding: 0 .75rem 0 0
+					font-size: 1.5rem
+					color: #7a7a7a
+					&:not(:last-child):after
+						display: inline-block
+						content: "/"
+						padding-left: .75rem
+					&:last-child
+						padding-right: 0
+						font-weight: 900
+						color: #242424
+						
+	.hero
+		background-color: #fff
+		border-bottom: 1px solid rgba(24,28,33,.06)
+		padding: 0
+		.hero-body
+			padding: 1.5rem

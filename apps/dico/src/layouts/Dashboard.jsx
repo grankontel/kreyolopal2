@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import Link from 'next/link'
-import { Button, Container, Footer, Icon, Image, Level, Menu, Navbar, Section } from "react-bulma-components";
+import { Button, Container, Footer, Heading, Hero, Icon, Image, Level, Menu, Navbar, Notification, Section } from "react-bulma-components";
 import classNames from 'classnames'
 import FeatherIcon from '@/components/FeatherIcon';
 
@@ -86,9 +86,39 @@ export default function Dashboard({ children }) {
 						<Menu.List.Item>
 							<Icon>
 
-								<FeatherIcon iconName='user' />
+								<FeatherIcon iconName='book' />
 							</Icon>
-							<span>My profile</span>
+							<span>Dictionnaire</span>
+						</Menu.List.Item>
+						<Menu.List.Item>
+							<Icon>
+
+								<FeatherIcon iconName='tool' />
+							</Icon>
+							<span>Orthographe</span>
+						</Menu.List.Item>
+					</Menu.List>
+					<Menu.List title="Personnel">
+						<Menu.List.Item active>
+							<Icon>
+
+								<FeatherIcon iconName='book-open' />
+							</Icon>
+							<span>Mon dictionnaire</span>
+						</Menu.List.Item>
+						<Menu.List.Item>
+							<Menu.List title={
+								<>
+									<Icon>
+
+										<FeatherIcon iconName='bookmark' />
+									</Icon>
+									<span>Mes lexiques</span>
+
+								</>
+							}>
+								<Menu.List.Item>Lexique 1</Menu.List.Item>
+							</Menu.List>
 						</Menu.List.Item>
 					</Menu.List>
 				</Menu>
@@ -99,8 +129,8 @@ export default function Dashboard({ children }) {
 					<Level.Side align='left'>
 						<Level.Item>
 							<ul>
-								<li>Admin</li>
-								<li>Tables</li>
+								<li>Personnel</li>
+								<li>Mon dictionnaire</li>
 							</ul>
 						</Level.Item>
 					</Level.Side>
@@ -112,10 +142,30 @@ export default function Dashboard({ children }) {
 					</Level.Side>
 				</Level>
 			</Section>
+			<Hero>
+				<Hero.Body>
+					<Level renderAs='div'>
+						<Level.Side align='left'>
+							<Level.Item>
+								<Heading  >Mon dictionnaire</Heading>
+							</Level.Item>
+						</Level.Side>
+					</Level>
+				</Hero.Body>
+			</Hero>
 			<Section>
-				Hero
-			</Section>
-			<Section>
+				<Notification color="warning">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.{' '}
+					<strong>
+						Pellentesque risus mi
+					</strong>
+					, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum{' '}
+					<a href="/">
+						felis venenatis
+					</a>
+					{' '}efficitur. Sit amet, consectetur adipiscing elit
+					<Button remove />
+				</Notification>
 				{children}
 			</Section>
 			<Footer>

@@ -80,8 +80,6 @@ export default function MePage() {
   }, [auth])
 
   return (
-    <Section>
-      Me Page
       <Table.Container>
         <Table striped size="fullwidth">
           <thead>
@@ -142,7 +140,6 @@ export default function MePage() {
           </tfoot>
         </Table>
       </Table.Container>
-    </Section>
   )
 }
 
