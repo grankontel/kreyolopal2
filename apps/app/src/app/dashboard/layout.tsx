@@ -88,7 +88,7 @@ export default function DashboardLayout({ children }: Readonly<{
 							<Package2Icon className="h-6 w-6" />
 							<span className="sr-only">Home</span>
 						</Link>
-						<Breadcrumb>
+						<Breadcrumb className="breadcrumb">
 							<BreadcrumbList>
 								<BreadcrumbItem>
 									<BreadcrumbLink href="/">Home</BreadcrumbLink>
