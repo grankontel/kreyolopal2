@@ -1,9 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import Script from 'next/script'
-// import { Inter } from "next/font/google";
-import '@/styles/index.sass'
+import { Inter as FontSans } from "next/font/google"
+import { cn } from "@/lib/utils"
+import { ThemeProvider } from "@/components/theme-provider"
+import "./globals.css"
 
-// const inter = Inter({ subsets: ["latin"] });
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
+
 const webSite = {
   '@context': 'http://schema.org',
   '@type': 'WebSite',
@@ -29,8 +35,8 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Kreyolopal",
   description: "Utiliser les technologies d'aujourd'hui pour encourager, améliorer et diffuser l'écriture du créole.",
-  manifest:  "/favicons/site.webmanifest",
-  
+  manifest: "/favicons/site.webmanifest",
+
   openGraph: {
     type: "website",
     images: [
@@ -82,17 +88,30 @@ export default function RootLayout({
   return (
     <html lang="en">
 
-      <Script 
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(webSite) }}
-        />
+      <Script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSite) }}
+      />
 
-        <Script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}
-        />
+      <Script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}
+      />
 
-      <body>{children}</body>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >{children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
