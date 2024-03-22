@@ -78,7 +78,6 @@ export default function MePage() {
   useEffect(() => {
     if (auth?.session) {
       fetchPersonalDico({ auth: auth.session, page: 0 }).then((rep) => {
-        console.log(rep)
         setWords(rep.data)
       }, setWords([]))
     }
