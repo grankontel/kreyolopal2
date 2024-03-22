@@ -6,6 +6,7 @@ import FeatherIcon from '@/components/FeatherIcon';
 import { useToggle } from '@kreyolopal/web-ui'
 import { DashboardProvider, useDashboard } from '@/components/dashboard/DashboardProvider';
 import { DashboardMenu } from '@/components/dashboard/DashboardMenu';
+import BreadCrumb from '@/components/dashboard/BreadCrumb';
 
 const Notifier = () => {
 	const dash = useDashboard()
@@ -103,16 +104,11 @@ export default function Dashboard({ children }) {
 						</div>
 					</div>
 					<DashboardMenu menus={menus} />
-					</aside>
+				</aside>
 				<Section className='title-bar'>
 					<Level>
 						<Level.Side align='left'>
-							<Level.Item>
-								<ul>
-									<li>Personnel</li>
-									<li>Mon dictionnaire</li>
-								</ul>
-							</Level.Item>
+							<BreadCrumb menus={menus} />
 						</Level.Side>
 						<Level.Side align='right'>
 							<Level.Item>
