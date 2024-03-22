@@ -1,10 +1,11 @@
 import React from 'react'
 import Link from 'next/link'
-import { Button, Container, Footer, Heading, Hero, Icon, Image, Level, Menu, Navbar, Notification, Section } from "react-bulma-components";
+import { Button, Footer, Heading, Hero, Icon, Level, Navbar, Notification, Section } from "react-bulma-components";
 import classNames from 'classnames'
 import FeatherIcon from '@/components/FeatherIcon';
 import { useToggle } from '@kreyolopal/web-ui'
 import { DashboardProvider, useDashboard } from '@/components/dashboard/DashboardProvider';
+import { DashboardMenu } from '@/components/dashboard/DashboardMenu';
 
 const Notifier = () => {
 	const dash = useDashboard()
@@ -17,6 +18,22 @@ const Notifier = () => {
 		''
 	)
 }
+
+const menus = []
+
+const general = []
+general.push({ icon: 'book', label: 'Dictionnaire', path: '/me/dictionary' })
+general.push({ icon: 'tool', label: 'Orthographe', path: '/me/spellcheck' })
+
+const personnel = []
+personnel.push({ icon: 'book-open', label: 'Mon dictionnaire', path: '/me' })
+const lexicons = []
+lexicons.push({ label: 'Lexique 1', path: '/tmalo/lexicons/lexique-1' })
+
+personnel.push({ icon: 'bookmark', label: 'Mes lexiques', path: '/me/lexicons', items: lexicons })
+
+menus.push({ label: 'Général', items: general })
+menus.push({ label: 'Personnel', items: personnel })
 
 export default function Dashboard({ children }) {
 	const [mobileOpen, openMobileMenu] = useToggle(false)
@@ -85,49 +102,8 @@ export default function Dashboard({ children }) {
 
 						</div>
 					</div>
-					<Menu renderAs='div'>
-						<Menu.List title="Général">
-							<Menu.List.Item>
-								<Icon>
-
-									<FeatherIcon iconName='book' />
-								</Icon>
-								<span>Dictionnaire</span>
-							</Menu.List.Item>
-							<Menu.List.Item>
-								<Icon>
-
-									<FeatherIcon iconName='tool' />
-								</Icon>
-								<span>Orthographe</span>
-							</Menu.List.Item>
-						</Menu.List>
-						<Menu.List title="Personnel">
-							<Menu.List.Item active>
-								<Icon>
-
-									<FeatherIcon iconName='book-open' />
-								</Icon>
-								<span>Mon dictionnaire</span>
-							</Menu.List.Item>
-							<Menu.List.Item>
-								<Menu.List title={
-									<>
-										<Icon>
-
-											<FeatherIcon iconName='bookmark' />
-										</Icon>
-										<span>Mes lexiques</span>
-
-									</>
-								}>
-									<Menu.List.Item>Lexique 1</Menu.List.Item>
-								</Menu.List>
-							</Menu.List.Item>
-						</Menu.List>
-					</Menu>
-
-				</aside>
+					<DashboardMenu menus={menus} />
+					</aside>
 				<Section className='title-bar'>
 					<Level>
 						<Level.Side align='left'>
