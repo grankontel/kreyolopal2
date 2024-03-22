@@ -49,6 +49,12 @@ module.exports = {
       'react-dom': 'react-dom', // Case matters here
       'react-bulma-components': 'react-bulma-components',
       next: 'next',
+      'next/navigation': 'next/navigation',
+      'next/router': 'next/router',
+      'next/link': 'next/link',
     },
   ],
+  optimization: {
+    usedExports: true,
+  },
 }

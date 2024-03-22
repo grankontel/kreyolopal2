@@ -74,7 +74,7 @@ export const config = {
 
 export const getServerSideProps = async (ctx) => {
   const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
-  const apiServer = process.env.API_SERVER || 'https://api.kreyolopal.com'
+  const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
   const auth = parseCookie(ctx.req.cookies?.[cookieName])
   const allowedKreyol = ['gp']
 

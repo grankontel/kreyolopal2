@@ -29,7 +29,7 @@ const getEntries = (w) => {
     })
 }
 
-export const HeroSearchBox = ({ navigate, ...rest }) => {
+export const HeroSearchBox = ({ onSelect, ...rest }) => {
   const [items, setItems] = useState([])
 
   const renderItems = (getItemProps, highlightedIndex, selectedItem) => {
@@ -66,7 +66,7 @@ export const HeroSearchBox = ({ navigate, ...rest }) => {
       onChange={(selection) => {
         if (selection) {
           const next = `/dictionary/gp/${selection.entry}`
-          if (location.pathname !== next) navigate(next)
+          if (location.pathname !== next) onSelect({entry: selection.entry, url: next})
         }
       }}
       itemToString={(item) => (item ? item.entry : '')}

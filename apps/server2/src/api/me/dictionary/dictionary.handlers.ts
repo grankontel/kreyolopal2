@@ -6,6 +6,20 @@ import { createHttpException } from '#utils/createHttpException'
 import { WordsRepository } from '#lib/words.repository'
 import { HTTPException } from 'hono/http-exception'
 
+function formatDate(date) {
+  if (date === null) return null
+
+  let d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear()
+
+  if (month.length < 2) month = '0' + month
+  if (day.length < 2) day = '0' + day
+
+  return [year, month, day].join('-')
+}
+
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
   const client = c.get('mongodb')
@@ -70,20 +84,6 @@ const getWord = async function (c: Context) {
       statusText: 'Unknown error.',
     })
   }
-}
-
-function formatDate(date) {
-  if (date === null) return null
-
-  let d = new Date(date),
-    month = '' + (d.getMonth() + 1),
-    day = '' + d.getDate(),
-    year = d.getFullYear()
-
-  if (month.length < 2) month = '0' + month
-  if (day.length < 2) day = '0' + day
-
-  return [year, month, day].join('-')
 }
 
 const bookmarkWord = async function (c: Context) {
@@ -177,65 +177,81 @@ const bookmarkWord = async function (c: Context) {
     )
 }
 
-const getWordId = (c: Context, client: MongoClient, logger: winston.Logger) => new Promise<ObjectId>(async (resolve, reject) => {
-  const user = c.get('user')
-  const { word } = c.req.param()
+const getWordId = (c: Context, client: MongoClient, logger: winston.Logger) =>
+  new Promise<ObjectId>(async (resolve, reject) => {
+    const user = c.get('user')
+    const { word } = c.req.param()
 
-  if (!user) {
-    reject(createHttpException({
-      errorContent: { error: 'You are not logged in.' },
-      status: 403,
-      statusText: 'You are not logged in.',
-    }, 403, 'You are not logged in.'))
-    return
-  }
-
-  if (word.trim().length === 0) {
-    reject(createHttpException({
-      errorContent: { error: 'Bad  request.' },
-      status: 400,
-      statusText: 'Bad  request.',
-    }, 400, 'Bad  request.'))
-    return
-  }
-
-  const user_id = user.id
-  const coll = client.db(config.mongodb.db).collection('personal')
-  const filter = {
-    entry: word,
-    user_id: user_id,
-  }
-  const projection = {
-    entry: 1,
-  }
-
-  try {
-
-    // const client = getClient()
-    const cursor = coll.find(filter, { projection })
-    const result = await cursor.toArray()
-
-    if (result?.length === 0) {
-      reject(createHttpException({
-        errorContent: { error: 'Not Found.' },
-        status: 404,
-        statusText: 'Not Found.',
-      }, 404, 'Not Found.'))
+    if (!user) {
+      reject(
+        createHttpException(
+          {
+            errorContent: { error: 'You are not logged in.' },
+            status: 403,
+            statusText: 'You are not logged in.',
+          },
+          403,
+          'You are not logged in.'
+        )
+      )
       return
     }
 
-    resolve(result[0]._id)
+    if (word.trim().length === 0) {
+      reject(
+        createHttpException(
+          {
+            errorContent: { error: 'Bad  request.' },
+            status: 400,
+            statusText: 'Bad  request.',
+          },
+          400,
+          'Bad  request.'
+        )
+      )
+      return
+    }
 
-  } catch (e: any) {
-    logger.error(e.message)
-    throw createHttpException({
-      errorContent: { error: 'Unknown error..' },
-      status: 500,
-      statusText: 'Unknown error.',
-    })
-  }
+    const user_id = user.id
+    const coll = client.db(config.mongodb.db).collection('personal')
+    const filter = {
+      entry: word,
+      user_id: user_id,
+    }
+    const projection = {
+      entry: 1,
+    }
 
-})
+    try {
+      // const client = getClient()
+      const cursor = coll.find(filter, { projection })
+      const result = await cursor.toArray()
+
+      if (result?.length === 0) {
+        reject(
+          createHttpException(
+            {
+              errorContent: { error: 'Not Found.' },
+              status: 404,
+              statusText: 'Not Found.',
+            },
+            404,
+            'Not Found.'
+          )
+        )
+        return
+      }
+
+      resolve(result[0]._id)
+    } catch (e: any) {
+      logger.error(e.message)
+      throw createHttpException({
+        errorContent: { error: 'Unknown error..' },
+        status: 500,
+        statusText: 'Unknown error.',
+      })
+    }
+  })
 
 const addSubField = async function (c: Context, subField: string) {
   const logger = c.get('logger')
@@ -246,42 +262,40 @@ const addSubField = async function (c: Context, subField: string) {
   logger.info(`me add ${subField} for ${word}`)
 
   return getWordId(c, client, logger)
-    .then((wordId) => {
-      const coll = client.db(config.mongodb.db).collection('personal')
+    .then(
+      (wordId) => {
+        const coll = client.db(config.mongodb.db).collection('personal')
 
-      const fieldObj = {}
-      fieldObj[`definitions.${kreyol}.${rank}.${subField}`] = text
-      logger.info(JSON.stringify(fieldObj))
+        const fieldObj = {}
+        fieldObj[`definitions.${kreyol}.${rank}.${subField}`] = text
+        logger.info(JSON.stringify(fieldObj))
 
-      return coll.updateOne(
-        { _id: wordId },
-        { $push: fieldObj }
-      ).then(
-        (aWord) => {
-          return c.json(
-            {
-              status: 'success',
-              data: { nb: aWord.modifiedCount },
-            },
-            201
-          )
-        },
-        (err) => {
-          if (err.code === 11000) {
+        return coll.updateOne({ _id: wordId }, { $push: fieldObj }).then(
+          (aWord) => {
             return c.json(
               {
-                status: 'error',
-                error: `Could not add ${subField} for '${word}'`,
+                status: 'success',
+                data: { nb: aWord.modifiedCount },
               },
-              409
+              201
             )
+          },
+          (err) => {
+            if (err.code === 11000) {
+              return c.json(
+                {
+                  status: 'error',
+                  error: `Could not add ${subField} for '${word}'`,
+                },
+                409
+              )
+            }
+            logger.error(`addSubField ${subField} failed`, err)
+            return c.json({ status: 'error', error: 'Internal error' }, 500)
           }
-          logger.error(`addSubField ${subField} failed`, err)
-          return c.json({ status: 'error', error: 'Internal error' }, 500)
-        }
-      )
-    },
-      err => {
+        )
+      },
+      (err) => {
         if (err instanceof HTTPException) {
           // Get the custom response
           return err.getResponse()
@@ -290,7 +304,8 @@ const addSubField = async function (c: Context, subField: string) {
         logger.error(err.message, err)
         return c.json({ status: 'error', error: 'Unknown error..' }, 500)
       }
-    ).catch((_error) => {
+    )
+    .catch((_error) => {
       logger.error(`addSubField ${subField} Exception`, _error)
       return c.json({ status: 'error', error: [_error] }, 500)
     })
@@ -308,7 +323,6 @@ const addConfer = async function (c: Context) {
 
   logger.info(`me addConfer for ${word}`)
 
-
   if (word === text) {
     logger.error('attempt to add confer to same word')
     return c.json(
@@ -318,64 +332,60 @@ const addConfer = async function (c: Context) {
       },
       422
     )
-
   }
 
-  return WordsRepository.getInstance(c).Exists(text).then(exists => {
-    if (!exists) {
-      logger.error(`${text} is not in dictionnary`)
-      return c.json(
-        {
-          status: 'error',
-          error: `'Unprocessable Entity'`,
-        },
-        422
-      )
-    }
-
-    return getWordId(c, client, logger)
-      .then((wordId) => {
-        const coll = client.db(config.mongodb.db).collection('personal')
-
-        const fieldObj = {}
-        fieldObj[`definitions.${kreyol}.${rank}.confer`] = text
-        logger.info(JSON.stringify(fieldObj))
-
-        return coll.updateOne(
-          { _id: wordId },
-          { $addToSet: fieldObj }
-        ).then(
-          (aWord) => {
-            return c.json(
-              {
-                status: 'success',
-                data: { nb: aWord.modifiedCount },
-              },
-              201
-            )
+  return WordsRepository.getInstance(c)
+    .Exists(text)
+    .then((exists) => {
+      if (!exists) {
+        logger.error(`${text} is not in dictionnary`)
+        return c.json(
+          {
+            status: 'error',
+            error: `'Unprocessable Entity'`,
           },
-          (err) => {
-            if (err.code === 11000) {
+          422
+        )
+      }
+
+      return getWordId(c, client, logger)
+        .then((wordId) => {
+          const coll = client.db(config.mongodb.db).collection('personal')
+
+          const fieldObj = {}
+          fieldObj[`definitions.${kreyol}.${rank}.confer`] = text
+          logger.info(JSON.stringify(fieldObj))
+
+          return coll.updateOne({ _id: wordId }, { $addToSet: fieldObj }).then(
+            (aWord) => {
               return c.json(
                 {
-                  status: 'error',
-                  error: `Could not addConfer for '${word}'`,
+                  status: 'success',
+                  data: { nb: aWord.modifiedCount },
                 },
-                409
+                201
               )
+            },
+            (err) => {
+              if (err.code === 11000) {
+                return c.json(
+                  {
+                    status: 'error',
+                    error: `Could not addConfer for '${word}'`,
+                  },
+                  409
+                )
+              }
+              logger.error(`addConfer failed`, err)
+              return c.json({ status: 'error', error: 'Internal error' }, 500)
             }
-            logger.error(`addConfer failed`, err)
-            return c.json({ status: 'error', error: 'Internal error' }, 500)
-          }
-        )
-
-      }).catch((_error) => {
-        logger.error(`addConfer ${word} Exception`, _error)
-        return c.json({ status: 'error', error: [_error] }, 500)
-      })
-  })
-
-
+          )
+        })
+        .catch((_error) => {
+          logger.error(`addConfer ${word} Exception`, _error)
+          return c.json({ status: 'error', error: [_error] }, 500)
+        })
+    })
 }
 
 const listWords = async function (c: Context) {
@@ -412,7 +422,10 @@ const listWords = async function (c: Context) {
   try {
     // const client = getClient()
     const coll = client.db(config.mongodb.db).collection('personal')
-    const cursor = coll.find(filter, { projection }).skip(offset).limit(pagesize)
+    const cursor = coll
+      .find(filter, { projection })
+      .skip(offset)
+      .limit(pagesize)
     const result = await cursor.toArray()
 
     const data = result?.map((item) => {
@@ -425,9 +438,17 @@ const listWords = async function (c: Context) {
     })
 
     if (data.length > 0) {
-      const nb = await client.db(config.mongodb.db).collection('personal').countDocuments(filter)
-      console.log(nb)
+      const nb = await client
+        .db(config.mongodb.db)
+        .collection('personal')
+        .countDocuments(filter)
+      var endRange = Math.min(nb, offset + limit)
       c.res.headers.append('Cache-Control', 'private, maxage=86400')
+      c.res.headers.append(
+        'Access-Control-Expose-Headers',
+        'X-Total-Count, Content-Range'
+      )
+      c.res.headers.append('Content-Range', `${offset}-${endRange}/${nb}`)
       c.res.headers.append('X-Total-Count', nb)
 
       c.status(200)
@@ -442,9 +463,7 @@ const listWords = async function (c: Context) {
       status: 500,
       statusText: 'Unknown error.',
     })
-
   }
-
 }
 
 export default { getWord, bookmarkWord, addSubField, addConfer, listWords }

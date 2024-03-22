@@ -97,9 +97,9 @@ const signup = async function (c: Context) {
           if (reason?.severity == 'ERROR' && reason?.code == '23505') {
             return c.json(
               {
-                message: 'Bad request',
+                message: 'Unprocessable Entity',
               },
-              400
+              422
             )
           }
           throw createHttpException({

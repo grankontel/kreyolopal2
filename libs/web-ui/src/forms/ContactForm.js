@@ -56,12 +56,10 @@ export function ContactForm({ endpoint, turnstileKey }) {
           setNotif({ color: 'success', message: 'Opération réussie' })
         })
         .catch((error) => {
-          console.log(error)
           setNotif({
             color: 'danger',
             message: error?.error || error.toString(),
           })
-          console.log(notif)
         })
     } catch (error) {
       setNotif({ color: 'danger', message: error?.error || error.toString() })
@@ -147,7 +145,7 @@ export function ContactForm({ endpoint, turnstileKey }) {
 
 ContactForm.propTypes = {
   endpoint: PropTypes.string.isRequired,
-  turnstileKey: PropTypes.string
+  turnstileKey: PropTypes.string,
 }
 
 ContactForm.defaultProps = {

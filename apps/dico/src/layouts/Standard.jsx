@@ -1,13 +1,12 @@
 import { StandardPage, useAuth } from '@kreyolopal/web-ui'
 import DicoHead from '@/components/DicoHead'
-import { useEffect, useState } from 'react'
-import { Button, Modal } from 'react-bulma-components'
+import { useState } from 'react'
+import { Button } from 'react-bulma-components'
 import { useRouter } from 'next/navigation'
 import classNames from 'classnames'
-import { Turnstile } from '@marsidev/react-turnstile'
 
 const dico_url = process.env.NEXT_PUBLIC_DICO_URL || `http://localhost:${process.env.PORT || 3000}`
-const apiServer = process.env.API_SERVER || 'https://api.kreyolopal.com'
+const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 
 const links = [
   {
@@ -30,9 +29,9 @@ const links = [
 const logout = async (auth) => {
   return fetch(apiServer + `/api/auth/logout`, {
     method: 'POST',
-//    credentials: 'same-origin',
+    //    credentials: 'same-origin',
   }).then(() => {
-    auth?.setSession(null)
+    auth?.closeSession()
   })
 }
 
@@ -64,18 +63,18 @@ export default function Standard({ children }) {
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Modal title</p>
+            <p className="modal-card-title">Déconnexion</p>
             <button className="delete" aria-label="close" onClick={() => setOpenLogout(false)}></button>
           </header>
           <section className="modal-card-body">
-            content
+            Êtes-vous sûr(e) ?
           </section>
           <footer className="modal-card-foot">
             <button className="button is-success" onClick={(e) => {
               e.preventDefault()
               logout(auth).then(() => setOpenLogout(false))
             }}>Save changes</button>
-            <button className="button" onClick={() => setOpenLogout(false)}>Cancel</button>
+            <button className="button" onClick={() => setOpenLogout(false)}>Annuler</button>
           </footer>
         </div>
       </div>

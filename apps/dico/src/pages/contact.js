@@ -2,7 +2,7 @@ import { Section, Heading } from 'react-bulma-components'
 import { ContactForm } from '@kreyolopal/web-ui'
 import Standard from '@/layouts/Standard'
 
-const apiServer = process.env.API_SERVER || 'https://api.kreyolopal.com'
+const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 
 export default function ContactPage() {
   return (
