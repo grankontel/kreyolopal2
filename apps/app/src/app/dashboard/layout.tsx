@@ -4,7 +4,6 @@
  */
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   DropdownMenuTrigger,
   DropdownMenuItem,
@@ -15,9 +14,7 @@ import { ModeToggle } from '@/components/mode-toogle'
 import Sidebar from '@/components/dashboard/sidebar'
 import SideMenu from '@/components/dashboard/side-menu'
 import DashboardPath from '@/components/dashboard/dashboard-path'
-import { RocketIcon } from '@radix-ui/react-icons'
-import { JSX, SVGProps } from 'react'
-import { IconAttributes } from '@/lib/utils'
+import { IconAttributes } from '@kreyolopal/react-ui'
 
 export default function DashboardLayout({
   children,
