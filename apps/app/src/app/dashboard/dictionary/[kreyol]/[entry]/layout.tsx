@@ -1,11 +1,9 @@
-import WordPanel from "@/components/dashboard/word-panel";
+import WordPanel from '@/components/dashboard/word-panel'
 
-export default function DicoLayout({ children }: Readonly<{
-	children: React.ReactNode;
+export default function DicoLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
 }>) {
-	return (
-<WordPanel>
-	{children}
-</WordPanel>
-	)
+  return <WordPanel>{children}</WordPanel>
 }

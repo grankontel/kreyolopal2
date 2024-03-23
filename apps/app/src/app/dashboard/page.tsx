@@ -1,6 +1,19 @@
-import MainPanel from "@/components/dashboard/main-panel"
-import { CardTitle, CardDescription, CardHeader, CardContent, Card } from "@/components/ui/card"
-import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
+import MainPanel from '@/components/dashboard/main-panel'
+import {
+  CardTitle,
+  CardDescription,
+  CardHeader,
+  CardContent,
+  Card,
+} from '@/components/ui/card'
+import {
+  TableHead,
+  TableRow,
+  TableHeader,
+  TableCell,
+  TableBody,
+  Table,
+} from '@/components/ui/table'
 
 export default function Home() {
   return (
@@ -8,7 +21,9 @@ export default function Home() {
       <Card>
         <CardHeader>
           <CardTitle>Product Overview</CardTitle>
-          <CardDescription>View and manage all your products from a single place</CardDescription>
+          <CardDescription>
+            View and manage all your products from a single place
+          </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-auto w-full">
@@ -58,5 +73,5 @@ export default function Home() {
         </CardContent>
       </Card>
     </MainPanel>
-  );
+  )
 }

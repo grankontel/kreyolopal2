@@ -1,13 +1,12 @@
 import * as React from "react"
-import { IconAttributes } from "../../types"
 
-export const FlagHt = (props:any) => (
+export const FlagHt = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
     width="1em"
     height="1em"
-    viewBox="0 0 1000 600" 
+    viewBox="0 0 1000 600"
     {...props}
   >
     <style>

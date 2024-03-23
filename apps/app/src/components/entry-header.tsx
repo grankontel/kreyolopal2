@@ -1,7 +1,6 @@
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { IconAttributes } from "@/lib/utils"
-
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { IconAttributes } from '@/lib/utils'
 
 function SearchIcon(props: IconAttributes) {
   return (
@@ -27,8 +26,15 @@ export function WordSearchForm() {
   return (
     <form className="flex-1">
       <div className="relative">
-        <Input className="w-full md:max-w-sm" placeholder="Search for a word" type="search" />
-        <Button className="absolute top-1/2 right-2 transform -translate-y-1/2" type="submit">
+        <Input
+          className="w-full md:max-w-sm"
+          placeholder="Search for a word"
+          type="search"
+        />
+        <Button
+          className="absolute top-1/2 right-2 transform -translate-y-1/2"
+          type="submit"
+        >
           <SearchIcon className="w-4 h-4" />
           <span className="sr-only">Search</span>
         </Button>
@@ -38,12 +44,11 @@ export function WordSearchForm() {
 }
 
 export function EntryHeader() {
-return (
-	<header className="py-4 pb-4 border-y-gray-200 border-y-2 dark:bg-gray-800 dark:border-y-gray-700">
-	<div className="container flex items-center gap-4 px-4 md:px-6 ">
-		<WordSearchForm />
-	</div>
-</header>
-
-)
+  return (
+    <header className="py-4 pb-4 border-y-gray-200 border-y-2 dark:bg-gray-800 dark:border-y-gray-700">
+      <div className="container flex items-center gap-4 px-4 md:px-6 ">
+        <WordSearchForm />
+      </div>
+    </header>
+  )
 }

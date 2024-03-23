@@ -1,0 +1,94 @@
+import Link from 'next/link'
+import { MeaningLanguage, SingleDefinition } from '@/lib/types'
+import { hashKey } from '@/lib/utils'
+
+export const EntryDefinition = ({
+  entry,
+  index,
+  definition,
+  dicoUrl,
+}: {
+  entry: string
+  index: number
+  definition: SingleDefinition
+  dicoUrl: (word: string) => string
+}) => {
+  const nature = definition.nature.join(', ')
+  const subnature = definition.subnature?.length
+    ? definition.subnature.join(', ')
+    : nature
+  const def_langues = Object.keys(definition.meaning).filter((value) => value !== 'fr')
+  return (
+    <section className="definition py-4 border-b-gray-200 border-b-2 dark:bg-inherit dark:border-b-gray-700">
+      <div className="grid gap-2">
+        <p className="nature text-md text-gray-400 dark:text-gray-600">
+          <span className="font-medium">
+            {index}. {subnature}{' '}
+          </span>
+        </p>
+        <section className="mb-3">
+          {def_langues.map((lang) => {
+            const k = lang as MeaningLanguage
+            return definition.meaning[k].length === 0 ? (
+              ' '
+            ) : (
+              <div className="meaning text-xl text-gray-600 dark:text-gray-500 mb-3">
+                <p>
+                  [{lang}] {definition.meaning[k]}
+                </p>
+              </div>
+            )
+          })}
+
+          {definition.meaning['fr'].length === 0 ? (
+            ' '
+          ) : (
+            <div className="meaning font-light text-xl text-gray-500 dark:text-gray-400 mb-3">
+              <p>[fr] {definition.meaning['fr']}</p>
+            </div>
+          )}
+        </section>
+      </div>
+
+      {definition.synonyms.length === 0 ? (
+        ' '
+      ) : (
+        <section className="synonyms grid gap-2 mb-2">
+          <h2 className="text-lg font-bold">Synonyms</h2>
+          <ul className="flex flex-wrap gap-2">
+            {definition.synonyms.map((item) => {
+              return (
+                <li key={hashKey('syn_', item)}>
+                  <Link
+                    className="text-sm rounded-lg bg-gray-100 px-2 py-1 dark:bg-gray-800"
+                    href={dicoUrl(item)}
+                  >
+                    {item}
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+      )}
+
+      {definition.usage.length === 0 ? (
+        ' '
+      ) : (
+        <section className="usage grid gap-2 my-3">
+          <h2 className="text-lg font-bold">Usage</h2>
+          <ul className="grid gap-4 tracking-normal">
+            {definition.usage.map((item) => (
+              <li
+                key={hashKey('usg_', item)}
+                dangerouslySetInnerHTML={{
+                  __html: item.replaceAll(entry, `<strong>${entry}</strong>`),
+                }}
+              />
+            ))}
+          </ul>
+        </section>
+      )}
+    </section>
+  )
+}

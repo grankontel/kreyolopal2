@@ -3,9 +3,16 @@ import { DOMAttributes } from 'react'
 
 type FeatherIconName = keyof typeof feather.icons
 
-export const FeatherIcon = ({iconName, ...props}: {iconName:FeatherIconName , props: DOMAttributes<HTMLElement>}) => {
+export const FeatherIcon = ({
+  iconName,
+  ...props
+}: {
+  iconName: FeatherIconName
+  props: DOMAttributes<HTMLElement>
+}) => {
   return (
-    <i {...props}
+    <i
+      {...props}
       dangerouslySetInnerHTML={{
         __html: feather.icons[iconName].toSvg({
           height: '1em',
