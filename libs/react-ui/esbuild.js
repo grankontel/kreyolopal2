@@ -1,6 +1,6 @@
 const esbuild = require('esbuild');
 const { nodeExternalsPlugin } = require('esbuild-node-externals');
-const  { sassPlugin } = require('esbuild-sass-plugin')
+const { sassPlugin } = require('esbuild-sass-plugin')
 
 esbuild
 	.build({
@@ -13,5 +13,8 @@ esbuild
 		format: 'cjs',
 		target: 'node20',
 		plugins: [nodeExternalsPlugin(), sassPlugin()],
+	})
+	.then(() => {
+		console.log('⚡ Done')
 	})
 	.catch(() => process.exit(1));
