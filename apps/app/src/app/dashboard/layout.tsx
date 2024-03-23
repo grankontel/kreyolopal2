@@ -52,28 +52,8 @@ export default function DashboardLayout({ children }: Readonly<{
 						<Button variant="logo">Logout</Button>
 					</div>
 				</header>
-				<section className="flex p-6 bg-gray-100 border-y-gray-200 border-y-2 dark:bg-gray-800 dark:border-y-gray-700">
-					<h1 className="font-bold text-2xl">Produits</h1>
-				</section>
-				<main className="flex-1 p-4 md:p-6">
-					<Alert variant="danger" className="my-2">
-						<RocketIcon className="h-4 w-4" />
-						<AlertTitle>Heads up!</AlertTitle>
-						<AlertDescription>
-							You can add components to your app using the cli.
-						</AlertDescription>
-					</Alert>
+				{children}
 
-					<Alert variant="danger" className="my-2">
-						<RocketIcon className="h-4 w-4" />
-						<AlertTitle>Heads up!</AlertTitle>
-						<AlertDescription>
-							You can add components to your app using the cli.
-						</AlertDescription>
-					</Alert>
-
-					{children}
-				</main>
 				<footer className="flex items-center justify-between px-6 py-4 bg-gray-100/40 dark:bg-gray-800/40">
 					<p className="text-sm text-gray-500 dark:text-gray-400">© 2024 Kreyolopal. All rights reserved.</p>
 				</footer>
