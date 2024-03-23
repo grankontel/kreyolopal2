@@ -33,6 +33,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.kreyolopal.com'),
   title: "Kreyolopal",
   description: "Utiliser les technologies d'aujourd'hui pour encourager, améliorer et diffuser l'écriture du créole.",
   manifest: "/favicons/site.webmanifest",

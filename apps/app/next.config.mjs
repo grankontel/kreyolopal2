@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'development') {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@kreyolopal/web-ui'],
+  transpilePackages: ['@kreyolopal/react-ui'],
   reactStrictMode: true,
   output: 'standalone',
   poweredByHeader: false,
