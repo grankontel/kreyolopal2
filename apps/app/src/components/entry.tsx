@@ -41,7 +41,7 @@ export function Entry() {
           </div>
           <div className="above-article flex flex-row">
             <article className="gap-2  basis-3/4">
-              <section className="definition py-4 border-b-gray-200 border-b-2 dark:bg-gray-800 dark:border-b-gray-700">
+              <section className="definition py-4 border-b-gray-200 border-b-2 dark:bg-inherit dark:border-b-gray-700">
 
                 <div className="grid gap-2">
                   <FlagGp className="w-8 h-4" />
