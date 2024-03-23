@@ -1,6 +1,9 @@
 import * as feather from 'feather-icons'
+import { DOMAttributes } from 'react'
 
-export const FeatherIcon = ({iconName, ...props}: {iconName:string}) => {
+type FeatherIconName = keyof typeof feather.icons
+
+export const FeatherIcon = ({iconName, ...props}: {iconName:FeatherIconName , props: DOMAttributes<HTMLElement>}) => {
   return (
     <i {...props}
       dangerouslySetInnerHTML={{

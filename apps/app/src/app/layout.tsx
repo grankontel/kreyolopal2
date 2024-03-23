@@ -89,11 +89,13 @@ export default function RootLayout({
     <html lang="en">
 
       <Script
+        id="website_ld_json"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webSite) }}
       />
 
       <Script
+        id="org_ld_json"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}
       />

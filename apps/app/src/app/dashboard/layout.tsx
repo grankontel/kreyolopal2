@@ -11,6 +11,8 @@ import Sidebar from "@/components/dashboard/sidebar";
 import SideMenu from "@/components/dashboard/side-menu";
 import DashboardPath from "@/components/dashboard/dashboard-path";
 import { RocketIcon } from "@radix-ui/react-icons"
+import { JSX, SVGProps } from "react";
+import { IconAttributes } from "@/lib/utils";
 
 export default function DashboardLayout({ children }: Readonly<{
 	children: React.ReactNode;
@@ -63,7 +65,7 @@ export default function DashboardLayout({ children }: Readonly<{
 }
 
 
-function Package2Icon(props) {
+function Package2Icon(props: IconAttributes) {
 	return (
 		<svg
 			{...props}
@@ -85,7 +87,7 @@ function Package2Icon(props) {
 }
 
 
-function BellIcon(props) {
+function BellIcon(props: IconAttributes) {
 	return (
 		<svg
 			{...props}
@@ -106,7 +108,7 @@ function BellIcon(props) {
 }
 
 
-function UserIcon(props) {
+function UserIcon(props: IconAttributes) {
 	return (
 		<svg
 			{...props}

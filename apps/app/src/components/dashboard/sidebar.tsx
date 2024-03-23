@@ -1,8 +1,9 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { IconAttributes } from "@/lib/utils"
 
-function Package2Icon(props) {
+function Package2Icon(props: IconAttributes) {
 	return (
 		<svg
 			{...props}
@@ -24,7 +25,7 @@ function Package2Icon(props) {
 }
 
 
-function BellIcon(props) {
+function BellIcon(props: IconAttributes) {
 	return (
 		<svg
 			{...props}

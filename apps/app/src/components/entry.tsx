@@ -4,8 +4,9 @@
  */
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { IconAttributes } from "@/lib/utils"
 
-const FlagGp = (props) => (
+const FlagGp = (props: IconAttributes) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -83,7 +84,7 @@ export function Entry() {
                       <strong>serendipity</strong>
                       that opened up new possibilities.
                     </li>
-                    <li>The word "serendipity" was coined by Horace Walpole in the 18th century.</li>
+                    <li>The word &ldquo;serendipity&rdquo; was coined by Horace Walpole in the 18th century.</li>
                     <li>
                       She always believed that
                       <strong>serendipity</strong>
@@ -125,7 +126,7 @@ export function Entry() {
   )
 }
 
-function BookmarkIcon(props) {
+function BookmarkIcon(props: IconAttributes) {
   return (
     <svg
       {...props}
@@ -144,23 +145,3 @@ function BookmarkIcon(props) {
   )
 }
 
-
-function FlagIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-      <line x1="4" x2="4" y1="22" y2="15" />
-    </svg>
-  )
-}

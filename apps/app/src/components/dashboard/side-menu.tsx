@@ -1,6 +1,7 @@
+import { IconAttributes } from "@/lib/utils"
 import Link from "next/link"
 
-function HomeIcon(props) {
+function HomeIcon(props: IconAttributes) {
 	return (
 		<svg
 			{...props}
@@ -20,7 +21,7 @@ function HomeIcon(props) {
 	)
 }
 
-function PackageIcon(props) {
+function PackageIcon(props: IconAttributes) {
 	return (
 		<svg
 			{...props}
@@ -43,7 +44,7 @@ function PackageIcon(props) {
 }
 
 
-function UsersIcon(props) {
+function UsersIcon(props: IconAttributes) {
 	return (
 		<svg
 			{...props}
@@ -65,7 +66,7 @@ function UsersIcon(props) {
 	)
 }
 
-function LineChartIcon(props) {
+function LineChartIcon(props: IconAttributes) {
 	return (
 		<svg
 			{...props}

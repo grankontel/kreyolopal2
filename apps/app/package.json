@@ -30,6 +30,7 @@
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.10.0",
     "@cloudflare/workers-types": "^4.20240320.1",
+    "@types/feather-icons": "^4.29.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
