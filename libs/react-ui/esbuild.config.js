@@ -1,3 +1,6 @@
+const { nodeExternalsPlugin } = require('esbuild-node-externals');
+const { sassPlugin } = require('esbuild-sass-plugin')
+
 module.exports={
 		entryPoints: ['./src/index.ts'],
 		outfile: 'dist/index.js',
