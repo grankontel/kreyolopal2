@@ -12,9 +12,19 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useLogin } from '@/queries/use-login'
+import { useToast } from "@/components/ui/use-toast"
 
 export function LoginForm() {
-  const signInMutation = useLogin()
+  const { toast } = useToast()
+  const notifyer= (err) => {
+  
+    toast({
+      title: "Erreur",
+      variant: "destructive",
+      description: err?.error || err.toString() ,
+    })
+  }
+  const signInMutation = useLogin(notifyer)
 
 const handleSubmit = (e) => {
   e.preventDefault()

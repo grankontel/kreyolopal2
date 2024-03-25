@@ -28,7 +28,7 @@ const fetchLogin = (content: IUserCredentials): Promise<User> => {
   })
 }
 
-export function useLogin() {
+export function useLogin(notifyer?: ((error: Error) => void)) {
 const router = useRouter()	
   const { user, setUser } = useDicoStore((state) => ({
     user: state.user,
@@ -40,8 +40,11 @@ const router = useRouter()
     onSuccess: (data) => {
       // save the user in the state
       setUser(data)
-	  router.push('/dshboard')
+	  router.push('/dashboard')
     },
+	onError: (err: Error)=> {
+		notifyer?.(err)
+	},
   })
 
   return signInMutation
