@@ -4,6 +4,7 @@
     "plugin:eslint-plugin-next-on-pages/recommended"
   ],
   "plugins": [
-    "eslint-plugin-next-on-pages"
+    "eslint-plugin-next-on-pages",
+    "@tanstack/eslint-plugin-query"
   ]
 }

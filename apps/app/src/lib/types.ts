@@ -7,7 +7,7 @@ type Definitions = {
 } & object
 
 type Meaning = {
-  [key in MeaningLanguage]: string[]
+  [key in MeaningLanguage]?: string
 } & object
 
 export interface SingleDefinition {

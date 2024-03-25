@@ -1,5 +1,6 @@
 import { Entry } from '@/components/entry'
 import { DictionaryEntry } from '@/lib/types'
+import { KreyolLanguage } from '@kreyolopal/react-ui'
 
 export const runtime = 'edge'
 
@@ -48,7 +49,7 @@ const word: DictionaryEntry[] = [
 export default function Page({ params }: { params: { kreyol: string; entry: string } }) {
   return (
     <Entry
-      kreyol={params.kreyol}
+      kreyol={params.kreyol as KreyolLanguage}
       word={word[0]}
       dicoUrl={(w) => `/dashboard/dictionary/${params.kreyol}/${encodeURI(w)}`}
     />

@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { IconAttributes } from '@/lib/utils'
+import { IconAttributes } from '@kreyolopal/react-ui'
 
 function SearchIcon(props: IconAttributes) {
   return (

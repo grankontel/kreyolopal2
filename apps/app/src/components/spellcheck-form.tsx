@@ -5,7 +5,7 @@
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { IconAttributes } from '@/lib/utils'
+import { IconAttributes } from '@kreyolopal/react-ui'
 
 export function SpellcheckForm() {
   return (

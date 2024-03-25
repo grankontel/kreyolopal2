@@ -4,7 +4,7 @@
  */
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { KreyolLanguage } from '@kreyolopal/react-ui'
+import { KreyolLanguage, IconAttributes } from '@kreyolopal/react-ui'
 import { DictionaryEntry } from '@/lib/types'
 import { hashKey, onlyUnique } from '@/lib/utils'
 import { EntryDefinition } from './entry-definition'
