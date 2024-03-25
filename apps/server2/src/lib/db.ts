@@ -115,6 +115,8 @@ export interface DatabaseUser {
   id: string
   username: string
   password: string
+  firstname: string
+  lastname: string
   is_admin: boolean
   birth_date: Date
 }

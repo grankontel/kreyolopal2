@@ -26,3 +26,18 @@ export interface DictionaryEntry {
   variations: string[]
   definitions: Array<SingleDefinition>
 }
+
+export class ResponseError extends Error {
+  readonly response: Response
+  constructor(m: string, r: Response) {
+    super(m)
+
+    this.response = r
+  }
+}
+
+export type User = {
+	cookie: string;
+	firstname: string;
+	lastname: string;
+}

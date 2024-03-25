@@ -106,6 +106,8 @@ export function logUserIn(
     c.status(200)
     let response = {
       cookie: theCookie.value,
+      firstname: existingUser.firstname,
+      lastname: existingUser.lastname
     }
     if (existingUser.is_admin) {
       response.token = jwt_sign(
