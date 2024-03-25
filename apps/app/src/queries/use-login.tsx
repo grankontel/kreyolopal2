@@ -1,34 +1,48 @@
-import { ResponseError } from '@/lib/types'
-import { useDicoStore } from '@/store/dico-store';
-import { useQueryClient, useMutation } from '@tanstack/react-query'
+'use client'
+
+import { useRouter } from 'next/navigation'
+import { ResponseError, User } from '@/lib/types'
+import { useDicoStore } from '@/store/dico-store'
+import { useMutation } from '@tanstack/react-query'
 
 interface IUserCredentials {
-	username: string,
-	password: string
+  username: string
+  password: string
 }
 
-const fetchLogin = (formData: FormData):Promise<Response> => {
-	return fetch('/api/auth/login', {
-		method: 'POST',
-		body: JSON.stringify({
-			username: formData.get('username'),
-			password: formData.get('password'),
-		}),
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	})
+const fetchLogin = (content: IUserCredentials): Promise<User> => {
+
+  return fetch('/api/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({
+      username: content.username,
+      password: content.password,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((response) => {
+    if (!response.ok) throw new ResponseError('Failed on sign in request', response)
+
+    return response.json()
+  })
 }
 
 export function useLogin() {
-	const queryClient = useQueryClient()
-	const {user, setUser } = useDicoStore((state) => ({user: state.user, setUser: state.setUser}))
+const router = useRouter()	
+  const { user, setUser } = useDicoStore((state) => ({
+    user: state.user,
+    setUser: state.setUser,
+  }))
 
-	return useMutation({
+  const { mutate: signInMutation } = useMutation({
     mutationFn: fetchLogin,
     onSuccess: (data) => {
-      // ✅ refetch the comments list for our blog post
-			setUser(data)
+      // save the user in the state
+      setUser(data)
+	  router.push('/dshboard')
     },
   })
+
+  return signInMutation
 }

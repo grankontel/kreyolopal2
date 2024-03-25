@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -9,8 +11,17 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useLogin } from '@/queries/use-login'
 
 export function LoginForm() {
+  const signInMutation = useLogin()
+
+const handleSubmit = (e) => {
+  e.preventDefault()
+  const username = e.target.elements.username.value
+  const password = e.target.elements.password.value
+  signInMutation({username, password})
+}
 
   return (
     <Card className="w-full max-w-sm m-auto">
@@ -20,21 +31,23 @@ export function LoginForm() {
           Enter your email below to login to your account.
         </CardDescription>
       </CardHeader>
+      <form onSubmit={handleSubmit}>
       <CardContent className="grid gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Label htmlFor="username">Username</Label>
+          <Input id="username" autoComplete='username' type="text" placeholder="username" required />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" required />
+          <Input id="password" autoComplete='current-password' type="password" required />
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full" variant="logo">
+        <Button className="w-full" type='submit' variant="logo">
           Sign in
         </Button>
       </CardFooter>
+      </form>
     </Card>
   )
 }
