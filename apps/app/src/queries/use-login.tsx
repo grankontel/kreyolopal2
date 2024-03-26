@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { ResponseError, User } from '@/lib/types'
 import { useDicoStore } from '@/store/dico-store'
 import { useMutation } from '@tanstack/react-query'
+import { parseCookie } from '@/lib/utils'
 
 interface IUserCredentials {
   username: string
@@ -38,6 +39,8 @@ const router = useRouter()
   const { mutate: signInMutation } = useMutation({
     mutationFn: fetchLogin,
     onSuccess: (data) => {
+      const auth = parseCookie(data.cookie)
+      data.bearer = auth?.session_id
       // save the user in the state
       setUser(data)
 	  router.push('/dashboard')

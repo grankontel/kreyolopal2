@@ -40,4 +40,5 @@ export type User = {
 	cookie: string;
 	firstname: string;
 	lastname: string;
+  bearer?: string;
 }
