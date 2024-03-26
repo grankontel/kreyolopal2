@@ -3,6 +3,7 @@
  * @see https://v0.dev/t/TAkw9ZCtCWp
  */
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenuTrigger,
@@ -15,12 +16,26 @@ import Sidebar from '@/components/dashboard/sidebar'
 import SideMenu from '@/components/dashboard/side-menu'
 import DashboardPath from '@/components/dashboard/dashboard-path'
 import { IconAttributes } from '@kreyolopal/react-ui'
+import { redirect } from 'next/navigation'
+import { parseCookie } from '@/lib/utils'
+
+const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
 export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieValue = cookies().get(cookieName)
+  if (cookieValue === undefined) {
+    redirect('/login')
+  }
+  const auth = parseCookie(cookieValue.value)
+  if (auth?.session_id === undefined)
+  {
+    redirect('/login')
+  }
+  
   return (
     <div className="grid h-screen w-full lg:grid-cols-[280px_1fr]">
       <Sidebar>
