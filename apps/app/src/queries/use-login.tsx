@@ -7,6 +7,7 @@ import { useDicoStore } from '@/store/dico-store'
 import { useMutation } from '@tanstack/react-query'
 import { parseCookie } from '@/lib/utils'
 
+const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
 interface IUserCredentials {
@@ -16,7 +17,7 @@ interface IUserCredentials {
 
 const fetchLogin = (content: IUserCredentials): Promise<User> => {
 
-  return fetch('/api/auth/login', {
+  return fetch(apiServer + '/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({
       username: content.username,

@@ -19,6 +19,7 @@
   "dependencies": {
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "lodash.debounce": "^4.0.8",
     "prop-types": "^15.8.1",
     "react": "^18",
     "react-dom": "^18"
@@ -28,6 +29,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "esbuild": "^0.20.2",
     "esbuild-node-externals": "^1.13.0",
     "esbuild-sass-plugin": "^3.2.0"
