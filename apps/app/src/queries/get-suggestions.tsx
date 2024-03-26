@@ -1,12 +1,15 @@
+import { useQuery } from '@tanstack/react-query'
+import debounce from 'lodash.debounce'
+
 const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 
-const getEntries = (w:string) => {
+export const getEntries = (w: string) => {
   const word = w.trim()
   if (word.length === 0) return Promise.resolve([])
 
   return fetch(apiServer + `/api/dictionary/suggest/${encodeURIComponent(word)}`, {
     method: 'GET',
-//    credentials: 'same-origin',
+    //    credentials: 'same-origin',
   })
     .then(
       async (result) => {
