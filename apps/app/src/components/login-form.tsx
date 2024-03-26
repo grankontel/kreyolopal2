@@ -16,7 +16,7 @@ import { useToast } from "@/components/ui/use-toast"
 
 export function LoginForm() {
   const { toast } = useToast()
-  const notifyer= (err) => {
+  const notifyer= (err: { error?: string; toString: () => string }) => {
   
     toast({
       title: "Erreur",
@@ -26,7 +26,7 @@ export function LoginForm() {
   }
   const signInMutation = useLogin(notifyer)
 
-const handleSubmit = (e) => {
+const handleSubmit = (e: any) => {
   e.preventDefault()
   const username = e.target.elements.username.value
   const password = e.target.elements.password.value
