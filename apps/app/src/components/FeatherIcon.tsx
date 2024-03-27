@@ -3,7 +3,7 @@ import { DOMAttributes } from 'react'
 
 export const FeatherIcon = ({
   iconName,
-  className
+  className,
 }: {
   iconName: string
   className?: string
@@ -15,7 +15,8 @@ export const FeatherIcon = ({
         height: '1em',
         width: '1em',
       }),
-    }} />
+    }}
+  />
 )
 
 export default FeatherIcon

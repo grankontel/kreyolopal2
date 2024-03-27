@@ -31,11 +31,10 @@ export default function DashboardLayout({
     redirect('/login')
   }
   const auth = parseCookie(cookieValue.value)
-  if (auth?.session_id === undefined)
-  {
+  if (auth?.session_id === undefined) {
     redirect('/login')
   }
-  
+
   return (
     <div className="grid h-screen w-full lg:grid-cols-[280px_1fr]">
       <Sidebar>

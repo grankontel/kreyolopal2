@@ -16,8 +16,8 @@ export const EntryDefinition = ({
   const nature = definition.nature.join(', ')
   const subnature = definition.subnature?.length
     ? definition.subnature.join(', ')
-    : nature;
-  const def_langues = Object.keys(definition.meaning).filter((value) => value !== 'fr');
+    : nature
+  const def_langues = Object.keys(definition.meaning).filter((value) => value !== 'fr')
 
   return (
     <section className="definition py-4 border-b-gray-200 border-b-2 dark:bg-inherit dark:border-b-gray-700">
@@ -28,18 +28,18 @@ export const EntryDefinition = ({
           </span>
         </p>
         <section className="mb-3">
-          {
-            def_langues.map((lang) => {
-              const k = lang as MeaningLanguage
-              return (definition.meaning[k]?.length === 0) ? ('') : (
-                <div className="meaning text-xl text-gray-600 dark:text-gray-500 mb-3">
-                  <p>
-                    [{lang}] {definition.meaning[k]}
-                  </p>
-                </div>
-              )
-            })
-          }
+          {def_langues.map((lang) => {
+            const k = lang as MeaningLanguage
+            return definition.meaning[k]?.length === 0 ? (
+              ''
+            ) : (
+              <div className="meaning text-xl text-gray-600 dark:text-gray-500 mb-3">
+                <p>
+                  [{lang}] {definition.meaning[k]}
+                </p>
+              </div>
+            )
+          })}
 
           {definition.meaning['fr']?.length === 0 ? (
             ' '

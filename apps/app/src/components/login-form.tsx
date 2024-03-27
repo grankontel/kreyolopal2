@@ -12,26 +12,25 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useLogin } from '@/queries/use-login'
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from '@/components/ui/use-toast'
 
 export function LoginForm() {
   const { toast } = useToast()
-  const notifyer= (err: { error?: string; toString: () => string }) => {
-  
+  const notifyer = (err: { error?: string; toString: () => string }) => {
     toast({
-      title: "Erreur",
-      variant: "destructive",
-      description: err?.error || err.toString() ,
+      title: 'Erreur',
+      variant: 'destructive',
+      description: err?.error || err.toString(),
     })
   }
   const signInMutation = useLogin(notifyer)
 
-const handleSubmit = (e: any) => {
-  e.preventDefault()
-  const username = e.target.elements.username.value
-  const password = e.target.elements.password.value
-  signInMutation({username, password})
-}
+  const handleSubmit = (e: any) => {
+    e.preventDefault()
+    const username = e.target.elements.username.value
+    const password = e.target.elements.password.value
+    signInMutation({ username, password })
+  }
 
   return (
     <Card className="w-full max-w-sm m-auto">
@@ -42,21 +41,32 @@ const handleSubmit = (e: any) => {
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-      <CardContent className="grid gap-4">
-        <div className="grid gap-2">
-          <Label htmlFor="username">Username</Label>
-          <Input id="username" autoComplete='username' type="text" placeholder="username" required />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" autoComplete='current-password' type="password" required />
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button className="w-full" type='submit' variant="logo">
-          Sign in
-        </Button>
-      </CardFooter>
+        <CardContent className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              autoComplete="username"
+              type="text"
+              placeholder="username"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              autoComplete="current-password"
+              type="password"
+              required
+            />
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full" type="submit" variant="logo">
+            Sign in
+          </Button>
+        </CardFooter>
       </form>
     </Card>
   )

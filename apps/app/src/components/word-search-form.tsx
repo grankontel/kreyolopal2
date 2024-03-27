@@ -71,23 +71,27 @@ export function WordSearchForm() {
             }}
           />
           <div className="absolute top-full left-0 w-full bg-white mt-2 shadow-lg z-10">
-            {(words === undefined ||  words?.length === 0) ? ' ' : (
-            <ul className="divide-y divide-gray-200">
-              {words.map((item: DictionaryEntry, index: any) => {
-                return (
-                  <li key={item._id}>
-                  <Button className="w-full justify-start text-left" variant="ghost" onClick={(e) => {
-                    e.preventDefault()
-                    router.push(`/dashboard/dictionary/gp/${encodeURI(item.entry)}`)
-                  }}>
-                  {item.variations.join('/')}
-                  </Button>
-                </li>
-    
-                )
-              })}
-          </ul>
-
+            {words === undefined || words?.length === 0 ? (
+              ' '
+            ) : (
+              <ul className="divide-y divide-gray-200">
+                {words.map((item: DictionaryEntry, index: any) => {
+                  return (
+                    <li key={item._id}>
+                      <Button
+                        className="w-full justify-start text-left"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          router.push(`/dashboard/dictionary/gp/${encodeURI(item.entry)}`)
+                        }}
+                      >
+                        {item.variations.join('/')}
+                      </Button>
+                    </li>
+                  )
+                })}
+              </ul>
             )}
           </div>
         </div>

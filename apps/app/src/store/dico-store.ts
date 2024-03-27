@@ -5,5 +5,5 @@ import { createUserSlice } from './user-slice'
 
 export const useDicoStore = create<DicoStore>()((...a) => ({
   ...createDicoSlice(...a),
-  ...createUserSlice(...a)
+  ...createUserSlice(...a),
 }))

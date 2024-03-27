@@ -4,7 +4,7 @@ import debounce from 'lodash.debounce'
 
 const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 
-export const getEntries = (w: string):Promise<DictionaryEntry[]> => {
+export const getEntries = (w: string): Promise<DictionaryEntry[]> => {
   const word = w.trim()
   if (word.length === 0) return Promise.resolve([])
 

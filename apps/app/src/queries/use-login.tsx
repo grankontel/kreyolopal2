@@ -16,7 +16,6 @@ interface IUserCredentials {
 }
 
 const fetchLogin = (content: IUserCredentials): Promise<User> => {
-
   return fetch(apiServer + '/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({
@@ -33,7 +32,7 @@ const fetchLogin = (content: IUserCredentials): Promise<User> => {
   })
 }
 
-export function useLogin(notifyer?: ((error: Error) => void)) {
+export function useLogin(notifyer?: (error: Error) => void) {
   const [cookies, setCookies, removeCookie] = useCookies()
   const router = useRouter()
   const { user, setUser } = useDicoStore((state) => ({

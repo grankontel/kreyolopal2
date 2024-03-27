@@ -19,7 +19,7 @@ export default function LoginPage() {
         </div>
       </div>
       <div className="basis-1/2 my-auto">
-        <LoginForm  />
+        <LoginForm />
       </div>
     </div>
   )

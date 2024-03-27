@@ -1,4 +1,4 @@
-import {  StateCreator } from 'zustand'
+import { StateCreator } from 'zustand'
 import { DashboardMenuItem } from '@/lib/dashboard'
 import { DicoStore, DicoSlice } from './types'
 
@@ -40,10 +40,10 @@ const removeByLabel = (
   return response
 }
 
-
 export const createDicoSlice: StateCreator<DicoStore, [], [], DicoSlice> = (set) => ({
-	menus: menus,
-	addMenu: (item: DashboardMenuItem) => set((state) => ({ menus: [...state.menus, item] })),
-	removeItem: (label: string) => set((state) => ({ menus: [...removeByLabel(label, state.menus)] })),
-
+  menus: menus,
+  addMenu: (item: DashboardMenuItem) =>
+    set((state) => ({ menus: [...state.menus, item] })),
+  removeItem: (label: string) =>
+    set((state) => ({ menus: [...removeByLabel(label, state.menus)] })),
 })

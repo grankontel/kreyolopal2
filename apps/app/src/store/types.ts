@@ -2,8 +2,8 @@ import { DashboardMenuItem } from '@/lib/dashboard'
 import { User } from '@/lib/types'
 
 export interface UserSlice {
-	user: User | null
-	setUser: (newUser:User) => void
+  user: User | null
+  setUser: (newUser: User) => void
 }
 
 export interface DicoSlice {

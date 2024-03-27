@@ -35,11 +35,11 @@ export interface DictionaryFullEntry {
 }
 
 export type UserDictionaryEntry = {
-	cacheMode: 'public' | 'private'
-	is_bookmarked: boolean;
-	entry: DictionaryEntry;
-	bookmark?: DictionaryEntry;
-	kreyol: string;
+  cacheMode: 'public' | 'private'
+  is_bookmarked: boolean
+  entry: DictionaryEntry
+  bookmark?: DictionaryEntry
+  kreyol: string
 }
 
 export class ResponseError extends Error {
@@ -52,8 +52,8 @@ export class ResponseError extends Error {
 }
 
 export type User = {
-	cookie: string;
-	firstname: string;
-	lastname: string;
-  bearer?: string;
+  cookie: string
+  firstname: string
+  lastname: string
+  bearer?: string
 }
