@@ -5,21 +5,24 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { KreyolLanguage, IconAttributes } from '@kreyolopal/react-ui'
-import { DictionaryEntry } from '@/lib/types'
+import { DictionaryEntry, UserDictionaryEntry } from '@/lib/types'
 import { hashKey, onlyUnique } from '@/lib/utils'
 import { EntryDefinition } from './entry-definition'
 
 export function Entry({
   kreyol,
-  word,
+  value,
   dicoUrl,
   ...props
 }: {
   kreyol: KreyolLanguage
-  word: DictionaryEntry
+  value: UserDictionaryEntry
   dicoUrl: (word: string) => string
 }) {
-  const relatedList = [word]
+
+  const source: DictionaryEntry = (value.is_bookmarked ? value.bookmark : value.entry) as DictionaryEntry
+
+  const relatedList = [source]
     .map((entry) => {
       const syns = entry.definitions
         .map((def) => {
@@ -36,6 +39,7 @@ export function Entry({
     .flat()
     .filter(onlyUnique)
 
+
   return (
     <div className="flex flex-col min-h-screen" {...props}>
       <main className="flex-1 py-6">
@@ -46,19 +50,19 @@ export function Entry({
                 <Button size="icon" variant="outline">
                   <BookmarkIcon className="h-6 w-6" />
                 </Button>
-                {word.entry}
+                {source.entry}
               </span>
             </h1>
             <p className="text-gray-500 dark:text-gray-400">
-              {word.variations.join(' /')}
+              {source.variations.join(' /')}
             </p>
           </div>
           <div className="above-article flex flex-row">
             <article className="gap-2  basis-3/4">
-              {word.definitions.map((definition, index) => (
+              {source.definitions.map((definition, index) => (
                 <EntryDefinition
-                  key={hashKey('key_', word.entry + ':' + index)}
-                  entry={word.entry}
+                  key={hashKey('key_', source.entry + ':' + index)}
+                  entry={source.entry}
                   index={index + 1}
                   definition={definition}
                   dicoUrl={dicoUrl}

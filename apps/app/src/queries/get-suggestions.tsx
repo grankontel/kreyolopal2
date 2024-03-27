@@ -1,9 +1,10 @@
+import { DictionaryEntry } from '@/lib/types'
 import { useQuery } from '@tanstack/react-query'
 import debounce from 'lodash.debounce'
 
 const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 
-export const getEntries = (w: string) => {
+export const getEntries = (w: string):Promise<DictionaryEntry[]> => {
   const word = w.trim()
   if (word.length === 0) return Promise.resolve([])
 
@@ -17,7 +18,7 @@ export const getEntries = (w: string) => {
           return []
         }
 
-        return result.json()
+        return result.json<DictionaryEntry[]>()
       },
       (reason) => {
         console.log(reason)

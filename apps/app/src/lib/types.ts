@@ -21,10 +21,25 @@ export interface SingleDefinition {
 }
 
 export interface DictionaryEntry {
-  id: string
+  _id: string
   entry: string
   variations: string[]
   definitions: Array<SingleDefinition>
+}
+
+export interface DictionaryFullEntry {
+  id: string
+  entry: string
+  variations: string[]
+  definitions: Definitions
+}
+
+export type UserDictionaryEntry = {
+	cacheMode: 'public' | 'private'
+	is_bookmarked: boolean;
+	entry: DictionaryEntry;
+	bookmark?: DictionaryEntry;
+	kreyol: string;
 }
 
 export class ResponseError extends Error {

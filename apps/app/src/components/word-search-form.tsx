@@ -5,9 +5,10 @@ import { useQuery } from '@tanstack/react-query'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { IconAttributes } from '@kreyolopal/react-ui'
-import { getEntries, useGetSuggestions } from '@/queries/get-suggestions'
+import { getEntries } from '@/queries/get-suggestions'
 import { DictionaryEntry } from '@/lib/types'
 import debounce from 'lodash.debounce'
+import { useRouter } from 'next/navigation'
 
 function SearchIcon(props: IconAttributes) {
   return (
@@ -29,21 +30,22 @@ function SearchIcon(props: IconAttributes) {
   )
 }
 
+export type EntrySelectedHandler = (entry: DictionaryEntry) => void
+
 export function WordSearchForm() {
-    const [open, setOpen]= useState(false)
+  const router = useRouter()
   const [word, setWord] = useState('')
-    const debounceSetWord = debounce(setWord, 1000)
-    useEffect(() => {
-        return () => {
-            debounceSetWord.cancel()
-        }
-      })
-    
+  const debounceSetWord = debounce(setWord, 1000)
+  useEffect(() => {
+    return () => {
+      debounceSetWord.cancel()
+    }
+  })
+
   const {
     data: words,
     error,
     isLoading,
-    refetch,
   } = useQuery({
     queryKey: ['suggest', word],
     queryFn: async ({ queryKey }) => {
@@ -53,19 +55,42 @@ export function WordSearchForm() {
       return rep
     },
   })
+
   console.log(words)
 
   return (
     <form className="flex-1">
       <div className="relative">
-        <Input
-          className="w-full md:max-w-sm"
-          placeholder="Search for a word"
-          type="search"
-          onChange={(e) => {
-            debounceSetWord(e.target.value)
-          }}
-        />
+        <div className="relative">
+          <Input
+            className="w-full "
+            placeholder="Search for a word"
+            type="search"
+            onChange={(e) => {
+              debounceSetWord(e.target.value)
+            }}
+          />
+          <div className="absolute top-full left-0 w-full bg-white mt-2 shadow-lg z-10">
+            {(words === undefined ||  words?.length === 0) ? ' ' : (
+            <ul className="divide-y divide-gray-200">
+              {words.map((item: DictionaryEntry, index: any) => {
+                return (
+                  <li key={item._id}>
+                  <Button className="w-full justify-start text-left" variant="ghost" onClick={(e) => {
+                    e.preventDefault()
+                    router.push(`/dashboard/dictionary/gp/${encodeURI(item.entry)}`)
+                  }}>
+                  {item.variations.join('/')}
+                  </Button>
+                </li>
+    
+                )
+              })}
+          </ul>
+
+            )}
+          </div>
+        </div>
         <Button
           className="absolute top-1/2 right-2 transform -translate-y-1/2"
           type="submit"
