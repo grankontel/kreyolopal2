@@ -129,3 +129,39 @@ filter : {$and: [{ variations: /^kyou/, docType: 'entry'}]}
 ```
 
 https://v0.dev/t/p4iTLoz5zql
+
+
+## Table
+
+```
+                <TableRow>
+                  <TableCell className="font-semibold">Glimmer Lamps</TableCell>
+                  <TableCell>Lighting</TableCell>
+                  <TableCell>$49.99</TableCell>
+                  <TableCell>500 in stock</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-semibold">Aqua Filters</TableCell>
+                  <TableCell>Home Appliances</TableCell>
+                  <TableCell>$29.99</TableCell>
+                  <TableCell>750 in stock</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-semibold">Eco Planters</TableCell>
+                  <TableCell>Gardening</TableCell>
+                  <TableCell>$19.99</TableCell>
+                  <TableCell>300 in stock</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-semibold">Zest Juicers</TableCell>
+                  <TableCell>Kitchenware</TableCell>
+                  <TableCell>$39.99</TableCell>
+                  <TableCell>1000 in stock</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-semibold">Flexi Wearables</TableCell>
+                  <TableCell>Fitness & Health</TableCell>
+                  <TableCell>$59.99</TableCell>
+                  <TableCell>200 in stock</TableCell>
+                </TableRow>
+```

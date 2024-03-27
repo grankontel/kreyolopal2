@@ -33,3 +33,8 @@ export function parseCookie(
     return null
   }
 }
+
+export const makeId = (entry:string, langue:string, index:number) => {
+  const str = [entry, langue, index].join(':')
+  return btoa(funhash(str).toString())
+}
