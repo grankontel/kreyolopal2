@@ -2,17 +2,20 @@
 import { Button } from '@/components/ui/button'
 import { KreyolLanguage, IconAttributes } from '@kreyolopal/react-ui'
 import { useDicoStore } from '@/store/dico-store'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useToast } from './ui/use-toast';
 
 const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 
 export const EntryBookmarkButton = ({ entry, bookmarked }: { entry: string, bookmarked: boolean }) => {
 	const [isBookmarked, setBookmarked] = useState(bookmarked)
+	const [isDisabled, setDisabled] = useState(true)
 	const user = useDicoStore((state) => state.user)
 	const { toast } = useToast()
 
-	console.log(user)
+	useEffect(() => {
+		setDisabled(user == null || user.bearer == null)
+	}, [user])
 
 	const addBookmark = async (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault()
@@ -53,9 +56,8 @@ export const EntryBookmarkButton = ({ entry, bookmarked }: { entry: string, book
 			})
 	}
 
-
 	return (
-		<Button size="icon" variant="outline" disabled={user == null || user.bearer == null} onClick={addBookmark}>
+		<Button size="icon" variant="outline" disabled={isDisabled} onClick={addBookmark}>
 			{isBookmarked ? (<BookmarkedIcon className="h-6 w-6" />) : (<BookmarkIcon className="h-6 w-6" />)}
 		</Button>
 
@@ -75,8 +77,8 @@ function BookmarkedIcon(props: IconAttributes) {
 			<path
 				d="M3.5 2C3.22386 2 3 2.22386 3 2.5V13.5C3 13.6818 3.09864 13.8492 3.25762 13.9373C3.41659 14.0254 3.61087 14.0203 3.765 13.924L7.5 11.5896L11.235 13.924C11.3891 14.0203 11.5834 14.0254 11.7424 13.9373C11.9014 13.8492 12 13.6818 12 13.5V2.5C12 2.22386 11.7761 2 11.5 2H3.5Z"
 				fill="currentColor"
-				fill-rule="evenodd"
-				clip-rule="evenodd"
+				fillRule="evenodd"
+				clipRule="evenodd"
 			></path>
 		</svg>
 	)

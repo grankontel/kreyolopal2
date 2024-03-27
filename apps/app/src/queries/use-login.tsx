@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useCookies } from 'react-cookie'
 import { ResponseError, User } from '@/lib/types'
 import { useDicoStore } from '@/store/dico-store'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { parseCookie } from '@/lib/utils'
 
 const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
@@ -33,6 +33,7 @@ const fetchLogin = (content: IUserCredentials): Promise<User> => {
 }
 
 export function useLogin(notifyer?: (error: Error) => void) {
+  const queryClient = useQueryClient()
   const [cookies, setCookies, removeCookie] = useCookies()
   const router = useRouter()
   const { user, setUser } = useDicoStore((state) => ({
@@ -47,7 +48,10 @@ export function useLogin(notifyer?: (error: Error) => void) {
       const auth = parseCookie(data.cookie)
       data.bearer = auth?.session_id
       // save the user in the state
+      console.log('useLogin')
+      console.log(data)
       setUser(data)
+      queryClient.invalidateQueries({ queryKey: ['me'] })
       router.push('/dashboard')
     },
     onError: (err: Error) => {

@@ -50,13 +50,10 @@ export function WordSearchForm() {
     queryKey: ['suggest', word],
     queryFn: async ({ queryKey }) => {
       const [_, word] = queryKey
-      console.log(word)
       const rep = await getEntries(word)
       return rep
     },
   })
-
-  console.log(words)
 
   return (
     <form className="flex-1">

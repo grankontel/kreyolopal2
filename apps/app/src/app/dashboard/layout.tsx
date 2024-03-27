@@ -5,12 +5,6 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-  DropdownMenuContent,
-  DropdownMenu,
-} from '@/components/ui/dropdown-menu'
 import { ModeToggle } from '@/components/mode-toogle'
 import Sidebar from '@/components/dashboard/sidebar'
 import SideMenu from '@/components/dashboard/side-menu'
@@ -18,6 +12,7 @@ import DashboardPath from '@/components/dashboard/dashboard-path'
 import { IconAttributes } from '@kreyolopal/react-ui'
 import { redirect } from 'next/navigation'
 import { parseCookie } from '@/lib/utils'
+import { UserDropdown } from '@/components/dashboard/user-dropdown'
 
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
@@ -32,6 +27,7 @@ export default function DashboardLayout({
   }
   const auth = parseCookie(cookieValue.value)
   if (auth?.session_id === undefined) {
+    cookies().delete(cookieName)
     redirect('/login')
   }
 
@@ -50,24 +46,7 @@ export default function DashboardLayout({
             <DashboardPath />
           </div>
           <div className="flex items-center gap-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
-                  id="profile-menu"
-                  size="icon"
-                  variant="ghost"
-                >
-                  <UserIcon className="h-4 w-4" />
-                  <span className="sr-only">Toggle profile menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <UserDropdown token={auth?.session_id as string} />
             <ModeToggle />
             <Button variant="logo">Logout</Button>
           </div>
@@ -101,46 +80,6 @@ function Package2Icon(props: IconAttributes) {
       <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
       <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9" />
       <path d="M12 3v6" />
-    </svg>
-  )
-}
-
-function BellIcon(props: IconAttributes) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-    </svg>
-  )
-}
-
-function UserIcon(props: IconAttributes) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
     </svg>
   )
 }
