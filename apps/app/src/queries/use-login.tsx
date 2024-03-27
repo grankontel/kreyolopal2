@@ -48,8 +48,6 @@ export function useLogin(notifyer?: (error: Error) => void) {
       const auth = parseCookie(data.cookie)
       data.bearer = auth?.session_id
       // save the user in the state
-      console.log('useLogin')
-      console.log(data)
       setUser(data)
       queryClient.invalidateQueries({ queryKey: ['me'] })
       router.push('/dashboard')
