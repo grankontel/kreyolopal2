@@ -17,6 +17,8 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { fetchPersonalDico } from '@/queries/fetch-personal-dico'
 import { useDicoStore } from '@/store/dico-store'
 import Link from 'next/link'
+import { DicoTableSkeleton } from './dico-table-skeleton'
+import { TableError } from './table-error'
 
 type WordRow = {
   id: string
@@ -98,7 +100,7 @@ export const DicoTable = () => {
   const user = useDicoStore((state) => state.user)
 
   const {
-    isLoading,
+    isPending,
     isError,
     error,
     data,
@@ -120,7 +122,8 @@ export const DicoTable = () => {
     }
   }, [data])
 
-  return (
+  return isPending ? (<DicoTableSkeleton />) : isError ? (
+    <TableError message={error.message} />) : (
     <Table>
       <DicoTableHeaders />
       <TableBody>
@@ -143,7 +146,7 @@ export const DicoTable = () => {
               {ligne.flag_rowspan === 0 ? null : (
                 <TableCell rowSpan={ligne.flag_rowspan} className='align-top mt-2'>
                   <Link href={ligne.url}>
-                  {ligne.Flag}
+                    {ligne.Flag}
                   </Link>
                 </TableCell>
               )}
