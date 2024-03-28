@@ -5,7 +5,7 @@ const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.
 interface PersonalDico {
 	count: number;
 	maxPages: number;
-	data: DictionaryFullEntry[]
+	entries: DictionaryFullEntry[]
 }
 
 export const fetchPersonalDico = ({ token, page = 0 }: { token: string, page: number }) =>
@@ -36,7 +36,7 @@ export const fetchPersonalDico = ({ token, page = 0 }: { token: string, page: nu
 		const total = parseInt(result.headers.get('X-Total-Count') || '0')
 		const data = await result.json<DictionaryFullEntry[]>()
 		const maxPages = Math.ceil(total / PAGE_SIZE)
-		resolve({ count: total, maxPages, data })
+		resolve({ count: total, maxPages, entries: data })
 	})
 
 	

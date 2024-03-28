@@ -1,6 +1,6 @@
 'use client'
 
-import { JSX, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import {
   TableHead,
   TableRow,
@@ -9,64 +9,14 @@ import {
   TableBody,
   Table,
 } from '@/components/ui/table'
-import { DictionaryFullEntry } from '@/lib/types'
+import { DictionaryFullEntry, User } from '@/lib/types'
 import { makeId, hashKey } from '@/lib/utils'
 import { KreyolFlag, KreyolLanguage } from '@kreyolopal/react-ui'
 import DicoTableCell from '@/components/dicotable/dico-table-cell'
-
-const data: DictionaryFullEntry[] = [
-  {
-    id: '65fae48184a6e7c923251f8d',
-    entry: 'abominasyon',
-    variations: ['abominasyon'],
-    definitions: {
-      gp: [
-        {
-          nature: ['nom'],
-          meaning: {
-            gp: '',
-            fr: 'chose abominable.',
-          },
-          usage: ['apré siklòn-la, fo ou té vwè sa, sa té on abominasyon.'],
-          synonyms: [],
-          confer: [],
-          quotes: [],
-        },
-      ],
-    },
-  },
-  {
-    id: '65fbeadcd766865cdea535ba',
-    entry: 'kabanné',
-    variations: ['kabanné'],
-    definitions: {
-      gp: [
-        {
-          nature: ['verbe'],
-          meaning: {
-            gp: '',
-            fr: 'faséyer, ne plus prendre le vent.',
-          },
-          usage: [],
-          synonyms: [],
-          confer: [],
-          quotes: [],
-        },
-        {
-          nature: ['adjectif'],
-          meaning: {
-            gp: '',
-            fr: "état d'une mangue qui a murit dans un chiffon pour qu'elle devienne plus veloutée, plus moelleuses.",
-          },
-          usage: [],
-          synonyms: [],
-          confer: [],
-          quotes: [],
-        },
-      ],
-    },
-  },
-]
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { fetchPersonalDico } from '@/queries/fetch-personal-dico'
+import { useDicoStore } from '@/store/dico-store'
+import Link from 'next/link'
 
 type WordRow = {
   id: string
@@ -77,6 +27,7 @@ type WordRow = {
   }
   entry: string
   entry_rowspan: number
+  url: string
   variations: string[]
   langue: KreyolLanguage
   Flag: JSX.Element
@@ -108,6 +59,7 @@ function wordsToRow(words: DictionaryFullEntry[]): WordRow[] {
             definition_rank: def_index,
           },
           entry: word.entry,
+          url: `/dashboard/dictionary/${langue}/${encodeURI(word.entry)}`,
           entry_rowspan,
           variations: word.variations,
           langue,
@@ -142,10 +94,33 @@ const DicoTableHeaders = () => (
 )
 
 export const DicoTable = () => {
-    const [words, setWords] = useState<DictionaryFullEntry[]>(data)
-    const lignes = wordsToRow(words)
+  const [page, setPage] = useState(0)
+  const user = useDicoStore((state) => state.user)
 
-    return (
+  const {
+    isLoading,
+    isError,
+    error,
+    data,
+    isFetching,
+    isPlaceholderData,
+  } = useQuery({
+    queryKey: ['projects', page],
+    queryFn: () => {
+      const token: string = (user as User).bearer || ''
+      return fetchPersonalDico({ token, page })
+    },
+    placeholderData: keepPreviousData
+  })
+
+  const [lignes, setLignes] = useState<WordRow[]>([])
+  useEffect(() => {
+    if (data) {
+      setLignes(wordsToRow(data.entries))
+    }
+  }, [data])
+
+  return (
     <Table>
       <DicoTableHeaders />
       <TableBody>
@@ -153,10 +128,13 @@ export const DicoTable = () => {
           return (
             <TableRow key={ligne.id}>
               {ligne.entry_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.entry_rowspan}>{ligne.entry}</TableCell>
+                <TableCell rowSpan={ligne.entry_rowspan} className='align-top mt-2'>
+                  {ligne.entry}
+
+                </TableCell>
               )}
               {ligne.entry_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.entry_rowspan}>
+                <TableCell rowSpan={ligne.entry_rowspan} className='align-top mt-2'>
                   {ligne.variations.map((variation) => {
                     return <div key={hashKey('var_', variation)}>{variation}</div>
                   })}
@@ -164,10 +142,12 @@ export const DicoTable = () => {
               )}
               {ligne.flag_rowspan === 0 ? null : (
                 <TableCell rowSpan={ligne.flag_rowspan} className='align-top mt-2'>
-                    {ligne.Flag}
+                  <Link href={ligne.url}>
+                  {ligne.Flag}
+                  </Link>
                 </TableCell>
               )}
-              <TableCell>{ligne.nature}</TableCell>
+              <TableCell className='align-top mt-2'>{ligne.nature}</TableCell>
               <TableCell>{ligne.definition_cpf}</TableCell>
               <TableCell>{ligne.definition_fr}</TableCell>
               <DicoTableCell
