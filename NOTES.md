@@ -134,34 +134,63 @@ https://v0.dev/t/p4iTLoz5zql
 ## Table
 
 ```
-                <TableRow>
-                  <TableCell className="font-semibold">Glimmer Lamps</TableCell>
-                  <TableCell>Lighting</TableCell>
-                  <TableCell>$49.99</TableCell>
-                  <TableCell>500 in stock</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-semibold">Aqua Filters</TableCell>
-                  <TableCell>Home Appliances</TableCell>
-                  <TableCell>$29.99</TableCell>
-                  <TableCell>750 in stock</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-semibold">Eco Planters</TableCell>
-                  <TableCell>Gardening</TableCell>
-                  <TableCell>$19.99</TableCell>
-                  <TableCell>300 in stock</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-semibold">Zest Juicers</TableCell>
-                  <TableCell>Kitchenware</TableCell>
-                  <TableCell>$39.99</TableCell>
-                  <TableCell>1000 in stock</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-semibold">Flexi Wearables</TableCell>
-                  <TableCell>Fitness & Health</TableCell>
-                  <TableCell>$59.99</TableCell>
-                  <TableCell>200 in stock</TableCell>
-                </TableRow>
+<Table>
+    <DicoTableHeaders />
+    <TableBody>
+      {lignes.map((ligne) => {
+        return (
+          <TableRow key={ligne.id}>
+            {ligne.entry_rowspan === 0 ? null : (
+              <TableCell rowSpan={ligne.entry_rowspan} className='align-top mt-2'>
+                {ligne.entry}
+
+              </TableCell>
+            )}
+            {ligne.entry_rowspan === 0 ? null : (
+              <TableCell rowSpan={ligne.entry_rowspan} className='align-top mt-2'>
+                {ligne.variations.map((variation) => {
+                  return <div key={hashKey('var_', variation)}>{variation}</div>
+                })}
+              </TableCell>
+            )}
+            {ligne.flag_rowspan === 0 ? null : (
+              <TableCell rowSpan={ligne.flag_rowspan} className='align-top mt-2'>
+                <Link href={ligne.url}>
+                  {ligne.Flag}
+                </Link>
+              </TableCell>
+            )}
+            <TableCell className='align-top mt-2'>{ligne.nature}</TableCell>
+            <TableCell>{ligne.definition_cpf}</TableCell>
+            <TableCell>{ligne.definition_fr}</TableCell>
+            <DicoTableCell
+              entry={ligne.definition_key}
+              name="usage"
+              value={ligne.usage.map((txt) => (
+                <div key={hashKey('usage_', txt)}>{txt}</div>
+              ))}
+              onAdd={(id) => console.log(id)}
+            />
+            <DicoTableCell
+              entry={ligne.definition_key}
+              name="synonyms"
+              value={ligne.synonyms.map((txt) => (
+                <div key={hashKey('syn_', txt)}>{txt}</div>
+              ))}
+              onAdd={(id) => console.log(id)}
+            />
+            <DicoTableCell
+              entry={ligne.definition_key}
+              name="confer"
+              value={ligne.confer.map((txt) => (
+                <div key={hashKey('confer_', txt)}>{txt}</div>
+              ))}
+              onAdd={(id) => console.log(id)}
+            />
+          </TableRow>
+        )
+      })}
+    </TableBody>
+  </Table>
+
 ```

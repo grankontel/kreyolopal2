@@ -29,6 +29,8 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
     "@types/lodash.debounce": "^4.0.9",
     "esbuild": "^0.20.2",
     "esbuild-node-externals": "^1.13.0",

@@ -3,6 +3,7 @@
 import { cookies } from 'next/headers'
 import { DictionaryEntry, DictionaryFullEntry, UserDictionaryEntry } from '@/lib/types'
 import { parseCookie } from '@/lib/utils'
+import {KreyolLanguage } from '@kreyolopal/react-ui'
 
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
@@ -23,6 +24,7 @@ export async function getWord(
       resolve(null)
     }
 
+    const lang = kreyol as KreyolLanguage
     // Fetch data from external API
     const result = await fetch(`${apiServer}/api/dictionary/${kreyol}/${entry}`, {
       method: 'GET',
@@ -70,7 +72,7 @@ export async function getWord(
             _id: item.id,
             entry: item.entry,
             variations: item.variations,
-            definitions: item.definitions[kreyol],
+            definitions: item.definitions[lang],
           }
         })
         response.is_bookmarked = bookmarks.length > 0

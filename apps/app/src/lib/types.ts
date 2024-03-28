@@ -58,3 +58,11 @@ export type User = {
   birth_date?: Date
   bearer?: string
 }
+
+export interface SpellcheckResponse {
+  status: string
+  kreyol: KreyolLanguage
+  unknown_words: string[]
+  message: string
+  html?: string
+}

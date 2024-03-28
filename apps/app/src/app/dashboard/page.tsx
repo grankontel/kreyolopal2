@@ -8,6 +8,8 @@ import {
   Card,
 } from '@/components/ui/card'
 
+export const runtime = 'edge'
+
 export default function Home() {
   return (
     <MainPanel title="Produits">

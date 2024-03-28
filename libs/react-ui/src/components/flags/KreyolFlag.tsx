@@ -4,9 +4,15 @@ import * as PropTypes from 'prop-types'
 import { FlagGp } from './FlagGp'
 import { FlagMq } from './FlagMq'
 import { FlagHt } from './FlagHt'
-import { IconAttributes, KreyolLanguage } from "../../types"
+import { KreyolLanguage } from "../../types"
 
-export const KreyolFlag = ({kreyol, ...props}: {kreyol:KreyolLanguage, props: IconAttributes}) => {
+interface KreyolFlagProps extends React.SVGAttributes<SVGSVGElement> {
+  kreyol: KreyolLanguage
+}
+
+export const KreyolFlag = (props: KreyolFlagProps) => {
+  const { kreyol } = props
+
   switch (kreyol) {
     case 'gp':
       return <FlagGp {...props} />

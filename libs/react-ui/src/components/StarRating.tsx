@@ -1,13 +1,34 @@
 import * as React from 'react'
-import './StarRating.sass'
 import * as PropTypes from 'prop-types'
+import styled from '@emotion/styled'
 
 interface onRatedFunc {
   (value: number): void
 }
-type StarRatingProps = { disabled: boolean, hidden: boolean, value: number, onRated: onRatedFunc }
+type StarRatingProps = { disabled?: boolean, hidden: boolean, value?: number, onRated?: onRatedFunc }
 
-export const StarRating = ({ disabled, hidden, value, onRated }: StarRatingProps) => {
+const SRDiv = styled.div`
+.on {
+color: #ffc107;
+}
+.off {
+color: #ccc;
+}
+`
+
+const SRButton = styled.button`
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 1px 2px;
+  &:disabled {
+    cursor: not-allowed;
+  }
+`
+
+export const StarRating = ({ disabled = false, hidden, value = 0, onRated }: StarRatingProps) => {
   const initialValue = Math.min(Math.max(value || 0, 0), 5)
   const [rating, setRating] = React.useState(initialValue)
   const [hover, setHover] = React.useState(0)
@@ -21,11 +42,11 @@ export const StarRating = ({ disabled, hidden, value, onRated }: StarRatingProps
   }
 
   return (
-    <div className="star-rating" hidden={hidden}>
+    <SRDiv className="star-rating" hidden={hidden}>
       {[...Array(5)].map((star, index) => {
         index += 1
         return (
-          <button
+          <SRButton
             type="button"
             key={index}
             className={index <= (hover || rating) ? 'on' : 'off'}
@@ -35,10 +56,10 @@ export const StarRating = ({ disabled, hidden, value, onRated }: StarRatingProps
             disabled={disabled}
           >
             <span className="star">&#9733;</span>
-          </button>
+          </SRButton>
         )
       })}
-    </div>
+    </SRDiv>
   )
 }
 
@@ -47,10 +68,6 @@ StarRating.propTypes = {
   hidden: PropTypes.bool,
   value: PropTypes.number,
   onRated: PropTypes.func,
-}
-
-StarRating.defaultProps = {
-  value: 0,
 }
 
 export default StarRating

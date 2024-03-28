@@ -2,6 +2,8 @@ import MainPanel from '@/components/dashboard/main-panel'
 import { SpellcheckForm } from '@/components/spellcheck-form'
 import { Card, CardContent } from '@/components/ui/card'
 
+export const runtime = 'edge'
+
 export default function Page() {
   return (
     <MainPanel title="Orthographe">

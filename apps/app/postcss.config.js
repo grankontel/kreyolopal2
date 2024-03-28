@@ -2,6 +2,9 @@ module.exports = {
   plugins: {
     tailwindcss: {},
     autoprefixer: {},
-    cssnano: {},
+    cssnano: {
+      preset: 'advanced',
+      discardComments: { removeAll: true }
+    },
   },
 }
