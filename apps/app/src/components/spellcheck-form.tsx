@@ -10,22 +10,76 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { IconAttributes, StarRating } from '@kreyolopal/react-ui'
 import { SpellcheckResponse } from '@/lib/types'
+import { postSpellCheck } from '@/queries/post-spellcheck'
+import { useDicoStore } from '@/store/dico-store'
+import { useToast } from './ui/use-toast'
+
+function addEmphasis(src: string) {
+  const strArray = Array.from(src)
+
+  var inEm = false
+  const result = strArray
+    .map((c) => {
+      var rep = c
+      if (c === '~') {
+        rep = inEm ? '</mark>' : '<mark>'
+        inEm = !inEm
+      }
+      return rep
+    })
+    .join('')
+  return result
+}
 
 export function SpellcheckForm() {
   const [request, setRequest] = useState('')
   const [copied, setCopied] = useState(false)
   const [response, setResponse] = useState<SpellcheckResponse>()
+  const user = useDicoStore((state) => state.user)
+  const { toast } = useToast()
 
+  const setErrorMessage = (msg: string) => {
+    toast({
+      title: 'Erreur',
+      variant: 'destructive',
+      description: msg,
+    })
+  }
   const clearForm = () => {
     setResponse(undefined)
     setCopied(false)
     setRequest('')
   }
 
+  const handleSubmit = async (e: any) => {
+    e.preventDefault()
+    console.log('submitting...')
+    setResponse(undefined)
+    setCopied(false)
+
+    try {
+      postSpellCheck(user?.bearer || '', request).then((data) => {
+
+        if (data.errors !== undefined) {
+          setErrorMessage('Erreur de zakari')
+        } else {
+          const result = data.response
+          result.html = addEmphasis(result.message)
+          result.id = data.id
+
+          setResponse(result)
+        }
+      })
+    } catch (error) {
+      setErrorMessage(error)
+    }
+  }
+
+
   return (
     <div className="w-full max-w-2xl space-y-4">
       <div className="p-4 border border-dashed rounded-lg flex items-center justify-center">
-        <form className="w-full space-y-4">
+        <form className="w-full space-y-4" onSubmit={handleSubmit}>
           <div className="grid w-full">
             <Label className="text-base" htmlFor="text">
               Enter your Kreyol text
@@ -33,7 +87,7 @@ export function SpellcheckForm() {
             <Textarea id="source" name="source"
               placeholder="Enter your Kreyol text here."
               rows={8} value={request}
-               
+
               onChange={(e) => {
                 setRequest(e.target.value)
                 setCopied(false)
@@ -41,10 +95,10 @@ export function SpellcheckForm() {
               } />
           </div>
           <div className="flex w-full items-center space-x-2">
-            <Button className="w-[140px]" type="submit">
+            <Button className="w-[140px]" type="submit" variant="logo">
               Check Spelling
             </Button>
-            <Button className="w-[80px]" type="button" onClick={() => {clearForm()}}>
+            <Button className="w-[80px]" type="button" onClick={() => { clearForm() }}>
               Clear
             </Button>
           </div>
@@ -54,10 +108,12 @@ export function SpellcheckForm() {
         <Label className="text-base" htmlFor="corrected">
           Corrected text
         </Label>
-        <div 
-        className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" 
+        <div
+          className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
 
-        id="corrected" dangerouslySetInnerHTML={{ __html: response?.html || '' }} />
+          id="corrected">
+          <p dangerouslySetInnerHTML={{ __html: response?.html || '' }} />
+        </div>
         <div className="flex w-full justify-between items-center space-x-2">
           <CopyToClipboard
             text={response?.message || ''}
@@ -68,11 +124,7 @@ export function SpellcheckForm() {
             </Button>
           </CopyToClipboard>
           <div className="flex items-center space-x-1">
-          <StarRating
-                  hidden={response === null}
-                  
-                />
-
+            <StarRating hidden={response === null} />
           </div>
         </div>
       </div>
