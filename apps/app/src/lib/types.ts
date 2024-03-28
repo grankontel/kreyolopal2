@@ -56,5 +56,5 @@ export type User = {
   firstname: string
   lastname: string
   birth_date?: Date
-  bearer?: string 
+  bearer?: string
 }

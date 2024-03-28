@@ -9,13 +9,18 @@ interface DicoTableCellProps<T> {
   onAdd: (item: T) => void
 }
 
-export default function DicoTableCell<T>({ entry, name, value, onAdd }: DicoTableCellProps<T>) {
+export default function DicoTableCell<T>({
+  entry,
+  name,
+  value,
+  onAdd,
+}: DicoTableCellProps<T>) {
   const [isCellHover, setCellHover] = useState(false)
   const cellClassName = `dico-${name}-add-button`
   const cellClass = classNames({
     [cellClassName]: true,
     'cursor-pointer': true,
-    'invisible': !isCellHover,
+    invisible: !isCellHover,
   })
 
   return (

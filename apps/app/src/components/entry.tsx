@@ -47,7 +47,10 @@ export function Entry({
           <div className="grid items-start gap-2">
             <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">
               <span className="flex items-center gap-2">
-                <EntryBookmarkButton entry={source.entry} bookmarked={value.is_bookmarked} />
+                <EntryBookmarkButton
+                  entry={source.entry}
+                  bookmarked={value.is_bookmarked}
+                />
                 {source.entry}
               </span>
             </h1>

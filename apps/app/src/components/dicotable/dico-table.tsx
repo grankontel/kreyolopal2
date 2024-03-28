@@ -99,20 +99,13 @@ export const DicoTable = () => {
   const [page, setPage] = useState(0)
   const user = useDicoStore((state) => state.user)
 
-  const {
-    isPending,
-    isError,
-    error,
-    data,
-    isFetching,
-    isPlaceholderData,
-  } = useQuery({
+  const { isPending, isError, error, data, isFetching, isPlaceholderData } = useQuery({
     queryKey: ['projects', page],
     queryFn: () => {
       const token: string = (user as User).bearer || ''
       return fetchPersonalDico({ token, page })
     },
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData,
   })
 
   const [lignes, setLignes] = useState<WordRow[]>([])
@@ -122,8 +115,11 @@ export const DicoTable = () => {
     }
   }, [data])
 
-  return isPending ? (<DicoTableSkeleton />) : isError ? (
-    <TableError message={error.message} />) : (
+  return isPending ? (
+    <DicoTableSkeleton />
+  ) : isError ? (
+    <TableError message={error.message} />
+  ) : (
     <Table>
       <DicoTableHeaders />
       <TableBody>
@@ -131,26 +127,23 @@ export const DicoTable = () => {
           return (
             <TableRow key={ligne.id}>
               {ligne.entry_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.entry_rowspan} className='align-top mt-2'>
+                <TableCell rowSpan={ligne.entry_rowspan} className="align-top mt-2">
                   {ligne.entry}
-
                 </TableCell>
               )}
               {ligne.entry_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.entry_rowspan} className='align-top mt-2'>
+                <TableCell rowSpan={ligne.entry_rowspan} className="align-top mt-2">
                   {ligne.variations.map((variation) => {
                     return <div key={hashKey('var_', variation)}>{variation}</div>
                   })}
                 </TableCell>
               )}
               {ligne.flag_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.flag_rowspan} className='align-top mt-2'>
-                  <Link href={ligne.url}>
-                    {ligne.Flag}
-                  </Link>
+                <TableCell rowSpan={ligne.flag_rowspan} className="align-top mt-2">
+                  <Link href={ligne.url}>{ligne.Flag}</Link>
                 </TableCell>
               )}
-              <TableCell className='align-top mt-2'>{ligne.nature}</TableCell>
+              <TableCell className="align-top mt-2">{ligne.nature}</TableCell>
               <TableCell>{ligne.definition_cpf}</TableCell>
               <TableCell>{ligne.definition_fr}</TableCell>
               <DicoTableCell

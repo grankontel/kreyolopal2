@@ -34,7 +34,7 @@ export function parseCookie(
   }
 }
 
-export const makeId = (entry:string, langue:string, index:number) => {
+export const makeId = (entry: string, langue: string, index: number) => {
   const str = [entry, langue, index].join(':')
   return btoa(funhash(str).toString())
 }
