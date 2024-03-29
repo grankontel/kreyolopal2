@@ -19,7 +19,7 @@ const login = async function (c: Context) {
   const { username, password } = body
 
   const text =
-    'SELECT id, username, password, is_admin FROM auth_user WHERE username = $1'
+    'SELECT id, username, password, is_admin, firstname, lastname FROM auth_user WHERE username = $1'
   const values = [username]
 
   return pgPool

@@ -21,11 +21,13 @@ const postSpellCheck = async function (c: Context) {
     )
   }
 
+  const dico = body.kreyol.toUpperCase() as KreyolLang 
+  
   let lMessage: DicoRequest & { [k: string]: any } = {
     user: user.id, // req.user.id,
     tool: c.req.header('User-Agent'),
     service: 'spellcheck',
-    kreyol: body.kreyol as KreyolLang,
+    kreyol: dico,
     request: body.request.replace(/ç/, 's'),
   }
   logger.debug(JSON.stringify(lMessage))
