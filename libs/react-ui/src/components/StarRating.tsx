@@ -9,10 +9,10 @@ type StarRatingProps = { disabled?: boolean, hidden: boolean, value?: number, on
 
 const SRDiv = styled.div`
 .on {
-color: #ffc107;
+  color: #ffc107;
 }
 .off {
-color: #ccc;
+  color: #ccc;
 }
 `
 
@@ -42,7 +42,7 @@ export const StarRating = ({ disabled = false, hidden, value = 0, onRated }: Sta
   }
 
   return (
-    <SRDiv className="star-rating" hidden={hidden}>
+    <SRDiv className="star-rating"  hidden={hidden}>
       {[...Array(5)].map((star, index) => {
         index += 1
         return (

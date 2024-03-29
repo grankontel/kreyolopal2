@@ -8,7 +8,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { IconAttributes, StarRating } from '@kreyolopal/react-ui'
+import { StarRating } from '@kreyolopal/react-ui'
 import { SpellcheckResponse } from '@/lib/types'
 import { postSpellCheck } from '@/queries/post-spellcheck'
 import { useDicoStore } from '@/store/dico-store'
@@ -58,18 +58,19 @@ export function SpellcheckForm() {
     setCopied(false)
 
     try {
-      postSpellCheck(user?.bearer || '', request).then((data) => {
+      postSpellCheck(user?.bearer || '', request)
+        .then((data) => {
 
-        if (data.errors !== undefined) {
-          setErrorMessage('Erreur de zakari')
-        } else {
-          const result = data.response
-          result.html = addEmphasis(result.message)
-          result.id = data.id
+          if (data.errors !== undefined) {
+            setErrorMessage('Erreur de zakari')
+          } else {
+            const result: SpellcheckResponse = data.response
+            result.html = addEmphasis(result.message)
+            result.id = data.id
 
-          setResponse(result)
-        }
-      })
+            setResponse(result)
+          }
+        })
     } catch (error) {
       setErrorMessage(error)
     }
@@ -82,10 +83,10 @@ export function SpellcheckForm() {
         <form className="w-full space-y-4" onSubmit={handleSubmit}>
           <div className="grid w-full">
             <Label className="text-base" htmlFor="text">
-              Enter your Kreyol text
+              Entrez le texte à corriger
             </Label>
             <Textarea id="source" name="source"
-              placeholder="Enter your Kreyol text here."
+              placeholder="Entrez le texte à corriger ici..."
               rows={8} value={request}
 
               onChange={(e) => {
@@ -96,17 +97,17 @@ export function SpellcheckForm() {
           </div>
           <div className="flex w-full items-center space-x-2">
             <Button className="w-[140px]" type="submit" variant="logo">
-              Check Spelling
+              Vérifier
             </Button>
             <Button className="w-[80px]" type="button" onClick={() => { clearForm() }}>
-              Clear
+              Effacer
             </Button>
           </div>
         </form>
       </div>
       <div className="grid w-full gap-2">
         <Label className="text-base" htmlFor="corrected">
-          Corrected text
+          Texte corrigé
         </Label>
         <div
           className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -120,33 +121,14 @@ export function SpellcheckForm() {
             onCopy={() => setCopied(true)}
           >
             <Button className="w-[160px]" type="button" disabled={response === undefined}>
-              Copy to Clipboard
+              Copier
             </Button>
           </CopyToClipboard>
           <div className="flex items-center space-x-1">
-            <StarRating hidden={response === null} />
+            <StarRating hidden={response === undefined}  />
           </div>
         </div>
       </div>
     </div>
-  )
-}
-
-function StarIcon(props: IconAttributes) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
   )
 }
