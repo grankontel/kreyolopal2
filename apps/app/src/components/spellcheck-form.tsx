@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { StarRating } from '@kreyolopal/react-ui'
 import { SpellcheckResponse } from '@/lib/types'
-import { postSpellCheck } from '@/queries/post-spellcheck'
+import { postSpellCheck, postRateCorrection } from '@/queries/post-spellcheck'
 import { useDicoStore } from '@/store/dico-store'
 import { useToast } from './ui/use-toast'
 
@@ -51,6 +51,26 @@ export function SpellcheckForm() {
     setRequest('')
   }
 
+  const rateCorrection = (note: number) => {
+    console.log(`rateCorrection: ${JSON.stringify(response)}`)
+
+    if (response?.id === undefined) return
+
+    try {
+      const resp = postRateCorrection(user?.bearer || '', response?.id, {
+        rating: note,
+      })
+
+      resp.then((data) => {
+        if (data.errors !== undefined) {
+          setErrorMessage('Il y a des erreurs')
+        }
+      })
+    } catch (error) {
+      setErrorMessage(error)
+    }
+  }
+
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     console.log('submitting...')
@@ -76,7 +96,6 @@ export function SpellcheckForm() {
     }
   }
 
-
   return (
     <div className="w-full max-w-2xl space-y-4">
       <div className="p-4 border border-dashed rounded-lg flex items-center justify-center">
@@ -92,8 +111,8 @@ export function SpellcheckForm() {
               onChange={(e) => {
                 setRequest(e.target.value)
                 setCopied(false)
-              }
-              } />
+              }}
+            />
           </div>
           <div className="flex w-full items-center space-x-2">
             <Button className="w-[140px]" type="submit" variant="logo">
@@ -111,21 +130,18 @@ export function SpellcheckForm() {
         </Label>
         <div
           className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-
-          id="corrected">
+          id="corrected"
+        >
           <p dangerouslySetInnerHTML={{ __html: response?.html || '' }} />
         </div>
         <div className="flex w-full justify-between items-center space-x-2">
-          <CopyToClipboard
-            text={response?.message || ''}
-            onCopy={() => setCopied(true)}
-          >
+          <CopyToClipboard text={response?.message || ''} onCopy={() => setCopied(true)}>
             <Button className="w-[160px]" type="button" disabled={response === undefined}>
               Copier
             </Button>
           </CopyToClipboard>
           <div className="flex items-center space-x-1">
-            <StarRating hidden={response === undefined}  />
+            <StarRating hidden={response === undefined} onRated={rateCorrection} />
           </div>
         </div>
       </div>

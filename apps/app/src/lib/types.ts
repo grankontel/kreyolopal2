@@ -60,6 +60,7 @@ export type User = {
 }
 
 export interface SpellcheckResponse {
+  id: string
   status: string
   kreyol: KreyolLanguage
   unknown_words: string[]
