@@ -50,19 +50,9 @@ export async function postRateCorrection(token: string, msgId: string, rating:{r
   })
     .then(
       async (result) => {
-        if (!result.ok) {
-          return []
-        }
+        if (!result.ok) throw new ResponseError('Failed to verify spelling', result)
 
         return result.json()
-      },
-      (reason) => {
-        console.log(reason)
-        return []
       }
     )
-    .catch((er) => {
-      console.log(er)
-      return []
-    })
 }

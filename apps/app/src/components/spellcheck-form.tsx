@@ -52,8 +52,6 @@ export function SpellcheckForm() {
   }
 
   const rateCorrection = (note: number) => {
-    console.log(`rateCorrection: ${JSON.stringify(response)}`)
-
     if (response?.id === undefined) return
 
     try {
