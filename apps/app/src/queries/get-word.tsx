@@ -3,7 +3,7 @@
 import { cookies } from 'next/headers'
 import { DictionaryEntry, DictionaryFullEntry, UserDictionaryEntry } from '@/lib/types'
 import { parseCookie } from '@/lib/utils'
-import {KreyolLanguage } from '@kreyolopal/react-ui'
+import { KreyolLanguage } from '@kreyolopal/react-ui'
 
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'

@@ -4,7 +4,7 @@ module.exports = {
     autoprefixer: {},
     cssnano: {
       preset: 'advanced',
-      discardComments: { removeAll: true }
+      discardComments: { removeAll: true },
     },
   },
 }

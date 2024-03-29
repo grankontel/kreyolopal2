@@ -13,6 +13,7 @@ import { IconAttributes } from '@kreyolopal/react-ui'
 import { redirect } from 'next/navigation'
 import { parseCookie } from '@/lib/utils'
 import { UserDropdown } from '@/components/dashboard/user-dropdown'
+import { LayoutFooter } from '@/components/layout-footer'
 
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
@@ -52,12 +53,7 @@ export default function DashboardLayout({
           </div>
         </header>
         {children}
-
-        <footer className="flex items-center justify-between px-6 py-4 bg-gray-100/40 dark:bg-gray-800/40">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            © 2024 Kreyolopal. All rights reserved.
-          </p>
-        </footer>
+        <LayoutFooter />
       </div>
     </div>
   )

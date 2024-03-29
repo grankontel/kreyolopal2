@@ -10,9 +10,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { StarRating } from '@kreyolopal/react-ui'
 import { SpellcheckResponse } from '@/lib/types'
-import { postSpellCheck, postRateCorrection } from '@/queries/post-spellcheck'
+import {
+  postSpellCheck,
+  postRateCorrection,
+  PostSpellCheckResponse,
+} from '@/queries/post-spellcheck'
 import { useDicoStore } from '@/store/dico-store'
-import { useToast } from './ui/use-toast'
+import { useToast } from '@/components/ui/use-toast'
 
 function addEmphasis(src: string) {
   const strArray = Array.from(src)
@@ -60,12 +64,12 @@ export function SpellcheckForm() {
       })
 
       resp.then((data) => {
-        if (data.errors !== undefined) {
+        if (data.id === undefined) {
           setErrorMessage('Il y a des erreurs')
         }
       })
     } catch (error) {
-      setErrorMessage(error)
+      setErrorMessage(error as string)
     }
   }
 
@@ -76,21 +80,19 @@ export function SpellcheckForm() {
     setCopied(false)
 
     try {
-      postSpellCheck(user?.bearer || '', request)
-        .then((data) => {
+      postSpellCheck(user?.bearer || '', request).then((data) => {
+        if (data?.id === undefined) {
+          setErrorMessage('Erreur de zakari')
+        } else {
+          const result: SpellcheckResponse = data?.response as SpellcheckResponse
+          result.html = addEmphasis(result.message)
+          result.id = data?.id as string
 
-          if (data.errors !== undefined) {
-            setErrorMessage('Erreur de zakari')
-          } else {
-            const result: SpellcheckResponse = data.response
-            result.html = addEmphasis(result.message)
-            result.id = data.id
-
-            setResponse(result)
-          }
-        })
+          setResponse(result)
+        }
+      })
     } catch (error) {
-      setErrorMessage(error)
+      setErrorMessage(error as string)
     }
   }
 
@@ -102,10 +104,12 @@ export function SpellcheckForm() {
             <Label className="text-base" htmlFor="text">
               Entrez le texte à corriger
             </Label>
-            <Textarea id="source" name="source"
+            <Textarea
+              id="source"
+              name="source"
               placeholder="Entrez le texte à corriger ici..."
-              rows={8} value={request}
-
+              rows={8}
+              value={request}
               onChange={(e) => {
                 setRequest(e.target.value)
                 setCopied(false)
@@ -116,7 +120,13 @@ export function SpellcheckForm() {
             <Button className="w-[140px]" type="submit" variant="logo">
               Vérifier
             </Button>
-            <Button className="w-[80px]" type="button" onClick={() => { clearForm() }}>
+            <Button
+              className="w-[80px]"
+              type="button"
+              onClick={() => {
+                clearForm()
+              }}
+            >
               Effacer
             </Button>
           </div>

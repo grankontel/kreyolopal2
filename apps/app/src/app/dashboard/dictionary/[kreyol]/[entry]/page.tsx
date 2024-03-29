@@ -6,7 +6,11 @@ import { KreyolLanguage } from '@kreyolopal/react-ui'
 
 export const runtime = 'edge'
 
-export default async function Page({ params, }: { params: { kreyol: string; entry: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: { kreyol: string; entry: string }
+}) {
   const data = await getWord(params.kreyol, params.entry)
 
   if (!data) {

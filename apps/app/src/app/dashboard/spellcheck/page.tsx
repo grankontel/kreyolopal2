@@ -1,5 +1,5 @@
 import MainPanel from '@/components/dashboard/main-panel'
-import { SpellcheckForm } from '@/components/spellcheck-form'
+import { SpellcheckForm } from '@/components/forms/spellcheck-form'
 import { Card, CardContent } from '@/components/ui/card'
 
 export const runtime = 'edge'
