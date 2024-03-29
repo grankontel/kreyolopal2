@@ -100,7 +100,7 @@ export const DicoTable = () => {
   const user = useDicoStore((state) => state.user)
 
   const { isPending, isError, error, data, isFetching, isPlaceholderData } = useQuery({
-    queryKey: ['projects', page],
+    queryKey: ['personalDico', page],
     queryFn: () => {
       const token: string = (user as User).bearer || ''
       return fetchPersonalDico({ token, page })

@@ -14,6 +14,8 @@ import { redirect } from 'next/navigation'
 import { parseCookie } from '@/lib/utils'
 import { UserDropdown } from '@/components/dashboard/user-dropdown'
 import { LayoutFooter } from '@/components/layout-footer'
+import { LogoutDialog } from '@/components/dashboard/logout-dialog'
+import { isLoggedIn } from './is-logged-in'
 
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
@@ -22,13 +24,8 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const cookieValue = cookies().get(cookieName)
-  if (cookieValue === undefined) {
-    redirect('/login')
-  }
-  const auth = parseCookie(cookieValue.value)
-  if (auth?.session_id === undefined) {
-    cookies().delete(cookieName)
+  const token = isLoggedIn()
+  if (!token) {
     redirect('/login')
   }
 
@@ -47,9 +44,9 @@ export default function DashboardLayout({
             <DashboardPath />
           </div>
           <div className="flex items-center gap-4">
-            <UserDropdown token={auth?.session_id as string} />
+            <UserDropdown token={token} />
             <ModeToggle />
-            <Button variant="logo">Logout</Button>
+            <LogoutDialog trigger={<Button variant="logo">Logout</Button>} />
           </div>
         </header>
         {children}

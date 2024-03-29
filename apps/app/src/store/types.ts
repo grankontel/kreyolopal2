@@ -3,6 +3,7 @@ import { User } from '@/lib/types'
 
 export interface UserSlice {
   user: User | null
+  unsetUser: () => void
   setUser: (newUser: User) => void
 }
 
