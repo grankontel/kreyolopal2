@@ -109,6 +109,20 @@ db.reference.createIndex(
 )
 ```
 
+```js
+db.reference.createIndex(
+   { entry: 1, docType: -1, kreyol: 1 },
+   { sparse: true, name: 'search' }
+)
+```
+
+```js
+db.reference.createIndex(
+   { variations: 1 },
+   { name: 'suggest', partialFilterExpression: { docType: "entry" } }
+)
+```
+
 ### Search
 
 ```
@@ -118,6 +132,7 @@ db.reference.createIndex(
 One documents
 
 ```
+{$and: [{entry: 'poul'},{$or: [{docType: 'entry'}, {docType: 'definition', kreyol: 'gp'}]}]}
 {$and: [{ entry: 'chat', kreyol: 'mq'}]}
 ```
 

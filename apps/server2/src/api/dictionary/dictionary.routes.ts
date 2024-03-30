@@ -16,13 +16,14 @@ const paramGetWordSchema = z
     word: z.string(),
   })
   .required()
+
 // get specific word
 dicoRoutes.get(
-  '/:language/:word',
-  zValidator('param', paramGetWordSchema, sendBadRequest),
-  dicoHandlers.getWord
-)
-
+    '/entry/:language/:word',
+    zValidator('param', paramGetWordSchema, sendBadRequest),
+    dicoHandlers.getWord
+  )
+  
 // db.runCommand({ distinct: "reference", key: "kreyol", query: {entry: "chat", docType: "definition"}})
 
 export default dicoRoutes

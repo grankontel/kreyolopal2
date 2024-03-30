@@ -49,6 +49,70 @@ export const EntryDefinition = ({
             </div>
           )}
         </section>
+
+        {definition.synonyms.length === 0 ? (
+          ' '
+        ) : (
+          <section className="grid gap-2 mb-2">
+            <h2 className="text-lg font-bold">Synonymes</h2>
+            <ul className="flex flex-wrap gap-2">
+              {definition.synonyms.map((item) => {
+                return (
+                  <li key={hashKey(entry + '_syn_', item)}>
+                    <Link
+                      className="text-sm rounded-lg bg-gray-100 px-2 py-1 dark:bg-gray-800"
+                      href={dicoUrl(item)}
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
+        )}
+
+        {definition.confer.length === 0 ? (
+          ' '
+        ) : (
+          <section className="grid gap-2 mb-2">
+            <h2 className="text-lg font-bold">Voir aussi</h2>
+            <ul className="flex flex-wrap gap-2">
+              {definition.confer.map((item) => {
+                return (
+                  <li key={hashKey(entry + '_confer_', item)}>
+                    <Link
+                      className="text-sm bg-gray-100 px-2 py-1 dark:bg-gray-800"
+                      href={dicoUrl(item)}
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
+        )}
+
+        {definition.usage.length === 0 ? (
+          ' '
+        ) : (
+          <div className="grid gap-2 my-3">
+            <h2 className="text-lg font-bold">Usage</h2>
+            <ul className="grid gap-4">
+              {definition.usage.map((item) => {
+                return (
+                  <li
+                    key={hashKey(entry + '_usage_', item)}
+                    dangerouslySetInnerHTML={{
+                      __html: item.replaceAll(entry, `<strong>${entry}</strong>`) || '',
+                    }}
+                  />
+                )
+              })}
+            </ul>
+          </div>
+        )}
       </div>
     </section>
   )

@@ -50,7 +50,8 @@ const getWord = async function (c: Context) {
     const entry = result.filter((item) => item.docType == 'entry')
     const defs = result.filter((item) => item.docType == 'definition')
 
-    const data = { ...entry, definitions: defs }
+    console.log(entry)
+    const data = { ...entry[0], definitions: defs }
 
     c.res.headers.append('Cache-Control', 'public, maxage=86400')
 

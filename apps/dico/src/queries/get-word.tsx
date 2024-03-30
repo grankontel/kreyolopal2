@@ -26,7 +26,7 @@ export async function getWord(
 
     const lang = kreyol as KreyolLanguage
     // Fetch data from external API
-    const result = await fetch(`${apiServer}/api/dictionary/${kreyol}/${entry}`, {
+    const result = await fetch(`${apiServer}/api/dictionary/entry/${kreyol}/${entry}`, {
       method: 'GET',
       //      credentials: 'same-origin',
       headers: {
@@ -42,14 +42,14 @@ export async function getWord(
       resolve(null)
     }
 
-    const data = await (result as Response).json<DictionaryEntry[]>()
+    const data = await (result as Response).json<DictionaryEntry>()
     const response: UserDictionaryEntry = {
       cacheMode: cacheMode,
       is_bookmarked: false,
-      entry: data[0],
+      entry: data,
       kreyol,
     }
-
+/*
     if (user_id) {
       const token = session_id
       const result2 = await fetch(`${apiServer}/api/me/dictionary/${encodeURI(entry)}`, {
@@ -79,7 +79,7 @@ export async function getWord(
         response.bookmark = bookmarks[0]
       }
     }
-
+*/
     resolve(response)
   })
 }
