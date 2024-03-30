@@ -1,52 +1,69 @@
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
-import { WordsRepository } from '#lib/words.repository'
 import type { Context } from 'hono'
 
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
+  const client = c.get('mongodb')
 
   const { language, word } = c.req.param()
+  const lang = language.toLowerCase().trim()
+  const aWord = word.trim()
 
   logger.info(`getWord ${language} ${word}`)
-  return WordsRepository.getInstance(c)
-    .GetOne(word, (item) => {
-      return {
-        id: item._id,
-        entry: item.entry,
-        variations: item.variations,
-        definitions: item.definitions[language],
-      }
-    })
-    .then(
-      (data) => {
-        if (data.length > 0) {
-          c.res.headers.append('Cache-Control', 'public, maxage=86400')
-
-          c.status(200)
-          return c.json(data)
-        }
-
-        return c.json({ error: 'Not Found.' }, 404)
+  if (aWord.length === 0)
+    return c.json(
+      {
+        message: 'Bad request',
       },
-      (reason) => {
-        console.log('reason')
-        logger.error(reason?.message)
-        throw createHttpException({
-          errorContent: { error: 'Unknown error..' },
-          status: 500,
-          statusText: 'Unknown error.',
-        })
-      }
+      400
     )
-    .catch((e) => {
-      logger.error(e.message)
-      throw createHttpException({
-        errorContent: { error: 'Unknown error..' },
-        status: 500,
-        statusText: 'Unknown error.',
-      })
+
+  const filter = {
+    $and: [
+      {
+        entry: aWord,
+      },
+      {
+        $or: [
+          {
+            docType: 'entry',
+          },
+          {
+            docType: 'definition',
+            kreyol: lang,
+          },
+        ],
+      },
+    ],
+  }
+  const projection = {
+    definition_id: 0,
+  }
+
+  try {
+    const coll = client.db(config.mongodb.db).collection('reference')
+    const cursor = coll.find(filter, { projection })
+    const result = await cursor.toArray()
+    if (result.length === 0) return c.json({ error: 'Not Found.' }, 404)
+
+    const entry = result.filter((item) => item.docType == 'entry')
+    const defs = result.filter((item) => item.docType == 'definition')
+
+    const data = { ...entry, definitions: defs }
+
+    c.res.headers.append('Cache-Control', 'public, maxage=86400')
+
+    c.status(200)
+    return c.json(data)
+  } catch (e: any) {
+    logger.error(e.message)
+    throw createHttpException({
+      errorContent: { error: 'Unknown error..' },
+      status: 500,
+      statusText: 'Unknown error.',
     })
+  }
 }
 
 const getSuggestion = async function (c: Context) {
@@ -61,6 +78,7 @@ const getSuggestion = async function (c: Context) {
 
     const filter = {
       variations: regex,
+      docType: 'entry',
       // publishedAt: { $not: { $eq: null } },
     }
     const projection = {
@@ -72,23 +90,25 @@ const getSuggestion = async function (c: Context) {
       variations: 1,
     }
 
-    const coll = client.db(config.mongodb.db).collection('words')
-    const cursor = coll.find(filter, { projection }).sort(sort).limit(8)
+    const coll = client.db(config.mongodb.db).collection('reference')
+    const cursor = coll.find(filter, { projection }).sort(sort).limit(12)
     const unsorted = await cursor.toArray()
 
-    const result = unsorted.sort((a, b) => {
-      if (regex.test(a.entry) && regex.test(b.entry)) {
-        return a.length - b.length
-      }
+    const result = unsorted
+      .sort((a, b) => {
+        if (regex.test(a.entry) && regex.test(b.entry)) {
+          return a.length - b.length
+        }
 
-      if (regex.test(a.entry)) return -1
-      if (regex.test(b.entry)) return 1
+        if (regex.test(a.entry)) return -1
+        if (regex.test(b.entry)) return 1
 
-      return (
-        a.variations.findIndex((i) => regex.test(i)) -
-        b.variations.findIndex((i) => regex.test(i))
-      )
-    })
+        return (
+          a.variations.findIndex((i) => regex.test(i)) -
+          b.variations.findIndex((i) => regex.test(i))
+        )
+      })
+      .slice(0, 8)
 
     c.res.headers.append('Cache-Control', 'public, maxage=86400')
     c.status(200)
