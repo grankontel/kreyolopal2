@@ -123,4 +123,40 @@ const getSuggestion = async function (c: Context) {
   }
 }
 
-export default { getWord, getSuggestion }
+const getKreyolsFor = async function (c: Context) {
+  const logger = c.get('logger')
+  const client = c.get('mongodb')
+
+  const { word } = c.req.param()
+  const aWord = word.trim()
+
+  logger.info(`getKreyolsFor  ${word}`)
+  if (aWord.length === 0)
+    return c.json(
+      {
+        message: 'Bad request',
+      },
+      400
+    )
+
+  try {
+    const result = await client
+      .db(config.mongodb.db)
+      .command({
+        distinct: 'reference',
+        key: 'kreyol',
+        query: { entry: aWord, docType: 'definition' },
+      })
+    c.status(200)
+    return c.json(result.values)
+  } catch (e: any) {
+    logger.error(e.message)
+    throw createHttpException({
+      errorContent: { error: 'Unknown error..' },
+      status: 500,
+      statusText: 'Unknown error.',
+    })
+  }
+}
+
+export default { getWord, getSuggestion, getKreyolsFor }

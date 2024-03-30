@@ -7,6 +7,9 @@ const dicoRoutes = createRouter()
 // get suggestion
 dicoRoutes.get('/suggest/:word', dicoHandlers.getSuggestion)
 
+// get available kreyol for a word
+dicoRoutes.get('/kreyolsfor/:word', dicoHandlers.getKreyolsFor)
+
 const paramGetWordSchema = z
   .object({
     language: z.enum(['gp', 'mq', 'GP', 'MQ']),
