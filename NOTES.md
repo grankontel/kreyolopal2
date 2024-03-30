@@ -1,3 +1,48 @@
+## Lexicon entry
+
+```json
+{
+    "name": "Woulo",
+    "description": "Lexique créole des mots du sport",
+    "slug": "lexique-1",
+    "owner":  "0h5lft4cjknfei3",
+    "is_private": false
+}
+```
+
+## Proposal entry
+
+```json
+{
+    "entry": "pit",
+    "creator":  "0h5lft4cjknfei3",
+    "docType": "definition",
+    "definition_id": "pit_0",
+    "kreyol": "gp",
+    "rank": 0,
+    "nature": [
+      "adjectif"
+    ],
+    "meaning": {
+      "gp": "",
+      "fr": "nul, mauvais"
+    },
+    "usage": [
+      "yenki blag pit i sa rakonté",
+      "an ay adan on swaré, sa té pit !"
+    ],
+    "synonyms": [],
+    "confer": [],
+    "quotes": [],
+    "backers": [
+      {
+        "user_id": "0h5lft4cjknfei3",
+        "birthdate": ""
+      }
+    ]
+}
+```
+
 
 ## Entries example
 
