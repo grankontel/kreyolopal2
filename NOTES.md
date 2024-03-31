@@ -1,3 +1,28 @@
+## TODO
+
+https://v0.dev/t/RpImR1PAsTR
+
+How to add a word in my personal dictionary
+
+Bookmark copy entry + definitions to personal (from reference or validate)
+
+Specific env for proposals
+
+use mongo transactions 
+https://www.mongodb.com/docs/manual/core/transactions/
+
+check for existing entry update if necessary
+add definition
+
+Validate 
+A new post, based on prior information
+owner and backers are kept
+
+entry is then removed from proposal
+users are notified ?
+rabbitmq ?
+
+
 ## Lexicon entry
 
 ```json
@@ -190,67 +215,3 @@ filter : {$and: [{ variations: /^kyou/, docType: 'entry'}]}
 
 https://v0.dev/t/p4iTLoz5zql
 
-
-## Table
-
-```
-<Table>
-    <DicoTableHeaders />
-    <TableBody>
-      {lignes.map((ligne) => {
-        return (
-          <TableRow key={ligne.id}>
-            {ligne.entry_rowspan === 0 ? null : (
-              <TableCell rowSpan={ligne.entry_rowspan} className='align-top mt-2'>
-                {ligne.entry}
-
-              </TableCell>
-            )}
-            {ligne.entry_rowspan === 0 ? null : (
-              <TableCell rowSpan={ligne.entry_rowspan} className='align-top mt-2'>
-                {ligne.variations.map((variation) => {
-                  return <div key={hashKey('var_', variation)}>{variation}</div>
-                })}
-              </TableCell>
-            )}
-            {ligne.flag_rowspan === 0 ? null : (
-              <TableCell rowSpan={ligne.flag_rowspan} className='align-top mt-2'>
-                <Link href={ligne.url}>
-                  {ligne.Flag}
-                </Link>
-              </TableCell>
-            )}
-            <TableCell className='align-top mt-2'>{ligne.nature}</TableCell>
-            <TableCell>{ligne.definition_cpf}</TableCell>
-            <TableCell>{ligne.definition_fr}</TableCell>
-            <DicoTableCell
-              entry={ligne.definition_key}
-              name="usage"
-              value={ligne.usage.map((txt) => (
-                <div key={hashKey('usage_', txt)}>{txt}</div>
-              ))}
-              onAdd={(id) => console.log(id)}
-            />
-            <DicoTableCell
-              entry={ligne.definition_key}
-              name="synonyms"
-              value={ligne.synonyms.map((txt) => (
-                <div key={hashKey('syn_', txt)}>{txt}</div>
-              ))}
-              onAdd={(id) => console.log(id)}
-            />
-            <DicoTableCell
-              entry={ligne.definition_key}
-              name="confer"
-              value={ligne.confer.map((txt) => (
-                <div key={hashKey('confer_', txt)}>{txt}</div>
-              ))}
-              onAdd={(id) => console.log(id)}
-            />
-          </TableRow>
-        )
-      })}
-    </TableBody>
-  </Table>
-
-```
