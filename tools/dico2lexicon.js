@@ -71,7 +71,7 @@ let errors = 0
 
 let entry = ''
 let entries = []
-let curitem = {}
+let existingEntries = []
 
 /*
   {
@@ -114,12 +114,16 @@ function cleanSubNature(nat) {
 }
 
 function removeAccents(str) {
-  return str.replaceAll('à','a_').replaceAll('ò','o_').replaceAll('é','e_').replaceAll('è','e_')
+  return str
+    .replaceAll('à', 'a_')
+    .replaceAll('ò', 'o_')
+    .replaceAll('é', 'e_')
+    .replaceAll('è', 'e_')
 }
 
 let rank = 0
-let radix=''
-let newEntry ={}
+let radix = ''
+let newEntry = {}
 while ((line = liner.next())) {
   // console.log('Line ' + lineNumber)
   const values = line.toString('utf8').split(';')
@@ -129,18 +133,20 @@ while ((line = liner.next())) {
     continue
   }
 
-  
   if (entry !== ent) {
+    const vari = values[VARIATIONS_FIELD].split('/').map((x) => x.trim())
     // new entry
     let newEntry = {
       entry: ent,
       docType: 'entry',
-      variations: values[VARIATIONS_FIELD].split('/').map((x) => x.trim()),
+      // make sure entry is the first variations
+      variations: [ent, ...vari.filter((x) => x != ent)],
     }
+    existingEntries.push(newEntry)
     entries.push(newEntry)
     entry = ent
     rank = 0
-    radix = removeAccents(ent)// Buffer.from(ent, 'utf-8').toString('ascii')
+    radix = removeAccents(ent) // Buffer.from(ent, 'utf-8').toString('ascii')
   }
 
   // add definition
@@ -207,6 +213,25 @@ console.log('end of line reached')
 console.log(`${entries.length} entries`)
 console.log(`${errors} errors`)
 
+// verify synonyms and confer
+for (let index = 0; index < entries.length; index++) {
+  const element = entries[index]
+  if (element.docType == 'entry') continue
+
+  if (element.synonyms.length > 0) {
+    const realSynonyms = element.synonyms.map((syn) => {
+      return existingEntries.find((x) => x.variations.includes(syn))?.entry
+    })
+    element.synonyms = realSynonyms.filter((x) => x !== undefined)
+  }
+
+  if (element.confer.length > 0) {
+    const realConfer = element.confer.map((syn) => {
+      return existingEntries.find((x) => x.variations.includes(syn))?.entry
+    })
+    element.confer = realConfer.filter((x) => x !== undefined)
+  }
+}
 // write JSON string to a file
 fs.writeFile(datafile, JSON.stringify(entries, null, 2), (err) => {
   if (err) {
