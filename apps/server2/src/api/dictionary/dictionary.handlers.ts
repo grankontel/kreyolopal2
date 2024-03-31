@@ -1,6 +1,7 @@
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import type { Context } from 'hono'
+import { LRUCache } from 'lru-cache'
 
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
@@ -50,7 +51,6 @@ const getWord = async function (c: Context) {
     const entry = result.filter((item) => item.docType == 'entry')
     const defs = result.filter((item) => item.docType == 'definition')
 
-    console.log(entry)
     const data = { ...entry[0], definitions: defs }
 
     c.res.headers.append('Cache-Control', 'public, maxage=86400')
@@ -67,6 +67,16 @@ const getWord = async function (c: Context) {
   }
 }
 
+interface WordSuggestion {
+  entry: string
+  docType: 'entry'
+  variations: string[]
+}
+
+const suggestionCache = new LRUCache<string, WordSuggestion[]>({
+  max: 50,
+})
+
 const getSuggestion = async function (c: Context) {
   const logger = c.get('logger')
   const client = c.get('mongodb')
@@ -74,8 +84,17 @@ const getSuggestion = async function (c: Context) {
   const word = c.req.param('word')
 
   logger.info(`getSuggestion ${word}`)
+  const value = suggestionCache.get(word)
+  if (value !== undefined) {
+    logger.info(`value for ${word} is in cache`)
+    c.res.headers.append('Cache-Control', 'public, maxage=86400')
+    c.status(200)
+    return c.json(value)
+  }
+
   try {
     const regex = new RegExp(`^${word}`, 'i')
+    logger.info(`calculating value for ${word}...`)
 
     // find entries
     const filterEnries = {
@@ -101,11 +120,15 @@ const getSuggestion = async function (c: Context) {
     }
 
     const cursor = coll.find(filterVariations, { projection }).limit(24)
-    const list =await cursor.toArray()
+    const list = await cursor.toArray()
     cursor.close()
-    const unsorted = exact.length === 0 ? list : [exact[0], ...list.filter((x) => x.entry != exact[0].entry)]
+    const unsorted =
+      exact.length === 0
+        ? list
+        : [exact[0], ...list.filter((x) => x.entry != exact[0].entry)]
 
-    const result = unsorted.sort((a, b) => {
+    const result = unsorted
+      .sort((a, b) => {
         if (a.entry === word) return -1
         if (b.entry === word) return 1
 
@@ -123,6 +146,7 @@ const getSuggestion = async function (c: Context) {
       })
       .slice(0, 8)
 
+    suggestionCache.set(word, result)
     c.res.headers.append('Cache-Control', 'public, maxage=86400')
     c.status(200)
     return c.json(result)
