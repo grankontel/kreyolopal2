@@ -67,11 +67,11 @@ export function WordSearchForm() {
               debounceSetWord(e.target.value)
             }}
           />
-          <div className="absolute top-full left-0 w-full bg-white mt-2 shadow-lg z-10">
+          <div className="absolute top-full left-0 w-full bg-white dark:bg-gray-800 mt-2 shadow-lg z-10 drop-shadow-md">
             {words === undefined || words?.length === 0 ? (
               ' '
             ) : (
-              <ul className="divide-y divide-gray-200">
+              <ul className="divide-y divide-gray-200 dark:divide-gray-900">
                 {words.map((item: DictionaryEntry, index: any) => {
                   return (
                     <li key={item._id}>

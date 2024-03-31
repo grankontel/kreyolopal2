@@ -77,36 +77,48 @@ const getSuggestion = async function (c: Context) {
   try {
     const regex = new RegExp(`^${word}`, 'i')
 
-    const filter = {
-      variations: regex,
+    // find entries
+    const filterEnries = {
+      entry: word,
       docType: 'entry',
-      // publishedAt: { $not: { $eq: null } },
     }
+
     const projection = {
       entry: 1,
       variations: 1,
     }
 
-    const sort = {
-      variations: 1,
+    const coll = client.db(config.mongodb.db).collection('reference')
+    const cursorE = coll.find(filterEnries, { projection })
+    const exact = await cursorE.toArray()
+    cursorE.close()
+
+    // find variations
+    const filterVariations = {
+      variations: regex,
+      docType: 'entry',
+      // publishedAt: { $not: { $eq: null } },
     }
 
-    const coll = client.db(config.mongodb.db).collection('reference')
-    const cursor = coll.find(filter, { projection }).sort(sort).limit(12)
-    const unsorted = await cursor.toArray()
+    const cursor = coll.find(filterVariations, { projection }).limit(24)
+    const list =await cursor.toArray()
+    cursor.close()
+    const unsorted = exact.length === 0 ? list : [exact[0], ...list.filter((x) => x.entry != exact[0].entry)]
 
-    const result = unsorted
-      .sort((a, b) => {
+    const result = unsorted.sort((a, b) => {
+        if (a.entry === word) return -1
+        if (b.entry === word) return 1
+
         if (regex.test(a.entry) && regex.test(b.entry)) {
-          return a.length - b.length
+          return b.length - a.length
         }
 
         if (regex.test(a.entry)) return -1
         if (regex.test(b.entry)) return 1
 
         return (
-          a.variations.findIndex((i) => regex.test(i)) -
-          b.variations.findIndex((i) => regex.test(i))
+          b.variations.findIndex((i) => regex.test(i)) -
+          a.variations.findIndex((i) => regex.test(i))
         )
       })
       .slice(0, 8)
@@ -141,13 +153,11 @@ const getKreyolsFor = async function (c: Context) {
     )
 
   try {
-    const result = await client
-      .db(config.mongodb.db)
-      .command({
-        distinct: 'reference',
-        key: 'kreyol',
-        query: { entry: aWord, docType: 'definition' },
-      })
+    const result = await client.db(config.mongodb.db).command({
+      distinct: 'reference',
+      key: 'kreyol',
+      query: { entry: aWord, docType: 'definition' },
+    })
     c.status(200)
     return c.json(result.values)
   } catch (e: any) {
