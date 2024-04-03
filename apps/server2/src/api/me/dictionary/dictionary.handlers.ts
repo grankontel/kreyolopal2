@@ -30,12 +30,7 @@ const getWord = async function (c: Context) {
 
   if (!user) {
     logger.debug('user not logged in')
-    return c.json(
-      {
-        message: 'You are not logged in.',
-      },
-      403
-    )
+    return c.json({error: 'You are not logged in.'},403)
   }
 
   const user_id = user.id
@@ -94,12 +89,7 @@ const bookmarkWord = async function (c: Context) {
   logger.info(`me bookmarkWord ${word}`)
 
   if (!user) {
-    return c.json(
-      {
-        message: 'You are not logged in.',
-      },
-      403
-    )
+    return c.json({error: 'You are not logged in.'},403)
   }
 
   const user_id = user.id
@@ -400,12 +390,7 @@ const listWords = async function (c: Context) {
 
   if (!user) {
     logger.debug('user not logged in')
-    return c.json(
-      {
-        message: 'You are not logged in.',
-      },
-      403
-    )
+    return c.json({error: 'You are not logged in.'},403)
   }
 
   const user_id = user.id

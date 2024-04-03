@@ -24,12 +24,7 @@ const getUserInfo = async function (c: Context) {
 
 	if (!user) {
 		logger.debug('user not logged in')
-		return c.json(
-			{
-				message: 'You are not logged in.',
-			},
-			403
-		)
+    return c.json({error: 'You are not logged in.'},403)
 	}
 
 	const result = await pgPool.query('SELECT username, is_admin, firstname, lastname, birth_date FROM auth_user WHERE id = $1', [user.id])
