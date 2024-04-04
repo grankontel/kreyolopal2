@@ -193,6 +193,133 @@ db.reference.createIndex(
 )
 ```
 
+## Lexicon
+
+### Lexicons index
+
+```js
+db.lexicons.createIndex(
+   { entry: 1  },
+   { unique: true, partialFilterExpression: { docType: "entry" } }
+)
+```
+
+```js
+db.lexicons.createIndex(
+   { entry: 1, docType: -1, lexicons: 1 },
+   { sparse: true, name: 'search' }
+)
+```
+
+```js
+db.lexicons.createIndex(
+   { variations: 1, lexicons },
+   { name: 'suggest', partialFilterExpression: { docType: "entry" } }
+)
+```
+### Entry
+
+```json
+    {
+      "_id": {
+        "$oid": "660ec7442d20dcfa8e764859"
+      },
+      "entry": "chat",
+      "docType": "definition",
+      "variations": [
+        "chat"
+      ],
+      "def_ids": [
+        "chat_0"
+      ],
+      "lexicons": [
+        "82da1d84-be7e-4c68-a7cb-cadb47c34eba"
+      ]
+    }
+```
+
+### Aggregate
+
+```js
+import { MongoClient } from 'mongodb';
+
+/*
+ * Requires the MongoDB Node.js Driver
+ * https://mongodb.github.io/node-mongodb-native
+ */
+
+const agg = [
+  {
+    '$match': {
+      'entry': 'chat', 
+      'lexicons': '82da1d84-be7e-4c68-a7cb-cadb47c34eba'
+    }
+  }, {
+    '$lookup': {
+      'from': 'reference', 
+      'let': {
+        'defi': '$def_ids'
+      }, 
+      'pipeline': [
+        {
+          '$match': {
+            'docType': 'definition', 
+						'kreyol': 'gp',
+            '$expr': {
+              '$in': [
+                '$definition_id', '$$defi'
+              ]
+            }
+          }
+        }
+      ], 
+      'as': 'ref_definitions'
+    }
+  }, {
+    '$lookup': {
+      'from': 'validated', 
+      'let': {
+        'defi': '$def_ids'
+      }, 
+      'pipeline': [
+        {
+          '$match': {
+            'docType': 'definition', 
+						'kreyol': 'gp',
+            '$expr': {
+              '$in': [
+                '$definition_id', '$$defi'
+              ]
+            }
+          }
+        }
+      ], 
+      'as': 'val_definitions'
+    }
+  }, {
+    '$project': {
+      'entry': 1, 
+      'variations': 1, 
+      'definitions': {
+        '$concatArrays': [
+          '$ref_definitions', '$val_definitions'
+        ]
+      }
+    }
+  }
+];
+
+const client = await MongoClient.connect(
+  'mongodb://zakari:Chuq3m9%26hatlD8O%40@localhost:27017/zakari?authMechanism=DEFAULT',
+  { useNewUrlParser: true, useUnifiedTopology: true }
+);
+const coll = client.db('zakari').collection('lexicons');
+const cursor = coll.aggregate(agg);
+const result = await cursor.toArray();
+await client.close();
+```
+
+
 ### Search
 
 ```
