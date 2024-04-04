@@ -68,8 +68,7 @@ const signup = async function (c: Context) {
   const hashedPassword = await argon2.hash(password)
   const userId = generateId(15)
 
-  const text =
-    `INSERT INTO auth_user (id, username, password, firstname, lastname, email) 
+  const text = `INSERT INTO auth_user (id, username, password, firstname, lastname, email) 
     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`
   const values = [userId, username, hashedPassword, firstname, lastname, email]
 

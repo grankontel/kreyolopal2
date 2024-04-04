@@ -12,8 +12,12 @@ interface LexiconEntry {
   lexicons: string[]
 }
 
-function getEntry(  client: MongoClient, lexicon_id: string, kreyol: string,aWord: string
-	): Promise<LexiconEntry> {
+function getEntry(
+  client: MongoClient,
+  lexicon_id: string,
+  kreyol: string,
+  aWord: string
+): Promise<LexiconEntry> {
   const agg = [
     {
       $match: {
