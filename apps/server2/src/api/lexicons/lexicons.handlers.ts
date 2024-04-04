@@ -47,6 +47,50 @@ const getLexicon = async function (c: Context) {
 		})
 }
 
+const getAllLexicons = async function (c: Context) {
+	const logger = c.get('logger')
+	const pgPool = c.get('pgPool')
+	//const client = c.get('mongodb')
+	const user = c.get('user')
+	const { username } = c.req.param()
+
+	logger.info(`getAllLexicons  ${username}`)
+
+	if (!user) {
+		logger.debug('user not logged in')
+		return c.json({ error: 'You are not logged in.' }, 403)
+	}
+
+
+	return pgPool
+		.connect()
+		.then(async (client) => {
+			const getOwner = 'SELECT id from auth_user where username = $1'
+			const resUser = await client.query(getOwner, [username])
+			if (resUser.rows.length === 0) {
+				return c.json({ error: 'Not Found' }, 404)
+			}
+
+			const owner_id = resUser.rows[0].id
+			const isMine = owner_id === user.id
+
+			const text =
+				'SELECT id, owner, name, slug, description, is_private FROM lexicons WHERE owner = $1'
+			const values = [owner_id]
+			const res = await client.query(text, values)
+			if (res.rows.length === 0) {
+				return c.json({ error: 'Not Found' }, 404)
+			}
+
+			const lexicons = isMine ? res.rows : res.rows.filter((item) =>item.is_private == false)
+			return c.json(lexicons, 200)
+		})
+		.catch((_error) => {
+			logger.error('getLexicon Exception', _error)
+			return c.json({ status: 'error', error: [_error] }, 500)
+		})
+}
+
 const addLexicon = async function (c: Context) {
 	const logger = c.get('logger')
 	const pgPool = c.get('pgPool')
@@ -90,4 +134,4 @@ const addLexicon = async function (c: Context) {
 		})
 }
 
-export default { getLexicon, addLexicon }
+export default { getLexicon, addLexicon, getAllLexicons }

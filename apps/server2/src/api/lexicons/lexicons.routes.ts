@@ -4,6 +4,10 @@ import { zValidator } from '@hono/zod-validator'
 import handlers from './lexicons.handlers'
 
 const slugCheck = z.string().regex(/^[a-z]+([a-z0-9]|-)*$/)
+const paramUsername = z.object({
+	username: z.string().trim().min(3)
+})
+
 const paramSlug = z
 	.object({
 		username: z.string().trim().min(3),
@@ -21,13 +25,19 @@ const postLexiconSchema = z
 
 const routes = createRouter()
 
-routes.post('/', zValidator('json', postLexiconSchema, sendBadRequest), 
-handlers.addLexicon)
+routes.post('/', zValidator('json', postLexiconSchema, sendBadRequest),
+	handlers.addLexicon)
+	
 routes.get('/:username/:slug', zValidator('param', paramSlug, sendBadRequest),
 	handlers.getLexicon)
+
+routes.get('/:username', zValidator('param', paramUsername, sendBadRequest),
+	handlers.getAllLexicons)
+
+
 /*
-	routes.get('/:username/:slug/entries', zValidator('param', paramSlug, sendBadRequest), 
-	handlers.listEntries)
+routes.get('/:username/:slug/entries', zValidator('param', paramSlug, sendBadRequest), 
+handlers.listEntries)
 routes.get('/:username/:slug/suggest/:word', handlers.suggestWord)
 */
 export default routes
