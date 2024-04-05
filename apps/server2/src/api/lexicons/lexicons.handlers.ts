@@ -362,41 +362,81 @@ const addDefinitions = async function (c: Context) {
       // check if entry is in lexicons
       const lexColl = mongo.db(config.mongodb.db).collection('lexicons')
       const findOptions = { projection: { _id: 0 } }
-      let lexEntry: LexiconEntry | null = await lexColl.findOne(
-        { entry: entry },
-        findOptions
-      )
-
-      if (lexEntry === null) {
-        lexEntry = await refColl.findOne({ entry: entry }, findOptions)
-      }
-
-      if (lexEntry === null) {
-        lexEntry = await valColl.findOne({ entry: entry }, findOptions)
-      }
+      const lexEntry: LexiconEntry | null = await lexColl
+        .findOne({ entry: entry }, findOptions)
+        .then((value) => {
+          return (
+            value ??
+            refColl.findOne({ entry: entry }, findOptions).then((x) => {
+              return x ?? valColl.findOne({ entry: entry }, findOptions)
+            })
+          )
+        })
 
       logger.debug(JSON.stringify(lexEntry))
       if (lexEntry === null) return c.json({ error: 'Invalid entry' }, 400)
 
       // upsert lexicons field and def_ids field
-      const result = await lexColl.updateOne(
-        lexEntry,
-        { $addToSet: { lexicons: lexicon.id, def_ids: ids } },
-        { upsert: true }
-      )
+      return lexColl
+        .updateOne(
+          lexEntry,
+          { $addToSet: { lexicons: lexicon.id, def_ids: ids } },
+          { upsert: true }
+        )
+        .then((result) => {
+          logger.debug(JSON.stringify(result))
 
-      logger.debug(JSON.stringify(result))
+          const response = {
+            ...lexEntry,
+            added: {
+              lexicon: lexicon.id,
+              def_ids: ids,
+            },
+          }
+          return c.json(response, 201)
+        })
+    })
+    .catch((_error) => {
+      logger.error('getLexicon Exception', _error)
+      return c.json({ status: 'error', error: [_error] }, 500)
+    })
+}
 
-      return c.json(
-        {
-          ...lexEntry,
-          added: {
-            lexicon: lexicon.id,
-            def_ids: ids,
-          },
-        },
-        201
-      )
+const deleteLexicon = async (c: Context) => {
+  const logger = c.get('logger')
+  const pgPool = c.get('pgPool')
+  const mongo = c.get('mongodb')
+  const user = c.get('user')
+
+  const { username, slug } = c.req.param()
+
+  logger.info(`deleteLexicon for ${username}/${slug}`)
+
+  if (!user) {
+    logger.debug('user not logged in')
+    return c.json({ error: 'You are not logged in.' }, 403)
+  }
+
+  if (user.username != username) return c.json({ error: 'Forbidden' }, 403)
+
+  return pgPool
+    .connect()
+    .then(async (client) => {
+      const text =
+        'SELECT id, owner, is_private FROM lexicons WHERE owner = $1 AND slug = $2'
+      const values = [user.id, slug]
+      const res = await client.query(text, values)
+      if (res.rows.length === 0) {
+        return c.json({ error: 'Not Found' }, 404)
+      }
+
+      const lexicon = res.rows[0]
+      logger.info('found lexicon')
+
+      const lexColl = mongo.db(config.mongodb.db).collection('lexicons')
+      await lexColl.update({}, { $pull: { lexicons: lexicon.id } })
+
+      return c.json({}, 200)
     })
     .catch((_error) => {
       logger.error('getLexicon Exception', _error)
@@ -409,4 +449,5 @@ export default {
   getAllLexicons,
   getLexiconEntry,
   addDefinitions,
+  deleteLexicon,
 }

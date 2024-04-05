@@ -56,6 +56,12 @@ routes.get(
   handlers.getLexicon
 )
 
+routes.delete(
+  '/:username/:slug',
+  zValidator('param', paramSlug, sendBadRequest),
+  handlers.deleteLexicon
+)
+
 routes.get(
   '/:username',
   zValidator('param', paramUsername, sendBadRequest),
