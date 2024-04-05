@@ -20,13 +20,13 @@ const getWord = async function (c: Context) {
       400
     )
 
-    const value = caches.entries.get(word+'_'+lang)
-    if (value !== undefined) {
-      logger.info(`value for ${word}_${lang} is in cache`)
-      c.res.headers.append('Cache-Control', 'public, maxage=86400')
-      c.status(200)
-      return c.json(value)
-    }
+  const value = caches.entries.get(word + '_' + lang)
+  if (value !== undefined) {
+    logger.info(`value for ${word}_${lang} is in cache`)
+    c.res.headers.append('Cache-Control', 'public, maxage=86400')
+    c.status(200)
+    return c.json(value)
+  }
 
   const filter = {
     $and: [
@@ -57,11 +57,13 @@ const getWord = async function (c: Context) {
     if (result.length === 0) return c.json({ error: 'Not Found.' }, 404)
 
     const entry = result.filter((item) => item.docType == 'entry')
-    const defs = result.filter((item) => item.docType == 'definition').map((item) => ({ source: 'reference', ...item }))
+    const defs = result
+      .filter((item) => item.docType == 'definition')
+      .map((item) => ({ source: 'reference', ...item }))
 
     const data = { ...entry[0], definitions: defs }
-    caches.entries.set(word+'_'+lang, data)
-    
+    caches.entries.set(word + '_' + lang, data)
+
     c.res.headers.append('Cache-Control', 'public, maxage=86400')
 
     c.status(200)

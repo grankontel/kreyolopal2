@@ -31,16 +31,17 @@ const paramLexiconEntry = z
   })
   .required()
 
-const addDefinitionSchema = z
-  .object({
-    entry: z.string().trim().min(1),
-    definitions: z.array(
+const addDefinitionSchema = z.object({
+  entry: z.string().trim().min(1),
+  definitions: z
+    .array(
       z.object({
         source: z.enum(['reference', 'validated']),
-        id: z.string().trim().min(1)
+        id: z.string().trim().min(1),
       })
-    ).nonempty()
-  })
+    )
+    .nonempty(),
+})
 const routes = createRouter()
 
 routes.post(
