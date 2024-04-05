@@ -8,8 +8,8 @@ export type KreyolLanguage = (typeof KreyolLanguages)[keyof typeof KreyolLanguag
 
 export type MeaningLanguage = KreyolLanguage | 'fr'
 
-type RestrictedDefinitionSource = 'reference' | 'validated'
-type DefinitionSource = RestrictedDefinitionSource | 'personal'
+export type RestrictedDefinitionSource = 'reference' | 'validated'
+export type DefinitionSource = RestrictedDefinitionSource | 'personal'
 
 type Meaning = {
 	[key in MeaningLanguage]?: string
@@ -44,3 +44,10 @@ export interface DictionaryEntry {
 	definitions: Array<SingleDefinition>
 }
 
+export interface LexiconEntry {
+  _id: string
+  entry: string
+  variations: string[]
+  def_ids: string[]
+  lexicons: string[]
+}

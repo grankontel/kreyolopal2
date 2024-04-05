@@ -2,6 +2,7 @@ import type { Context } from 'hono'
 import type { MongoClient } from 'mongodb'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
+import { RestrictedDefinitionSource } from '../../domain/types'
 
 interface LexiconEntry {
   _id?: string
@@ -123,7 +124,7 @@ const getLexicon = async function (c: Context) {
       }
 
       const lexicon = res.rows[0]
-      if (lexicon.owner != user.username && lexicon.is_private) {
+      if (lexicon.owner != user.id && lexicon.is_private) {
         return c.json({ error: 'Forbidden' }, 403)
       }
 
@@ -275,4 +276,125 @@ const getLexiconEntry = async function (c: Context) {
     })
 }
 
-export default { getLexicon, addLexicon, getAllLexicons, getLexiconEntry }
+interface AddDefinitionPayload {
+  entry: string
+  definitions: {
+    source: RestrictedDefinitionSource
+    id: string
+  }[]
+}
+
+const addDefinitions = async function (c: Context) {
+  const logger = c.get('logger')
+  const pgPool = c.get('pgPool')
+  const mongo = c.get('mongodb')
+  const user = c.get('user')
+
+  const { username, slug } = c.req.param()
+
+  const { entry, definitions }: AddDefinitionPayload = c.req.valid('json')
+  logger.info(`addDefinitions for ${username}/${slug} to ${entry}`)
+
+  if (!user) {
+    logger.debug('user not logged in')
+    return c.json({ error: 'You are not logged in.' }, 403)
+  }
+
+  if (user.username != username)
+    return c.json({ error: 'Forbidden' }, 403)
+
+  return pgPool
+    .connect()
+    .then(async (client) => {
+      const text =
+        'SELECT id, owner, is_private FROM lexicons WHERE owner = $1 AND slug = $2'
+      const values = [user.id, slug]
+      const res = await client.query(text, values)
+      if (res.rows.length === 0) {
+        return c.json({ error: 'Not Found' }, 404)
+      }
+
+      const lexicon = res.rows[0]
+      logger.info('found lexicon')
+
+      // check each def_id against associated source
+
+      const projection = {
+        'entry': 1,
+        'definition_id': 1,
+        '_id': 0
+      };
+
+      const reference_defs = definitions.filter((item) => item.source === 'reference').map((item) => item.id)
+      const validated_defs = definitions.filter((item) => item.source === 'validated').map((item) => item.id)
+
+
+      const refFilter = {
+        'definition_id': {
+          '$in': reference_defs
+        }
+      };
+
+      const refColl = mongo.db(config.mongodb.db).collection('reference');
+      const refCursor = refColl.find(refFilter, { projection });
+      const refResult = (await refCursor.toArray())
+        .filter((item) => item.entry === entry)
+        .map((item) => item.definition_id)
+
+      const valFilter = {
+        'definition_id': {
+          '$in': validated_defs
+        }
+      };
+
+      const valColl = mongo.db(config.mongodb.db).collection('validated');
+      const valCursor = valColl.find(valFilter, { projection });
+      const valResult = (await valCursor.toArray())
+        .filter((item) => item.entry === entry)
+        .map((item) => item.definition_id)
+
+      logger.debug(JSON.stringify({ refResult, valResult }))
+      const ids = refResult.concat(valResult)
+      if (ids.length === 0)
+        return c.json({ error: 'Invalid definitions' }, 400)
+
+      // check if entry is in lexicons
+      const lexColl = mongo.db(config.mongodb.db).collection('lexicons')
+      const findOptions = { projection: { _id: 0 } }
+      let lexEntry: LexiconEntry | null = await lexColl.findOne({ "entry": entry }, findOptions)
+
+      if (lexEntry === null) {
+        lexEntry = await refColl.findOne({ "entry": entry }, findOptions)
+      }
+
+      if (lexEntry === null) {
+        lexEntry = await valColl.findOne({ "entry": entry }, findOptions)
+      }
+
+      logger.debug(JSON.stringify(lexEntry))
+      if (lexEntry === null)
+        return c.json({ error: 'Invalid entry' }, 400)
+
+      // upsert lexicons field and def_ids field
+      const result = await lexColl.updateOne(lexEntry,
+        { $addToSet: { lexicons: lexicon.id, def_ids: ids } },
+        { upsert: true }
+      )
+
+      logger.debug(JSON.stringify(result))
+
+
+      return c.json({
+        ...lexEntry,
+        added: {
+          lexicon: lexicon.id,
+          def_ids: ids
+        }
+      }, 201)
+    })
+    .catch((_error) => {
+      logger.error('getLexicon Exception', _error)
+      return c.json({ status: 'error', error: [_error] }, 500)
+    })
+}
+export default { getLexicon, addLexicon, getAllLexicons, getLexiconEntry, addDefinitions }

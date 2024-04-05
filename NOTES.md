@@ -193,6 +193,14 @@ db.reference.createIndex(
 )
 ```
 
+```js
+db.reference.createIndex(
+   { definition_id: 1 },
+   { sparse: true, name: 'definition' }
+)
+```
+
+
 ## Lexicon
 
 ### Lexicons index
@@ -200,21 +208,21 @@ db.reference.createIndex(
 ```js
 db.lexicons.createIndex(
    { entry: 1  },
-   { unique: true, partialFilterExpression: { docType: "entry" } }
+   { unique: true}
 )
 ```
 
 ```js
 db.lexicons.createIndex(
-   { entry: 1, docType: -1, lexicons: 1 },
+   { entry: 1, lexicons: 1 },
    { sparse: true, name: 'search' }
 )
 ```
 
 ```js
 db.lexicons.createIndex(
-   { variations: 1, lexicons },
-   { name: 'suggest', partialFilterExpression: { docType: "entry" } }
+   { variations: 1, lexicons: 1 },
+   { sparse: true, name: 'suggest'}
 )
 ```
 ### Entry

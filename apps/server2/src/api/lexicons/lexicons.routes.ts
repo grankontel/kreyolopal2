@@ -31,6 +31,16 @@ const paramLexiconEntry = z
   })
   .required()
 
+const addDefinitionSchema = z
+  .object({
+    entry: z.string().trim().min(1),
+    definitions: z.array(
+      z.object({
+        source: z.enum(['reference', 'validated']),
+        id: z.string().trim().min(1)
+      })
+    ).nonempty()
+  })
 const routes = createRouter()
 
 routes.post(
@@ -57,6 +67,12 @@ routes.get(
   handlers.getLexiconEntry
 )
 
+routes.put(
+  '/:username/:slug/definition',
+  zValidator('param', paramSlug, sendBadRequest),
+  zValidator('json', addDefinitionSchema, sendBadRequest),
+  handlers.addDefinitions
+)
 /*
 routes.get('/:username/:slug/entries', zValidator('param', paramSlug, sendBadRequest), 
 handlers.listEntries)
