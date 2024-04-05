@@ -1,7 +1,7 @@
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import type { Context } from 'hono'
-import { LRUCache } from 'lru-cache'
+import caches from './caches'
 
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
@@ -19,6 +19,14 @@ const getWord = async function (c: Context) {
       },
       400
     )
+
+    const value = caches.entries.get(word+'_'+lang)
+    if (value !== undefined) {
+      logger.info(`value for ${word}_${lang} is in cache`)
+      c.res.headers.append('Cache-Control', 'public, maxage=86400')
+      c.status(200)
+      return c.json(value)
+    }
 
   const filter = {
     $and: [
@@ -39,7 +47,7 @@ const getWord = async function (c: Context) {
     ],
   }
   const projection = {
-    definition_id: 0,
+    _id: 0,
   }
 
   try {
@@ -49,10 +57,11 @@ const getWord = async function (c: Context) {
     if (result.length === 0) return c.json({ error: 'Not Found.' }, 404)
 
     const entry = result.filter((item) => item.docType == 'entry')
-    const defs = result.filter((item) => item.docType == 'definition')
+    const defs = result.filter((item) => item.docType == 'definition').map((item) => ({ source: 'reference', ...item }))
 
     const data = { ...entry[0], definitions: defs }
-
+    caches.entries.set(word+'_'+lang, data)
+    
     c.res.headers.append('Cache-Control', 'public, maxage=86400')
 
     c.status(200)
@@ -67,16 +76,6 @@ const getWord = async function (c: Context) {
   }
 }
 
-interface WordSuggestion {
-  entry: string
-  docType: 'entry'
-  variations: string[]
-}
-
-const suggestionCache = new LRUCache<string, WordSuggestion[]>({
-  max: 50,
-})
-
 const getSuggestion = async function (c: Context) {
   const logger = c.get('logger')
   const client = c.get('mongodb')
@@ -84,7 +83,7 @@ const getSuggestion = async function (c: Context) {
   const word = c.req.param('word')
 
   logger.info(`getSuggestion ${word}`)
-  const value = suggestionCache.get(word)
+  const value = caches.suggestions.get(word)
   if (value !== undefined) {
     logger.info(`value for ${word} is in cache`)
     c.res.headers.append('Cache-Control', 'public, maxage=86400')
@@ -146,7 +145,7 @@ const getSuggestion = async function (c: Context) {
       })
       .slice(0, 8)
 
-    suggestionCache.set(word, result)
+    caches.suggestions.set(word, result)
     c.res.headers.append('Cache-Control', 'public, maxage=86400')
     c.status(200)
     return c.json(result)
