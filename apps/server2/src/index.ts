@@ -57,7 +57,7 @@ Promise.all([mongoClient.connect()])
       })
 
       setRoutes(app)
-      app.showRoutes()
+      // app.showRoutes()
 
       process.stdout.write(
         `\n🚀 Your server is ready on http://localhost:${port}\n\n`
