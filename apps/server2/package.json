@@ -18,6 +18,7 @@
     "#lib/*": "./src/lib/*.ts",
     "#services/*": "./src/services/*.ts",
     "#utils/*": "./src/utils/*.ts",
+    "#domain/*": "./src/domain/*.ts",
     "#config": "./src/config.ts"
   },
   "peerDependencies": {

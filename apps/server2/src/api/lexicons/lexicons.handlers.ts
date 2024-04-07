@@ -2,7 +2,7 @@ import type { Context } from 'hono'
 import type { MongoClient } from 'mongodb'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
-import { RestrictedDefinitionSource } from '../../domain/types'
+import { MongoCollection, RestrictedDefinitionSource } from '#domain/types'
 import { PoolClient } from 'pg'
 
 interface LexiconEntry {
@@ -80,7 +80,7 @@ function getEntry(
     },
   ]
   return new Promise<LexiconEntry>( (resolve, reject) => {
-    const coll = client.db(config.mongodb.db).collection('lexicons')
+    const coll = client.db(config.mongodb.db).collection(MongoCollection.lexicons)
     const cursor = coll.aggregate<LexiconEntry>(agg)
     cursor.toArray().then((result) => {
       cursor.close()
@@ -367,7 +367,7 @@ const addDefinitions = async function (c: Context) {
     if (ids.length === 0) return c.json({ error: 'Invalid definitions' }, 400)
 
     // check if entry is in lexicons
-    const lexColl = mongo.db(config.mongodb.db).collection('lexicons')
+    const lexColl = mongo.db(config.mongodb.db).collection(MongoCollection.lexicons)
     const findOptions = { projection: { _id: 0 } }
     const lexEntry: LexiconEntry | null = await lexColl
       .findOne({ entry: entry }, findOptions)
@@ -441,7 +441,7 @@ const deleteLexicon = async (c: Context) => {
     const lexicon = res.rows[0]
     logger.info('found lexicon')
 
-    const lexColl = mongo.db(config.mongodb.db).collection('lexicons')
+    const lexColl = mongo.db(config.mongodb.db).collection(MongoCollection.lexicons)
     await lexColl.update({}, { $pull: { lexicons: lexicon.id } })
 
     return c.json({}, 200)

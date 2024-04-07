@@ -2,6 +2,7 @@ import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import type { Context } from 'hono'
 import caches from './caches'
+import { MongoCollection } from '#domain/types'
 
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
@@ -51,7 +52,7 @@ const getWord = async function (c: Context) {
   }
 
   try {
-    const coll = client.db(config.mongodb.db).collection('reference')
+    const coll = client.db(config.mongodb.db).collection(MongoCollection.reference)
     const cursor = coll.find(filter, { projection })
     const result = await cursor.toArray()
     cursor.close()
@@ -60,7 +61,7 @@ const getWord = async function (c: Context) {
     const entry = result.filter((item) => item.docType == 'entry')
     const defs = result
       .filter((item) => item.docType == 'definition')
-      .map((item) => ({ source: 'reference', ...item }))
+      .map((item) => ({ source: MongoCollection.reference, ...item }))
 
     const data = { ...entry[0], definitions: defs }
     caches.entries.set(word + '_' + lang, data)
@@ -109,7 +110,7 @@ const getSuggestion = async function (c: Context) {
       variations: 1,
     }
 
-    const coll = client.db(config.mongodb.db).collection('reference')
+    const coll = client.db(config.mongodb.db).collection(MongoCollection.reference)
     const cursorE = coll.find(filterEnries, { projection })
     const exact = await cursorE.toArray()
     cursorE.close()
@@ -180,7 +181,7 @@ const getKreyolsFor = async function (c: Context) {
 
   try {
     const result = await client.db(config.mongodb.db).command({
-      distinct: 'reference',
+      distinct: MongoCollection.reference,
       key: 'kreyol',
       query: { entry: aWord, docType: 'definition' },
     })
