@@ -36,7 +36,6 @@ export const UserDropdown = async ({ token }: { token: string }) => {
     const data = await fetchUserInfo(token)
     if (data != null) {
       data.bearer = token
-      console.log(data)
       useDicoStore.setState({ user: data })
     }
   } catch (error) {
@@ -51,12 +50,11 @@ export const UserDropdown = async ({ token }: { token: string }) => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
+            className="rounded-lg border border-gray-200 dark:border-gray-800"
             id="profile-menu"
-            size="icon"
             variant="ghost"
           >
-            <UserIcon className="h-4 w-4" />
+            <UserIcon className="h-4 w-4" />&nbsp;{user?.firstname} {user?.lastname}
             <span className="sr-only">Toggle profile menu</span>
           </Button>
         </DropdownMenuTrigger>

@@ -11,7 +11,7 @@ import { DashboardMenuItem } from '@/lib/dashboard'
 import { hashKey } from '@/lib/utils'
 import { useDicoStore } from '@/store/dico-store'
 import { usePathname } from 'next/navigation'
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 const getBreadcrumb = (
   pathName: string,
@@ -19,11 +19,12 @@ const getBreadcrumb = (
   start: Array<{ label: string; path: string }> = []
 ): Array<{ label: string; path: string }> | boolean => {
   const sortedMenus = menus.toSorted(
-    (a, b) => (a.path?.length || 0) - (b.path?.length || 0)
+    (a, b) => (b.path?.length || 0) - (a.path?.length || 0)
   )
 
   for (let index = 0; index < sortedMenus.length; index++) {
     const menu = sortedMenus[index]
+
     if (menu.path != null && pathName.includes(menu.path as string)) {
       return [...start, { label: menu.label, path: menu.path }]
     }
@@ -41,10 +42,14 @@ const getBreadcrumb = (
 }
 
 export default function DashboardPath() {
+  const [crumbs, setCrumbs] = useState<{ label: string; path: string }[]>([])
   const pathName = usePathname()
   const { menus } = useDicoStore()
 
-  const crumbs = getBreadcrumb(pathName, menus) as { label: string; path: string }[]
+  useEffect(() => {
+    setCrumbs(getBreadcrumb(pathName, menus) as { label: string; path: string }[])
+  }, [menus, pathName])
+  //const crumbs = getBreadcrumb(pathName, menus) as { label: string; path: string }[]
 
   return (
     <Breadcrumb className="breadcrumb">

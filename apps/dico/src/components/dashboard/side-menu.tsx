@@ -5,11 +5,6 @@ import Link from 'next/link'
 import FeatherIcon from '../FeatherIcon'
 import { useDicoStore } from '@/store/dico-store'
 import { DashboardMenuItem } from '@/lib/dashboard'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { getLexicons } from '@/queries/get-lexicons'
-import { Lexicon } from '@/lib/lexicons/types'
-import { ResponseError } from '@/lib/types'
-import { useEffect } from 'react'
 
 const SideMenuItem = ({
   menu,
@@ -45,43 +40,6 @@ const SideMenuItem = ({
 
 export default function SideMenu({ username, token }: { username: string, token: string }) {
   const { menus, setPersonnel } = useDicoStore()
-  const queryClient = useQueryClient()
-
-  const { data, isError, error, isLoading } = useQuery<
-    unknown,
-    ResponseError,
-    Lexicon[],
-    string[]
-  >({
-    queryKey: ['me', 'lexicons'],
-    staleTime: Infinity,
-    queryFn: () => {
-      console.log('querying lexicons...')
-      console.log(username)
-      return (username ? getLexicons(username, token) : [])},
-  })
-
-  useEffect(() => {
-    queryClient.invalidateQueries({
-      queryKey: ['me', 'lexicons'],
-      refetchType: 'active'
-     });
-  }, [username])
-
-  useEffect(() => {
-    console.log('handling lexicons...')
-    if (data?.length || 0 > 0) {
-      const personnel: DashboardMenuItem[] = []
-
-      personnel.push({
-        icon: 'bookmark',
-        label: 'Mes lexiques',
-        path: '/dashboard/lexicons',
-        items: data?.map((item) => ({ label: item.name, path: item.path })),
-      })
-      setPersonnel(personnel)
-    }
-  }, [data])
 
   return (
     <nav className="menu grid items-start px-4 text-sm font-medium">

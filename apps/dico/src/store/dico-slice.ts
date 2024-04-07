@@ -23,7 +23,7 @@ const removeByLabel = (
 const defaultMenus = getDefaultMenu()
 export const createDicoSlice: StateCreator<DicoStore, [], [], DicoSlice> = (set) => ({
   menus: defaultMenus,
-  set: (newMenu: DashboardMenuItem[]) => set((state) => ({ menus: newMenu })),
+  setMenus: (newMenu: DashboardMenuItem[]) => set((state) => ({ menus: newMenu })),
   setPersonnel: (newMenu: DashboardMenuItem[]) => {
     console.log('set Personnel')
     set((state) => ({ menus: getDefaultMenu(newMenu) }))

@@ -48,26 +48,26 @@ export default function DashboardLayout({
       <Sidebar>
         <SideMenu username={auth.username} token={auth.session_id} />
       </Sidebar>
-      <div className="flex flex-col">
-        <header className="flex h-14 items-center justify-between px-6 bg-gray-100/40 dark:bg-gray-800/40">
-          <div className="flex items-center gap-4">
-            <Link className="lg:hidden" href="#">
-              <Package2Icon className="h-6 w-6" />
-              <span className="sr-only">Home</span>
-            </Link>
-            <DashboardPath />
-          </div>
-          <div className="flex items-center gap-4">
-            <UserDropdown token={auth.session_id} />
-            <ModeToggle />
-            <LogoutDialog trigger={<Button variant="logo">Logout</Button>} />
-          </div>
-        </header>
-        <DashboardProvider init={{ ...auth}}>
+      <DashboardProvider init={{ ...auth }}>
+        <div className="flex flex-col">
+          <header className="flex h-14 items-center justify-between px-6 bg-gray-100/40 dark:bg-gray-800/40">
+            <div className="flex items-center gap-4">
+              <Link className="lg:hidden" href="#">
+                <Package2Icon className="h-6 w-6" />
+                <span className="sr-only">Home</span>
+              </Link>
+              <DashboardPath />
+            </div>
+            <div className="flex items-center gap-4">
+              <UserDropdown token={auth.session_id} />
+              <ModeToggle />
+              <LogoutDialog trigger={<Button variant="logo">Logout</Button>} />
+            </div>
+          </header>
           {children}
-          </DashboardProvider>
-        <LayoutFooter />
-      </div>
+          <LayoutFooter />
+        </div>
+      </DashboardProvider>
     </div>
   )
 }
