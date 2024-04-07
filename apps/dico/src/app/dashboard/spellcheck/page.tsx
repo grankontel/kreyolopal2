@@ -10,7 +10,7 @@ export default function Page() {
   if (!token) {
     return undefined
   }
-  
+
   return (
     <MainPanel title="Orthographe">
       <div className="flex flex-row justify-center">

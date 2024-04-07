@@ -4,8 +4,8 @@ import { LayoutFooter } from '@/components/layout-footer'
 
 export default async function ContactPage() {
   return (
-    <div className=' flex flex-col h-screen w-full '>
-      <main className='flex m-auto'>
+    <div className=" flex flex-col h-screen w-full ">
+      <main className="flex m-auto">
         <Card className="w-full max-w-md m-auto">
           <CardHeader>
             <CardTitle>Nous contacter</CardTitle>

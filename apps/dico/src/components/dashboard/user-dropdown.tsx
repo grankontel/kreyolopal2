@@ -54,7 +54,8 @@ export const UserDropdown = async ({ token }: { token: string }) => {
             id="profile-menu"
             variant="ghost"
           >
-            <UserIcon className="h-4 w-4" />&nbsp;{user?.firstname} {user?.lastname}
+            <UserIcon className="h-4 w-4" />
+            &nbsp;{user?.firstname} {user?.lastname}
             <span className="sr-only">Toggle profile menu</span>
           </Button>
         </DropdownMenuTrigger>

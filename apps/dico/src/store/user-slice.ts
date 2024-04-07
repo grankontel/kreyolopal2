@@ -5,7 +5,7 @@ import { parseCookie } from '@/lib/utils'
 
 export const createUserSlice: StateCreator<DicoStore, [], [], UserSlice> = (set) => ({
   user: null,
-  unsetUser: () => set(() => ({user: null})),
+  unsetUser: () => set(() => ({ user: null })),
   setUser: (aUser: User) =>
     set(() => {
       if (aUser.cookie) {

@@ -27,7 +27,7 @@ export const DashboardProvider = ({
   children: React.ReactNode
   init: AuthValue
 }>) => {
-  const {  setLexicons, setPersonnel } = useDicoStore()
+  const { setLexicons, setPersonnel } = useDicoStore()
   const queryClient = useQueryClient()
   const username = init.username
   const token = init.session_id

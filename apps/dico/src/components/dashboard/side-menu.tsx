@@ -38,7 +38,13 @@ const SideMenuItem = ({
   )
 }
 
-export default function SideMenu({ username, token }: { username: string, token: string }) {
+export default function SideMenu({
+  username,
+  token,
+}: {
+  username: string
+  token: string
+}) {
   const { menus, setPersonnel } = useDicoStore()
 
   return (
@@ -46,8 +52,10 @@ export default function SideMenu({ username, token }: { username: string, token:
       <ul>
         {menus.map((menu) => {
           const active = false
-          return (
-            menu?.label?.length|| 0 > 0 ? (<SideMenuItem key={hashKey('menu', menu.label)} menu={menu} active={active} />) : ' '
+          return menu?.label?.length || 0 > 0 ? (
+            <SideMenuItem key={hashKey('menu', menu.label)} menu={menu} active={active} />
+          ) : (
+            ' '
           )
         })}
       </ul>

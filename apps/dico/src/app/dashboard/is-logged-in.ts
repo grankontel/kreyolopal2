@@ -4,24 +4,24 @@ import { parseCookie } from '@/lib/utils'
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
 export const isLoggedIn = () => {
-	const cookieValue = cookies().get(cookieName)
+  const cookieValue = cookies().get(cookieName)
   if (cookieValue === undefined) {
     return false
   }
   const auth = parseCookie(cookieValue.value)
 
   console.log('***** is logged in  *****')
-  
+
   if (auth?.session_id === undefined) {
     cookies().delete(cookieName)
     return false
   }
 
-	return auth?.session_id
+  return auth?.session_id
 }
 
 export const getUsername = () => {
-	const cookieValue = cookies().get(cookieName)
+  const cookieValue = cookies().get(cookieName)
   if (cookieValue === undefined) {
     return false
   }
@@ -32,6 +32,5 @@ export const getUsername = () => {
     return false
   }
 
-	return auth?.username
+  return auth?.username
 }
-

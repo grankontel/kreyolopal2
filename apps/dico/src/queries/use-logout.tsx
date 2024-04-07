@@ -1,9 +1,9 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useDicoStore } from "@/store/dico-store"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useCookies } from "react-cookie"
+import { useDicoStore } from '@/store/dico-store'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useCookies } from 'react-cookie'
 import { cookieName } from '@/lib/types'
 
 const fetchLogout = async (token: string) => {
@@ -12,7 +12,7 @@ const fetchLogout = async (token: string) => {
 
   myHeaders.set('Authorization', `Bearer ${token}`)
 
-  return fetch( `/api/auth/logout`, {
+  return fetch(`/api/auth/logout`, {
     method: 'POST',
     //    credentials: 'same-origin',
     headers: myHeaders,

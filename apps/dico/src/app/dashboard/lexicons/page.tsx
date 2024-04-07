@@ -12,8 +12,7 @@ export default function Page() {
 
   return (
     <MainPanel title="Mes lexiques">
-        <LexiconTable />
+      <LexiconTable />
     </MainPanel>
   )
 }
-
