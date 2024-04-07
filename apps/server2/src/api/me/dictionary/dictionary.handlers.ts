@@ -5,14 +5,15 @@ import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import { WordsRepository } from '#lib/words.repository'
 import { HTTPException } from 'hono/http-exception'
+import { MongoCollection } from '#domain/types'
 
-function formatDate(date) {
+function formatDate(date: string | number | Date): string | null {
   if (date === null) return null
 
-  let d = new Date(date),
-    month = '' + (d.getMonth() + 1),
-    day = '' + d.getDate(),
-    year = d.getFullYear()
+  const d = new Date(date)
+  let month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate()
+  const year = d.getFullYear()
 
   if (month.length < 2) month = '0' + month
   if (day.length < 2) day = '0' + day
@@ -30,12 +31,7 @@ const getWord = async function (c: Context) {
 
   if (!user) {
     logger.debug('user not logged in')
-    return c.json(
-      {
-        message: 'You are not logged in.',
-      },
-      403
-    )
+    return c.json({ error: 'You are not logged in.' }, 403)
   }
 
   const user_id = user.id
@@ -53,9 +49,10 @@ const getWord = async function (c: Context) {
     }
 
     // const client = getClient()
-    const coll = client.db(config.mongodb.db).collection('personal')
+    const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
     const cursor = coll.find(filter, { projection })
     const result = await cursor.toArray()
+    cursor.close()
     logger.debug(JSON.stringify(result?.[0]))
     //client.close()
 
@@ -94,12 +91,7 @@ const bookmarkWord = async function (c: Context) {
   logger.info(`me bookmarkWord ${word}`)
 
   if (!user) {
-    return c.json(
-      {
-        message: 'You are not logged in.',
-      },
-      403
-    )
+    return c.json({ error: 'You are not logged in.' }, 403)
   }
 
   const user_id = user.id
@@ -118,7 +110,7 @@ const bookmarkWord = async function (c: Context) {
       (data) => {
         if (data.length === 0) return c.json({ error: 'Not Found.' }, 404)
 
-        const coll = client.db(config.mongodb.db).collection('personal')
+        const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
         const options = { upsert: true }
         const updateObj = {
           user_id: user_id,
@@ -213,7 +205,7 @@ const getWordId = (c: Context, client: MongoClient, logger: winston.Logger) =>
     }
 
     const user_id = user.id
-    const coll = client.db(config.mongodb.db).collection('personal')
+    const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
     const filter = {
       entry: word,
       user_id: user_id,
@@ -226,6 +218,7 @@ const getWordId = (c: Context, client: MongoClient, logger: winston.Logger) =>
       // const client = getClient()
       const cursor = coll.find(filter, { projection })
       const result = await cursor.toArray()
+      cursor.close()
 
       if (result?.length === 0) {
         reject(
@@ -264,7 +257,7 @@ const addSubField = async function (c: Context, subField: string) {
   return getWordId(c, client, logger)
     .then(
       (wordId) => {
-        const coll = client.db(config.mongodb.db).collection('personal')
+        const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
 
         const fieldObj = {}
         fieldObj[`definitions.${kreyol}.${rank}.${subField}`] = text
@@ -350,7 +343,7 @@ const addConfer = async function (c: Context) {
 
       return getWordId(c, client, logger)
         .then((wordId) => {
-          const coll = client.db(config.mongodb.db).collection('personal')
+          const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
 
           const fieldObj = {}
           fieldObj[`definitions.${kreyol}.${rank}.confer`] = text
@@ -400,12 +393,7 @@ const listWords = async function (c: Context) {
 
   if (!user) {
     logger.debug('user not logged in')
-    return c.json(
-      {
-        message: 'You are not logged in.',
-      },
-      403
-    )
+    return c.json({ error: 'You are not logged in.' }, 403)
   }
 
   const user_id = user.id
@@ -421,12 +409,13 @@ const listWords = async function (c: Context) {
 
   try {
     // const client = getClient()
-    const coll = client.db(config.mongodb.db).collection('personal')
+    const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
     const cursor = coll
       .find(filter, { projection })
       .skip(offset)
       .limit(pagesize)
     const result = await cursor.toArray()
+    cursor.close()
 
     const data = result?.map((item) => {
       return {
@@ -440,9 +429,9 @@ const listWords = async function (c: Context) {
     if (data.length > 0) {
       const nb = await client
         .db(config.mongodb.db)
-        .collection('personal')
+        .collection(MongoCollection.personal)
         .countDocuments(filter)
-      var endRange = Math.min(nb, offset + limit)
+      const endRange = Math.min(nb, offset + limit)
       c.res.headers.append('Cache-Control', 'private, maxage=86400')
       c.res.headers.append(
         'Access-Control-Expose-Headers',

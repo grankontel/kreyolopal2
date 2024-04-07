@@ -10,7 +10,6 @@ export const pgPool = new pg.Pool({
   database: config.db.database,
   connectionTimeoutMillis: 5000,
 })
-
 ;(async () => {
   await pgPool
     .connect()
@@ -96,6 +95,25 @@ BEFORE UPDATE ON "public"."spellcheckeds" FOR EACH ROW EXECUTE FUNCTION trigger_
 
       client.query(`CREATE OR REPLACE TRIGGER "set_timestamp" 
     BEFORE UPDATE ON "public"."ratings" FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp()`)
+
+      //table lexicons
+      client.query(`CREATE TABLE IF NOT EXISTS "public"."lexicons" (
+          "id" uuid DEFAULT gen_random_uuid(),
+          "owner" TEXT NOT NULL REFERENCES auth_user(id) ON DELETE CASCADE,
+          "name" TEXT NOT NULL,
+          "slug" TEXT NOT NULL,
+          "description" character varying(255) NULL,
+          "is_private" boolean DEFAULT false NOT NULL,
+          "created_at" timestamptz DEFAULT now() NOT NULL,
+          "updated_at" timestamptz DEFAULT now() NOT NULL,
+          CONSTRAINT "lexicons_pkey" PRIMARY KEY ("id")
+          ) WITH (oids = false);`)
+
+      client.query(`CREATE OR REPLACE TRIGGER "set_timestamp" 
+        BEFORE UPDATE ON "public"."lexicons" FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp()`)
+
+      client.query(`CREATE UNIQUE INDEX IF NOT EXISTS "IX_owner_slug" 
+    ON "public"."lexicons" USING btree ("owner", "slug");`)
 
       client.release()
     })

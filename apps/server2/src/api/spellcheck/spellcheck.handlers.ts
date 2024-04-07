@@ -13,16 +13,11 @@ const postSpellCheck = async function (c: Context) {
   logger.info('postSpellCheck')
 
   if (!user) {
-    return c.json(
-      {
-        message: 'You are not logged in.',
-      },
-      403
-    )
+    return c.json({ error: 'You are not logged in.' }, 403)
   }
 
-  const dico = body.kreyol.toUpperCase() as KreyolLang 
-  
+  const dico = body.kreyol.toUpperCase() as KreyolLang
+
   let lMessage: DicoRequest & { [k: string]: any } = {
     user: user.id, // req.user.id,
     tool: c.req.header('User-Agent'),
@@ -96,12 +91,7 @@ const postRating = async function (c: Context) {
   logger.info('postRating')
 
   if (!user) {
-    return c.json(
-      {
-        message: 'You are not logged in.',
-      },
-      403
-    )
+    return c.json({ error: 'You are not logged in.' }, 403)
   }
 
   logger.debug(JSON.stringify({ id, ...body }))
@@ -116,7 +106,7 @@ const postRating = async function (c: Context) {
       if (res.rows.length === 0) {
         return c.json(
           {
-            message: 'Forbidden',
+            error: 'Forbidden',
           },
           403
         )

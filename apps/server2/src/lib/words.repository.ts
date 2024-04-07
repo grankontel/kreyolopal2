@@ -51,7 +51,7 @@ export class WordsRepository {
         .collection('words')
       const cursor = coll.find(filter, { projection })
       const result = await cursor.toArray()
-
+      cursor.close()
       //client.close()
 
       const data = result?.map(mapCallback)
