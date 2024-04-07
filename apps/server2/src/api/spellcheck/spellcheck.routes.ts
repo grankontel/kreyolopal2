@@ -7,7 +7,7 @@ const myRoutes = createRouter()
 
 const postSpellCheckSchema = z
   .object({
-    kreyol: z.enum(['GP', 'MQ']),
+    kreyol: z.enum(['gp', 'mq', 'GP', 'MQ']),
     request: z.string(),
   })
   .required()
