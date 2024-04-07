@@ -72,51 +72,53 @@ const signup = async function (c: Context) {
     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`
   const values = [userId, username, hashedPassword, firstname, lastname, email]
 
-  return pgPool.connect().then(async (client: PoolClient) => {
-    return client
-      .query(text, values)
-      .then(
-        (dbresult) => {
-          const createdUser = dbresult.rows[0] as DatabaseUser
+  const client: PoolClient = await pgPool.connect()
+  return client
+    .query(text, values)
+    .then(
+      (dbresult) => {
+        const createdUser = dbresult.rows[0] as DatabaseUser
 
-          return lucia.createSession(createdUser.id, {}).then((session) => {
-            const theCookie = createCookie(session.id, createdUser)
-            setCookie(c, theCookie.name, theCookie.value, {
-              ...theCookie.attributes,
-              httpOnly: false,
-            })
-            // setCookie(c, 'delicious_cookie', 'macha')
-            c.status(200)
-            return c.json({})
+        return lucia.createSession(createdUser.id, {}).then((session) => {
+          const theCookie = createCookie(session.id, createdUser)
+          setCookie(c, theCookie.name, theCookie.value, {
+            ...theCookie.attributes,
+            httpOnly: false,
           })
-        },
-        (reason) => {
-          console.log('reason')
-          logger.error(reason?.message)
-          if (reason?.severity == 'ERROR' && reason?.code == '23505') {
-            return c.json(
-              {
-                message: 'Unprocessable Entity',
-              },
-              422
-            )
-          }
-          throw createHttpException({
-            errorContent: { error: 'Unknown error..' },
-            status: 500,
-            statusText: 'Unknown error.',
-          })
+          // setCookie(c, 'delicious_cookie', 'macha')
+          c.status(200)
+          return c.json({})
+        })
+      },
+      (reason) => {
+        console.log('reason')
+        logger.error(reason?.message)
+        if (reason?.severity == 'ERROR' && reason?.code == '23505') {
+          return c.json(
+            {
+              message: 'Unprocessable Entity',
+            },
+            422
+          )
         }
-      )
-      .catch((e) => {
-        logger.error(e.message)
         throw createHttpException({
           errorContent: { error: 'Unknown error..' },
           status: 500,
           statusText: 'Unknown error.',
         })
+      }
+    ).finally(() => {
+      client.release()
+    })
+    .catch((e) => {
+      client.release()
+      logger.error(e.message)
+      throw createHttpException({
+        errorContent: { error: 'Unknown error..' },
+        status: 500,
+        statusText: 'Unknown error.',
       })
-  })
+    })
 }
 
 const logout = async function (c: Context) {

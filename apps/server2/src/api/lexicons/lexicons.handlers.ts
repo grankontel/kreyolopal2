@@ -3,6 +3,7 @@ import type { MongoClient } from 'mongodb'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import { RestrictedDefinitionSource } from '../../domain/types'
+import { PoolClient } from 'pg'
 
 interface LexiconEntry {
   _id?: string
@@ -78,10 +79,11 @@ function getEntry(
       },
     },
   ]
-  return new Promise<LexiconEntry>(async (resolve, reject) => {
+  return new Promise<LexiconEntry>( (resolve, reject) => {
     const coll = client.db(config.mongodb.db).collection('lexicons')
     const cursor = coll.aggregate<LexiconEntry>(agg)
     cursor.toArray().then((result) => {
+      cursor.close()
       if (result.length === 0)
         reject(createHttpException({ error: 'Not Found' }, 404, 'Not Found'))
 
@@ -104,36 +106,37 @@ const getLexicon = async function (c: Context) {
     return c.json({ error: 'You are not logged in.' }, 403)
   }
 
-  return pgPool
-    .connect()
-    .then(async (client) => {
-      const getOwner = 'SELECT id from auth_user where username = $1'
-      const resUser = await client.query(getOwner, [username])
-      if (resUser.rows.length === 0) {
-        return c.json({ error: 'Not Found' }, 404)
-      }
+  const client: PoolClient = await pgPool.connect()
 
-      const owner_id = resUser.rows[0].id
+  try {
+    const getOwner = 'SELECT id from auth_user where username = $1'
+    const resUser = await client.query(getOwner, [username])
+    if (resUser.rows.length === 0) {
+      return c.json({ error: 'Not Found' }, 404)
+    }
 
-      const text =
-        'SELECT id, owner, name, slug, description, is_private FROM lexicons WHERE owner = $1 AND slug = $2'
-      const values = [owner_id, slug]
-      const res = await client.query(text, values)
-      if (res.rows.length === 0) {
-        return c.json({ error: 'Not Found' }, 404)
-      }
+    const owner_id = resUser.rows[0].id
 
-      const lexicon = res.rows[0]
-      if (lexicon.owner != user.id && lexicon.is_private) {
-        return c.json({ error: 'Forbidden' }, 403)
-      }
+    const text =
+      'SELECT id, owner, name, slug, description, is_private FROM lexicons WHERE owner = $1 AND slug = $2'
+    const values = [owner_id, slug]
+    const res = await client.query(text, values)
+    if (res.rows.length === 0) {
+      return c.json({ error: 'Not Found' }, 404)
+    }
 
-      return c.json(lexicon, 200)
-    })
-    .catch((_error) => {
-      logger.error('getLexicon Exception', _error)
-      return c.json({ status: 'error', error: [_error] }, 500)
-    })
+    const lexicon = res.rows[0]
+    if (lexicon.owner != user.id && lexicon.is_private) {
+      return c.json({ error: 'Forbidden' }, 403)
+    }
+
+    return c.json(lexicon, 200)
+  } catch (_error) {
+    logger.error('getLexicon Exception', _error)
+    return c.json({ status: 'error', error: [_error] }, 500)
+  } finally {
+    client.release()
+  }
 }
 
 const getAllLexicons = async function (c: Context) {
@@ -150,35 +153,36 @@ const getAllLexicons = async function (c: Context) {
     return c.json({ error: 'You are not logged in.' }, 403)
   }
 
-  return pgPool
-    .connect()
-    .then(async (client) => {
-      const getOwner = 'SELECT id from auth_user where username = $1'
-      const resUser = await client.query(getOwner, [username])
-      if (resUser.rows.length === 0) {
-        return c.json({ error: 'Not Found' }, 404)
-      }
+  const client: PoolClient = await pgPool.connect()
 
-      const owner_id = resUser.rows[0].id
-      const isMine = owner_id === user.id
+  try {
+    const getOwner = 'SELECT id from auth_user where username = $1'
+    const resUser = await client.query(getOwner, [username])
+    if (resUser.rows.length === 0) {
+      return c.json({ error: 'Not Found' }, 404)
+    }
 
-      const text =
-        'SELECT id, owner, name, slug, description, is_private FROM lexicons WHERE owner = $1'
-      const values = [owner_id]
-      const res = await client.query(text, values)
-      if (res.rows.length === 0) {
-        return c.json({ error: 'Not Found' }, 404)
-      }
+    const owner_id = resUser.rows[0].id
+    const isMine = owner_id === user.id
 
-      const lexicons = isMine
-        ? res.rows
-        : res.rows.filter((item) => item.is_private == false)
-      return c.json(lexicons, 200)
-    })
-    .catch((_error) => {
-      logger.error('getLexicon Exception', _error)
-      return c.json({ status: 'error', error: [_error] }, 500)
-    })
+    const text =
+      'SELECT id, owner, name, slug, description, is_private FROM lexicons WHERE owner = $1'
+    const values = [owner_id]
+    const res = await client.query(text, values)
+    if (res.rows.length === 0) {
+      return c.json({ error: 'Not Found' }, 404)
+    }
+
+    const lexicons = (
+      isMine ? res.rows : res.rows.filter((item) => item.is_private == false)
+    ).map((item) => ({ ...item, path: `/lexicons/${username}/${item.slug}` }))
+    return c.json(lexicons, 200)
+  } catch (_error) {
+    logger.error('getLexicon Exception', _error)
+    return c.json({ status: 'error', error: [_error] }, 500)
+  } finally {
+    client.release()
+  }
 }
 
 const addLexicon = async function (c: Context) {
@@ -241,39 +245,40 @@ const getLexiconEntry = async function (c: Context) {
     return c.json({ error: 'You are not logged in.' }, 403)
   }
 
-  return pgPool
-    .connect()
-    .then(async (client) => {
-      const getOwner = 'SELECT id from auth_user where username = $1'
-      const resUser = await client.query(getOwner, [username])
-      if (resUser.rows.length === 0) {
-        return c.json({ error: 'Not Found' }, 404)
-      }
+  const client: PoolClient = await pgPool.connect()
 
-      const owner_id = resUser.rows[0].id
-      const isMine = owner_id === user.id
+  try {
+    const getOwner = 'SELECT id from auth_user where username = $1'
+    const resUser = await client.query(getOwner, [username])
+    if (resUser.rows.length === 0) {
+      return c.json({ error: 'Not Found' }, 404)
+    }
 
-      const text = 'SELECT id, is_private FROM lexicons WHERE slug = $1'
-      const values = [slug]
-      const resLexicon = await client.query(text, values)
-      if (resLexicon.rows.length === 0) {
-        return c.json({ error: 'Not Found' }, 404)
-      }
+    const owner_id = resUser.rows[0].id
+    const isMine = owner_id === user.id
 
-      const lexicon = resLexicon.rows[0]
+    const text = 'SELECT id, is_private FROM lexicons WHERE slug = $1'
+    const values = [slug]
+    const resLexicon = await client.query(text, values)
+    if (resLexicon.rows.length === 0) {
+      return c.json({ error: 'Not Found' }, 404)
+    }
 
-      if (lexicon.is_private && !isMine) {
-        return c.json({ error: 'Forbidden' }, 403)
-      }
+    const lexicon = resLexicon.rows[0]
 
-      return getEntry(mongo, lexicon.id, lang, aWord).then((entry) => {
-        return c.json(entry, 200)
-      })
+    if (lexicon.is_private && !isMine) {
+      return c.json({ error: 'Forbidden' }, 403)
+    }
+
+    return getEntry(mongo, lexicon.id, lang, aWord).then((entry) => {
+      return c.json(entry, 200)
     })
-    .catch((_error) => {
-      logger.error('getLexicon Exception', _error)
-      return c.json({ status: 'error', error: [_error] }, 500)
-    })
+  } catch (_error) {
+    logger.error('getLexicon Exception', _error)
+    return c.json({ status: 'error', error: [_error] }, 500)
+  } finally {
+    client.release()
+  }
 }
 
 interface AddDefinitionPayload {
@@ -302,104 +307,107 @@ const addDefinitions = async function (c: Context) {
 
   if (user.username != username) return c.json({ error: 'Forbidden' }, 403)
 
-  return pgPool
-    .connect()
-    .then(async (client) => {
-      const text =
-        'SELECT id, owner, is_private FROM lexicons WHERE owner = $1 AND slug = $2'
-      const values = [user.id, slug]
-      const res = await client.query(text, values)
-      if (res.rows.length === 0) {
-        return c.json({ error: 'Not Found' }, 404)
-      }
+  const client: PoolClient = await pgPool.connect()
 
-      const lexicon = res.rows[0]
-      logger.info('found lexicon')
+  try {
+    const text =
+      'SELECT id, owner, is_private FROM lexicons WHERE owner = $1 AND slug = $2'
+    const values = [user.id, slug]
+    const res = await client.query(text, values)
+    if (res.rows.length === 0) {
+      return c.json({ error: 'Not Found' }, 404)
+    }
 
-      // check each def_id against associated source
+    const lexicon = res.rows[0]
+    logger.info('found lexicon')
 
-      const projection = {
-        entry: 1,
-        definition_id: 1,
-        _id: 0,
-      }
+    // check each def_id against associated source
 
-      const reference_defs = definitions
-        .filter((item) => item.source === 'reference')
-        .map((item) => item.id)
-      const validated_defs = definitions
-        .filter((item) => item.source === 'validated')
-        .map((item) => item.id)
+    const projection = {
+      entry: 1,
+      definition_id: 1,
+      _id: 0,
+    }
 
-      const refFilter = {
-        definition_id: {
-          $in: reference_defs,
-        },
-      }
+    const reference_defs = definitions
+      .filter((item) => item.source === 'reference')
+      .map((item) => item.id)
+    const validated_defs = definitions
+      .filter((item) => item.source === 'validated')
+      .map((item) => item.id)
 
-      const refColl = mongo.db(config.mongodb.db).collection('reference')
-      const refCursor = refColl.find(refFilter, { projection })
-      const refResult = (await refCursor.toArray())
-        .filter((item) => item.entry === entry)
-        .map((item) => item.definition_id)
+    const refFilter = {
+      definition_id: {
+        $in: reference_defs,
+      },
+    }
 
-      const valFilter = {
-        definition_id: {
-          $in: validated_defs,
-        },
-      }
+    const refColl = mongo.db(config.mongodb.db).collection('reference')
+    const refCursor = refColl.find(refFilter, { projection })
+    const refResult = (await refCursor.toArray())
+      .filter((item) => item.entry === entry)
+      .map((item) => item.definition_id)
 
-      const valColl = mongo.db(config.mongodb.db).collection('validated')
-      const valCursor = valColl.find(valFilter, { projection })
-      const valResult = (await valCursor.toArray())
-        .filter((item) => item.entry === entry)
-        .map((item) => item.definition_id)
+    refCursor.close()
+    const valFilter = {
+      definition_id: {
+        $in: validated_defs,
+      },
+    }
 
-      logger.debug(JSON.stringify({ refResult, valResult }))
-      const ids = refResult.concat(valResult)
-      if (ids.length === 0) return c.json({ error: 'Invalid definitions' }, 400)
+    const valColl = mongo.db(config.mongodb.db).collection('validated')
+    const valCursor = valColl.find(valFilter, { projection })
+    const valResult = (await valCursor.toArray())
+      .filter((item) => item.entry === entry)
+      .map((item) => item.definition_id)
+    valCursor.close()
 
-      // check if entry is in lexicons
-      const lexColl = mongo.db(config.mongodb.db).collection('lexicons')
-      const findOptions = { projection: { _id: 0 } }
-      const lexEntry: LexiconEntry | null = await lexColl
-        .findOne({ entry: entry }, findOptions)
-        .then((value) => {
-          return (
-            value ??
-            refColl.findOne({ entry: entry }, findOptions).then((x) => {
-              return x ?? valColl.findOne({ entry: entry }, findOptions)
-            })
-          )
-        })
+    logger.debug(JSON.stringify({ refResult, valResult }))
+    const ids = refResult.concat(valResult)
+    if (ids.length === 0) return c.json({ error: 'Invalid definitions' }, 400)
 
-      logger.debug(JSON.stringify(lexEntry))
-      if (lexEntry === null) return c.json({ error: 'Invalid entry' }, 400)
-
-      // upsert lexicons field and def_ids field
-      return lexColl
-        .updateOne(
-          lexEntry,
-          { $addToSet: { lexicons: lexicon.id, def_ids: ids } },
-          { upsert: true }
+    // check if entry is in lexicons
+    const lexColl = mongo.db(config.mongodb.db).collection('lexicons')
+    const findOptions = { projection: { _id: 0 } }
+    const lexEntry: LexiconEntry | null = await lexColl
+      .findOne({ entry: entry }, findOptions)
+      .then((value) => {
+        return (
+          value ??
+          refColl.findOne({ entry: entry }, findOptions).then((x) => {
+            return x ?? valColl.findOne({ entry: entry }, findOptions)
+          })
         )
-        .then((result) => {
-          logger.debug(JSON.stringify(result))
+      })
 
-          const response = {
-            ...lexEntry,
-            added: {
-              lexicon: lexicon.id,
-              def_ids: ids,
-            },
-          }
-          return c.json(response, 201)
-        })
-    })
-    .catch((_error) => {
-      logger.error('getLexicon Exception', _error)
-      return c.json({ status: 'error', error: [_error] }, 500)
-    })
+    logger.debug(JSON.stringify(lexEntry))
+    if (lexEntry === null) return c.json({ error: 'Invalid entry' }, 400)
+
+    // upsert lexicons field and def_ids field
+    return lexColl
+      .updateOne(
+        lexEntry,
+        { $addToSet: { lexicons: lexicon.id, def_ids: ids } },
+        { upsert: true }
+      )
+      .then((result) => {
+        logger.debug(JSON.stringify(result))
+
+        const response = {
+          ...lexEntry,
+          added: {
+            lexicon: lexicon.id,
+            def_ids: ids,
+          },
+        }
+        return c.json(response, 201)
+      })
+  } catch (_error) {
+    logger.error('getLexicon Exception', _error)
+    return c.json({ status: 'error', error: [_error] }, 500)
+  } finally {
+    client.release()
+  }
 }
 
 const deleteLexicon = async (c: Context) => {
@@ -419,30 +427,30 @@ const deleteLexicon = async (c: Context) => {
 
   if (user.username != username) return c.json({ error: 'Forbidden' }, 403)
 
-  return pgPool
-    .connect()
-    .then(async (client) => {
-      const text =
-        'SELECT id, owner, is_private FROM lexicons WHERE owner = $1 AND slug = $2'
-      const values = [user.id, slug]
-      const res = await client.query(text, values)
-      if (res.rows.length === 0) {
-        return c.json({ error: 'Not Found' }, 404)
-      }
+  const client: PoolClient = await pgPool.connect()
 
-      const lexicon = res.rows[0]
-      logger.info('found lexicon')
+  try {
+    const text =
+      'SELECT id, owner, is_private FROM lexicons WHERE owner = $1 AND slug = $2'
+    const values = [user.id, slug]
+    const res = await client.query(text, values)
+    if (res.rows.length === 0) {
+      return c.json({ error: 'Not Found' }, 404)
+    }
 
-      const lexColl = mongo.db(config.mongodb.db).collection('lexicons')
-      await lexColl.update({}, { $pull: { lexicons: lexicon.id } })
+    const lexicon = res.rows[0]
+    logger.info('found lexicon')
 
-      return c.json({}, 200)
-    })
-    .catch((_error) => {
-      logger.error('getLexicon Exception', _error)
-      return c.json({ status: 'error', error: [_error] }, 500)
-    })
+    const lexColl = mongo.db(config.mongodb.db).collection('lexicons')
+    await lexColl.update({}, { $pull: { lexicons: lexicon.id } })
+
+    return c.json({}, 200)
+  } catch (_error) {
+    logger.error('getLexicon Exception', _error)
+    return c.json({ status: 'error', error: [_error] }, 500)
+  }
 }
+
 export default {
   getLexicon,
   addLexicon,

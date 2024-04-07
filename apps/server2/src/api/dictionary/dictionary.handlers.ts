@@ -54,6 +54,7 @@ const getWord = async function (c: Context) {
     const coll = client.db(config.mongodb.db).collection('reference')
     const cursor = coll.find(filter, { projection })
     const result = await cursor.toArray()
+    cursor.close()
     if (result.length === 0) return c.json({ error: 'Not Found.' }, 404)
 
     const entry = result.filter((item) => item.docType == 'entry')
