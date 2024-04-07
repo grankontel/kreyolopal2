@@ -9,6 +9,8 @@ export interface UserSlice {
 
 export interface DicoSlice {
   menus: DashboardMenuItem[]
+  set: (item: DashboardMenuItem[]) => void
+  setPersonnel: (item: DashboardMenuItem[]) => void
   addMenu: (item: DashboardMenuItem) => void
   removeItem: (label: string) => void
 }

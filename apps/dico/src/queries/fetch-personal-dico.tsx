@@ -1,6 +1,4 @@
-import { DictionaryFullEntry, ResponseError } from '@/lib/types'
-
-const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
+import { DictionaryFullEntry, ResponseError, apiServer } from '@/lib/types'
 
 interface PersonalDico {
   count: number

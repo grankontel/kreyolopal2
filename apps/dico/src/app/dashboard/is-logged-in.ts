@@ -19,3 +19,19 @@ export const isLoggedIn = () => {
 
 	return auth?.session_id
 }
+
+export const getUsername = () => {
+	const cookieValue = cookies().get(cookieName)
+  if (cookieValue === undefined) {
+    return false
+  }
+  const auth = parseCookie(cookieValue.value)
+
+  if (auth?.session_id === undefined) {
+    cookies().delete(cookieName)
+    return false
+  }
+
+	return auth?.username
+}
+

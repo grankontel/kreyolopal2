@@ -1,6 +1,4 @@
-import { DictionaryEntry } from '@/lib/types'
-
-const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
+import { DictionaryEntry, apiServer } from '@/lib/types'
 
 export const getEntries = (w: string): Promise<DictionaryEntry[]> => {
   const word = w.trim()

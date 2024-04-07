@@ -2,9 +2,9 @@
 
 import { z } from 'zod'
 import { ActionState } from './contact-state'
+import { apiServer } from '@/lib/types'
 // export const runtime = 'edge'
 
-const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 const turnstileSecretKey = process.env.TURNSTILE_SECRETKEY || ''
 const verifyEndpoint = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
 

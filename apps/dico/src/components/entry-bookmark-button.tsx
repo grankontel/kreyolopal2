@@ -5,8 +5,6 @@ import { useDicoStore } from '@/store/dico-store'
 import { useEffect, useState } from 'react'
 import { useToast } from './ui/use-toast'
 
-const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
-
 export const EntryBookmarkButton = ({
   entry,
   bookmarked,

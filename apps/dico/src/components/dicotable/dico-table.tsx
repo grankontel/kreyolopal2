@@ -15,10 +15,10 @@ import { KreyolFlag, KreyolLanguage } from '@kreyolopal/react-ui'
 import DicoTableCell from '@/components/dicotable/dico-table-cell'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { fetchPersonalDico } from '@/queries/fetch-personal-dico'
-import { useDicoStore } from '@/store/dico-store'
 import Link from 'next/link'
 import { DicoTableSkeleton } from './dico-table-skeleton'
 import { TableError } from './table-error'
+import { useDashboard } from '@/app/dashboard/dashboard-provider'
 
 type WordRow = {
   id: string
@@ -83,26 +83,28 @@ function wordsToRow(words: DictionaryFullEntry[]): WordRow[] {
 
 const DicoTableHeaders = () => (
   <TableHeader>
-    <TableHead className="w-[150px]">Entr&eacute;e</TableHead>
-    <TableHead className="w-[150px]">Variations</TableHead>
-    <TableHead className="w-[26px]">Kr&eacute;y&ograve;l</TableHead>
-    <TableHead className="w-[150px]">Nature</TableHead>
-    <TableHead className="w-[150px]">D&eacute;finition</TableHead>
-    <TableHead className="w-[150px]">D&eacute;finition (FR)</TableHead>
-    <TableHead className="w-[150px]">Usage</TableHead>
-    <TableHead className="w-[150px]">Synonyme</TableHead>
-    <TableHead className="w-[150px]">Voir&nbsp;aussi</TableHead>
+    <tr>
+      <TableHead className="w-[150px]">Entr&eacute;e</TableHead>
+      <TableHead className="w-[150px]">Variations</TableHead>
+      <TableHead className="w-[26px]">Kr&eacute;y&ograve;l</TableHead>
+      <TableHead className="w-[150px]">Nature</TableHead>
+      <TableHead className="w-[150px]">D&eacute;finition</TableHead>
+      <TableHead className="w-[150px]">D&eacute;finition (FR)</TableHead>
+      <TableHead className="w-[150px]">Usage</TableHead>
+      <TableHead className="w-[150px]">Synonyme</TableHead>
+      <TableHead className="w-[150px]">Voir&nbsp;aussi</TableHead>
+    </tr>
   </TableHeader>
 )
 
 export const DicoTable = () => {
   const [page, setPage] = useState(0)
-  const user = useDicoStore((state) => state.user)
+  const dash = useDashboard()
 
   const { isPending, isError, error, data, isFetching, isPlaceholderData } = useQuery({
     queryKey: ['personalDico', page],
     queryFn: () => {
-      const token: string = (user as User).bearer || ''
+      const token: string = dash?.session_id || ''
       return fetchPersonalDico({ token, page })
     },
     placeholderData: keepPreviousData,

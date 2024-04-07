@@ -1,6 +1,4 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenuTrigger,
@@ -9,17 +7,12 @@ import {
   DropdownMenu,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
-import {  LogoutDialogContent } from '@/components/dashboard/logout-dialog'
+import { LogoutDialogContent } from '@/components/dashboard/logout-dialog'
 import { IconAttributes } from '@kreyolopal/react-ui'
-import { useQuery } from '@tanstack/react-query'
 import { useDicoStore } from '@/store/dico-store'
-import { ResponseError, User } from '@/lib/types'
-import { useEffect } from 'react'
-import { useCookies } from "react-cookie"
+import { ResponseError, User, apiServer, cookieName } from '@/lib/types'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
-
-const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
-const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
+import { cookies } from 'next/headers'
 
 const fetchUserInfo = async (token: string) => {
   return fetch(apiServer + '/api/me/', {
@@ -31,70 +24,56 @@ const fetchUserInfo = async (token: string) => {
     },
   }).then((res) => {
     if (!res.ok) {
+      cookies().delete(cookieName)
       throw new ResponseError('Could not fetch user info', res)
     }
     return res.json<User>()
   })
 }
 
-export const UserDropdown = ({ token }: { token: string }) => {
-  const { user, setUser, unsetUser } = useDicoStore()
-  const [cookies, setCookies, removeCookie] = useCookies()
-  const router = useRouter()
-
-  const { data, isError, error, isLoading } = useQuery<unknown, ResponseError, User, string[]>({
-    queryKey: ['me'],
-    queryFn: () => fetchUserInfo(token),
-
-  })
-
-  if (isError) {
-    console.log(error.response.status)
-    if (error.response.status == 403) {
-      removeCookie(cookieName)
-      unsetUser()
-      router.push('/login')
-    }
-
-  }
-  useEffect(() => {
+export const UserDropdown = async ({ token }: { token: string }) => {
+  try {
+    const data = await fetchUserInfo(token)
     if (data != null) {
       data.bearer = token
-      setUser(data)
+      console.log(data)
+      useDicoStore.setState({ user: data })
     }
-  }, [data])
+  } catch (error) {
+    console.log(error)
+    useDicoStore.setState({ user: null })
+    redirect('/login')
+  }
+  const user = useDicoStore.getState().user
 
-  return isLoading ? (
-    <>...</>
-  ) : (
+  return (
     <Dialog>
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
-          id="profile-menu"
-          size="icon"
-          variant="ghost"
-        >
-          <UserIcon className="h-4 w-4" />
-          <span className="sr-only">Toggle profile menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>
-          {user?.firstname} {user?.lastname}
-        </DropdownMenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
+            id="profile-menu"
+            size="icon"
+            variant="ghost"
+          >
+            <UserIcon className="h-4 w-4" />
+            <span className="sr-only">Toggle profile menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem>
+            {user?.firstname} {user?.lastname}
+          </DropdownMenuItem>
 
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DialogTrigger asChild>
-        <DropdownMenuItem>Logout</DropdownMenuItem>
-        </DialogTrigger>
-
-      </DropdownMenuContent>
-    </DropdownMenu>
-    <LogoutDialogContent />
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DialogTrigger asChild>
+            <DropdownMenuItem>Logout</DropdownMenuItem>
+          </DialogTrigger>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <LogoutDialogContent />
     </Dialog>
   )
 }

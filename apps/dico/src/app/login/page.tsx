@@ -8,6 +8,7 @@ export default function LoginPage() {
         <div className="m-4 px-4 py-12">
           <Image
             src="/images/logo_name-transparent.svg"
+            priority
             width={218}
             height={60}
             alt="Zakari Brand"

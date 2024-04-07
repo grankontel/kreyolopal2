@@ -2,13 +2,10 @@
 
 import { useRouter } from 'next/navigation'
 import { useCookies } from 'react-cookie'
-import { ResponseError, User } from '@/lib/types'
+import { ResponseError, User, cookieName } from '@/lib/types'
 import { useDicoStore } from '@/store/dico-store'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { parseCookie } from '@/lib/utils'
-
-const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
-const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
 interface IUserCredentials {
   username: string
@@ -16,7 +13,7 @@ interface IUserCredentials {
 }
 
 const fetchLogin = (content: IUserCredentials): Promise<User> => {
-  return fetch(apiServer + '/api/auth/login', {
+  return fetch('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({
       username: content.username,

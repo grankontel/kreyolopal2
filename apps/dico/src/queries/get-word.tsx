@@ -1,12 +1,9 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import { DictionaryEntry, DictionaryFullEntry, UserDictionaryEntry } from '@/lib/types'
+import { DictionaryEntry, UserDictionaryEntry, apiServer, cookieName } from '@/lib/types'
 import { parseCookie } from '@/lib/utils'
 import { KreyolLanguage } from '@kreyolopal/react-ui'
-
-const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
-const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 
 export async function getWord(
   kreyol: string,
@@ -49,7 +46,7 @@ export async function getWord(
       entry: data,
       kreyol,
     }
-/*
+    /*
     if (user_id) {
       const token = session_id
       const result2 = await fetch(`${apiServer}/api/me/dictionary/${encodeURI(entry)}`, {

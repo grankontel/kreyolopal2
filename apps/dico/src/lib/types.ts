@@ -1,5 +1,8 @@
 import { KreyolLanguage } from '@kreyolopal/react-ui'
 
+export const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
+export const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
+
 export type MeaningLanguage = KreyolLanguage | 'fr'
 
 type Definitions = {
@@ -52,6 +55,7 @@ export class ResponseError extends Error {
 }
 
 export type User = {
+  username: string
   cookie: string
   firstname: string
   lastname: string

@@ -4,10 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useDicoStore } from "@/store/dico-store"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useCookies } from "react-cookie"
-
-const apiServer = process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
-const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
-
+import { cookieName } from '@/lib/types'
 
 const fetchLogout = async (token: string) => {
   const myHeaders = new Headers()
@@ -15,7 +12,7 @@ const fetchLogout = async (token: string) => {
 
   myHeaders.set('Authorization', `Bearer ${token}`)
 
-  return fetch(apiServer + `/api/auth/logout`, {
+  return fetch( `/api/auth/logout`, {
     method: 'POST',
     //    credentials: 'same-origin',
     headers: myHeaders,

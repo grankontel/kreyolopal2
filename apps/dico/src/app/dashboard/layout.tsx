@@ -15,7 +15,7 @@ import { parseCookie } from '@/lib/utils'
 import { UserDropdown } from '@/components/dashboard/user-dropdown'
 import { LayoutFooter } from '@/components/layout-footer'
 import { LogoutDialog } from '@/components/dashboard/logout-dialog'
-import { isLoggedIn } from './is-logged-in'
+import { DashboardProvider } from './dashboard-provider'
 
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
@@ -24,15 +24,29 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const token = isLoggedIn()
-  if (!token) {
-    redirect('/login')
+  const getAuthValue = () => {
+    const cookieValue = cookies().get(cookieName)
+    if (cookieValue === undefined) {
+      return false
+    }
+    const auth = parseCookie(cookieValue.value)
+
+    if (auth?.session_id === undefined) {
+      cookies().delete(cookieName)
+      return false
+    }
+    console.log('***** is logged in  *****')
+    return auth
   }
 
+  const auth = getAuthValue()
+  if (!auth) {
+    redirect('/login')
+  }
   return (
     <div className="grid h-screen w-full lg:grid-cols-[280px_1fr]">
       <Sidebar>
-        <SideMenu />
+        <SideMenu username={auth.username} token={auth.session_id} />
       </Sidebar>
       <div className="flex flex-col">
         <header className="flex h-14 items-center justify-between px-6 bg-gray-100/40 dark:bg-gray-800/40">
@@ -44,12 +58,14 @@ export default function DashboardLayout({
             <DashboardPath />
           </div>
           <div className="flex items-center gap-4">
-            <UserDropdown token={token} />
+            <UserDropdown token={auth.session_id} />
             <ModeToggle />
             <LogoutDialog trigger={<Button variant="logo">Logout</Button>} />
           </div>
         </header>
-        {children}
+        <DashboardProvider init={{ ...auth}}>
+          {children}
+          </DashboardProvider>
         <LayoutFooter />
       </div>
     </div>
