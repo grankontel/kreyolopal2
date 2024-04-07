@@ -1,4 +1,5 @@
 import { createAdaptorServer } from '@hono/node-server'
+import { cors } from 'hono/cors'
 import { HTTPException } from 'hono/http-exception'
 import { MongoClient } from 'mongodb'
 import config from './config'
@@ -15,6 +16,7 @@ const port: number = Number(config.app.port) || 3000
 
 const app = createRouter()
 app.use('*', logger())
+app.use('*', cors())
 // app.use('*', csrfMiddleware())
 app.use('*', sessionMiddleware())
 app.use('/api/admin/*', adminMiddleware())

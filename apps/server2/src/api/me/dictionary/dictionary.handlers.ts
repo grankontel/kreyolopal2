@@ -6,13 +6,13 @@ import { createHttpException } from '#utils/createHttpException'
 import { WordsRepository } from '#lib/words.repository'
 import { HTTPException } from 'hono/http-exception'
 
-function formatDate(date) {
+function formatDate(date: string | number | Date): string | null {
   if (date === null) return null
 
-  let d = new Date(date),
-    month = '' + (d.getMonth() + 1),
-    day = '' + d.getDate(),
-    year = d.getFullYear()
+  const d = new Date(date)
+  let month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate()
+  const year = d.getFullYear()
 
   if (month.length < 2) month = '0' + month
   if (day.length < 2) day = '0' + day
@@ -51,6 +51,7 @@ const getWord = async function (c: Context) {
     const coll = client.db(config.mongodb.db).collection('personal')
     const cursor = coll.find(filter, { projection })
     const result = await cursor.toArray()
+    cursor.close()
     logger.debug(JSON.stringify(result?.[0]))
     //client.close()
 
@@ -216,6 +217,7 @@ const getWordId = (c: Context, client: MongoClient, logger: winston.Logger) =>
       // const client = getClient()
       const cursor = coll.find(filter, { projection })
       const result = await cursor.toArray()
+      cursor.close()
 
       if (result?.length === 0) {
         reject(
@@ -412,6 +414,7 @@ const listWords = async function (c: Context) {
       .skip(offset)
       .limit(pagesize)
     const result = await cursor.toArray()
+    cursor.close()
 
     const data = result?.map((item) => {
       return {
@@ -427,7 +430,7 @@ const listWords = async function (c: Context) {
         .db(config.mongodb.db)
         .collection('personal')
         .countDocuments(filter)
-      var endRange = Math.min(nb, offset + limit)
+      const endRange = Math.min(nb, offset + limit)
       c.res.headers.append('Cache-Control', 'private, maxage=86400')
       c.res.headers.append(
         'Access-Control-Expose-Headers',

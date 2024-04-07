@@ -30,7 +30,8 @@ const getUserInfo = async function (c: Context) {
     'SELECT username, is_admin, firstname, lastname, birth_date FROM auth_user WHERE id = $1',
     [user.id]
   )
-  return c.json(result.rows[0], 200)
+  const response = result.rows[0]
+  return c.json(response, 200)
 }
 
 export default { getUserInfo }
