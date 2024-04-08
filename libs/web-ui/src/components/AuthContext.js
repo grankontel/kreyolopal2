@@ -9,14 +9,27 @@ function parseCookie(cookie) {
   if (cookie === null) return null
   const [data, digest] = cookie.split('.')
 
-  const info = JSON.parse(Buffer.from(data, 'base64').toString('ascii'))
-  return info
+  try {
+    const info = JSON.parse(Buffer.from(data, 'base64').toString('ascii'))
+    return info
+  } catch (error) {
+    return null
+  }
 }
 
 export const AuthProvider = ({ cookieName, children }) => {
   const [cookies, setCookies, removeCookie] = useCookies()
   const [session, setSession] = useState(null)
 
+  const closeSession = () => {
+    console.log('session closed')
+    removeCookie(cookieName)
+    setSession(null)
+  }
+
+  const LoggedIn = (data) => {
+    setCookies(cookieName, data.cookie)
+  }
   useEffect(() => {
     const x = parseCookie(cookies[cookieName] ?? null)
     if (x === null) return
@@ -30,7 +43,7 @@ export const AuthProvider = ({ cookieName, children }) => {
     setSession(x)
   }, [])
   return (
-    <AuthContext.Provider value={{ session, setSession }}>
+    <AuthContext.Provider value={{ session, closeSession, LoggedIn }}>
       {children}
     </AuthContext.Provider>
   )

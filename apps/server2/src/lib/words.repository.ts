@@ -19,6 +19,20 @@ export class WordsRepository {
     return WordsRepository.instance
   }
 
+  public async Exists(word: string): Promise<boolean> {
+    const coll = WordsRepository.client
+      .db(config.mongodb.db)
+      .collection('words')
+    return coll
+      .countDocuments({
+        entry: word,
+      })
+      .then((val) => {
+        WordsRepository.logger.debug(val)
+        return val != 0
+      })
+  }
+
   public async GetOne(word: string, mapCallback) {
     WordsRepository.logger.info(`WordsRepository.GetOne ${word}`)
     try {
@@ -37,7 +51,7 @@ export class WordsRepository {
         .collection('words')
       const cursor = coll.find(filter, { projection })
       const result = await cursor.toArray()
-
+      cursor.close()
       //client.close()
 
       const data = result?.map(mapCallback)

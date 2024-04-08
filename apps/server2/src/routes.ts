@@ -4,9 +4,11 @@ import dicoRoutes from './api/dictionary'
 import wordsRoutes from './api/words'
 import spellRoutes from './api/spellcheck'
 import myDicoRoutes from './api/me/dictionary'
+import meRoutes from './api/me'
 import contactRoutes from './api/contact'
 import healthRoutes from './api/health'
 import verifyRoutes from './api/verify'
+import lexiconsRoutes from './api/lexicons'
 
 import { AppRouter } from '#services/hono'
 import { winston_logger as logger } from '#services/winston_logger'
@@ -21,7 +23,9 @@ function setRoutes(app: AppRouter) {
   app.route('/api/dictionary', dicoRoutes)
   app.route('/api/admin/words', wordsRoutes)
   app.route('/api/spellcheck', spellRoutes)
+  app.route('/api/lexicons', lexiconsRoutes)
 
+  app.route('/api/me', meRoutes)
   app.route('/api/me/dictionary', myDicoRoutes)
   app.route('/api/contact', contactRoutes)
   app.route('/api/verify', verifyRoutes)
