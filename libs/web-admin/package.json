@@ -6,7 +6,7 @@
     "dist"
   ],
   "main": "./dist/main.js",
-  "types": "dist/index.d.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "webpack --mode development -w",
     "build": "webpack --mode production",
