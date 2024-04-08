@@ -8,6 +8,12 @@ const paramUsername = z.object({
   username: z.string().trim().min(3),
 })
 
+const paramLexiconId = z
+  .object({
+    id: z.string().uuid()
+  })
+  .required()
+
 const paramSlug = z
   .object({
     username: z.string().trim().min(3),
@@ -48,6 +54,13 @@ routes.post(
   '/',
   zValidator('json', postLexiconSchema, sendBadRequest),
   handlers.addLexicon
+)
+
+routes.put(
+  '/:id',
+  zValidator('param', paramLexiconId, sendBadRequest),
+  zValidator('json', postLexiconSchema, sendBadRequest),
+  handlers.editLexicon
 )
 
 routes.get(

@@ -79,8 +79,10 @@ function getEntry(
       },
     },
   ]
-  return new Promise<LexiconEntry>( (resolve, reject) => {
-    const coll = client.db(config.mongodb.db).collection(MongoCollection.lexicons)
+  return new Promise<LexiconEntry>((resolve, reject) => {
+    const coll = client
+      .db(config.mongodb.db)
+      .collection(MongoCollection.lexicons)
     const cursor = coll.aggregate<LexiconEntry>(agg)
     cursor.toArray().then((result) => {
       cursor.close()
@@ -177,6 +179,53 @@ const getAllLexicons = async function (c: Context) {
       isMine ? res.rows : res.rows.filter((item) => item.is_private == false)
     ).map((item) => ({ ...item, path: `/lexicons/${username}/${item.slug}` }))
     return c.json(lexicons, 200)
+  } catch (_error) {
+    logger.error('getLexicon Exception', _error)
+    return c.json({ status: 'error', error: [_error] }, 500)
+  } finally {
+    client.release()
+  }
+}
+
+const editLexicon = async function (c: Context) {
+  const logger = c.get('logger')
+  const pgPool = c.get('pgPool')
+  //const client = c.get('mongodb')
+  const user = c.get('user')
+
+  const { id } = c.req.param()
+  const { name, description, slug, is_private } = c.req.valid('json')
+
+  logger.info(`editLexicon  ${id}`)
+  if (!user) {
+    logger.debug('user not logged in')
+    return c.json({ error: 'You are not logged in.' }, 403)
+  }
+
+  const client: PoolClient = await pgPool.connect()
+  try {
+    const text = 'SELECT id, owner FROM lexicons WHERE id = $1'
+    const values = [id]
+    const res = await client.query(text, values)
+    if (res.rows.length === 0) {
+      return c.json({ error: 'Not Found' }, 404)
+    }
+
+    if (res.rows[0].owner != user.id) {
+      return c.json({ error: 'Forbidden' }, 403)
+    }
+
+    const up_text = `UPDATE lexicons SET name = $1, description = $2, slug= $3, is_private = $4
+    WHERE id = $5 RETURNING id`
+    const res2 = await client.query(up_text, [
+      name,
+      description,
+      slug,
+      is_private,
+      id,
+    ])
+
+    return c.json({ id: res2.rows[0].id }, 200)
   } catch (_error) {
     logger.error('getLexicon Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)
@@ -367,7 +416,9 @@ const addDefinitions = async function (c: Context) {
     if (ids.length === 0) return c.json({ error: 'Invalid definitions' }, 400)
 
     // check if entry is in lexicons
-    const lexColl = mongo.db(config.mongodb.db).collection(MongoCollection.lexicons)
+    const lexColl = mongo
+      .db(config.mongodb.db)
+      .collection(MongoCollection.lexicons)
     const findOptions = { projection: { _id: 0 } }
     const lexEntry: LexiconEntry | null = await lexColl
       .findOne({ entry: entry }, findOptions)
@@ -441,7 +492,9 @@ const deleteLexicon = async (c: Context) => {
     const lexicon = res.rows[0]
     logger.info('found lexicon')
 
-    const lexColl = mongo.db(config.mongodb.db).collection(MongoCollection.lexicons)
+    const lexColl = mongo
+      .db(config.mongodb.db)
+      .collection(MongoCollection.lexicons)
     await lexColl.update({}, { $pull: { lexicons: lexicon.id } })
 
     return c.json({}, 200)
@@ -458,4 +511,5 @@ export default {
   getLexiconEntry,
   addDefinitions,
   deleteLexicon,
+  editLexicon,
 }
