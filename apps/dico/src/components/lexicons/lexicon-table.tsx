@@ -14,6 +14,8 @@ import { Switch } from '@/components/ui/switch'
 import { useDicoStore } from '@/store/dico-store'
 import Link from 'next/link'
 import { IconAttributes } from '@kreyolopal/react-ui'
+import FeatherIcon from '../FeatherIcon'
+import { EditLexiconDialog } from './edit-lexicon-dialog'
 
 export const LexiconTable = () => {
   const { lexicons } = useDicoStore()
@@ -27,7 +29,7 @@ export const LexiconTable = () => {
           <TableHead>Description</TableHead>
           <TableHead>Slug</TableHead>
           <TableHead>Privé ?</TableHead>
-          <TableHead className="w-12">Actions</TableHead>
+          <TableHead className="w-24">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -45,10 +47,17 @@ export const LexiconTable = () => {
               <TableCell>
                 <Switch checked={lexicon.is_private} disabled />
               </TableCell>
-              <TableCell className="w-12">
+              <TableCell className="w-24 grid gap-1 grid-cols-2">
+                <EditLexiconDialog
+                  trigger={
+                    <Button size="icon" variant="outline">
+                      <FeatherIcon iconName="edit" />
+                    </Button>
+                  }
+                  lexicon={lexicon}
+                />
                 <Button size="icon" variant="outline">
-                  <MoreHorizontalIcon className="h-4 w-4" />
-                  <span className="sr-only">Actions</span>
+                  <FeatherIcon iconName="trash-2" />
                 </Button>
               </TableCell>
             </TableRow>

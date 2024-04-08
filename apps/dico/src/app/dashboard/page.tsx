@@ -12,12 +12,12 @@ export const runtime = 'edge'
 
 export default function Home() {
   return (
-    <MainPanel title="Produits">
+    <MainPanel title="Mon dictionnaire">
       <Card>
         <CardHeader>
-          <CardTitle>Product Overview</CardTitle>
+          <CardTitle>Mon dictionnaire</CardTitle>
           <CardDescription>
-            View and manage all your products from a single place
+           Le vocabulaire que j&apos;ai sélectionné
           </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
