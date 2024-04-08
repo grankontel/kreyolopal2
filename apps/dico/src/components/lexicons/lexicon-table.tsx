@@ -1,8 +1,5 @@
 'use client'
-import MainPanel from '@/components/dashboard/main-panel'
-import { isLoggedIn } from '../is-logged-in'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
+
 import { Button } from '@/components/ui/button'
 import {
   TableHead,
@@ -13,9 +10,10 @@ import {
   Table,
 } from '@/components/ui/table'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Switch } from '@/components/ui/switch'
 import { useDicoStore } from '@/store/dico-store'
 import Link from 'next/link'
-import { Switch } from '../ui/switch'
+import { IconAttributes } from '@kreyolopal/react-ui'
 
 export const LexiconTable = () => {
   const { lexicons } = useDicoStore()
@@ -61,7 +59,7 @@ export const LexiconTable = () => {
   )
 }
 
-function MoreHorizontalIcon(props) {
+function MoreHorizontalIcon(props: IconAttributes) {
   return (
     <svg
       {...props}

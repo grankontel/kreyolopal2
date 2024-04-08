@@ -3,7 +3,7 @@ ansistrano_deploy_from: "{{ playbook_dir }}/../build/"
 ansistrano_deploy_to: "/home/{{ user }}/{{ domain }}"
 ansistrano_deploy_via: rsync
 ansistrano_keep_releases: 3
-ansistrano_shared_paths: ["data", "server/dico"]
+ansistrano_shared_paths: ["data", "server/dico", "server2/dico"]
 ansistrano_shared_files: [".env", "docker-compose.yml", "server/.env","server2/.env", "admin/.env"]
 
 ansistrano_before_setup_tasks_file: "{{ playbook_dir }}/tasks/before-setup.yml"
