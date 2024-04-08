@@ -15,7 +15,7 @@ function send(message: any, sourceName: string | undefined) {
       }
 
       logger.info(`email ${sourceName} sent`)
-      resolve(new Error(result.data))
+      resolve(result.data)
     })
   })
 }

@@ -19,7 +19,7 @@
 
     - name: IMPORT | Copy import data
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/../import/var/entries.json"
+        src: "{{ playbook_dir }}/../import/var/entries2.json"
         dest: ~/import/var/entries.json
 
     - name: IMPORT | ensure docker is up
@@ -28,25 +28,122 @@
         state: present
 
     - name: IMPORT | Import Json File
-      command: "mongoimport -u zakari -p {{ mongodb_password }} --drop --db zakari --collection words --file ~/import/var/entries.json --jsonArray"
+      command: "mongoimport -u zakari -p {{ mongodb_password }} --drop --db zakari --collection reference --file ~/import/var/entries.json --jsonArray"
 
     - name: IMPORT | Create multiple indexes
       community.mongodb.mongodb_index:
         login_user: root
         login_password: "{{ pwd_mongo }}"
         indexes:
+
+# db.reference.createIndex(
+#    { entry: 1 },
+#    { unique: true, partialFilterExpression: { docType: "entry" } }
+# )
           - database: zakari
-            collection: words
+            collection: reference
+            keys:
+              entry: 1
+            options:
+              name: entry_1
+              unique: true
+              partialFilterExpression:
+                docType: entry
+            state: present
+
+# db.reference.createIndex(
+#    { entry: 1, docType: -1, kreyol: 1 },
+#    { sparse: true, name: 'search' }
+# )
+          - database: zakari
+            collection: reference
+            keys:
+              entry: 1
+              docType: -1
+              kreyol: 1
+            options:
+              name: search
+              sparse: true
+            state: present
+
+# db.reference.createIndex(
+#    { variations: 1 },
+#    { name: 'suggest', partialFilterExpression: { docType: "entry" } }
+# )
+
+          - database: zakari
+            collection: reference
+            keys:
+              variations: 1
+            options:
+              name: suggest
+              partialFilterExpression:
+                docType: entry
+            state: present
+
+# db.reference.createIndex(
+#    { definition_id: 1 },
+#    { sparse: true, name: 'definition' }
+# )
+          - database: zakari
+            collection: reference
+            keys:
+              definition_id: 1
+            options:
+              name: definition
+              sparse: true
+            state: present
+            
+# db.lexicons.createIndex(
+#    { entry: 1  },
+#    { unique: true}
+# )
+          - database: zakari
+            collection: lexicons
             keys:
               entry: 1
             options:
               name: entry_1
               unique: true
             state: present
+
+# db.lexicons.createIndex(
+#    { entry: 1, lexicons: 1 },
+#    { sparse: true, name: 'search' }
+# )
           - database: zakari
-            collection: words
+            collection: lexicons
             keys:
-              variations: 1
+              entry: 1
+              lexicons: 1
             options:
-              name: variations_1
+              name: search
+              sparse: true
             state: present
+
+# db.personal.createIndex(
+#    { user_id: 1  },
+#    { name: ix_user_id}
+# )
+          - database: zakari
+            collection: personal
+            keys:
+              user_id: 1
+            options:
+              name: ix_user_id
+            state: present
+
+# db.personal.createIndex(
+#    { user_id: 1, entry: 1  },
+#    { unique: true}
+# )
+          - database: zakari
+            collection: personal
+            keys:
+              user_id: 1
+              entry: 1
+            options:
+              name: ix_user_entry
+              unique: true
+            state: present
+

@@ -1,0 +1,39 @@
+{
+  "name": "@kreyolopal/react-ui",
+  "version": "0.1.0",
+  "description": "Shared react components",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "rm -rf dist && tsc && node esbuild.js --watch",
+    "build": "rm -rf dist && node esbuild.js && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react",
+    "kreyol",
+    "kreyolopal"
+  ],
+  "author": "Thierry Malo",
+  "license": "ISC",
+  "dependencies": {
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "lodash.debounce": "^4.0.8",
+    "prop-types": "^15.8.1",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "peerDependencies": {
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@types/lodash.debounce": "^4.0.9",
+    "esbuild": "^0.20.2",
+    "esbuild-node-externals": "^1.13.0",
+    "esbuild-sass-plugin": "^3.2.0"
+  }
+}

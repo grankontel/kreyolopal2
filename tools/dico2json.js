@@ -96,7 +96,7 @@ function cleanNature(nat) {
   if (natures.includes(nat)) return nat
 
   if (['vebre', 'verb'].includes(nat)) return 'verbe'
-  if (['noun', 'nm', 'nomn'].includes(nat)) return 'nom'
+  if (['noun', 'nm', 'nomn', 'non'].includes(nat)) return 'nom'
   if (['adjverbe'].includes(nat)) return 'adverbe'
   if (['adjective', 'adejctif', 'advectif', 'adjecif'].includes(nat))
     return 'adjectif'

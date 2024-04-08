@@ -1,19 +1,9 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { Button, Navbar } from 'react-bulma-components'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
-
-const useToggle = (initialState = false) => {
-  // Initialize the state
-  const [state, setState] = useState(initialState)
-
-  // Define and memorize toggler function in case we pass down the comopnent,
-  // This function change the boolean value to it's opposite value
-  const toggle = useCallback(() => setState((state) => !state), [])
-
-  return [state, toggle]
-}
+import { useToggle } from '../libs/hooks'
 
 export const TopNavbar = ({ links, CustomItems }) => {
   const [mobileOpen, openMobileMenu] = useToggle(false)
