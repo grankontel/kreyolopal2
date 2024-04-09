@@ -497,10 +497,15 @@ const deleteLexicon = async (c: Context) => {
       .collection(MongoCollection.lexicons)
     await lexColl.update({}, { $pull: { lexicons: lexicon.id } })
 
+    // delete from DATABASE
+    await client.query('DELETE FROM lexicons WHERE id = $1', [lexicon.id])
+
     return c.json({}, 200)
   } catch (_error) {
     logger.error('getLexicon Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)
+  } finally {
+    client.release()
   }
 }
 
