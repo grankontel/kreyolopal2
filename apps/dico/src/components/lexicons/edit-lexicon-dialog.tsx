@@ -11,8 +11,8 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog'
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Lexicon } from '@/lib/lexicons/types'
 import { useState } from 'react'
@@ -22,7 +22,13 @@ import { useDashboard } from '@/app/dashboard/dashboard-provider'
 
 var slugify = require('slugify')
 
-export function EditLexiconDialog({ trigger, lexicon }: { trigger: React.ReactNode, lexicon: Lexicon }) {
+export function EditLexiconDialog({
+  trigger,
+  lexicon,
+}: {
+  trigger: React.ReactNode
+  lexicon: Lexicon
+}) {
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -41,7 +47,12 @@ export const EditLexiconDialogContent = ({ lexicon }: { lexicon: Lexicon }) => {
   const queryClient = useQueryClient()
 
   const editLexiconMutation = useMutation({
-    mutationFn: () => putLexicon(lexicon.id, { name, slug, description: desc, is_private: isPrivate }, dash?.session_id),
+    mutationFn: () =>
+      putLexicon(
+        lexicon.id,
+        { name, slug, description: desc, is_private: isPrivate },
+        dash?.session_id
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['me', 'lexicons'] })
     },
@@ -61,9 +72,7 @@ export const EditLexiconDialogContent = ({ lexicon }: { lexicon: Lexicon }) => {
   }
 
   const resetSlug = () => {
-    if (slug.length === 0)
-      setSlug(slugify(name.toLowerCase()))
-
+    if (slug.length === 0) setSlug(slugify(name.toLowerCase()))
   }
 
   const handleSubmit = (e: any) => {
@@ -82,26 +91,41 @@ export const EditLexiconDialogContent = ({ lexicon }: { lexicon: Lexicon }) => {
             <Label htmlFor="name" className="text-right">
               Nom
             </Label>
-            <Input id="name" value={name} onChange={(e) => changeName(e.target.value)} className="col-span-3" />
+            <Input
+              id="name"
+              value={name}
+              onChange={(e) => changeName(e.target.value)}
+              className="col-span-3"
+            />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="slug" className="text-right">
               Slug
             </Label>
-            <Input id="slug" value={slug} onChange={(e) => changeSlug(e.target.value)} onBlur={() => resetSlug()} className="col-span-3" />
+            <Input
+              id="slug"
+              value={slug}
+              onChange={(e) => changeSlug(e.target.value)}
+              onBlur={() => resetSlug()}
+              className="col-span-3"
+            />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="description" className="text-right">
               Description
             </Label>
-            <Input id="description" value={desc} onChange={(e) => setDesc(e.target.value)} className="col-span-3" />
+            <Input
+              id="description"
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
+              className="col-span-3"
+            />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="is_private" className="text-right">
               Privé ?
             </Label>
             <Switch id="is_private" checked={isPrivate} onCheckedChange={setPrivate} />
-
           </div>
         </form>
       </div>

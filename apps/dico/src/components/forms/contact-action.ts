@@ -38,7 +38,9 @@ export default async function postContact(
   if (!validatedFields.success) {
     return Promise.resolve({
       status: 'error',
-      errors: Object.entries(validatedFields.error.flatten().fieldErrors).map((item)=>(`${item[0]}: ${item[1].join(',')}`)),
+      errors: Object.entries(validatedFields.error.flatten().fieldErrors).map(
+        (item) => `${item[0]}: ${item[1].join(',')}`
+      ),
     })
   }
 

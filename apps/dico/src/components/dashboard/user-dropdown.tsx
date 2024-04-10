@@ -22,7 +22,7 @@ const fetchUserInfo = async (token: string) => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    next: { revalidate: 3600 }
+    next: { revalidate: 3600 },
   }).then((res) => {
     if (!res.ok) {
       cookies().delete(cookieName)

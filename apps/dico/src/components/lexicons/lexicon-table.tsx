@@ -54,7 +54,11 @@ export const LexiconTable = () => {
                 </TableCell>
                 <TableCell className="w-24 grid gap-1 grid-cols-2">
                   <DialogTrigger asChild>
-                    <Button size="icon" variant="outline" onClick={() => setCurrentLexicon(lexicon)}>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => setCurrentLexicon(lexicon)}
+                    >
                       <FeatherIcon iconName="edit" />
                     </Button>
                   </DialogTrigger>
@@ -65,7 +69,11 @@ export const LexiconTable = () => {
               </TableRow>
             )
           })}
-          { currentLexicon === undefined ? ('') : (<EditLexiconDialogContent lexicon={currentLexicon} />)}
+          {currentLexicon === undefined ? (
+            ''
+          ) : (
+            <EditLexiconDialogContent lexicon={currentLexicon} />
+          )}
         </Dialog>
       </TableBody>
     </Table>

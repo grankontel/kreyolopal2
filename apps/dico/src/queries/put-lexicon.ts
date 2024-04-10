@@ -12,10 +12,8 @@ export const putLexicon = async (
   lexicon: LexiconEditPayload,
   token: string | undefined
 ): Promise<unknown> => {
-
   console.log(`putLexicon ${token}`)
-  if (token === undefined)
-    return Promise.resolve()
+  if (token === undefined) return Promise.resolve()
 
   const myHeaders = new Headers()
   myHeaders.set('Content-Type', 'application/json')
@@ -25,7 +23,7 @@ export const putLexicon = async (
     method: 'PUT',
     //    credentials: 'same-origin',
     headers: myHeaders,
-    body: JSON.stringify(lexicon)
+    body: JSON.stringify(lexicon),
   }).then(async (result) => {
     if (!result.ok) throw new ResponseError('Failed to update lexicon', result)
 

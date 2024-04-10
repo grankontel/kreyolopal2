@@ -16,9 +16,7 @@ export default function Home() {
       <Card>
         <CardHeader>
           <CardTitle>Mon dictionnaire</CardTitle>
-          <CardDescription>
-           Le vocabulaire que j&apos;ai sélectionné
-          </CardDescription>
+          <CardDescription>Le vocabulaire que j&apos;ai sélectionné</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-auto w-full">
