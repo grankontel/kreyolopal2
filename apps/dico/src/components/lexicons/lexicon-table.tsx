@@ -15,10 +15,14 @@ import { useDicoStore } from '@/store/dico-store'
 import Link from 'next/link'
 import { IconAttributes } from '@kreyolopal/react-ui'
 import FeatherIcon from '../FeatherIcon'
-import { EditLexiconDialog } from './edit-lexicon-dialog'
+import { EditLexiconDialogContent } from './edit-lexicon-dialog'
+import { useState } from 'react'
+import { Lexicon } from '@/lib/lexicons/types'
+import { Dialog, DialogTrigger } from '../ui/dialog'
 
 export const LexiconTable = () => {
   const { lexicons } = useDicoStore()
+  const [currentLexicon, setCurrentLexicon] = useState<Lexicon | undefined>(undefined)
 
   return (
     <Table>
@@ -33,36 +37,36 @@ export const LexiconTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {lexicons.map((lexicon) => {
-          return (
-            <TableRow key={lexicon.id}>
-              <TableCell className="w-12">
-                <Checkbox />
-              </TableCell>
-              <TableCell>{lexicon.name}</TableCell>
-              <TableCell>{lexicon.description}</TableCell>
-              <TableCell>
-                <Link href={`/dashboard${lexicon.path}`}>{lexicon.slug}</Link>
-              </TableCell>
-              <TableCell>
-                <Switch checked={lexicon.is_private} disabled />
-              </TableCell>
-              <TableCell className="w-24 grid gap-1 grid-cols-2">
-                <EditLexiconDialog
-                  trigger={
-                    <Button size="icon" variant="outline">
+        <Dialog>
+          {lexicons.map((lexicon) => {
+            return (
+              <TableRow key={lexicon.id}>
+                <TableCell className="w-12">
+                  <Checkbox />
+                </TableCell>
+                <TableCell>{lexicon.name}</TableCell>
+                <TableCell>{lexicon.description}</TableCell>
+                <TableCell>
+                  <Link href={`/dashboard${lexicon.path}`}>{lexicon.slug}</Link>
+                </TableCell>
+                <TableCell>
+                  <Switch checked={lexicon.is_private} disabled />
+                </TableCell>
+                <TableCell className="w-24 grid gap-1 grid-cols-2">
+                  <DialogTrigger asChild>
+                    <Button size="icon" variant="outline" onClick={() => setCurrentLexicon(lexicon)}>
                       <FeatherIcon iconName="edit" />
                     </Button>
-                  }
-                  lexicon={lexicon}
-                />
-                <Button size="icon" variant="outline">
-                  <FeatherIcon iconName="trash-2" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          )
-        })}
+                  </DialogTrigger>
+                  <Button size="icon" variant="outline">
+                    <FeatherIcon iconName="trash-2" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            )
+          })}
+          { currentLexicon === undefined ? ('') : (<EditLexiconDialogContent lexicon={currentLexicon} />)}
+        </Dialog>
       </TableBody>
     </Table>
   )

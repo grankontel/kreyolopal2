@@ -16,9 +16,13 @@ import { Label } from "@/components/ui/label"
 import { Switch } from '@/components/ui/switch'
 import { Lexicon } from '@/lib/lexicons/types'
 import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { putLexicon } from '@/queries/put-lexicon'
+import { useDashboard } from '@/app/dashboard/dashboard-provider'
+
 var slugify = require('slugify')
 
-export function EditLexiconDialog({ trigger, lexicon }: { trigger: React.ReactNode, lexicon:Lexicon }) {
+export function EditLexiconDialog({ trigger, lexicon }: { trigger: React.ReactNode, lexicon: Lexicon }) {
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -27,31 +31,45 @@ export function EditLexiconDialog({ trigger, lexicon }: { trigger: React.ReactNo
   )
 }
 
-export const EditLexiconDialogContent = ({lexicon}: {lexicon: Lexicon}) => {
-    const [name, setName] = useState(lexicon.name)
-    const [slug, setSlug] = useState(lexicon.slug)
-    const [desc, setDesc] = useState(lexicon.description)
-    const [isPrivate, setPrivate] = useState(lexicon.is_private)
-    const [hasCustomSlug, setCustomSlug] = useState(false)
+export const EditLexiconDialogContent = ({ lexicon }: { lexicon: Lexicon }) => {
+  const [name, setName] = useState(lexicon.name)
+  const [slug, setSlug] = useState(lexicon.slug)
+  const [desc, setDesc] = useState(lexicon.description)
+  const [isPrivate, setPrivate] = useState(lexicon.is_private)
+  const [hasCustomSlug, setCustomSlug] = useState(false)
+  const dash = useDashboard()
+  const queryClient = useQueryClient()
 
-    const changeName = (value:string) =>{
-      setName(value)
-      if (!hasCustomSlug) {
-        setSlug(slugify(value.toLowerCase()))
-      }
+  const editLexiconMutation = useMutation({
+    mutationFn: () => putLexicon(lexicon.id, { name, slug, description: desc, is_private: isPrivate }, dash?.session_id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['me', 'lexicons'] })
+    },
+  })
+
+  const changeName = (value: string) => {
+    setName(value)
+    if (!hasCustomSlug) {
+      setSlug(slugify(value.toLowerCase()))
     }
+  }
 
-    const changeSlug = (value:string) =>{
-      const rvalue = slugify(value.toLowerCase())
-      setSlug(rvalue)
-      setCustomSlug(rvalue.length > 0)
-    }
+  const changeSlug = (value: string) => {
+    const rvalue = slugify(value.toLowerCase())
+    setSlug(rvalue)
+    setCustomSlug(rvalue.length > 0)
+  }
 
-    const resetSlug = () => {
-      if (slug.length === 0)
-        setSlug(slugify(name.toLowerCase()))
+  const resetSlug = () => {
+    if (slug.length === 0)
+      setSlug(slugify(name.toLowerCase()))
 
-    }
+  }
+
+  const handleSubmit = (e: any) => {
+    editLexiconMutation.mutate()
+  }
+
   return (
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
@@ -59,37 +77,41 @@ export const EditLexiconDialogContent = ({lexicon}: {lexicon: Lexicon}) => {
         <DialogDescription>Etes vous sûr de vouloir vous déconnecter ?</DialogDescription>
       </DialogHeader>
       <div className="grid gap-4 py-4">
+        <form>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
               Nom
             </Label>
-            <Input id="name" value={name} defaultValue={lexicon.name} onChange={(e) => changeName(e.target.value)} className="col-span-3" />
+            <Input id="name" value={name} onChange={(e) => changeName(e.target.value)} className="col-span-3" />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="slug" className="text-right">
               Slug
             </Label>
-            <Input id="name" value={slug} onChange={(e) => changeSlug(e.target.value)} onBlur={() => resetSlug()}  className="col-span-3" />
+            <Input id="slug" value={slug} onChange={(e) => changeSlug(e.target.value)} onBlur={() => resetSlug()} className="col-span-3" />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="description" className="text-right">
               Description
             </Label>
-            <Input id="name" value={desc} onChange={(e)=> setDesc(e.target.value)} className="col-span-3" />
+            <Input id="description" value={desc} onChange={(e) => setDesc(e.target.value)} className="col-span-3" />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="is_private" className="text-right">
               Privé ?
             </Label>
-            <Switch checked={isPrivate} onCheckedChange={setPrivate} />
+            <Switch id="is_private" checked={isPrivate} onCheckedChange={setPrivate} />
 
           </div>
-        </div>
+        </form>
+      </div>
 
       <DialogFooter>
         <DialogClose asChild>
           <Button
             variant="logo"
+            loading={editLexiconMutation.isPending}
+            onClick={handleSubmit}
           >
             Sauvegarder
           </Button>
