@@ -72,3 +72,9 @@ export interface SpellcheckResponse {
   message: string
   html?: string
 }
+
+export interface PersonalDico {
+  count: number
+  maxPages: number
+  entries: DictionaryFullEntry[]
+}

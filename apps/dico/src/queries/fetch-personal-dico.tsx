@@ -1,10 +1,4 @@
-import { DictionaryFullEntry, ResponseError, apiServer } from '@/lib/types'
-
-interface PersonalDico {
-  count: number
-  maxPages: number
-  entries: DictionaryFullEntry[]
-}
+import { DictionaryFullEntry, ResponseError, apiServer, PersonalDico } from '@/lib/types'
 
 export const fetchPersonalDico = ({ token, page = 0 }: { token: string; page: number }) =>
   new Promise<PersonalDico>(async (resolve, reject) => {
