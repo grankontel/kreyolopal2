@@ -1,5 +1,5 @@
 import MainPanel from '@/components/dashboard/main-panel'
-import { DicoTable } from '@/components/dicotable/dico-table'
+import { PersonalDicoTable } from '@/components/dicotable/personal-dico-table'
 import {
   CardTitle,
   CardDescription,
@@ -11,6 +11,7 @@ import {
 export const runtime = 'edge'
 
 export default function Home() {
+  
   return (
     <MainPanel title="Mon dictionnaire">
       <Card>
@@ -20,7 +21,7 @@ export default function Home() {
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-auto w-full">
-            <DicoTable />
+            <PersonalDicoTable />
           </div>
         </CardContent>
       </Card>
