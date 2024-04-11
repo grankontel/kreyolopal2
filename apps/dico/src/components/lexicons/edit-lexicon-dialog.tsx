@@ -18,7 +18,8 @@ import { Lexicon } from '@/lib/lexicons/types'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
-import { putLexicon, postLexicon } from '@/queries/put-lexicon'
+import { putLexicon, postLexicon } from '@/queries/lexicons/put-lexicon'
+import { useToast } from '@/components/ui/use-toast'
 
 var slugify = require('slugify')
 
@@ -58,6 +59,14 @@ export const EditLexiconDialogContent = ({
   const [hasCustomSlug, setCustomSlug] = useState(false)
   const dash = useDashboard()
   const queryClient = useQueryClient()
+  const { toast } = useToast()
+  const notifyer = (err: { error?: string; toString: () => string }) => {
+    toast({
+      title: 'Erreur',
+      variant: 'destructive',
+      description: err?.error || err.toString(),
+    })
+  }
 
   const editLexiconMutation = useMutation({
     mutationFn: () =>
@@ -74,6 +83,10 @@ export const EditLexiconDialogContent = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['me', 'lexicons'] })
     },
+    onError: (err: Error) => {
+      notifyer(err)
+    },
+
   })
 
   const changeName = (value: string) => {

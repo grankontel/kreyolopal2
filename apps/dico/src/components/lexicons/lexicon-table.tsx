@@ -21,7 +21,8 @@ import { AlertDialog } from '../ui/alert-dialog'
 import { ConfirmDialogContent } from '../confirm-dialog'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
-import { deleteLexicon } from '@/queries/put-lexicon'
+import { deleteLexicon } from '@/queries/lexicons/put-lexicon'
+import { useToast } from '@/components/ui/use-toast'
 
 export const LexiconTable = () => {
   const { lexicons } = useDicoStore()
@@ -31,6 +32,14 @@ export const LexiconTable = () => {
 
   const dash = useDashboard()
   const queryClient = useQueryClient()
+  const { toast } = useToast()
+  const notifyer = (err: { error?: string; toString: () => string }) => {
+    toast({
+      title: 'Erreur',
+      variant: 'destructive',
+      description: err?.error || err.toString(),
+    })
+  }
 
   const delLexiconMutation = useMutation({
     mutationFn: () =>
@@ -40,6 +49,10 @@ export const LexiconTable = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['me', 'lexicons'] })
     },
+    onError: (err: Error) => {
+      notifyer(err)
+    },
+
   })
 
   return (
