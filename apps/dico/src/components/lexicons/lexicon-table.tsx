@@ -12,16 +12,16 @@ import {
 import { Switch } from '@/components/ui/switch'
 import { useDicoStore } from '@/store/dico-store'
 import Link from 'next/link'
-import { IconAttributes } from '@kreyolopal/react-ui'
 import FeatherIcon from '../FeatherIcon'
 import { EditLexiconDialogContent } from './edit-lexicon-dialog'
 import { useState } from 'react'
 import { Lexicon } from '@/lib/lexicons/types'
-import { Dialog } from '../ui/dialog'
+import { Dialog, DialogTrigger } from '../ui/dialog'
 import { AlertDialog } from '../ui/alert-dialog'
 import { ConfirmDialogContent } from '../confirm-dialog'
-
-
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useDashboard } from '@/app/dashboard/dashboard-provider'
+import { deleteLexicon } from '@/queries/put-lexicon'
 
 export const LexiconTable = () => {
   const { lexicons } = useDicoStore()
@@ -29,9 +29,41 @@ export const LexiconTable = () => {
   const [isEditOpen, setEditOpen] = useState(false)
   const [isDeleteOpen, setDeleteOpen] = useState(false)
 
+  const dash = useDashboard()
+  const queryClient = useQueryClient()
+
+  const delLexiconMutation = useMutation({
+    mutationFn: () =>
+      (currentLexicon !== undefined) ? deleteLexicon(
+        currentLexicon.id,
+        dash?.session_id
+      ) : Promise.resolve()
+    ,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['me', 'lexicons'] })
+    },
+  })
+
   return (
-    <>
-      <Table>
+    <div className="w-full space-y-2.5 overflow-auto">
+      <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
+        <div className="flex flex-1 items-center space-x-2">
+        </div>
+        <div className="flex items-center gap-2">
+          <Dialog>
+            <DialogTrigger asChild >
+              <Button size="default" variant="outline">
+                <FeatherIcon iconName='plus' />
+                Ajouter
+              </Button>
+            </DialogTrigger>
+            <EditLexiconDialogContent mode="create" />
+
+          </Dialog>
+        </div>
+      </div>
+
+      <Table className='rounded-md border'>
         <TableHeader>
           <TableRow>
             <TableHead>Nom</TableHead>
@@ -87,34 +119,13 @@ export const LexiconTable = () => {
       ) : (
         <div>
           <Dialog onOpenChange={setEditOpen} open={isEditOpen} modal defaultOpen={isEditOpen}>
-            <EditLexiconDialogContent lexicon={currentLexicon} />
+            <EditLexiconDialogContent lexicon={currentLexicon} mode="edit" />
           </Dialog>
           <AlertDialog onOpenChange={setDeleteOpen} open={isDeleteOpen} defaultOpen={isDeleteOpen}>
-            <ConfirmDialogContent onAction={() => console.log(currentLexicon.id)} />
+            <ConfirmDialogContent onAction={() => delLexiconMutation.mutate()} />
           </AlertDialog>
         </div>
       )}
-    </>
-  )
-}
-
-function MoreHorizontalIcon(props: IconAttributes) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="1" />
-      <circle cx="19" cy="12" r="1" />
-      <circle cx="5" cy="12" r="1" />
-    </svg>
+    </div>
   )
 }

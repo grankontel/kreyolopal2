@@ -17,8 +17,8 @@ import { Switch } from '@/components/ui/switch'
 import { Lexicon } from '@/lib/lexicons/types'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { putLexicon } from '@/queries/put-lexicon'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
+import { putLexicon, postLexicon } from '@/queries/put-lexicon'
 
 var slugify = require('slugify')
 
@@ -32,24 +32,35 @@ export function EditLexiconDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <EditLexiconDialogContent lexicon={lexicon} />
+      <EditLexiconDialogContent lexicon={lexicon} mode='edit' />
     </Dialog>
   )
 }
 
-export const EditLexiconDialogContent = ({ lexicon }: { lexicon: Lexicon }) => {
-  const [name, setName] = useState(lexicon.name)
-  const [slug, setSlug] = useState(lexicon.slug)
-  const [desc, setDesc] = useState(lexicon.description)
-  const [isPrivate, setPrivate] = useState(lexicon.is_private)
+type EditLexiconDialogProps = {
+  lexicon: Lexicon
+  mode: "edit"
+} | {
+  lexicon?: undefined
+  mode: "create"
+} 
+
+export const EditLexiconDialogContent = ({ lexicon, mode = "edit" }: EditLexiconDialogProps) => {
+  const [name, setName] = useState(lexicon?.name || '')
+  const [slug, setSlug] = useState(lexicon?.slug || '')
+  const [desc, setDesc] = useState(lexicon?.description || '')
+  const [isPrivate, setPrivate] = useState(lexicon?.is_private  || false)
   const [hasCustomSlug, setCustomSlug] = useState(false)
   const dash = useDashboard()
   const queryClient = useQueryClient()
 
   const editLexiconMutation = useMutation({
     mutationFn: () =>
-      putLexicon(
-        lexicon.id,
+      mode === 'edit' ? putLexicon(
+        lexicon?.id as string,
+        { name, slug, description: desc, is_private: isPrivate },
+        dash?.session_id
+      ) : postLexicon(
         { name, slug, description: desc, is_private: isPrivate },
         dash?.session_id
       ),
@@ -86,48 +97,46 @@ export const EditLexiconDialogContent = ({ lexicon }: { lexicon: Lexicon }) => {
         <DialogDescription>Etes vous sûr de vouloir vous déconnecter ?</DialogDescription>
       </DialogHeader>
       <div className="grid gap-4 py-4">
-        <form>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Nom
-            </Label>
-            <Input
-              id="name"
-              value={name}
-              onChange={(e) => changeName(e.target.value)}
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="slug" className="text-right">
-              Slug
-            </Label>
-            <Input
-              id="slug"
-              value={slug}
-              onChange={(e) => changeSlug(e.target.value)}
-              onBlur={() => resetSlug()}
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="description" className="text-right">
-              Description
-            </Label>
-            <Input
-              id="description"
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="is_private" className="text-right">
-              Privé ?
-            </Label>
-            <Switch id="is_private" checked={isPrivate} onCheckedChange={setPrivate} />
-          </div>
-        </form>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="name" className="text-right">
+            Nom
+          </Label>
+          <Input
+            id="name"
+            value={name}
+            onChange={(e) => changeName(e.target.value)}
+            className="col-span-3"
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="slug" className="text-right">
+            Slug
+          </Label>
+          <Input
+            id="slug"
+            value={slug}
+            onChange={(e) => changeSlug(e.target.value)}
+            onBlur={() => resetSlug()}
+            className="col-span-3"
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="description" className="text-right">
+            Description
+          </Label>
+          <Input
+            id="description"
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+            className="col-span-3"
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="is_private" className="text-right">
+            Privé ?
+          </Label>
+          <Switch id="is_private" checked={isPrivate} onCheckedChange={setPrivate} />
+        </div>
       </div>
 
       <DialogFooter>

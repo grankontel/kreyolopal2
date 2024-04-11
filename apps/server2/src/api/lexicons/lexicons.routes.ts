@@ -70,8 +70,8 @@ routes.get(
 )
 
 routes.delete(
-  '/:username/:slug',
-  zValidator('param', paramSlug, sendBadRequest),
+  '/:id',
+  zValidator('param', paramLexiconId, sendBadRequest),
   handlers.deleteLexicon
 )
 
