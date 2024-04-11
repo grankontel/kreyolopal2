@@ -22,5 +22,5 @@ export const PersonalDicoTable = () => {
 	})
 
 
-	return (<DicoTable queryResult={qr} pageHandler={{page, setPage}} />)
+	return (<DicoTable queryResult={qr} pageHandler={pageHandler} />)
 }

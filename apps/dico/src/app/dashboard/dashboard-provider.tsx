@@ -63,7 +63,7 @@ export const DashboardProvider = ({
         icon: 'bookmark',
         label: 'Mes lexiques',
         path: '/dashboard/lexicons',
-        items: data?.map((item) => ({ label: item.name, path: item.path })),
+        items: data?.map((item) => ({ label: item.name, path: '/dashboard' + item.path })),
       })
       setPersonnel(personnel)
     }
