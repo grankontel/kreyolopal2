@@ -107,7 +107,8 @@ const signup = async function (c: Context) {
           statusText: 'Unknown error.',
         })
       }
-    ).finally(() => {
+    )
+    .finally(() => {
       client.release()
     })
     .catch((e) => {

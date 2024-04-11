@@ -4,10 +4,10 @@ import { MeaningLanguage, SingleDefinition } from '@/lib/types'
 import { hashKey } from '@/lib/utils'
 import { Button } from './ui/button'
 import FeatherIcon from './FeatherIcon'
-import { DropdownMenu, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { LexiconDropdownMenu } from "./lexicons/lexicon-dropdown-menu"
-import { KreyolLanguage } from "@kreyolopal/react-ui"
-import { dicoUrl } from "@/lib/dicoUrl"
+import { DropdownMenu, DropdownMenuTrigger } from './ui/dropdown-menu'
+import { LexiconDropdownMenu } from './lexicons/lexicon-dropdown-menu'
+import { KreyolLanguage } from '@kreyolopal/react-ui'
+import { dicoUrl } from '@/lib/dicoUrl'
 
 interface EntryDefinitionProps {
   entry: string
@@ -36,14 +36,16 @@ export const EntryDefinition = ({
             {index}. {subnature}{' '}
           </span>
           <DropdownMenu>
-            <DropdownMenuTrigger >
-              <Button size="icon" className='border' variant='outline'>
-                <FeatherIcon iconName='chevron-right' />
+            <DropdownMenuTrigger>
+              <Button size="icon" className="border" variant="outline">
+                <FeatherIcon iconName="chevron-right" />
               </Button>
             </DropdownMenuTrigger>
-            <LexiconDropdownMenu onSelect={(item) => {
-              console.log(`add ${definition.definition_id} to lexicon ${item.id}`)
-            }} />
+            <LexiconDropdownMenu
+              onSelect={(item) => {
+                console.log(`add ${definition.definition_id} to lexicon ${item.id}`)
+              }}
+            />
           </DropdownMenu>
         </p>
         <section className="mb-3">

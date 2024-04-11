@@ -13,7 +13,7 @@ import { DictionaryFullEntry, PersonalDico, User } from '@/lib/types'
 import { makeId, hashKey } from '@/lib/utils'
 import { KreyolFlag, KreyolLanguage } from '@kreyolopal/react-ui'
 import DicoTableCell from '@/components/dicotable/dico-table-cell'
-import { UseQueryResult} from '@tanstack/react-query'
+import { UseQueryResult } from '@tanstack/react-query'
 import Link from 'next/link'
 import { DicoTableSkeleton } from './dico-table-skeleton'
 import { TableError } from './table-error'
@@ -97,8 +97,8 @@ const DicoTableHeaders = () => (
 
 interface DicoTableProps {
   pageHandler: {
-    page: number;
-    setPage: Dispatch<SetStateAction<number>>;
+    page: number
+    setPage: Dispatch<SetStateAction<number>>
   }
   queryResult: UseQueryResult<PersonalDico, Error>
 }

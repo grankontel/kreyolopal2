@@ -32,38 +32,45 @@ export function EditLexiconDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <EditLexiconDialogContent lexicon={lexicon} mode='edit' />
+      <EditLexiconDialogContent lexicon={lexicon} mode="edit" />
     </Dialog>
   )
 }
 
-type EditLexiconDialogProps = {
-  lexicon: Lexicon
-  mode: "edit"
-} | {
-  lexicon?: undefined
-  mode: "create"
-} 
+type EditLexiconDialogProps =
+  | {
+      lexicon: Lexicon
+      mode: 'edit'
+    }
+  | {
+      lexicon?: undefined
+      mode: 'create'
+    }
 
-export const EditLexiconDialogContent = ({ lexicon, mode = "edit" }: EditLexiconDialogProps) => {
+export const EditLexiconDialogContent = ({
+  lexicon,
+  mode = 'edit',
+}: EditLexiconDialogProps) => {
   const [name, setName] = useState(lexicon?.name || '')
   const [slug, setSlug] = useState(lexicon?.slug || '')
   const [desc, setDesc] = useState(lexicon?.description || '')
-  const [isPrivate, setPrivate] = useState(lexicon?.is_private  || false)
+  const [isPrivate, setPrivate] = useState(lexicon?.is_private || false)
   const [hasCustomSlug, setCustomSlug] = useState(false)
   const dash = useDashboard()
   const queryClient = useQueryClient()
 
   const editLexiconMutation = useMutation({
     mutationFn: () =>
-      mode === 'edit' ? putLexicon(
-        lexicon?.id as string,
-        { name, slug, description: desc, is_private: isPrivate },
-        dash?.session_id
-      ) : postLexicon(
-        { name, slug, description: desc, is_private: isPrivate },
-        dash?.session_id
-      ),
+      mode === 'edit'
+        ? putLexicon(
+            lexicon?.id as string,
+            { name, slug, description: desc, is_private: isPrivate },
+            dash?.session_id
+          )
+        : postLexicon(
+            { name, slug, description: desc, is_private: isPrivate },
+            dash?.session_id
+          ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['me', 'lexicons'] })
     },

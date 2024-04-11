@@ -58,7 +58,11 @@ export function Entry({
             </p>
           </div>
           <div className="above-article flex flex-row">
-            <EntryDefinitionList entry={source.entry} definitions={source.definitions} kreyol={kreyol} />
+            <EntryDefinitionList
+              entry={source.entry}
+              definitions={source.definitions}
+              kreyol={kreyol}
+            />
 
             <aside className="hidden md:block  basis-1/4 px-4">
               {relatedList.length === 0 ? (
@@ -89,4 +93,3 @@ export function Entry({
     </div>
   )
 }
-

@@ -21,10 +21,5 @@ export default async function Page({
   if (!data) {
     return notFound()
   }
-  return (
-    <Entry
-      kreyol={params.kreyol as KreyolLanguage}
-      value={data}
-    />
-  )
+  return <Entry kreyol={params.kreyol as KreyolLanguage} value={data} />
 }

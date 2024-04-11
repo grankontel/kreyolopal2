@@ -34,11 +34,9 @@ export const LexiconTable = () => {
 
   const delLexiconMutation = useMutation({
     mutationFn: () =>
-      (currentLexicon !== undefined) ? deleteLexicon(
-        currentLexicon.id,
-        dash?.session_id
-      ) : Promise.resolve()
-    ,
+      currentLexicon !== undefined
+        ? deleteLexicon(currentLexicon.id, dash?.session_id)
+        : Promise.resolve(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['me', 'lexicons'] })
     },
@@ -47,23 +45,21 @@ export const LexiconTable = () => {
   return (
     <div className="w-full space-y-2.5 overflow-auto">
       <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
-        <div className="flex flex-1 items-center space-x-2">
-        </div>
+        <div className="flex flex-1 items-center space-x-2"></div>
         <div className="flex items-center gap-2">
           <Dialog>
-            <DialogTrigger asChild >
+            <DialogTrigger asChild>
               <Button size="default" variant="outline">
-                <FeatherIcon iconName='plus' />
+                <FeatherIcon iconName="plus" />
                 Ajouter
               </Button>
             </DialogTrigger>
             <EditLexiconDialogContent mode="create" />
-
           </Dialog>
         </div>
       </div>
 
-      <Table className='rounded-md border'>
+      <Table className="rounded-md border">
         <TableHeader>
           <TableRow>
             <TableHead>Nom</TableHead>
@@ -78,8 +74,7 @@ export const LexiconTable = () => {
             return (
               <TableRow key={lexicon.id}>
                 <TableCell>
-                  <strong>
-                    {lexicon.name}</strong>
+                  <strong>{lexicon.name}</strong>
                 </TableCell>
                 <TableCell>{lexicon.description}</TableCell>
                 <TableCell>
@@ -99,12 +94,13 @@ export const LexiconTable = () => {
                   >
                     <FeatherIcon iconName="edit" />
                   </Button>
-                  <Button size="icon" variant="outline"
+                  <Button
+                    size="icon"
+                    variant="outline"
                     onClick={() => {
                       setCurrentLexicon(lexicon)
                       setDeleteOpen(true)
                     }}
-
                   >
                     <FeatherIcon iconName="trash-2" />
                   </Button>
@@ -118,10 +114,19 @@ export const LexiconTable = () => {
         ''
       ) : (
         <div>
-          <Dialog onOpenChange={setEditOpen} open={isEditOpen} modal defaultOpen={isEditOpen}>
+          <Dialog
+            onOpenChange={setEditOpen}
+            open={isEditOpen}
+            modal
+            defaultOpen={isEditOpen}
+          >
             <EditLexiconDialogContent lexicon={currentLexicon} mode="edit" />
           </Dialog>
-          <AlertDialog onOpenChange={setDeleteOpen} open={isDeleteOpen} defaultOpen={isDeleteOpen}>
+          <AlertDialog
+            onOpenChange={setDeleteOpen}
+            open={isDeleteOpen}
+            defaultOpen={isDeleteOpen}
+          >
             <ConfirmDialogContent onAction={() => delLexiconMutation.mutate()} />
           </AlertDialog>
         </div>

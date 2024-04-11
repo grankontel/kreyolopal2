@@ -19,6 +19,8 @@ export default async function Page({
     return notFound()
   }
   return (
-		<div>{params.username} / {params.slug}</div>
+    <div>
+      {params.username} / {params.slug}
+    </div>
   )
 }

@@ -10,7 +10,7 @@ const paramUsername = z.object({
 
 const paramLexiconId = z
   .object({
-    id: z.string().uuid()
+    id: z.string().uuid(),
   })
   .required()
 
