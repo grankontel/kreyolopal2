@@ -15,6 +15,7 @@ type Meaning = {
 } & object
 
 export interface SingleDefinition {
+  definition_id: string
   nature: string[]
   subnature?: string[]
   meaning: Meaning
