@@ -25,7 +25,6 @@ export default async function Page({
     <Entry
       kreyol={params.kreyol as KreyolLanguage}
       value={data}
-      dicoUrl={(w) => `/dashboard/dictionary/${params.kreyol}/${encodeURI(w)}`}
     />
   )
 }

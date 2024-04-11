@@ -1,9 +1,9 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { KreyolLanguage, IconAttributes } from '@kreyolopal/react-ui'
-import { useDicoStore } from '@/store/dico-store'
+import { IconAttributes } from '@kreyolopal/react-ui'
 import { useEffect, useState } from 'react'
 import { useToast } from './ui/use-toast'
+import { useDashboard } from '@/app/dashboard/dashboard-provider'
 
 export const EntryBookmarkButton = ({
   entry,
@@ -14,21 +14,20 @@ export const EntryBookmarkButton = ({
 }) => {
   const [isBookmarked, setBookmarked] = useState(bookmarked)
   const [isDisabled, setDisabled] = useState(true)
-  const user = useDicoStore((state) => state.user)
+  const auth = useDashboard()
   const { toast } = useToast()
 
   useEffect(() => {
-    setDisabled(user == null || user.bearer == null)
-  }, [user])
+    setDisabled(auth?.user_id == null || auth.session_id == null)
+  }, [auth])
 
   const addBookmark = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    if (!user) return false
+    if (!auth?.user_id) return false
 
     const myHeaders = new Headers()
     myHeaders.set('Content-Type', 'application/json')
-
-    if (user.bearer) myHeaders.set('Authorization', `Bearer ${user.bearer}`)
+    myHeaders.set('Authorization', `Bearer ${auth.session_id}`)
 
     return fetch(`/api/me/dictionary/${encodeURIComponent(entry)}`, {
       method: 'PUT',

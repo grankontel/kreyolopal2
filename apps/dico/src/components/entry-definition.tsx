@@ -1,18 +1,26 @@
 import Link from 'next/link'
 import { MeaningLanguage, SingleDefinition } from '@/lib/types'
 import { hashKey } from '@/lib/utils'
+import { Button } from './ui/button'
+import FeatherIcon from './FeatherIcon'
+import { DropdownMenu, DropdownMenuTrigger } from "./ui/dropdown-menu"
+import { LexiconDropdownMenu } from "./lexicons/lexicon-dropdown-menu"
+import { KreyolLanguage } from "@kreyolopal/react-ui"
+import { dicoUrl } from "@/lib/dicoUrl"
+
+interface EntryDefinitionProps {
+  entry: string
+  kreyol: KreyolLanguage
+  index: number
+  definition: SingleDefinition
+}
 
 export const EntryDefinition = ({
   entry,
+  kreyol,
   index,
   definition,
-  dicoUrl,
-}: {
-  entry: string
-  index: number
-  definition: SingleDefinition
-  dicoUrl: (word: string) => string
-}) => {
+}: EntryDefinitionProps) => {
   const nature = definition.nature.join(', ')
   const subnature = definition.subnature?.length
     ? definition.subnature.join(', ')
@@ -26,6 +34,14 @@ export const EntryDefinition = ({
           <span className="font-medium">
             {index}. {subnature}{' '}
           </span>
+          <DropdownMenu>
+            <DropdownMenuTrigger >
+              <Button size="icon" className='border' variant='outline'>
+                <FeatherIcon iconName='chevron-right' />
+              </Button>
+            </DropdownMenuTrigger>
+            <LexiconDropdownMenu />
+          </DropdownMenu>
         </p>
         <section className="mb-3">
           {def_langues.map((lang) => {
@@ -53,19 +69,19 @@ export const EntryDefinition = ({
         {definition.synonyms.length === 0 ? (
           ' '
         ) : (
-          <Synonyms entry={entry} list={definition.synonyms} dicoUrl={dicoUrl} />
+          <Synonyms entry={entry} list={definition.synonyms} kreyol={kreyol} />
         )}
 
         {definition.confer.length === 0 ? (
           ' '
         ) : (
-          <Confers entry={entry} list={definition.confer} dicoUrl={dicoUrl} />
+          <Confers entry={entry} list={definition.confer} kreyol={kreyol} />
         )}
 
         {definition.usage.length === 0 ? (
           ' '
         ) : (
-          <Usages entry={entry} list={definition.usage} dicoUrl={dicoUrl} />
+          <Usages entry={entry} list={definition.usage} kreyol={kreyol} />
         )}
       </div>
     </section>
@@ -74,22 +90,22 @@ export const EntryDefinition = ({
 
 const Synonyms = ({
   entry,
+  kreyol,
   list,
-  dicoUrl,
 }: {
   entry: string
+  kreyol: KreyolLanguage
   list: string[]
-  dicoUrl: (word: string) => string
 }) => (
   <section className="grid gap-2 mb-2">
     <h2 className="text-lg font-bold">Synonymes</h2>
     <ul className="flex flex-wrap gap-2">
-      {list.map((item) => {
+      {list.map(async (item) => {
         return (
           <li key={hashKey(entry + '_syn_', item)}>
             <Link
               className="text-sm rounded-lg bg-gray-100 px-2 py-1 dark:bg-gray-800"
-              href={dicoUrl(item)}
+              href={dicoUrl(kreyol, item)}
             >
               {item}
             </Link>
@@ -102,22 +118,22 @@ const Synonyms = ({
 
 const Confers = ({
   entry,
+  kreyol,
   list,
-  dicoUrl,
 }: {
   entry: string
+  kreyol: KreyolLanguage
   list: string[]
-  dicoUrl: (word: string) => string
 }) => (
   <section className="grid gap-2 mb-2">
     <h2 className="text-lg font-bold">Voir aussi</h2>
     <ul className="flex flex-wrap gap-2">
-      {list.map((item) => {
+      {list.map(async (item) => {
         return (
           <li key={hashKey(entry + '_confer_', item)}>
             <Link
               className="text-sm bg-gray-100 px-2 py-1 dark:bg-gray-800"
-              href={dicoUrl(item)}
+              href={dicoUrl(kreyol, item)}
             >
               {item}
             </Link>
@@ -130,12 +146,12 @@ const Confers = ({
 
 const Usages = ({
   entry,
+  kreyol,
   list,
-  dicoUrl,
 }: {
   entry: string
+  kreyol: KreyolLanguage
   list: string[]
-  dicoUrl: (word: string) => string
 }) => (
   <div className="grid gap-2 my-3">
     <h2 className="text-lg font-bold">Usage</h2>
