@@ -12,7 +12,7 @@ export const putLexicon = async (
   lexicon: LexiconPayload,
   token: string | undefined
 ): Promise<unknown> => {
-  console.log(`putLexicon ${token}`)
+  console.log(`putLexicon ${id}`)
   if (token === undefined) return Promise.resolve()
 
   const myHeaders = new Headers()
@@ -35,7 +35,7 @@ export const deleteLexicon = async (
   id: string,
   token: string | undefined
 ): Promise<unknown> => {
-  console.log(`putLexicon ${token}`)
+  console.log(`deleteLexicon ${id}`)
   if (token === undefined) return Promise.resolve()
 
   const myHeaders = new Headers()
