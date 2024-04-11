@@ -9,7 +9,6 @@ import {
   TableBody,
   Table,
 } from '@/components/ui/table'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Switch } from '@/components/ui/switch'
 import { useDicoStore } from '@/store/dico-store'
 import Link from 'next/link'
@@ -18,33 +17,38 @@ import FeatherIcon from '../FeatherIcon'
 import { EditLexiconDialogContent } from './edit-lexicon-dialog'
 import { useState } from 'react'
 import { Lexicon } from '@/lib/lexicons/types'
-import { Dialog, DialogTrigger } from '../ui/dialog'
+import { Dialog } from '../ui/dialog'
+import { AlertDialog } from '../ui/alert-dialog'
+import { ConfirmDialogContent } from '../confirm-dialog'
+
+
 
 export const LexiconTable = () => {
   const { lexicons } = useDicoStore()
   const [currentLexicon, setCurrentLexicon] = useState<Lexicon | undefined>(undefined)
+  const [isEditOpen, setEditOpen] = useState(false)
+  const [isDeleteOpen, setDeleteOpen] = useState(false)
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-12">Select</TableHead>
-          <TableHead>Nom</TableHead>
-          <TableHead>Description</TableHead>
-          <TableHead>Slug</TableHead>
-          <TableHead>Privé ?</TableHead>
-          <TableHead className="w-24">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <Dialog>
+    <>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Nom</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Slug</TableHead>
+            <TableHead>Privé ?</TableHead>
+            <TableHead className="w-24">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {lexicons.map((lexicon) => {
             return (
               <TableRow key={lexicon.id}>
-                <TableCell className="w-12">
-                  <Checkbox />
+                <TableCell>
+                  <strong>
+                    {lexicon.name}</strong>
                 </TableCell>
-                <TableCell>{lexicon.name}</TableCell>
                 <TableCell>{lexicon.description}</TableCell>
                 <TableCell>
                   <Link href={`/dashboard${lexicon.path}`}>{lexicon.slug}</Link>
@@ -53,30 +57,44 @@ export const LexiconTable = () => {
                   <Switch checked={lexicon.is_private} disabled />
                 </TableCell>
                 <TableCell className="w-24 grid gap-1 grid-cols-2">
-                  <DialogTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      onClick={() => setCurrentLexicon(lexicon)}
-                    >
-                      <FeatherIcon iconName="edit" />
-                    </Button>
-                  </DialogTrigger>
-                  <Button size="icon" variant="outline">
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={() => {
+                      setCurrentLexicon(lexicon)
+                      setEditOpen(true)
+                    }}
+                  >
+                    <FeatherIcon iconName="edit" />
+                  </Button>
+                  <Button size="icon" variant="outline"
+                    onClick={() => {
+                      setCurrentLexicon(lexicon)
+                      setDeleteOpen(true)
+                    }}
+
+                  >
                     <FeatherIcon iconName="trash-2" />
                   </Button>
                 </TableCell>
               </TableRow>
             )
           })}
-          {currentLexicon === undefined ? (
-            ''
-          ) : (
+        </TableBody>
+      </Table>
+      {currentLexicon === undefined ? (
+        ''
+      ) : (
+        <div>
+          <Dialog onOpenChange={setEditOpen} open={isEditOpen} modal defaultOpen={isEditOpen}>
             <EditLexiconDialogContent lexicon={currentLexicon} />
-          )}
-        </Dialog>
-      </TableBody>
-    </Table>
+          </Dialog>
+          <AlertDialog onOpenChange={setDeleteOpen} open={isDeleteOpen} defaultOpen={isDeleteOpen}>
+            <ConfirmDialogContent onAction={() => console.log(currentLexicon.id)} />
+          </AlertDialog>
+        </div>
+      )}
+    </>
   )
 }
 
