@@ -1,3 +1,4 @@
+'use client'
 import Link from 'next/link'
 import { MeaningLanguage, SingleDefinition } from '@/lib/types'
 import { hashKey } from '@/lib/utils'
@@ -40,7 +41,9 @@ export const EntryDefinition = ({
                 <FeatherIcon iconName='chevron-right' />
               </Button>
             </DropdownMenuTrigger>
-            <LexiconDropdownMenu />
+            <LexiconDropdownMenu onSelect={(item) => {
+              console.log(`add ${definition.definition_id} to lexicon ${item.id}`)
+            }} />
           </DropdownMenu>
         </p>
         <section className="mb-3">

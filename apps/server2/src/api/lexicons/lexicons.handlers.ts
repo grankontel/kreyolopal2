@@ -344,27 +344,28 @@ const addDefinitions = async function (c: Context) {
   const mongo = c.get('mongodb')
   const user = c.get('user')
 
-  const { username, slug } = c.req.param()
+  const { id } = c.req.param()
 
   const { entry, definitions }: AddDefinitionPayload = c.req.valid('json')
-  logger.info(`addDefinitions for ${username}/${slug} to ${entry}`)
+  logger.info(`addDefinitions for ${entry} to ${id}`)
 
   if (!user) {
     logger.debug('user not logged in')
     return c.json({ error: 'You are not logged in.' }, 403)
   }
 
-  if (user.username != username) return c.json({ error: 'Forbidden' }, 403)
-
   const client: PoolClient = await pgPool.connect()
 
   try {
-    const text =
-      'SELECT id, owner, is_private FROM lexicons WHERE owner = $1 AND slug = $2'
-    const values = [user.id, slug]
+    const text = 'SELECT id, owner FROM lexicons WHERE id = $1'
+    const values = [id]
     const res = await client.query(text, values)
     if (res.rows.length === 0) {
       return c.json({ error: 'Not Found' }, 404)
+    }
+
+    if (res.rows[0].owner != user.id) {
+      return c.json({ error: 'Forbidden' }, 403)
     }
 
     const lexicon = res.rows[0]

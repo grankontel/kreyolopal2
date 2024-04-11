@@ -88,8 +88,8 @@ routes.get(
 )
 
 routes.put(
-  '/:username/:slug/definition',
-  zValidator('param', paramSlug, sendBadRequest),
+  '/:id/definition',
+  zValidator('param', paramLexiconId, sendBadRequest),
   zValidator('json', addDefinitionSchema, sendBadRequest),
   handlers.addDefinitions
 )
