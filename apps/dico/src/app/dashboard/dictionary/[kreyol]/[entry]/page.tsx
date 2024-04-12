@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { Entry } from '@/components/entry'
 import { getWord } from '@/queries/get-word'
-import { KreyolLanguage } from '@kreyolopal/react-ui'
+import { KreyolLanguage } from '@kreyolopal/domain'
 import { isLoggedIn } from '@/app/dashboard/is-logged-in'
 
 export const runtime = 'edge'

@@ -2,9 +2,8 @@
 
 import { cookies } from 'next/headers'
 import { UserDictionaryEntry, apiServer, cookieName } from '@/lib/types'
-import { DictionaryEntry } from '@kreyolopal/domain'
+import { DictionaryEntry, KreyolLanguage } from '@kreyolopal/domain'
 import { parseCookie } from '@/lib/utils'
-import { KreyolLanguage } from '@kreyolopal/react-ui'
 
 export async function getWord(
   kreyol: string,
