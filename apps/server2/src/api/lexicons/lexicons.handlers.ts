@@ -330,6 +330,56 @@ const getLexiconEntry = async function (c: Context) {
   }
 }
 
+const deleteLexicon = async (c: Context) => {
+  const logger = c.get('logger')
+  const pgPool = c.get('pgPool')
+  const mongo = c.get('mongodb')
+  const user = c.get('user')
+
+  const { id } = c.req.param()
+
+  logger.info(`deleteLexicon ${id}`)
+
+  if (!user) {
+    logger.debug('user not logged in')
+    return c.json({ error: 'You are not logged in.' }, 403)
+  }
+
+  const client: PoolClient = await pgPool.connect()
+
+  try {
+    const text = 'SELECT id, owner FROM lexicons WHERE id = $1'
+    const values = [id]
+    const res = await client.query(text, values)
+    if (res.rows.length === 0) {
+      return c.json({ error: 'Not Found' }, 404)
+    }
+
+    if (res.rows[0].owner != user.id) {
+      return c.json({ error: 'Forbidden' }, 403)
+    }
+
+    const lexicon = res.rows[0]
+    logger.info('found lexicon')
+
+    const lexColl = mongo
+      .db(config.mongodb.db)
+      .collection(MongoCollection.lexicons)
+    await lexColl.updateMany({}, { $pull: { lexicons: lexicon.id } })
+
+    // delete from DATABASE
+    await client.query('DELETE FROM lexicons WHERE id = $1', [lexicon.id])
+
+    return c.json({}, 200)
+  } catch (_error) {
+    logger.error('getLexicon Exception', _error)
+    return c.json({ status: 'error', error: [_error] }, 500)
+  } finally {
+    client.release()
+  }
+}
+
+
 interface AddDefinitionPayload {
   entry: string
   definitions: {
@@ -454,55 +504,6 @@ const addDefinitions = async function (c: Context) {
         }
         return c.json(response, 201)
       })
-  } catch (_error) {
-    logger.error('getLexicon Exception', _error)
-    return c.json({ status: 'error', error: [_error] }, 500)
-  } finally {
-    client.release()
-  }
-}
-
-const deleteLexicon = async (c: Context) => {
-  const logger = c.get('logger')
-  const pgPool = c.get('pgPool')
-  const mongo = c.get('mongodb')
-  const user = c.get('user')
-
-  const { id } = c.req.param()
-
-  logger.info(`deleteLexicon ${id}`)
-
-  if (!user) {
-    logger.debug('user not logged in')
-    return c.json({ error: 'You are not logged in.' }, 403)
-  }
-
-  const client: PoolClient = await pgPool.connect()
-
-  try {
-    const text = 'SELECT id, owner FROM lexicons WHERE id = $1'
-    const values = [id]
-    const res = await client.query(text, values)
-    if (res.rows.length === 0) {
-      return c.json({ error: 'Not Found' }, 404)
-    }
-
-    if (res.rows[0].owner != user.id) {
-      return c.json({ error: 'Forbidden' }, 403)
-    }
-
-    const lexicon = res.rows[0]
-    logger.info('found lexicon')
-
-    const lexColl = mongo
-      .db(config.mongodb.db)
-      .collection(MongoCollection.lexicons)
-    await lexColl.updateMany({}, { $pull: { lexicons: lexicon.id } })
-
-    // delete from DATABASE
-    await client.query('DELETE FROM lexicons WHERE id = $1', [lexicon.id])
-
-    return c.json({}, 200)
   } catch (_error) {
     logger.error('getLexicon Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)
