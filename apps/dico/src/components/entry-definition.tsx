@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { MeaningLanguage, SingleDefinition } from '@/lib/types'
+import { MeaningLanguage, SingleDefinition } from '@kreyolopal/domain'
 import { hashKey } from '@/lib/utils'
 import FeatherIcon from './FeatherIcon'
 import { DropdownMenu, DropdownMenuTrigger } from './ui/dropdown-menu'
@@ -41,7 +41,7 @@ export const EntryDefinition = ({
   const addEntry = useMutation({
     mutationFn: () => {
       return addEntries(
-        lexiconId,
+        lexiconId as string,
         {
           entry: entry,
           definitions: [

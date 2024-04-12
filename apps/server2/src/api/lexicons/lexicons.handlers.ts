@@ -2,7 +2,7 @@ import type { Context } from 'hono'
 import type { MongoClient } from 'mongodb'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
-import { MongoCollection, RestrictedDefinitionSource } from '#domain/types'
+import { MongoCollection, RestrictedDefinitionSource } from '@kreyolopal/domain'
 import { PoolClient } from 'pg'
 
 interface LexiconEntry {

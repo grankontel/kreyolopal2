@@ -2,7 +2,7 @@ import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import type { Context } from 'hono'
 import caches from './caches'
-import { MongoCollection } from '#domain/types'
+import { MongoCollection } from '@kreyolopal/domain'
 
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
