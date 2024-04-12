@@ -49,7 +49,9 @@ const getWord = async function (c: Context) {
     }
 
     // const client = getClient()
-    const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+    const coll = client
+      .db(config.mongodb.db)
+      .collection(MongoCollection.personal)
     const cursor = coll.find(filter, { projection })
     const result = await cursor.toArray()
     cursor.close()
@@ -110,7 +112,9 @@ const bookmarkWord = async function (c: Context) {
       (data) => {
         if (data.length === 0) return c.json({ error: 'Not Found.' }, 404)
 
-        const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+        const coll = client
+          .db(config.mongodb.db)
+          .collection(MongoCollection.personal)
         const options = { upsert: true }
         const updateObj = {
           user_id: user_id,
@@ -205,7 +209,9 @@ const getWordId = (c: Context, client: MongoClient, logger: winston.Logger) =>
     }
 
     const user_id = user.id
-    const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+    const coll = client
+      .db(config.mongodb.db)
+      .collection(MongoCollection.personal)
     const filter = {
       entry: word,
       user_id: user_id,
@@ -257,7 +263,9 @@ const addSubField = async function (c: Context, subField: string) {
   return getWordId(c, client, logger)
     .then(
       (wordId) => {
-        const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+        const coll = client
+          .db(config.mongodb.db)
+          .collection(MongoCollection.personal)
 
         const fieldObj = {}
         fieldObj[`definitions.${kreyol}.${rank}.${subField}`] = text
@@ -343,7 +351,9 @@ const addConfer = async function (c: Context) {
 
       return getWordId(c, client, logger)
         .then((wordId) => {
-          const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+          const coll = client
+            .db(config.mongodb.db)
+            .collection(MongoCollection.personal)
 
           const fieldObj = {}
           fieldObj[`definitions.${kreyol}.${rank}.confer`] = text
@@ -409,7 +419,9 @@ const listWords = async function (c: Context) {
 
   try {
     // const client = getClient()
-    const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+    const coll = client
+      .db(config.mongodb.db)
+      .collection(MongoCollection.personal)
     const cursor = coll
       .find(filter, { projection })
       .skip(offset)

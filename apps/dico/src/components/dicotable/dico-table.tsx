@@ -1,6 +1,6 @@
 'use client'
 
-import { JSX, useEffect, useState } from 'react'
+import { Dispatch, JSX, SetStateAction, useEffect, useState } from 'react'
 import {
   TableHead,
   TableRow,
@@ -9,16 +9,14 @@ import {
   TableBody,
   Table,
 } from '@/components/ui/table'
-import { DictionaryFullEntry, User } from '@/lib/types'
+import { DictionaryFullEntry, PaginatedDico } from '@/lib/types'
 import { makeId, hashKey } from '@/lib/utils'
 import { KreyolFlag, KreyolLanguage } from '@kreyolopal/react-ui'
 import DicoTableCell from '@/components/dicotable/dico-table-cell'
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { fetchPersonalDico } from '@/queries/fetch-personal-dico'
+import { UseQueryResult } from '@tanstack/react-query'
 import Link from 'next/link'
 import { DicoTableSkeleton } from './dico-table-skeleton'
 import { TableError } from './table-error'
-import { useDashboard } from '@/app/dashboard/dashboard-provider'
 
 type WordRow = {
   id: string
@@ -97,18 +95,18 @@ const DicoTableHeaders = () => (
   </TableHeader>
 )
 
-export const DicoTable = () => {
-  const [page, setPage] = useState(0)
-  const dash = useDashboard()
+interface DicoTableProps {
+  pageHandler: {
+    page: number
+    setPage: Dispatch<SetStateAction<number>>
+  }
+  queryResult: UseQueryResult<PaginatedDico, Error>
+}
 
-  const { isPending, isError, error, data, isFetching, isPlaceholderData } = useQuery({
-    queryKey: ['personalDico', page],
-    queryFn: () => {
-      const token: string = dash?.session_id || ''
-      return fetchPersonalDico({ token, page })
-    },
-    placeholderData: keepPreviousData,
-  })
+export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
+  const { page, setPage } = pageHandler
+
+  const { isPending, isError, error, data, isFetching, isPlaceholderData } = queryResult
 
   const [lignes, setLignes] = useState<WordRow[]>([])
   useEffect(() => {

@@ -15,6 +15,8 @@ type Meaning = {
 } & object
 
 export interface SingleDefinition {
+  source: string
+  definition_id: string
   nature: string[]
   subnature?: string[]
   meaning: Meaning
@@ -71,4 +73,10 @@ export interface SpellcheckResponse {
   unknown_words: string[]
   message: string
   html?: string
+}
+
+export interface PaginatedDico {
+  count: number
+  maxPages: number
+  entries: DictionaryFullEntry[]
 }

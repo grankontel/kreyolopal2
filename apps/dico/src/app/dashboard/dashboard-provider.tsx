@@ -4,7 +4,7 @@ import { createContext, useContext } from 'react'
 import { useDicoStore } from '@/store/dico-store'
 import { DashboardMenuItem } from '@/lib/dashboard'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { getLexicons } from '@/queries/get-lexicons'
+import { getLexicons } from '@/queries/lexicons/get-lexicons'
 import { Lexicon } from '@/lib/lexicons/types'
 import { ResponseError } from '@/lib/types'
 import { useEffect } from 'react'
@@ -63,7 +63,10 @@ export const DashboardProvider = ({
         icon: 'bookmark',
         label: 'Mes lexiques',
         path: '/dashboard/lexicons',
-        items: data?.map((item) => ({ label: item.name, path: item.path })),
+        items: data?.map((item) => ({
+          label: item.name,
+          path: '/dashboard' + item.path,
+        })),
       })
       setPersonnel(personnel)
     }

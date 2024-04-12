@@ -9,15 +9,19 @@ export type KreyolLanguage =
 
 export type MeaningLanguage = KreyolLanguage | 'fr'
 
-export enum MongoCollection  {
+export enum MongoCollection {
   reference = 'reference',
   validated = 'validated',
   personal = 'personal',
   lexicons = 'lexicons',
-} 
+}
 
-export type RestrictedDefinitionSource = MongoCollection.reference | MongoCollection.validated
-export type DefinitionSource = RestrictedDefinitionSource | MongoCollection.personal
+export type RestrictedDefinitionSource =
+  | MongoCollection.reference
+  | MongoCollection.validated
+export type DefinitionSource =
+  | RestrictedDefinitionSource
+  | MongoCollection.personal
 
 type Meaning = {
   [key in MeaningLanguage]?: string

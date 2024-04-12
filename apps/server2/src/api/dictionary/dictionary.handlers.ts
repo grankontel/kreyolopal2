@@ -52,7 +52,9 @@ const getWord = async function (c: Context) {
   }
 
   try {
-    const coll = client.db(config.mongodb.db).collection(MongoCollection.reference)
+    const coll = client
+      .db(config.mongodb.db)
+      .collection(MongoCollection.reference)
     const cursor = coll.find(filter, { projection })
     const result = await cursor.toArray()
     cursor.close()
@@ -110,7 +112,9 @@ const getSuggestion = async function (c: Context) {
       variations: 1,
     }
 
-    const coll = client.db(config.mongodb.db).collection(MongoCollection.reference)
+    const coll = client
+      .db(config.mongodb.db)
+      .collection(MongoCollection.reference)
     const cursorE = coll.find(filterEnries, { projection })
     const exact = await cursorE.toArray()
     cursorE.close()

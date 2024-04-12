@@ -7,7 +7,7 @@ export function SubmitButton(props: ButtonProps) {
   const { pending } = useFormStatus()
 
   return (
-    <Button type="submit" {...props} aria-disabled={pending}>
+    <Button type="submit" {...props} loading={pending} aria-disabled={pending}>
       {props.children}
     </Button>
   )

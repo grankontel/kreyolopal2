@@ -21,11 +21,5 @@ export default async function Page({
   if (!data) {
     return notFound()
   }
-  return (
-    <Entry
-      kreyol={params.kreyol as KreyolLanguage}
-      value={data}
-      dicoUrl={(w) => `/dashboard/dictionary/${params.kreyol}/${encodeURI(w)}`}
-    />
-  )
+  return <Entry kreyol={params.kreyol as KreyolLanguage} value={data} />
 }
