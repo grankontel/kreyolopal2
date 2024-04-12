@@ -1,7 +1,6 @@
-import { SingleDefinition } from '@kreyolopal/domain'
+import { SingleDefinition, KreyolLanguage } from '@kreyolopal/domain'
 import { hashKey } from '@/lib/utils'
 import { EntryDefinition } from './entry-definition'
-import { KreyolLanguage } from '@kreyolopal/react-ui'
 
 interface EntryDefinitionListProps {
   entry: string
