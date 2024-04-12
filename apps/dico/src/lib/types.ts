@@ -1,15 +1,8 @@
-import { KreyolLanguage, MeaningLanguage, SingleDefinition, Definitions } from '@kreyolopal/domain'
+import { KreyolLanguage, DictionaryEntry, Definitions } from '@kreyolopal/domain'
 
 export const apiServer =
   process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 export const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
-
-export interface DictionaryEntry {
-  _id: string
-  entry: string
-  variations: string[]
-  definitions: Array<SingleDefinition>
-}
 
 export interface DictionaryFullEntry {
   id: string

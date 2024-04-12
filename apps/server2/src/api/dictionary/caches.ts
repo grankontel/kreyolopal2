@@ -1,5 +1,5 @@
 import { LRUCache } from 'lru-cache'
-import { DictionaryEntry } from '../../domain/types'
+import { DictionaryEntry } from '@kreyolopal/domain'
 
 interface WordSuggestion {
   entry: string

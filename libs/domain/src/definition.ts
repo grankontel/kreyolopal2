@@ -43,3 +43,10 @@ export interface SingleDefinition {
 export type Definitions = {
   [key in KreyolLanguage]: SingleDefinition[]
 } & object
+
+export interface DictionaryEntry {
+  _id: string
+  entry: string
+  variations: string[]
+  definitions: Array<SingleDefinition>
+}

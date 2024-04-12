@@ -4,7 +4,8 @@
  */
 import Link from 'next/link'
 import { KreyolLanguage } from '@kreyolopal/react-ui'
-import { DictionaryEntry, UserDictionaryEntry } from '@/lib/types'
+import { UserDictionaryEntry } from '@/lib/types'
+import { DictionaryEntry } from '@kreyolopal/domain'
 import { hashKey, onlyUnique } from '@/lib/utils'
 import { EntryBookmarkButton } from './entry-bookmark-button'
 import { EntryDefinitionList } from './entry-definition-list'

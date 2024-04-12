@@ -1,4 +1,5 @@
-import { DictionaryEntry, apiServer } from '@/lib/types'
+import { apiServer } from '@/lib/types'
+import { DictionaryEntry } from '@kreyolopal/domain'
 
 export const getEntries = (w: string): Promise<DictionaryEntry[]> => {
   const word = w.trim()

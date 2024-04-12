@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { IconAttributes } from '@kreyolopal/react-ui'
 import { getEntries } from '@/queries/get-suggestions'
-import { DictionaryEntry } from '@/lib/types'
+import { DictionaryEntry } from '@kreyolopal/domain'
 import debounce from 'lodash.debounce'
 import { useRouter } from 'next/navigation'
 
