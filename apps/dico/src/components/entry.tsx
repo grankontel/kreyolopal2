@@ -3,8 +3,8 @@
  * @see https://v0.dev/t/7Zyk89nt9tB
  */
 import Link from 'next/link'
-import { KreyolLanguage } from '@kreyolopal/react-ui'
-import { DictionaryEntry, UserDictionaryEntry } from '@/lib/types'
+import { UserDictionaryEntry } from '@/lib/types'
+import { DictionaryEntry, KreyolLanguage } from '@kreyolopal/domain'
 import { hashKey, onlyUnique } from '@/lib/utils'
 import { EntryBookmarkButton } from './entry-bookmark-button'
 import { EntryDefinitionList } from './entry-definition-list'

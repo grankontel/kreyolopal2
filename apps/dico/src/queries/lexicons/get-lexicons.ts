@@ -1,4 +1,4 @@
-import { Lexicon } from '@/lib/lexicons/types'
+import { Lexicon } from '@kreyolopal/domain'
 import { apiServer, ResponseError } from '@/lib/types'
 
 export const getLexicons = async (

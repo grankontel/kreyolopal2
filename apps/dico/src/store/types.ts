@@ -1,5 +1,5 @@
 import { DashboardMenuItem } from '@/lib/dashboard'
-import { Lexicon } from '@/lib/lexicons/types'
+import { Lexicon } from '@kreyolopal/domain'
 import { User } from '@/lib/types'
 
 export interface UserSlice {

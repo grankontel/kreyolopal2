@@ -6,7 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
-import { Lexicon } from '@/lib/lexicons/types'
+import { Lexicon } from '@kreyolopal/domain'
 import { useDicoStore } from '@/store/dico-store'
 
 export const LexiconDropdownMenu = ({

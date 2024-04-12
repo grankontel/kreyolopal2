@@ -1,9 +1,10 @@
 import type { Context } from 'hono'
-import type { MongoClient } from 'mongodb'
+import { MongoClient } from 'mongodb'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
-import { MongoCollection, RestrictedDefinitionSource } from '#domain/types'
+import { Lexicon, MongoCollection, RestrictedDefinitionSource } from '@kreyolopal/domain'
 import { PoolClient } from 'pg'
+import { DictionaryFullEntry } from '@kreyolopal/domain'
 
 interface LexiconEntry {
   _id?: string
@@ -127,12 +128,12 @@ const getLexicon = async function (c: Context) {
       return c.json({ error: 'Not Found' }, 404)
     }
 
-    const lexicon = res.rows[0]
+    const lexicon: Lexicon = res.rows[0]
     if (lexicon.owner != user.id && lexicon.is_private) {
       return c.json({ error: 'Forbidden' }, 403)
     }
 
-    return c.json(lexicon, 200)
+    return c.json<Lexicon>(lexicon, 200)
   } catch (_error) {
     logger.error('getLexicon Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)
@@ -175,10 +176,10 @@ const getAllLexicons = async function (c: Context) {
       return c.json({ error: 'Not Found' }, 404)
     }
 
-    const lexicons = (
+    const lexicons: Lexicon[] = (
       isMine ? res.rows : res.rows.filter((item) => item.is_private == false)
     ).map((item) => ({ ...item, path: `/lexicons/${username}/${item.slug}` }))
-    return c.json(lexicons, 200)
+    return c.json<Lexicon[]>(lexicons, 200)
   } catch (_error) {
     logger.error('getLexicon Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)
@@ -442,7 +443,7 @@ const addDefinitions = async function (c: Context) {
       },
     }
 
-    const refColl = mongo.db(config.mongodb.db).collection('reference')
+    const refColl = mongo.db(config.mongodb.db).collection(MongoCollection.reference)
     const refCursor = refColl.find(refFilter, { projection })
     const refResult = (await refCursor.toArray())
       .filter((item) => item.entry === entry)
@@ -455,7 +456,7 @@ const addDefinitions = async function (c: Context) {
       },
     }
 
-    const valColl = mongo.db(config.mongodb.db).collection('validated')
+    const valColl = mongo.db(config.mongodb.db).collection(MongoCollection.validated)
     const valCursor = valColl.find(valFilter, { projection })
     const valResult = (await valCursor.toArray())
       .filter((item) => item.entry === entry)
@@ -562,14 +563,13 @@ const listEntries = async function (c: Context) {
     const result = await cursor.toArray();
     await cursor.close();
 
-    const data = result?.map((item) => {
+    const data: DictionaryFullEntry[] = result?.map((item) => {
       const def_object = item.definitions.reduce((obj, v) => {
         obj[v.kreyol] = obj[v.kreyol] || []
         obj[v.kreyol].push(v)
         return obj
       }, Object.create(null))
 
-      console.log(def_object)
       return {
         id: item._id,
         entry: item.entry,
@@ -593,11 +593,11 @@ const listEntries = async function (c: Context) {
       c.res.headers.append('X-Total-Count', nb)
 
       c.status(200)
-      return c.json(data)
+      return c.json<DictionaryFullEntry[]>(data)
     }
 
     return c.json({ error: 'Not Found.' }, 404)
-    
+
   } catch (_error) {
     logger.error('getLexicon Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)

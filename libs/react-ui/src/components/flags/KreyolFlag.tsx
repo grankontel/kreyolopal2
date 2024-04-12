@@ -4,7 +4,7 @@ import * as PropTypes from 'prop-types'
 import { FlagGp } from './FlagGp'
 import { FlagMq } from './FlagMq'
 import { FlagHt } from './FlagHt'
-import { KreyolLanguage } from "../../types"
+import { KreyolLanguage } from "@kreyolopal/domain"
 
 interface KreyolFlagProps extends React.SVGAttributes<SVGSVGElement> {
   kreyol: KreyolLanguage

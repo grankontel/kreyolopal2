@@ -9,9 +9,10 @@ import {
   TableBody,
   Table,
 } from '@/components/ui/table'
-import { DictionaryFullEntry, PaginatedDico } from '@/lib/types'
+import { PaginatedDico } from '@/lib/types'
 import { makeId, hashKey } from '@/lib/utils'
-import { KreyolFlag, KreyolLanguage } from '@kreyolopal/react-ui'
+import { KreyolFlag } from '@kreyolopal/react-ui'
+import { SingleDefinition, DictionaryFullEntry, KreyolLanguage } from '@kreyolopal/domain'
 import DicoTableCell from '@/components/dicotable/dico-table-cell'
 import { UseQueryResult } from '@tanstack/react-query'
 import Link from 'next/link'
@@ -44,7 +45,7 @@ function wordsToRow(words: DictionaryFullEntry[]): WordRow[] {
   const lignes: WordRow[] = []
   words.forEach((word) => {
     const defs = Object.entries(word.definitions).map((item) => {
-      return { langue: item[0] as KreyolLanguage, definitions: item[1] }
+      return { langue: item[0] as KreyolLanguage, definitions: item[1]  as SingleDefinition[]}
     })
     const totalDefs = defs.reduce((nbdefs, item) => nbdefs + item.definitions.length, 0)
     defs.forEach(({ langue, definitions }, langue_index) => {

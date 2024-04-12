@@ -1,11 +1,10 @@
 'use client'
 import Link from 'next/link'
-import { MeaningLanguage, SingleDefinition } from '@/lib/types'
+import { MeaningLanguage, SingleDefinition, KreyolLanguage } from '@kreyolopal/domain'
 import { hashKey } from '@/lib/utils'
 import FeatherIcon from './FeatherIcon'
 import { DropdownMenu, DropdownMenuTrigger } from './ui/dropdown-menu'
 import { LexiconDropdownMenu } from './lexicons/lexicon-dropdown-menu'
-import { KreyolLanguage } from '@kreyolopal/react-ui'
 import { dicoUrl } from '@/lib/dicoUrl'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
@@ -41,7 +40,7 @@ export const EntryDefinition = ({
   const addEntry = useMutation({
     mutationFn: () => {
       return addEntries(
-        lexiconId,
+        lexiconId as string,
         {
           entry: entry,
           definitions: [
