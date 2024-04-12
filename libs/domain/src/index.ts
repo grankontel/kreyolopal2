@@ -1,3 +1,3 @@
 
-export type { KreyolLanguage, MeaningLanguage } from './types'
+export type { KreyolLanguage, MeaningLanguage, MongoCollection } from './types'
 export type * from './definition'

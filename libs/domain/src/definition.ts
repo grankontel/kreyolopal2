@@ -1,11 +1,4 @@
-import { KreyolLanguage, MeaningLanguage } from "./types"
-
-export enum MongoCollection {
-  reference = 'reference',
-  validated = 'validated',
-  personal = 'personal',
-  lexicons = 'lexicons',
-}
+import { KreyolLanguage, MeaningLanguage, MongoCollection } from "./types"
 
 export type RestrictedDefinitionSource =
   | MongoCollection.reference

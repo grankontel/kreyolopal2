@@ -2,7 +2,7 @@ import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import type { Context } from 'hono'
 import caches from './caches'
-import { MongoCollection } from '@kreyolopal/domain'
+import { MongoCollection, DictionaryEntry } from '@kreyolopal/domain'
 
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
@@ -71,7 +71,7 @@ const getWord = async function (c: Context) {
     c.res.headers.append('Cache-Control', 'public, maxage=86400')
 
     c.status(200)
-    return c.json(data)
+    return c.json<DictionaryEntry>(data)
   } catch (e: any) {
     logger.error(e.message)
     throw createHttpException({
@@ -156,7 +156,7 @@ const getSuggestion = async function (c: Context) {
     caches.suggestions.set(word, result)
     c.res.headers.append('Cache-Control', 'public, maxage=86400')
     c.status(200)
-    return c.json(result)
+    return c.json<DictionaryEntry[]>(result)
   } catch (e: any) {
     logger.error(e.message)
     throw createHttpException({

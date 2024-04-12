@@ -1,5 +1,5 @@
 const { nodeExternalsPlugin } = require('esbuild-node-externals');
-const { sassPlugin } = require('esbuild-sass-plugin')
+// const { sassPlugin } = require('esbuild-sass-plugin')
 
 module.exports={
 		entryPoints: ['./src/index.ts'],
@@ -10,5 +10,5 @@ module.exports={
 		platform: 'node',
 		format: 'cjs',
 		target: 'node20',
-		plugins: [nodeExternalsPlugin(), sassPlugin()],
+		plugins: [nodeExternalsPlugin()],
 	}
