@@ -570,7 +570,6 @@ const listEntries = async function (c: Context) {
         return obj
       }, Object.create(null))
 
-      console.log(def_object)
       return {
         id: item._id,
         entry: item.entry,
