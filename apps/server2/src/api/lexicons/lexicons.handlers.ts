@@ -1,5 +1,5 @@
 import type { Context } from 'hono'
-import type { MongoClient } from 'mongodb'
+import { MongoClient } from 'mongodb'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import { Lexicon, MongoCollection, RestrictedDefinitionSource } from '@kreyolopal/domain'
@@ -443,7 +443,7 @@ const addDefinitions = async function (c: Context) {
       },
     }
 
-    const refColl = mongo.db(config.mongodb.db).collection('reference')
+    const refColl = mongo.db(config.mongodb.db).collection(MongoCollection.reference)
     const refCursor = refColl.find(refFilter, { projection })
     const refResult = (await refCursor.toArray())
       .filter((item) => item.entry === entry)
@@ -456,7 +456,7 @@ const addDefinitions = async function (c: Context) {
       },
     }
 
-    const valColl = mongo.db(config.mongodb.db).collection('validated')
+    const valColl = mongo.db(config.mongodb.db).collection(MongoCollection.validated)
     const valCursor = valColl.find(valFilter, { projection })
     const valResult = (await valCursor.toArray())
       .filter((item) => item.entry === entry)

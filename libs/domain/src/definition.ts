@@ -1,11 +1,8 @@
-import { KreyolLanguage, MeaningLanguage, MongoCollection } from "./types"
+import { KreyolLanguage, MeaningLanguage } from "./types"
 
-export type RestrictedDefinitionSource =
-  | MongoCollection.reference
-  | MongoCollection.validated
-export type DefinitionSource =
-  | RestrictedDefinitionSource
-  | MongoCollection.personal
+export type RestrictedDefinitionSource =  "reference" | "validated"
+
+export type DefinitionSource = RestrictedDefinitionSource | "personal" | "lexicons"
 
 type Meaning = {
   [key in MeaningLanguage]?: string
