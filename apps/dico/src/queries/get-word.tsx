@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers'
 import { UserDictionaryEntry, apiServer, cookieName } from '@/lib/types'
-import { DictionaryEntry, KreyolLanguage } from '@kreyolopal/domain'
+import { DictionaryEntry, DictionaryFullEntry, KreyolLanguage } from '@kreyolopal/domain'
 import { parseCookie } from '@/lib/utils'
 
 export async function getWord(
@@ -46,10 +46,10 @@ export async function getWord(
       entry: data,
       kreyol,
     }
-    /*
+    
     if (user_id) {
       const token = session_id
-      const result2 = await fetch(`${apiServer}/api/me/dictionary/${encodeURI(entry)}`, {
+      const result2 = await fetch(`${apiServer}/api/me/dictionary/${entry}`, {
         method: 'GET',
 
         headers: {
@@ -76,7 +76,7 @@ export async function getWord(
         response.bookmark = bookmarks[0]
       }
     }
-*/
+
     resolve(response)
   })
 }

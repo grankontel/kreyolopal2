@@ -55,6 +55,22 @@ export function WordSearchForm() {
     },
   })
 
+  const ProposeWord = ({ word }: { word: string }) => (
+    <li key="add_word">
+      <Button
+        className="w-full justify-start text-left"
+        variant="ghost"
+        onClick={(e) => {
+          e.preventDefault()
+          router.push(`/dashboard/dictionary/proposal/${word}`)
+        }}
+
+      >
+        Ajouter {word}
+      </Button>
+    </li>
+  )
+
   return (
     <form className="flex-1">
       <div className="relative">
@@ -68,28 +84,35 @@ export function WordSearchForm() {
             }}
           />
           <div className="absolute top-full left-0 w-full bg-white dark:bg-gray-800 mt-2 shadow-lg z-10 drop-shadow-md">
-            {words === undefined || words?.length === 0 ? (
-              ' '
-            ) : (
-              <ul className="divide-y divide-gray-200 dark:divide-gray-900">
-                {words.map((item: DictionaryEntry, index: any) => {
-                  return (
-                    <li key={item._id}>
-                      <Button
-                        className="w-full justify-start text-left"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          router.push(`/dashboard/dictionary/gp/${encodeURI(item.entry)}`)
-                        }}
-                      >
-                        {item.variations.join('/')}
-                      </Button>
-                    </li>
-                  )
-                })}
-              </ul>
-            )}
+            {words === undefined || words?.length === 0 ?
+              word.length > 0 ? (
+
+                <ul className="divide-y divide-gray-200 dark:divide-gray-900">
+                  <ProposeWord word={word} />
+                </ul>) : ('')
+              : (
+                <ul className="divide-y divide-gray-200 dark:divide-gray-900">
+                  {words.map((item: DictionaryEntry, index: any) => {
+                    return (
+                      <li key={item._id}>
+                        <Button
+                          className="w-full justify-start text-left"
+                          variant="ghost"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            router.push(`/dashboard/dictionary/gp/${encodeURI(item.entry)}`)
+                          }}
+                        >
+                          {item.variations.join('/')}
+                        </Button>
+                      </li>
+                    )
+                  })}
+                  {word.length > 0 && words.findIndex((item) => item.entry === word) === -1 ? (
+                    <ProposeWord word={word} />
+                  ) : ('')}
+                </ul>
+              )}
           </div>
         </div>
         <Button
