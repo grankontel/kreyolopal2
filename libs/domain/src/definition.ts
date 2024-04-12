@@ -43,3 +43,10 @@ export interface DictionaryEntry {
   variations: string[]
   definitions: Array<SingleDefinition>
 }
+
+export interface DictionaryFullEntry {
+  id: string
+  entry: string
+  variations: string[]
+  definitions: Definitions
+}

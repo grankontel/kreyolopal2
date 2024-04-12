@@ -4,6 +4,7 @@ import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import { Lexicon, MongoCollection, RestrictedDefinitionSource } from '@kreyolopal/domain'
 import { PoolClient } from 'pg'
+import { DictionaryFullEntry } from '@kreyolopal/domain'
 
 interface LexiconEntry {
   _id?: string
@@ -562,7 +563,7 @@ const listEntries = async function (c: Context) {
     const result = await cursor.toArray();
     await cursor.close();
 
-    const data = result?.map((item) => {
+    const data: DictionaryFullEntry[] = result?.map((item) => {
       const def_object = item.definitions.reduce((obj, v) => {
         obj[v.kreyol] = obj[v.kreyol] || []
         obj[v.kreyol].push(v)
@@ -593,7 +594,7 @@ const listEntries = async function (c: Context) {
       c.res.headers.append('X-Total-Count', nb)
 
       c.status(200)
-      return c.json(data)
+      return c.json<DictionaryFullEntry[]>(data)
     }
 
     return c.json({ error: 'Not Found.' }, 404)

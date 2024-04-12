@@ -1,15 +1,8 @@
-import { KreyolLanguage, DictionaryEntry, Definitions } from '@kreyolopal/domain'
+import { KreyolLanguage, DictionaryEntry, DictionaryFullEntry } from '@kreyolopal/domain'
 
 export const apiServer =
   process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 export const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
-
-export interface DictionaryFullEntry {
-  id: string
-  entry: string
-  variations: string[]
-  definitions: Definitions
-}
 
 export type UserDictionaryEntry = {
   cacheMode: 'public' | 'private'

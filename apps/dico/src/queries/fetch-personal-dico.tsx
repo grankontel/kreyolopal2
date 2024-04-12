@@ -1,4 +1,5 @@
-import { DictionaryFullEntry, ResponseError, apiServer, PaginatedDico } from '@/lib/types'
+import { ResponseError, apiServer, PaginatedDico } from '@/lib/types'
+import { DictionaryFullEntry } from '@kreyolopal/domain'
 
 export const fetchPersonalDico = ({ token, page = 0 }: { token: string; page: number }) =>
   new Promise<PaginatedDico>(async (resolve, reject) => {

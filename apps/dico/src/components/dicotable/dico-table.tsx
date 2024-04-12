@@ -9,10 +9,10 @@ import {
   TableBody,
   Table,
 } from '@/components/ui/table'
-import { DictionaryFullEntry, PaginatedDico } from '@/lib/types'
+import { PaginatedDico } from '@/lib/types'
 import { makeId, hashKey } from '@/lib/utils'
 import { KreyolFlag, KreyolLanguage } from '@kreyolopal/react-ui'
-import { SingleDefinition } from '@kreyolopal/domain'
+import { SingleDefinition, DictionaryFullEntry } from '@kreyolopal/domain'
 import DicoTableCell from '@/components/dicotable/dico-table-cell'
 import { UseQueryResult } from '@tanstack/react-query'
 import Link from 'next/link'

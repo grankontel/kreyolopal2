@@ -1,4 +1,5 @@
-import { DictionaryFullEntry, ResponseError, apiServer, PaginatedDico } from '@/lib/types'
+import { ResponseError, apiServer, PaginatedDico } from '@/lib/types'
+import { DictionaryFullEntry } from '@kreyolopal/domain'
 
 interface LexiconEntriesProps {
 	token: string;

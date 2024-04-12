@@ -6,6 +6,7 @@ import { createHttpException } from '#utils/createHttpException'
 import { WordsRepository } from '#lib/words.repository'
 import { HTTPException } from 'hono/http-exception'
 import { MongoCollection } from '@kreyolopal/domain'
+import { DictionaryFullEntry } from '@kreyolopal/domain'
 
 function formatDate(date: string | number | Date): string | null {
   if (date === null) return null
@@ -429,7 +430,7 @@ const listWords = async function (c: Context) {
     const result = await cursor.toArray()
     cursor.close()
 
-    const data = result?.map((item) => {
+    const data: DictionaryFullEntry[] = result?.map((item) => {
       return {
         id: item._id,
         entry: item.entry,
@@ -453,7 +454,7 @@ const listWords = async function (c: Context) {
       c.res.headers.append('X-Total-Count', nb)
 
       c.status(200)
-      return c.json(data)
+      return c.json<DictionaryFullEntry[]>(data)
     }
 
     return c.json({ error: 'Not Found.' }, 404)
