@@ -2,7 +2,7 @@ import type { Context } from 'hono'
 import type { MongoClient } from 'mongodb'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
-import { MongoCollection, RestrictedDefinitionSource } from '@kreyolopal/domain'
+import { Lexicon, MongoCollection, RestrictedDefinitionSource } from '@kreyolopal/domain'
 import { PoolClient } from 'pg'
 
 interface LexiconEntry {
@@ -127,12 +127,12 @@ const getLexicon = async function (c: Context) {
       return c.json({ error: 'Not Found' }, 404)
     }
 
-    const lexicon = res.rows[0]
+    const lexicon: Lexicon = res.rows[0]
     if (lexicon.owner != user.id && lexicon.is_private) {
       return c.json({ error: 'Forbidden' }, 403)
     }
 
-    return c.json(lexicon, 200)
+    return c.json<Lexicon>(lexicon, 200)
   } catch (_error) {
     logger.error('getLexicon Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)
@@ -175,10 +175,10 @@ const getAllLexicons = async function (c: Context) {
       return c.json({ error: 'Not Found' }, 404)
     }
 
-    const lexicons = (
+    const lexicons: Lexicon[] = (
       isMine ? res.rows : res.rows.filter((item) => item.is_private == false)
     ).map((item) => ({ ...item, path: `/lexicons/${username}/${item.slug}` }))
-    return c.json(lexicons, 200)
+    return c.json<Lexicon[]>(lexicons, 200)
   } catch (_error) {
     logger.error('getLexicon Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)
@@ -597,7 +597,7 @@ const listEntries = async function (c: Context) {
     }
 
     return c.json({ error: 'Not Found.' }, 404)
-    
+
   } catch (_error) {
     logger.error('getLexicon Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)
