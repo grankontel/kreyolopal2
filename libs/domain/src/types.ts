@@ -15,3 +15,24 @@ export const MongoCollection = {
   lexicons: 'lexicons',
 } as const;
 
+export const Natures = {
+  adjectif: "adjectif",
+  adverbe: "adverbe",
+  article: "article",
+  conjonction: "conjonction",
+  exclamation: "exclamation",
+  expression: "expression",
+  interjection: "interjection",
+  locution: "locution",
+  nom: "nom",
+  nom_propre: "nom propre",
+  nombre: "nombre",
+  particule: "particule",
+  préfixe: "préfixe",
+  préposition: "préposition",
+  pronom: "pronom",
+  suffixe: "suffixe",
+  verbe: "verbe"
+} as const
+
+export type Nature = (typeof Natures)[keyof typeof Natures]
