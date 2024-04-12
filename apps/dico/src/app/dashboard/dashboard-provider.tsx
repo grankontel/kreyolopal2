@@ -5,7 +5,7 @@ import { useDicoStore } from '@/store/dico-store'
 import { DashboardMenuItem } from '@/lib/dashboard'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getLexicons } from '@/queries/lexicons/get-lexicons'
-import { Lexicon } from '@/lib/lexicons/types'
+import { Lexicon } from '@kreyolopal/domain'
 import { ResponseError } from '@/lib/types'
 import { useEffect } from 'react'
 

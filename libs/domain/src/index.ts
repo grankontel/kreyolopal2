@@ -1,3 +1,4 @@
 
 export type { KreyolLanguage, MeaningLanguage, MongoCollection } from './types'
-export type * from './definition'
+export * from './definition'
+export * from './lexicon'

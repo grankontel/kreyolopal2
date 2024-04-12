@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { Lexicon } from '@/lib/lexicons/types'
+import { Lexicon } from '@kreyolopal/domain'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'

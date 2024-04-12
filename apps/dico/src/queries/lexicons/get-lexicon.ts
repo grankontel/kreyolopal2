@@ -3,7 +3,7 @@
 import { cookies } from 'next/headers'
 import { apiServer, cookieName, ResponseError } from '@/lib/types'
 import { parseCookie } from '@/lib/utils'
-import { Lexicon } from '@/lib/lexicons/types'
+import { Lexicon } from '@kreyolopal/domain'
 
 export async function getLexicon(username: string, slug: string) : Promise<Lexicon> {
 	const cookieValue = cookies().get(cookieName)
