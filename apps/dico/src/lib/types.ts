@@ -75,7 +75,7 @@ export interface SpellcheckResponse {
   html?: string
 }
 
-export interface PersonalDico {
+export interface PaginatedDico {
   count: number
   maxPages: number
   entries: DictionaryFullEntry[]

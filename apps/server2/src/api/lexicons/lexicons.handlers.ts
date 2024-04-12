@@ -562,7 +562,42 @@ const listEntries = async function (c: Context) {
     const result = await cursor.toArray();
     await cursor.close();
 
-    return c.json(result, 200)
+    const data = result?.map((item) => {
+      const def_object = item.definitions.reduce((obj, v) => {
+        obj[v.kreyol] = obj[v.kreyol] || []
+        obj[v.kreyol].push(v)
+        return obj
+      }, Object.create(null))
+
+      console.log(def_object)
+      return {
+        id: item._id,
+        entry: item.entry,
+        variations: item.variations,
+        definitions: def_object,
+      }
+    })
+
+    if (data.length > 0) {
+      const nb = await mongo
+        .db(config.mongodb.db)
+        .collection(MongoCollection.lexicons)
+        .countDocuments({ lexicons: lexicon.id })
+      const endRange = Math.min(nb, offset + limit)
+      c.res.headers.append('Cache-Control', 'private, maxage=86400')
+      c.res.headers.append(
+        'Access-Control-Expose-Headers',
+        'X-Total-Count, Content-Range'
+      )
+      c.res.headers.append('Content-Range', `${offset}-${endRange}/${nb}`)
+      c.res.headers.append('X-Total-Count', nb)
+
+      c.status(200)
+      return c.json(data)
+    }
+
+    return c.json({ error: 'Not Found.' }, 404)
+    
   } catch (_error) {
     logger.error('getLexicon Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)
@@ -596,7 +631,6 @@ const buildListAggregate = (lexiconId: string, skip: number, limit: number) => (
           {
             $match: {
               docType: "definition",
-              kreyol: "gp",
               $expr: {
                 $in: ["$definition_id", "$$defi"],
               },
@@ -616,7 +650,6 @@ const buildListAggregate = (lexiconId: string, skip: number, limit: number) => (
           {
             $match: {
               docType: "definition",
-              kreyol: "gp",
               $expr: {
                 $in: ["$definition_id", "$$defi"],
               },

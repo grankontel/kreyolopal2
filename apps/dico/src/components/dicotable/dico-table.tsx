@@ -9,7 +9,7 @@ import {
   TableBody,
   Table,
 } from '@/components/ui/table'
-import { DictionaryFullEntry, PersonalDico, User } from '@/lib/types'
+import { DictionaryFullEntry, PaginatedDico } from '@/lib/types'
 import { makeId, hashKey } from '@/lib/utils'
 import { KreyolFlag, KreyolLanguage } from '@kreyolopal/react-ui'
 import DicoTableCell from '@/components/dicotable/dico-table-cell'
@@ -100,7 +100,7 @@ interface DicoTableProps {
     page: number
     setPage: Dispatch<SetStateAction<number>>
   }
-  queryResult: UseQueryResult<PersonalDico, Error>
+  queryResult: UseQueryResult<PaginatedDico, Error>
 }
 
 export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {

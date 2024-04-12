@@ -1,7 +1,7 @@
-import { DictionaryFullEntry, ResponseError, apiServer, PersonalDico } from '@/lib/types'
+import { DictionaryFullEntry, ResponseError, apiServer, PaginatedDico } from '@/lib/types'
 
 export const fetchPersonalDico = ({ token, page = 0 }: { token: string; page: number }) =>
-  new Promise<PersonalDico>(async (resolve, reject) => {
+  new Promise<PaginatedDico>(async (resolve, reject) => {
     const PAGE_SIZE = 20
     const [offset, limit] = [page * PAGE_SIZE, PAGE_SIZE]
 
