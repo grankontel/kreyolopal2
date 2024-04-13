@@ -2,9 +2,8 @@ import type { Context } from 'hono'
 import { MongoClient } from 'mongodb'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
-import { Lexicon, MongoCollection, RestrictedDefinitionSource } from '@kreyolopal/domain'
+import { Lexicon, MongoCollection, RestrictedDefinitionSource, DictionaryFullEntry } from '@kreyolopal/domain'
 import { PoolClient } from 'pg'
-import { DictionaryFullEntry } from '@kreyolopal/domain'
 
 interface LexiconEntry {
   _id?: string
