@@ -4,6 +4,7 @@ import * as PropTypes from 'prop-types'
 import { FlagGp } from './FlagGp'
 import { FlagMq } from './FlagMq'
 import { FlagHt } from './FlagHt'
+import { FlagDm } from "./FlagDm"
 import { KreyolLanguage } from "@kreyolopal/domain"
 
 interface KreyolFlagProps extends React.SVGAttributes<SVGSVGElement> {
@@ -23,7 +24,10 @@ export const KreyolFlag = (props: KreyolFlagProps) => {
     case 'ht':
       return <FlagHt {...props} />
 
-    default:
+      case 'dm':
+        return <FlagDm {...props} />
+  
+      default:
       return <FlagGp {...props} />
   }
 }
