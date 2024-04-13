@@ -1,7 +1,8 @@
 export const KreyolLanguages = {
   gp: 'gp',
   mq: 'mq',
-  ht: 'ht'
+  ht: 'ht',
+  dm: 'dm'
 } as const;
 
 export type KreyolLanguage = (typeof KreyolLanguages)[keyof typeof KreyolLanguages]
