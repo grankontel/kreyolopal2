@@ -3,10 +3,11 @@
 build
 dist
 /coverage
-data
+/data
 .next
 .vercel
 public
+out
 
 ansible
 vagrant

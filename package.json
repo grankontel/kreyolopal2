@@ -18,7 +18,7 @@
     "dev:dico": "turbo run dev --filter=server2 --filter=@kreyolopal/react-ui --filter=dico --parallel",
     "dev:front": "turbo run dev --filter=@kreyolopal/web-ui --filter=front --parallel",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{js,ts,tsx,md}\""
+    "format": "prettier --write \"./{apps,libs,tools,shared}/**/*.{js,jsx,ts,tsx,json,md,html}\""
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,8 @@
     "eslint-config-custom": "*",
     "eslint-config-prettier": "^9.1.0",
     "n-readlines": "^1.0.1",
-    "prettier": "latest",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.13",
     "rimraf": "^4.4.1",
     "sharp": "^0.33.1",
     "turbo": "^1.13.2",
