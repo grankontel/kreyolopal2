@@ -22,6 +22,25 @@ entry is then removed from proposal
 users are notified ?
 rabbitmq ?
 
+### Proposals
+
+- [ ] finish add definition form in proposal
+- [ ] handle proposal creation
+- [ ] upvote definition
+- [ ] downvote definition
+- [ ] validate proposal
+
+### Profile
+
+- [ ] change password
+
+### Stack
+
+- [ ] migrate to Drizzle (https://drizzle.dev/docs/getting-started/installation)
+- [ ] install drizzle eslint
+- [ ] migrate to Neon (https://neon.tech/pricing)
+- [ ] migrate to Cloud Atlas
+- [ ] migrato to Hono/Cloudflare
 
 ## Lexicon entry
 
