@@ -60,18 +60,31 @@ export default async function Page({ params }: { params: { entry: string } }) {
                 </Label>
                 <div className="col-span-4"
                 >
-<div className="grid grid-cols-4 items-center gap-1"> 
+                  <div className="grid grid-cols-4 items-center gap-1">
 
-                  <KreyolCombobox />
-                  <Input
-                    className="col-span-3"
-                    type="text"
-                    name="meaning"
-                    placeholder="Entrez la définition de l'entrée"
-                  />
-</div>
+                    <KreyolCombobox />
+                    <Input
+                      className="col-span-3"
+                      type="text"
+                      name="meaning"
+                      placeholder="Entrez la définition de l'entrée"
+                    />
+                  </div>
                 </div>
               </div>
+
+              <div className="grid grid-cols-5 items-center gap-4">
+                <Label htmlFor="synonyms" className="text-left">
+                  Synonymes
+                </Label>
+                <Input
+                  className="col-span-4"
+                  type="text"
+                  name="synonyms"
+                  placeholder={`entrez les synonymes de ${entry}`}
+                />
+              </div>
+
 
             </div>
           </div>
