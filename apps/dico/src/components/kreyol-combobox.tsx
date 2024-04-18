@@ -15,7 +15,7 @@ import {
 } from 'cmdk'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { KreyolLanguage } from '@kreyolopal/domain'
-import { KreyolFlag } from '@kreyolopal/react-ui'
+import { LangFlag } from '@kreyolopal/react-ui'
 
 export function KreyolCombobox() {
   const [open, setOpen] = React.useState(false)
@@ -41,7 +41,7 @@ export function KreyolCombobox() {
             ? 
             (
               <>
-              <KreyolFlag kreyol={value}  className="h-6 w-6 pr-1.5" />
+              <LangFlag kreyol={value}  className="h-6 w-6 pr-1.5" />
               <span>{kreyols.find((item) => item.key === value)?.value}
                 </span></>
                 )
@@ -73,7 +73,7 @@ export function KreyolCombobox() {
                     setOpen(false)
                   }}
                 >
-                  <KreyolFlag kreyol={item.key}  className="h-6 w-6 pr-1.5" />
+                  <LangFlag kreyol={item.key}  className="h-6 w-6 pr-1.5" />
                   <span>{item.value}</span>
                   <CheckIcon
                     className={cn(

@@ -1,0 +1,10 @@
+import * as React from "react"
+
+export const FlagFr = (props: React.SVGProps<SVGSVGElement>) => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" {...props}>
+		<path fill="#ED2939" d="M0 0h900v600H0z" />
+		<path fill="#fff" d="M0 0h600v600H0z" />
+		<path fill="#002395" d="M0 0h300v600H0z" />
+	</svg>
+)
+

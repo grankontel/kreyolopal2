@@ -5,16 +5,17 @@ import { FlagGp } from './FlagGp'
 import { FlagMq } from './FlagMq'
 import { FlagHt } from './FlagHt'
 import { FlagDm } from "./FlagDm"
-import { KreyolLanguage } from "@kreyolopal/domain"
+import { MeaningLanguage } from "@kreyolopal/domain"
+import { FlagFr } from "./FlagFr"
 
-interface KreyolFlagProps extends React.SVGAttributes<SVGSVGElement> {
-  kreyol: KreyolLanguage
+interface LangFlagProps extends React.SVGAttributes<SVGSVGElement> {
+  langue: MeaningLanguage
 }
 
-export const KreyolFlag = (props: KreyolFlagProps) => {
-  const { kreyol } = props
+export const LangFlag = (props: LangFlagProps) => {
+  const { langue } = props
 
-  switch (kreyol) {
+  switch (langue) {
     case 'gp':
       return <FlagGp {...props} />
 
@@ -24,14 +25,17 @@ export const KreyolFlag = (props: KreyolFlagProps) => {
     case 'ht':
       return <FlagHt {...props} />
 
-      case 'dm':
-        return <FlagDm {...props} />
-  
-      default:
+    case 'dm':
+      return <FlagDm {...props} />
+
+    case 'fr':
+      return <FlagFr {...props} />
+
+    default:
       return <FlagGp {...props} />
   }
 }
 
-KreyolFlag.propTypes = {
+LangFlag.propTypes = {
   kreyol: PropTypes.string.isRequired,
 }

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/table'
 import { PaginatedDico } from '@/lib/types'
 import { makeId, hashKey } from '@/lib/utils'
-import { KreyolFlag } from '@kreyolopal/react-ui'
+import { LangFlag } from '@kreyolopal/react-ui'
 import { SingleDefinition, DictionaryFullEntry, KreyolLanguage } from '@kreyolopal/domain'
 import DicoTableCell from '@/components/dicotable/dico-table-cell'
 import { UseQueryResult } from '@tanstack/react-query'
@@ -64,7 +64,7 @@ function wordsToRow(words: DictionaryFullEntry[]): WordRow[] {
           entry_rowspan,
           variations: word.variations,
           langue,
-          Flag: <KreyolFlag kreyol={langue} width="24" height="12" />,
+          Flag: <LangFlag kreyol={langue} width="24" height="12" />,
           flag_rowspan:
             definitions.length === 1 ? 1 : def_index === 0 ? definitions.length : 0,
           nature: definition.nature,
