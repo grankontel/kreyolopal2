@@ -37,5 +37,5 @@ export const LangFlag = (props: LangFlagProps) => {
 }
 
 LangFlag.propTypes = {
-  kreyol: PropTypes.string.isRequired,
+  langue: PropTypes.string.isRequired,
 }

@@ -1,7 +1,9 @@
 import { isLoggedIn } from '@/app/dashboard/is-logged-in'
+import FeatherIcon from '@/components/FeatherIcon'
 import { BookmarkIcon } from '@/components/bookmark-icon'
-import { KreyolCombobox } from '@/components/kreyol-combobox'
+import { LanguageCombobox } from '@/components/language-combobox'
 import { NatureCombobox } from '@/components/nature-combobox'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
@@ -43,7 +45,7 @@ export default async function Page({ params }: { params: { entry: string } }) {
                 <Label htmlFor="kreyol" className="text-left">
                   Kreyol
                 </Label>
-                <KreyolCombobox />
+                <LanguageCombobox kreyolOnly />
               </div>
 
               <div className="grid grid-cols-5 items-center gap-4">
@@ -62,13 +64,19 @@ export default async function Page({ params }: { params: { entry: string } }) {
                 >
                   <div className="grid grid-cols-4 items-center gap-1">
 
-                    <KreyolCombobox />
-                    <Input
-                      className="col-span-3"
-                      type="text"
-                      name="meaning"
-                      placeholder="Entrez la définition de l'entrée"
-                    />
+                    <LanguageCombobox />
+                    <div className="col-span-3 flex w-full items-center space-x-2">
+                      <Input
+                        type="text"
+                        name="meaning"
+                        placeholder="Entrez la définition de l'entrée"
+                      />
+                      <Button size='icon' variant='outline' className='w-8 h-8'>
+                        <FeatherIcon iconName='plus' />
+                      </Button>
+
+
+                    </div>
                   </div>
                 </div>
               </div>
