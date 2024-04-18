@@ -74,6 +74,18 @@ export default async function Page({ params }: { params: { entry: string } }) {
               </div>
 
               <div className="grid grid-cols-5 items-center gap-4">
+                <Label htmlFor="usage" className="text-left">
+                  Usage
+                </Label>
+                <Input
+                  className="col-span-4"
+                  type="text"
+                  name="usage"
+                  placeholder={`entrez une phrase d'usage avec ${entry}`}
+                />
+              </div>
+
+              <div className="grid grid-cols-5 items-center gap-4">
                 <Label htmlFor="synonyms" className="text-left">
                   Synonymes
                 </Label>
