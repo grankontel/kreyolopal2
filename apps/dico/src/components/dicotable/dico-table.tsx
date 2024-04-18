@@ -64,7 +64,7 @@ function wordsToRow(words: DictionaryFullEntry[]): WordRow[] {
           entry_rowspan,
           variations: word.variations,
           langue,
-          Flag: <LangFlag kreyol={langue} width="24" height="12" />,
+          Flag: <LangFlag langue={langue} width="24" height="12" />,
           flag_rowspan:
             definitions.length === 1 ? 1 : def_index === 0 ? definitions.length : 0,
           nature: definition.nature,

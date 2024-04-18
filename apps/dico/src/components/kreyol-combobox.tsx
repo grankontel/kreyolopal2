@@ -21,7 +21,7 @@ export function KreyolCombobox() {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState<KreyolLanguage>('gp')
 
-  const kreyols:Array<{key: KreyolLanguage, value: string}> = [
+  const langues:Array<{key: KreyolLanguage, value: string}> = [
     {key: "gp", value: 'Gwadloup'},
     {key: "mq", value: 'Matnik'},
     {key: "ht", value: 'Ayiti'},
@@ -41,8 +41,8 @@ export function KreyolCombobox() {
             ? 
             (
               <>
-              <LangFlag kreyol={value}  className="h-6 w-6 pr-1.5" />
-              <span>{kreyols.find((item) => item.key === value)?.value}
+              <LangFlag langue={value}  className="h-6 w-6 pr-1.5" />
+              <span>{langues.find((item) => item.key === value)?.value}
                 </span></>
                 )
 
@@ -61,7 +61,7 @@ export function KreyolCombobox() {
               Aucune nature trouvée.
             </CommandEmpty>
             <CommandGroup className="overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground">
-              {kreyols.map((item) => (
+              {langues.map((item) => (
                 //   '   aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50'
                 <CommandItem
                   className="relative flex items-center rounded-sm px-2 py-1.5 text-sm select-none  outline-none cursor-default"
@@ -73,7 +73,7 @@ export function KreyolCombobox() {
                     setOpen(false)
                   }}
                 >
-                  <LangFlag kreyol={item.key}  className="h-6 w-6 pr-1.5" />
+                  <LangFlag langue={item.key}  className="h-6 w-6 pr-1.5" />
                   <span>{item.value}</span>
                   <CheckIcon
                     className={cn(
