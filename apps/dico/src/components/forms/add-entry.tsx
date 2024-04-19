@@ -1,4 +1,5 @@
 'use client'
+import { useDashboard } from '@/app/dashboard/dashboard-provider'
 import FeatherIcon from '@/components/FeatherIcon'
 import { LanguageCombobox } from '@/components/language-combobox'
 import { NatureCombobox } from '@/components/nature-combobox'
@@ -6,9 +7,11 @@ import { Tags } from '@/components/tags'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { checkWord } from '@/queries/check-word'
 import { Quote, KreyolLanguage, Meaning } from '@kreyolopal/domain'
 import type { Nature } from '@kreyolopal/domain'
 import { useState } from 'react'
+import { useToast } from '../ui/use-toast'
 
 export interface SubmitEntry {
   entry: string
@@ -28,6 +31,10 @@ export interface SubmitDefinition {
 
 
 export const AddEntry = ({ entry }: { entry: string }) => {
+  const auth = useDashboard()
+  const { toast } = useToast()
+
+  const [isChecking, setChecking] = useState(false)
   const [variations, setVariations] = useState<string[]>([])
   const [kreyol, setKreyol] = useState<KreyolLanguage>('gp')
   const [nature, setNature] = useState<Nature>('nom')
@@ -44,8 +51,22 @@ export const AddEntry = ({ entry }: { entry: string }) => {
     setConfer(confer.filter((_, i) => i !== index))
   }
 
-  function addConfer(tag: string): boolean {
+  async function addConfer(tag: string): Promise<boolean> {
     // make sure the word exists
+    setChecking(true)
+    const result = await checkWord(auth?.session_id || '', tag)
+    setChecking(false)
+    if (!result) {
+      toast({
+        title: 'Erreur',
+        variant: 'destructive',
+        description: `Le mot ${tag} n'est pas dans le dictionnaire`,
+      })
+
+      return false
+    }
+
+
     setConfer([...confer, tag])
     return true
   }
@@ -54,8 +75,21 @@ export const AddEntry = ({ entry }: { entry: string }) => {
     setSynonyms(synonyms.filter((_, i) => i !== index))
   }
 
-  function addSynonym(tag: string): boolean {
+  async function addSynonym(tag: string): Promise<boolean> {
     // make sure the word exists
+    setChecking(true)
+    const result = await checkWord(auth?.session_id || '', tag)
+    setChecking(false)
+    if (!result) {
+      toast({
+        title: 'Erreur',
+        variant: 'destructive',
+        description: `Le mot ${tag} n'est pas dans le dictionnaire`,
+      })
+
+      return false
+    }
+
     setSynonyms([...synonyms, tag])
     return true
   }
@@ -156,6 +190,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
           addTag={addSynonym}
           removeTagAtIndex={removeSynonymAtIndex}
           placeholder="Ajouter un synonyme"
+          isLoading={isChecking}
         />
       </div>
 
@@ -170,6 +205,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
           addTag={addConfer}
           removeTagAtIndex={removeConferAtIndex}
           placeholder="Ajouter une référence"
+          isLoading={isChecking}
         />
       </div>
 
