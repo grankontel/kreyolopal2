@@ -35,7 +35,7 @@ export type EntrySelectedHandler = (entry: DictionaryEntry) => void
 export function WordSearchForm() {
   const router = useRouter()
   const [word, setWord] = useState('')
-  const debounceSetWord = debounce(setWord, 1000)
+  const debounceSetWord = debounce(setWord, 500)
   useEffect(() => {
     return () => {
       debounceSetWord.cancel()
@@ -110,7 +110,7 @@ export function WordSearchForm() {
                   )
                 })}
                 {word.length > 0 &&
-                words.findIndex((item) => item.entry === word) === -1 ? (
+                  words.findIndex((item) => item.entry === word) === -1 ? (
                   <ProposeWord word={word} />
                 ) : (
                   ''
