@@ -4,6 +4,72 @@ import type { Context } from 'hono'
 import caches from './caches'
 import { MongoCollection, DictionaryEntry } from '@kreyolopal/domain'
 
+const findWord = async function (c: Context) {
+  const logger = c.get('logger')
+  const client = c.get('mongodb')
+  const user = c.get('user')
+
+  const { word } = c.req.param()
+  const aWord = word.trim()
+
+  logger.info(`findWord  ${word}`)
+
+  if (!user) {
+    logger.debug('user not logged in')
+    return c.json({ error: 'You are not logged in.' }, 403)
+  }
+
+
+  if (aWord.length === 0)
+    return c.json(
+      {
+        message: 'Bad request',
+      },
+      400
+    )
+
+  const filter = {
+    $and: [
+      {
+        entry: aWord,
+      },
+      {
+        $or: [
+          {
+            docType: 'entry',
+          },
+          {
+            docType: 'definition',
+          },
+        ],
+      },
+    ],
+  }
+
+  try {
+    const coll = client
+      .db(config.mongodb.db)
+      .collection(MongoCollection.reference)
+    const nb_reference = await coll.countDocuments(filter)
+    if (nb_reference !== 0) return c.json<boolean>(true, 200)
+
+    const validated = client
+      .db(config.mongodb.db)
+      .collection(MongoCollection.validated)
+    const nb_validated = await coll.countDocuments(filter)
+
+    return c.json<boolean>(nb_validated > 0 , nb_validated > 0 ? 200 : 404)
+  } catch (e: any) {
+    logger.error(e.message)
+    throw createHttpException({
+      errorContent: { error: 'Unknown error..' },
+      status: 500,
+      statusText: 'Unknown error.',
+    })
+  }
+
+}
+
 const getWord = async function (c: Context) {
   const logger = c.get('logger')
   const client = c.get('mongodb')
@@ -201,4 +267,4 @@ const getKreyolsFor = async function (c: Context) {
   }
 }
 
-export default { getWord, getSuggestion, getKreyolsFor }
+export default { findWord,getWord, getSuggestion, getKreyolsFor }

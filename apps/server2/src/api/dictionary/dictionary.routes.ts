@@ -7,6 +7,8 @@ const dicoRoutes = createRouter()
 // get suggestion
 dicoRoutes.get('/suggest/:word', dicoHandlers.getSuggestion)
 
+dicoRoutes.get( '/check/:word', dicoHandlers.findWord)
+
 // get available kreyol for a word
 dicoRoutes.get('/kreyolsfor/:word', dicoHandlers.getKreyolsFor)
 
