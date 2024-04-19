@@ -8,10 +8,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { checkWord } from '@/queries/check-word'
-import { Quote, KreyolLanguage, Meaning } from '@kreyolopal/domain'
+import { Quote, KreyolLanguage, Meaning, MeaningLanguage } from '@kreyolopal/domain'
 import type { Nature } from '@kreyolopal/domain'
 import { useState } from 'react'
 import { useToast } from '../ui/use-toast'
+
+
+interface LangDefinition {
+  language: MeaningLanguage
+  definition: string
+}
 
 export interface SubmitEntry {
   entry: string
@@ -38,7 +44,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
   const [variations, setVariations] = useState<string[]>([])
   const [kreyol, setKreyol] = useState<KreyolLanguage>('gp')
   const [nature, setNature] = useState<Nature>('nom')
-  const [meaning, setMeaning] = useState<Meaning>({})
+  const [meaning, setMeaning] = useState<LangDefinition[]>([{ language: 'fr', definition: '' }])
   const [usage, setUsage] = useState<string[]>([''])
   const [synonyms, setSynonyms] = useState<string[]>([])
   const [confer, setConfer] = useState<string[]>([])
@@ -129,26 +135,37 @@ export const AddEntry = ({ entry }: { entry: string }) => {
         <NatureCombobox value={nature} onChange={setNature} />
       </div>
 
-      <div className="grid grid-cols-5 items-center gap-4">
-        <Label htmlFor="meaning" className="text-left">
-          Définition
-        </Label>
-        <div className="col-span-4">
-          <div className="grid grid-cols-4 items-center gap-1">
-            <LanguageCombobox />
-            <div className="col-span-3 flex w-full items-center space-x-2">
-              <Input
-                type="text"
-                name="meaning"
-                placeholder={`Entrez la définition de ${entry} en `}
-              />
-              <Button size="icon" variant="outline" className="h-8 w-8">
-                <FeatherIcon iconName="plus" />
-              </Button>
+      {meaning.map((item, index) => (
+        <div key={`meaning-${index}`} className="grid grid-cols-5 items-center gap-4">
+          <Label htmlFor="meaning" className="text-left">
+            Définition
+          </Label>
+          <div className="col-span-4">
+            <div className="grid grid-cols-4 items-center gap-1">
+              <LanguageCombobox value={meaning[index].language} onChange={(e) => setMeaning(meaning.map((_, i) => i === index ? { ...meaning[index], language: e } : meaning[i]))} />
+              <div className="col-span-3 flex w-full items-center space-x-2">
+                <Input
+                  type="text"
+                  name="meaning"
+                  placeholder={`Entrez la définition de ${entry} en ${meaning[index].language} `}
+                  value={meaning[index].definition}
+                  onChange={(e) => setMeaning(meaning.map((_, i) => i === index ? { ...meaning[index], definition: e.target.value } : meaning[i]))}
+                />
+                <Button size="icon" variant="outline" className="h-8 w-8"
+                  onClick={() => {
+                    if (meaning[index].definition.length > 3)
+                      setMeaning([...meaning, { language: 'gp', definition: '' }])
+                  }
+                  }
+                >
+                  <FeatherIcon iconName="plus" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+
+      ))}
 
       {usage.map((item, index) => (
         <div key={`usage-${index}`} className="grid grid-cols-5 items-center gap-4">

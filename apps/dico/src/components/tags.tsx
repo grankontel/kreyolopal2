@@ -69,7 +69,7 @@ export interface TagsProps
     VariantProps<typeof tagVariants> {
   tags: string[]
   removeTagAtIndex: (index: number) => void
-  addTag: (tag: string) => boolean
+  addTag: (tag: string) => Promise<boolean>
   isLoading?: boolean
   placeholder?: string
 }
@@ -98,9 +98,9 @@ export function Tags(props: TagsProps) {
               value={newTag}
               disabled={props.isLoading}
               onChange={(e) => setNewTag(e.target.value)}
-              onKeyDown={(e) => {
+              onKeyDown={async (e) => {
                 if (e.key === 'Enter') {
-                  if (props.addTag(newTag)) {
+                  if (await props.addTag(newTag)) {
                     setNewTag('')
                   }
                 }
