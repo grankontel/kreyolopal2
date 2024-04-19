@@ -51,8 +51,7 @@ export interface TagProps
 }
 
 export function Tag({ tag, onDelete, className, variant }: TagProps) {
-  console.log(variant)
-  console.log(cn(tagVariants({ variant })))
+
   return (
     <div className={cn('relative', className)}>
       <span className={cn(tagVariants({ variant }))}>

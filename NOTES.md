@@ -36,11 +36,12 @@ rabbitmq ?
 
 ### Stack
 
+- [ ] switch logger to pino (https://github.com/pinojs/pino)
 - [ ] migrate to Drizzle (https://drizzle.dev/docs/getting-started/installation)
 - [ ] install drizzle eslint
 - [ ] migrate to Neon (https://neon.tech/pricing)
 - [ ] migrate to Cloud Atlas
-- [ ] migrato to Hono/Cloudflare
+- [ ] migrate to Hono/Cloudflare
 
 ## Lexicon entry
 
