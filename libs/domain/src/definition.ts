@@ -4,7 +4,7 @@ export type RestrictedDefinitionSource =  "reference" | "validated"
 
 export type DefinitionSource = RestrictedDefinitionSource | "personal" | "lexicons"
 
-type Meaning = {
+export type Meaning = {
   [key in MeaningLanguage]?: string
 } & object
 
