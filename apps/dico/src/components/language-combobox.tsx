@@ -17,9 +17,14 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { MeaningLanguage } from '@kreyolopal/domain'
 import { LangFlag } from '@kreyolopal/react-ui'
 
-export function LanguageCombobox({ kreyolOnly }: { kreyolOnly?: boolean }) {
+export interface LanguageComboboxProps {
+  kreyolOnly?: boolean
+  value?: MeaningLanguage
+  onChange?: (value: MeaningLanguage) => void
+}
+
+export function LanguageCombobox({ kreyolOnly, value, onChange }: LanguageComboboxProps) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState<MeaningLanguage>('gp')
 
   const langues: Array<{ key: MeaningLanguage; value: string }> = [
     { key: 'gp', value: 'Gwadloup' },
@@ -71,7 +76,7 @@ export function LanguageCombobox({ kreyolOnly }: { kreyolOnly?: boolean }) {
                   value={item.key}
                   onSelect={(currentValue) => {
                     console.log(currentValue)
-                    if (currentValue !== value) setValue(currentValue as MeaningLanguage)
+                    if (currentValue !== value) onChange?.(currentValue as MeaningLanguage)
                     setOpen(false)
                   }}
                 >

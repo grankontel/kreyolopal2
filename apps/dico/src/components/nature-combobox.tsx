@@ -16,9 +16,12 @@ import {
 } from 'cmdk'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-export function NatureCombobox() {
+export interface NatureComboboxProps {
+  value?: Nature
+  onChange?: (value: Nature) => void
+}
+export function NatureCombobox({ value, onChange }: NatureComboboxProps) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState('')
 
   const natures = Object.keys(Natures).map((key) => ({ key: key, value: Natures[key] }))
 
@@ -54,7 +57,7 @@ export function NatureCombobox() {
                   value={item.key}
                   onSelect={(currentValue) => {
                     console.log(currentValue)
-                    setValue(currentValue === value ? '' : currentValue)
+                    onChange?.(currentValue === value ? '' : currentValue)
                     setOpen(false)
                   }}
                 >
