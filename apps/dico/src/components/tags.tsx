@@ -72,11 +72,13 @@ export interface TagsProps
   removeTagAtIndex: (index: number) => void
   addTag: (tag: string) => boolean
   isLoading?: boolean
+  placeholder?: string
 }
 
 export function Tags(props: TagsProps) {
   const { tags, className, variant } = props
   const [newTag, setNewTag] = React.useState('')
+  const placeholder = props.placeholder || 'Add a tag'
   return (
     <div className={cn('flex w-full flex-col', className)}>
       <div className="grid w-full items-center gap-1.5 rounded-lg border border-gray-200 p-1.5 dark:border-gray-800">
@@ -92,7 +94,7 @@ export function Tags(props: TagsProps) {
           <div className="relative ml-2 flex items-center">
             <Input
               className="w-full rounded-full px-2 py-0.5 text-sm text-gray-900 outline-none dark:text-gray-100"
-              placeholder="Add a tag"
+              placeholder={placeholder}
               type="text"
               value={newTag}
               disabled={props.isLoading}
@@ -109,7 +111,7 @@ export function Tags(props: TagsProps) {
         </div>
       </div>
       <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-        Separate tags with commas. Press Enter to add a tag.
+        Tapez Entrée pour valider.
       </div>
     </div>
   )

@@ -9,6 +9,16 @@ import { Label } from '@/components/ui/label'
 
 export const AddEntry = ({ entry }: { entry: string }) => {
   const synonyms: string[] = []
+  const confer: string[] = []
+
+  function removeConferAtIndex(index: number): void {
+    confer.splice(index, 1)
+  }
+
+  function addConfer(tag: string): boolean {
+    confer.push(tag)
+    return true
+  }
 
   function removeSynonymAtIndex(index: number): void {
     synonyms.splice(index, 1)
@@ -58,7 +68,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
               <Input
                 type="text"
                 name="meaning"
-                placeholder="Entrez la définition de l'entrée"
+                placeholder={`Entrez la définition de ${entry} en `}
               />
               <Button size="icon" variant="outline" className="h-8 w-8">
                 <FeatherIcon iconName="plus" />
@@ -71,13 +81,17 @@ export const AddEntry = ({ entry }: { entry: string }) => {
       <div className="grid grid-cols-5 items-center gap-4">
         <Label htmlFor="usage" className="text-left">
           Usage
-        </Label>
-        <Input
-          className="col-span-4"
-          type="text"
-          name="usage"
-          placeholder={`entrez une phrase d'usage avec ${entry}`}
-        />
+        </Label>{' '}
+        <div className="col-span-4 flex w-full items-center space-x-2">
+          <Input
+            type="text"
+            name="usage"
+            placeholder={`entrez une phrase d'usage avec ${entry}`}
+          />
+          <Button size="icon" variant="outline" className="h-8 w-8">
+            <FeatherIcon iconName="plus" />
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-5 items-center gap-4">
@@ -90,8 +104,24 @@ export const AddEntry = ({ entry }: { entry: string }) => {
           tags={synonyms}
           addTag={addSynonym}
           removeTagAtIndex={removeSynonymAtIndex}
+          placeholder="Ajouter un synonyme"
         />
       </div>
+
+      <div className="grid grid-cols-5 items-center gap-4">
+        <Label htmlFor="conver" className="text-left">
+          Voir aussi
+        </Label>
+        <Tags
+          className="col-span-4"
+          variant="default"
+          tags={confer}
+          addTag={addConfer}
+          removeTagAtIndex={removeConferAtIndex}
+          placeholder="Ajouter une référence"
+        />
+      </div>
+
     </div>
   )
 }
