@@ -70,7 +70,7 @@ export const EntryDefinition = ({
   const def_langues = Object.keys(definition.meaning).filter((value) => value !== 'fr')
 
   return (
-    <section className="definition py-4 border-b-gray-200 border-b-2 dark:bg-inherit dark:border-b-gray-700">
+    <section className="definition border-b-2 border-b-gray-200 py-4 dark:border-b-gray-700 dark:bg-inherit">
       <div className="grid gap-2">
         <p className="nature text-md text-gray-400 dark:text-gray-600">
           <span className="font-medium">
@@ -78,10 +78,10 @@ export const EntryDefinition = ({
           </span>
           <DropdownMenu>
             <DropdownMenuTrigger
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-md 
-              text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring 
-              disabled:pointer-events-none disabled:opacity-50 border-input bg-background shadow-sm hover:bg-accent 
-              hover:text-accent-foreground h-9 w-9 border`}
+              className={`focus-visible:ring-ring border-input bg-background hover:bg-accent hover:text-accent-foreground 
+              inline-flex h-9 w-9 items-center justify-center whitespace-nowrap 
+              rounded-md border text-sm font-medium shadow-sm transition-colors 
+              focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50`}
             >
               <FeatherIcon iconName="chevron-right" />
             </DropdownMenuTrigger>
@@ -99,7 +99,7 @@ export const EntryDefinition = ({
             return definition.meaning[k]?.length === 0 ? (
               ''
             ) : (
-              <div className="meaning text-xl text-gray-600 dark:text-gray-500 mb-3">
+              <div className="meaning mb-3 text-xl text-gray-600 dark:text-gray-500">
                 <p>
                   [{lang}] {definition.meaning[k]}
                 </p>
@@ -110,7 +110,7 @@ export const EntryDefinition = ({
           {definition.meaning['fr']?.length === 0 ? (
             ' '
           ) : (
-            <div className="meaning font-light text-xl text-gray-500 dark:text-gray-400 mb-3">
+            <div className="meaning mb-3 text-xl font-light text-gray-500 dark:text-gray-400">
               <p>[fr] {definition.meaning['fr']}</p>
             </div>
           )}
@@ -147,14 +147,14 @@ const Synonyms = ({
   kreyol: KreyolLanguage
   list: string[]
 }) => (
-  <section className="grid gap-2 mb-2">
+  <section className="mb-2 grid gap-2">
     <h2 className="text-lg font-bold">Synonymes</h2>
     <ul className="flex flex-wrap gap-2">
       {list.map(async (item) => {
         return (
           <li key={hashKey(entry + '_syn_', item)}>
             <Link
-              className="text-sm rounded-lg bg-gray-100 px-2 py-1 dark:bg-gray-800"
+              className="rounded-lg bg-gray-100 px-2 py-1 text-sm dark:bg-gray-800"
               href={dicoUrl(kreyol, item)}
             >
               {item}
@@ -175,14 +175,14 @@ const Confers = ({
   kreyol: KreyolLanguage
   list: string[]
 }) => (
-  <section className="grid gap-2 mb-2">
+  <section className="mb-2 grid gap-2">
     <h2 className="text-lg font-bold">Voir aussi</h2>
     <ul className="flex flex-wrap gap-2">
       {list.map(async (item) => {
         return (
           <li key={hashKey(entry + '_confer_', item)}>
             <Link
-              className="text-sm bg-gray-100 px-2 py-1 dark:bg-gray-800"
+              className="bg-gray-100 px-2 py-1 text-sm dark:bg-gray-800"
               href={dicoUrl(kreyol, item)}
             >
               {item}
@@ -203,7 +203,7 @@ const Usages = ({
   kreyol: KreyolLanguage
   list: string[]
 }) => (
-  <div className="grid gap-2 my-3">
+  <div className="my-3 grid gap-2">
     <h2 className="text-lg font-bold">Usage</h2>
     <ul className="grid gap-4">
       {list.map((item) => {

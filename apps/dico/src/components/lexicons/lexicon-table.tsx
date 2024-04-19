@@ -52,7 +52,6 @@ export const LexiconTable = () => {
     onError: (err: Error) => {
       notifyer(err)
     },
-
   })
 
   return (
@@ -96,7 +95,7 @@ export const LexiconTable = () => {
                 <TableCell>
                   <Switch checked={lexicon.is_private} disabled />
                 </TableCell>
-                <TableCell className="w-24 grid gap-1 grid-cols-2">
+                <TableCell className="grid w-24 grid-cols-2 gap-1">
                   <Button
                     size="icon"
                     variant="outline"

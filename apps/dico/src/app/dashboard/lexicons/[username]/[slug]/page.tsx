@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation'
 import { isLoggedIn } from '@/app/dashboard/is-logged-in'
-import { getLexicon } from '@/queries/lexicons/get-lexicon';
-import MainPanel from '@/components/dashboard/main-panel';
-import { LexiconDicoTable } from '@/components/dicotable/lexicon-dico-table';
+import { getLexicon } from '@/queries/lexicons/get-lexicon'
+import MainPanel from '@/components/dashboard/main-panel'
+import { LexiconDicoTable } from '@/components/dicotable/lexicon-dico-table'
 
 export const runtime = 'edge'
 

@@ -98,7 +98,7 @@ export function SpellcheckForm() {
 
   return (
     <div className="w-full max-w-2xl space-y-4">
-      <div className="p-4 border border-dashed rounded-lg flex items-center justify-center">
+      <div className="flex items-center justify-center rounded-lg border border-dashed p-4">
         <form className="w-full space-y-4" onSubmit={handleSubmit}>
           <div className="grid w-full">
             <Label className="text-base" htmlFor="text">
@@ -137,12 +137,12 @@ export function SpellcheckForm() {
           Texte corrigé
         </Label>
         <div
-          className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          className="border-input placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[120px] w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50"
           id="corrected"
         >
           <p dangerouslySetInnerHTML={{ __html: response?.html || '' }} />
         </div>
-        <div className="flex w-full justify-between items-center space-x-2">
+        <div className="flex w-full items-center justify-between space-x-2">
           <CopyToClipboard text={response?.message || ''} onCopy={() => setCopied(true)}>
             <Button className="w-[160px]" type="button" disabled={response === undefined}>
               Copier

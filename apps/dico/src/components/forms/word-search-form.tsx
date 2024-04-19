@@ -64,7 +64,6 @@ export function WordSearchForm() {
           e.preventDefault()
           router.push(`/dashboard/dictionary/proposal/${word}`)
         }}
-
       >
         Ajouter {word}
       </Button>
@@ -83,43 +82,48 @@ export function WordSearchForm() {
               debounceSetWord(e.target.value)
             }}
           />
-          <div className="absolute top-full left-0 w-full bg-white dark:bg-gray-800 mt-2 shadow-lg z-10 drop-shadow-md">
-            {words === undefined || words?.length === 0 ?
+          <div className="absolute left-0 top-full z-10 mt-2 w-full bg-white shadow-lg drop-shadow-md dark:bg-gray-800">
+            {words === undefined || words?.length === 0 ? (
               word.length > 0 ? (
-
                 <ul className="divide-y divide-gray-200 dark:divide-gray-900">
                   <ProposeWord word={word} />
-                </ul>) : ('')
-              : (
-                <ul className="divide-y divide-gray-200 dark:divide-gray-900">
-                  {words.map((item: DictionaryEntry, index: any) => {
-                    return (
-                      <li key={item._id}>
-                        <Button
-                          className="w-full justify-start text-left"
-                          variant="ghost"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            router.push(`/dashboard/dictionary/gp/${encodeURI(item.entry)}`)
-                          }}
-                        >
-                          {item.variations.join('/')}
-                        </Button>
-                      </li>
-                    )
-                  })}
-                  {word.length > 0 && words.findIndex((item) => item.entry === word) === -1 ? (
-                    <ProposeWord word={word} />
-                  ) : ('')}
                 </ul>
-              )}
+              ) : (
+                ''
+              )
+            ) : (
+              <ul className="divide-y divide-gray-200 dark:divide-gray-900">
+                {words.map((item: DictionaryEntry, index: any) => {
+                  return (
+                    <li key={item._id}>
+                      <Button
+                        className="w-full justify-start text-left"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          router.push(`/dashboard/dictionary/gp/${encodeURI(item.entry)}`)
+                        }}
+                      >
+                        {item.variations.join('/')}
+                      </Button>
+                    </li>
+                  )
+                })}
+                {word.length > 0 &&
+                words.findIndex((item) => item.entry === word) === -1 ? (
+                  <ProposeWord word={word} />
+                ) : (
+                  ''
+                )}
+              </ul>
+            )}
           </div>
         </div>
         <Button
-          className="absolute top-1/2 right-2 transform -translate-y-1/2"
+          className="absolute right-2 top-1/2 -translate-y-1/2 transform"
           type="submit"
         >
-          <SearchIcon className="w-4 h-4" />
+          <SearchIcon className="h-4 w-4" />
           <span className="sr-only">Search</span>
         </Button>
       </div>

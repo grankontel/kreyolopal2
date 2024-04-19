@@ -45,7 +45,10 @@ function wordsToRow(words: DictionaryFullEntry[]): WordRow[] {
   const lignes: WordRow[] = []
   words.forEach((word) => {
     const defs = Object.entries(word.definitions).map((item) => {
-      return { langue: item[0] as KreyolLanguage, definitions: item[1]  as SingleDefinition[]}
+      return {
+        langue: item[0] as KreyolLanguage,
+        definitions: item[1] as SingleDefinition[],
+      }
     })
     const totalDefs = defs.reduce((nbdefs, item) => nbdefs + item.definitions.length, 0)
     defs.forEach(({ langue, definitions }, langue_index) => {
@@ -128,23 +131,23 @@ export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
           return (
             <TableRow key={ligne.id}>
               {ligne.entry_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.entry_rowspan} className="align-top mt-2">
+                <TableCell rowSpan={ligne.entry_rowspan} className="mt-2 align-top">
                   {ligne.entry}
                 </TableCell>
               )}
               {ligne.entry_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.entry_rowspan} className="align-top mt-2">
+                <TableCell rowSpan={ligne.entry_rowspan} className="mt-2 align-top">
                   {ligne.variations.map((variation) => {
                     return <div key={hashKey('var_', variation)}>{variation}</div>
                   })}
                 </TableCell>
               )}
               {ligne.flag_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.flag_rowspan} className="align-top mt-2">
+                <TableCell rowSpan={ligne.flag_rowspan} className="mt-2 align-top">
                   <Link href={ligne.url}>{ligne.Flag}</Link>
                 </TableCell>
               )}
-              <TableCell className="align-top mt-2">{ligne.nature}</TableCell>
+              <TableCell className="mt-2 align-top">{ligne.nature}</TableCell>
               <TableCell>{ligne.definition_cpf}</TableCell>
               <TableCell>{ligne.definition_fr}</TableCell>
               <DicoTableCell

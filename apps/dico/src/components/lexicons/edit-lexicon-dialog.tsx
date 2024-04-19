@@ -86,7 +86,6 @@ export const EditLexiconDialogContent = ({
     onError: (err: Error) => {
       notifyer(err)
     },
-
   })
 
   const changeName = (value: string) => {

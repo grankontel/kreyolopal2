@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: { entry: string } }) {
   }
   const { entry } = params
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <main className="flex-1 py-6">
         <div className="container space-y-6 px-4 md:px-6">
           <div className="grid  items-start gap-2">

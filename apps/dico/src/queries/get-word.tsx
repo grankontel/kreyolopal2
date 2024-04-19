@@ -46,7 +46,7 @@ export async function getWord(
       entry: data,
       kreyol,
     }
-    
+
     if (user_id) {
       const token = session_id
       const result2 = await fetch(`${apiServer}/api/me/dictionary/${entry}`, {

@@ -10,12 +10,13 @@ export default function MainPanel({
 }: Readonly<MainPanelProps>) {
   return (
     <div>
-      <section className=" p-6 bg-gray-100 border-y-gray-200 border-y-2 dark:bg-gray-800 dark:border-y-gray-700">
-        <h1 className="font-bold text-2xl">{title}</h1>
-        {description === undefined ? (' ') : (
-          <p className="text-sm text-muted-foreground">
-            {description}
-          </p>)}
+      <section className=" border-y-2 border-y-gray-200 bg-gray-100 p-6 dark:border-y-gray-700 dark:bg-gray-800">
+        <h1 className="text-2xl font-bold">{title}</h1>
+        {description === undefined ? (
+          ' '
+        ) : (
+          <p className="text-muted-foreground text-sm">{description}</p>
+        )}
       </section>
       <main className="flex-1 p-4 md:p-6">{children}</main>
     </div>

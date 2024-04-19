@@ -14,7 +14,7 @@ export const EntryDefinitionList = ({
   definitions,
 }: EntryDefinitionListProps) => {
   return (
-    <article className="gap-2  basis-3/4">
+    <article className="basis-3/4  gap-2">
       {definitions.map((definition, index) => (
         <EntryDefinition
           key={hashKey('key_', entry + ':' + index)}

@@ -40,7 +40,7 @@ export function Entry({
     .filter(onlyUnique)
 
   return (
-    <div className="flex flex-col min-h-screen" {...props}>
+    <div className="flex min-h-screen flex-col" {...props}>
       <main className="flex-1 py-6">
         <div className="container space-y-6 px-4 md:px-6">
           <div className="grid items-start gap-2">
@@ -64,18 +64,18 @@ export function Entry({
               kreyol={kreyol}
             />
 
-            <aside className="hidden md:block  basis-1/4 px-4">
+            <aside className="hidden basis-1/4  px-4 md:block">
               {relatedList.length === 0 ? (
                 ' '
               ) : (
                 <div className="sticky top-20">
-                  <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                    <h3 className="text-lg font-semibold mb-2">Voir aussi</h3>
+                  <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+                    <h3 className="mb-2 text-lg font-semibold">Voir aussi</h3>
                     <ul className="space-y-2">
                       {relatedList.map((item: string) => (
                         <li key={hashKey('also_', item)}>
                           <Link
-                            className="text-gray-700 dark:text-gray-300 hover:underline"
+                            className="text-gray-700 hover:underline dark:text-gray-300"
                             href={dicoUrl(kreyol, item)}
                           >
                             {item.charAt(0).toUpperCase() + item.slice(1)}

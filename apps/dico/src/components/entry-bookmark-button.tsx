@@ -90,4 +90,3 @@ function BookmarkedIcon(props: IconAttributes) {
     </svg>
   )
 }
-

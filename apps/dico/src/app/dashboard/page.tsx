@@ -19,7 +19,7 @@ export default function Home() {
           <CardDescription>Le vocabulaire que j&apos;ai sélectionné</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-auto w-full">
+          <div className="w-full overflow-auto">
             <PersonalDicoTable />
           </div>
         </CardContent>
