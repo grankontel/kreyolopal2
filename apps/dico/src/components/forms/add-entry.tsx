@@ -5,7 +5,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
-import { Quote, KreyolLanguage, LanguageArray, Meaning, MeaningLanguage } from '@kreyolopal/domain'
+import {
+  Quote,
+  KreyolLanguage,
+  LanguageArray,
+  Meaning,
+  MeaningLanguage,
+} from '@kreyolopal/domain'
 import type { Nature } from '@kreyolopal/domain'
 import FeatherIcon from '@/components/FeatherIcon'
 import { Tags } from '@/components/tags'
@@ -40,6 +46,8 @@ export const AddEntry = ({ entry }: { entry: string }) => {
   const { toast } = useToast()
 
   const [isChecking, setChecking] = useState(false)
+  const [pending, setPending] = useState(false)
+
   const [variations, setVariations] = useState<string[]>([])
   const [kreyol, setKreyol] = useState<KreyolLanguage>('gp')
   const [nature, setNature] = useState<Nature>('nom')
@@ -50,6 +58,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
   const [synonyms, setSynonyms] = useState<string[]>([])
   const [confer, setConfer] = useState<string[]>([])
   const [quotes, setQuotes] = useState<Quote[]>([])
+
   const var_regex = /^([a-z]([a-z-]|é|è|ò|à|)*,?)*$/gm
   const entry_regex = /^[a-z]([a-z-]|é|è|ò|à|)*$/gm
 
@@ -152,11 +161,8 @@ export const AddEntry = ({ entry }: { entry: string }) => {
                           i === index ? { ...meaning[index], language: e } : meaning[i]
                         )
                       )
-                    }
-                    }
-
+                    }}
                   />
-
                 ) : (
                   <LanguageCombobox
                     value={meaning[index].language}
@@ -166,12 +172,11 @@ export const AddEntry = ({ entry }: { entry: string }) => {
                           i === index ? { ...meaning[index], language: e } : meaning[i]
                         )
                       )
-
-                    }
-                    }
-                    allowed={LanguageArray.filter((item: MeaningLanguage) => !usedLanguages.includes(item))}
+                    }}
+                    allowed={LanguageArray.filter(
+                      (item: MeaningLanguage) => !usedLanguages.includes(item)
+                    )}
                   />
-
                 )}
                 <div className="col-span-3 flex w-full items-center space-x-2">
                   <Input
@@ -183,27 +188,36 @@ export const AddEntry = ({ entry }: { entry: string }) => {
                       setMeaning(
                         meaning.map((_, i) =>
                           i === index
-                            ? { ...meaning[index], definition: e.target.value.toLowerCase() }
+                            ? {
+                                ...meaning[index],
+                                definition: e.target.value.toLowerCase(),
+                              }
                             : meaning[i]
                         )
                       )
                     }
                   />
-                  {usedLanguages.length < LanguageArray.length-1 ? (
+                  {usedLanguages.length < LanguageArray.length - 1 ? (
                     <Button
                       size="icon"
                       variant="outline"
                       className="h-8 w-8"
                       onClick={() => {
-                        const remaining = LanguageArray.filter((item: MeaningLanguage) => !usedLanguages.includes(item))
+                        const remaining = LanguageArray.filter(
+                          (item: MeaningLanguage) => !usedLanguages.includes(item)
+                        )
                         if (meaning[index].definition.length > 3 && remaining.length > 0)
-                          setMeaning([...meaning, { language: remaining[0], definition: '' }])
+                          setMeaning([
+                            ...meaning,
+                            { language: remaining[0], definition: '' },
+                          ])
                       }}
                     >
                       <FeatherIcon iconName="plus" />
                     </Button>
-                  ) : ('')}
-
+                  ) : (
+                    ''
+                  )}
                 </div>
               </div>
             </div>
@@ -277,6 +291,18 @@ export const AddEntry = ({ entry }: { entry: string }) => {
           placeholder="Ajouter une référence"
           isLoading={isChecking}
         />
+      </div>
+
+      <div className="grid grid-cols-5  gap-4">
+        <Button
+          type="submit"
+          className="col-span-2 col-end-6"
+          variant="logo"
+          loading={pending}
+          aria-disabled={pending}
+        >
+          Valider
+        </Button>
       </div>
     </div>
   )
