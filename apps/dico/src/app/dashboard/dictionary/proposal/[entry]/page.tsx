@@ -1,13 +1,6 @@
 import { isLoggedIn } from '@/app/dashboard/is-logged-in'
-import FeatherIcon from '@/components/FeatherIcon'
 import { BookmarkIcon } from '@/components/bookmark-icon'
 import { AddEntry } from '@/components/forms/add-entry'
-import { LanguageCombobox } from '@/components/language-combobox'
-import { NatureCombobox } from '@/components/nature-combobox'
-import { Tags } from '@/components/tags'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 
 export const runtime = 'edge'
 

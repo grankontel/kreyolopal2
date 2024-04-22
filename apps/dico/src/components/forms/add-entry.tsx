@@ -1,18 +1,18 @@
 'use client'
-import { useDashboard } from '@/app/dashboard/dashboard-provider'
-import FeatherIcon from '@/components/FeatherIcon'
-import { LanguageCombobox } from '@/components/language-combobox'
-import { NatureCombobox } from '@/components/nature-combobox'
-import { Tags } from '@/components/tags'
+
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { checkWord } from '@/queries/check-word'
-import { Quote, KreyolLanguage, Meaning, MeaningLanguage } from '@kreyolopal/domain'
+import { useToast } from '@/components/ui/use-toast'
+import { Quote, KreyolLanguage, LanguageArray, Meaning, MeaningLanguage } from '@kreyolopal/domain'
 import type { Nature } from '@kreyolopal/domain'
-import { useState } from 'react'
-import { useToast } from '../ui/use-toast'
-
+import FeatherIcon from '@/components/FeatherIcon'
+import { Tags } from '@/components/tags'
+import { LanguageCombobox } from '@/components/language-combobox'
+import { NatureCombobox } from '@/components/nature-combobox'
+import { checkWord } from '@/queries/check-word'
+import { useDashboard } from '@/app/dashboard/dashboard-provider'
 
 interface LangDefinition {
   language: MeaningLanguage
@@ -35,7 +35,6 @@ export interface SubmitDefinition {
   quotes: Quote[]
 }
 
-
 export const AddEntry = ({ entry }: { entry: string }) => {
   const auth = useDashboard()
   const { toast } = useToast()
@@ -44,14 +43,17 @@ export const AddEntry = ({ entry }: { entry: string }) => {
   const [variations, setVariations] = useState<string[]>([])
   const [kreyol, setKreyol] = useState<KreyolLanguage>('gp')
   const [nature, setNature] = useState<Nature>('nom')
-  const [meaning, setMeaning] = useState<LangDefinition[]>([{ language: 'fr', definition: '' }])
+  const [meaning, setMeaning] = useState<LangDefinition[]>([
+    { language: 'fr', definition: '' },
+  ])
   const [usage, setUsage] = useState<string[]>([''])
   const [synonyms, setSynonyms] = useState<string[]>([])
   const [confer, setConfer] = useState<string[]>([])
   const [quotes, setQuotes] = useState<Quote[]>([])
-
   const var_regex = /^([a-z]([a-z-]|é|è|ò|à|)*,?)*$/gm
   const entry_regex = /^[a-z]([a-z-]|é|è|ò|à|)*$/gm
+
+  const usedLanguages: MeaningLanguage[] = []
 
   function removeConferAtIndex(index: number): void {
     setConfer(confer.filter((_, i) => i !== index))
@@ -71,7 +73,6 @@ export const AddEntry = ({ entry }: { entry: string }) => {
 
       return false
     }
-
 
     setConfer([...confer, tag])
     return true
@@ -115,8 +116,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
             if (var_regex.test(e.target.value)) {
               setVariations(e.target.value.split(','))
             }
-          }
-          }
+          }}
           placeholder={`entrez les différentes façon d'écrire ${entry}`}
         />
       </div>
@@ -135,37 +135,84 @@ export const AddEntry = ({ entry }: { entry: string }) => {
         <NatureCombobox value={nature} onChange={setNature} />
       </div>
 
-      {meaning.map((item, index) => (
-        <div key={`meaning-${index}`} className="grid grid-cols-5 items-center gap-4">
-          <Label htmlFor="meaning" className="text-left">
-            Définition
-          </Label>
-          <div className="col-span-4">
-            <div className="grid grid-cols-4 items-center gap-1">
-              <LanguageCombobox value={meaning[index].language} onChange={(e) => setMeaning(meaning.map((_, i) => i === index ? { ...meaning[index], language: e } : meaning[i]))} />
-              <div className="col-span-3 flex w-full items-center space-x-2">
-                <Input
-                  type="text"
-                  name="meaning"
-                  placeholder={`Entrez la définition de ${entry} en ${meaning[index].language} `}
-                  value={meaning[index].definition}
-                  onChange={(e) => setMeaning(meaning.map((_, i) => i === index ? { ...meaning[index], definition: e.target.value } : meaning[i]))}
-                />
-                <Button size="icon" variant="outline" className="h-8 w-8"
-                  onClick={() => {
-                    if (meaning[index].definition.length > 3)
-                      setMeaning([...meaning, { language: 'gp', definition: '' }])
-                  }
-                  }
-                >
-                  <FeatherIcon iconName="plus" />
-                </Button>
+      {meaning.map((item, index) => {
+        const value = (
+          <div key={`meaning-${index}`} className="grid grid-cols-5 items-center gap-4">
+            <Label htmlFor="meaning" className="text-left">
+              Définition
+            </Label>
+            <div className="col-span-4">
+              <div className="grid grid-cols-4 items-center gap-1">
+                {index === 0 ? (
+                  <LanguageCombobox
+                    value={meaning[index].language}
+                    onChange={(e, prev) => {
+                      setMeaning(
+                        meaning.map((_, i) =>
+                          i === index ? { ...meaning[index], language: e } : meaning[i]
+                        )
+                      )
+                    }
+                    }
+
+                  />
+
+                ) : (
+                  <LanguageCombobox
+                    value={meaning[index].language}
+                    onChange={(e, prev) => {
+                      setMeaning(
+                        meaning.map((_, i) =>
+                          i === index ? { ...meaning[index], language: e } : meaning[i]
+                        )
+                      )
+
+                    }
+                    }
+                    allowed={LanguageArray.filter((item: MeaningLanguage) => !usedLanguages.includes(item))}
+                  />
+
+                )}
+                <div className="col-span-3 flex w-full items-center space-x-2">
+                  <Input
+                    type="text"
+                    name="meaning"
+                    placeholder={`Entrez la définition de ${entry} en ${meaning[index].language} `}
+                    value={meaning[index].definition}
+                    onChange={(e) =>
+                      setMeaning(
+                        meaning.map((_, i) =>
+                          i === index
+                            ? { ...meaning[index], definition: e.target.value.toLowerCase() }
+                            : meaning[i]
+                        )
+                      )
+                    }
+                  />
+                  {usedLanguages.length < LanguageArray.length-1 ? (
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="h-8 w-8"
+                      onClick={() => {
+                        const remaining = LanguageArray.filter((item: MeaningLanguage) => !usedLanguages.includes(item))
+                        if (meaning[index].definition.length > 3 && remaining.length > 0)
+                          setMeaning([...meaning, { language: remaining[0], definition: '' }])
+                      }}
+                    >
+                      <FeatherIcon iconName="plus" />
+                    </Button>
+                  ) : ('')}
+
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )
+        usedLanguages.push(item.language)
 
-      ))}
+        return value
+      })}
 
       {usage.map((item, index) => (
         <div key={`usage-${index}`} className="grid grid-cols-5 items-center gap-4">
@@ -179,19 +226,25 @@ export const AddEntry = ({ entry }: { entry: string }) => {
               placeholder={`entrez une phrase d'usage avec ${entry}`}
               value={usage[index]}
               onChange={(e) => {
-                setUsage([...usage.slice(0, index), e.target.value, ...usage.slice(index + 1)])
+                setUsage([
+                  ...usage.slice(0, index),
+                  e.target.value,
+                  ...usage.slice(index + 1),
+                ])
               }}
             />
-            {(index !== usage.length - 1) ? null : (
-              <Button size="icon" variant="outline" className="h-8 w-8"
+            {index !== usage.length - 1 ? null : (
+              <Button
+                size="icon"
+                variant="outline"
+                className="h-8 w-8"
                 onClick={() => {
-                  if (usage[index].length > 3)
-                    setUsage([...usage, ''])
-                }
-                }
+                  if (usage[index].length > 3) setUsage([...usage, ''])
+                }}
               >
                 <FeatherIcon iconName="plus" />
-              </Button>)}
+              </Button>
+            )}
           </div>
         </div>
       ))}
@@ -225,7 +278,6 @@ export const AddEntry = ({ entry }: { entry: string }) => {
           isLoading={isChecking}
         />
       </div>
-
     </div>
   )
 }
