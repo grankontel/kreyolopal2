@@ -23,7 +23,10 @@ export interface NatureComboboxProps {
 export function NatureCombobox({ value, onChange }: NatureComboboxProps) {
   const [open, setOpen] = React.useState(false)
 
-  const natures = Object.entries(Natures).map(([key, value]) => ({ key: key, value: value as Nature }))
+  const natures = Object.entries(Natures).map(([key, value]) => ({
+    key: key,
+    value: value as Nature,
+  }))
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -57,8 +60,7 @@ export function NatureCombobox({ value, onChange }: NatureComboboxProps) {
                   value={item.key}
                   onSelect={(currentValue) => {
                     console.log(currentValue)
-                    if (currentValue !== value)
-                      onChange?.(currentValue as Nature)
+                    if (currentValue !== value) onChange?.(currentValue as Nature)
                     setOpen(false)
                   }}
                 >
