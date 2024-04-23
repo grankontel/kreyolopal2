@@ -110,6 +110,38 @@ export const AddEntry = ({ entry }: { entry: string }) => {
     return true
   }
 
+
+
+  const submitHandler = async (event: Event) => {
+    event.preventDefault()
+    setPending(true)
+
+    //verify data (meaning, usage)
+    let meaningObj: Meaning = {}
+    meaning.filter((item) => item.definition.length > 2).forEach((item) => {
+      meaningObj[item.language] = item.definition
+    })
+
+    const newEntry: SubmitEntry = {
+      entry,
+      variations,
+      definitions: [
+        {
+          kreyol,
+          nature: [nature],
+          meaning: meaningObj,
+          usage: usage.filter((item) => item.length > 2),
+          synonyms,
+          confer,
+          quotes,
+        },
+      ],
+    }
+
+    console.log(newEntry)
+    setPending(false)
+  }
+
   return (
     <div className="width-4/5 border-radius mx-auto grid gap-2 border border-solid border-gray-200 p-4 dark:border-gray-700">
       <div className="grid grid-cols-5 items-center gap-4 text-gray-500 dark:text-gray-400">
@@ -189,9 +221,9 @@ export const AddEntry = ({ entry }: { entry: string }) => {
                         meaning.map((_, i) =>
                           i === index
                             ? {
-                                ...meaning[index],
-                                definition: e.target.value.toLowerCase(),
-                              }
+                              ...meaning[index],
+                              definition: e.target.value.toLowerCase(),
+                            }
                             : meaning[i]
                         )
                       )
@@ -300,6 +332,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
           variant="logo"
           loading={pending}
           aria-disabled={pending}
+          onClick={submitHandler}
         >
           Valider
         </Button>
