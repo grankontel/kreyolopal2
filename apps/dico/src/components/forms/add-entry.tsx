@@ -11,6 +11,7 @@ import {
   LanguageArray,
   Meaning,
   MeaningLanguage,
+  sanitizeSubmitEntry,
 } from '@kreyolopal/domain'
 import type { Nature } from '@kreyolopal/domain'
 import FeatherIcon from '@/components/FeatherIcon'
@@ -122,7 +123,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
       meaningObj[item.language] = item.definition
     })
 
-    const newEntry: SubmitEntry = {
+    let newEntry: SubmitEntry = {
       entry,
       variations,
       definitions: [
@@ -138,6 +139,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
       ],
     }
 
+    newEntry = sanitizeSubmitEntry(newEntry)
     console.log(newEntry)
     setPending(false)
   }
