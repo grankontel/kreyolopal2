@@ -19,5 +19,11 @@
     "esbuild": "^0.20.2",
     "esbuild-node-externals": "^1.13.0",
     "typescript": "^5.4.5"
+  },
+  "peerDependencies": {
+    "zod": "^3.23.3"
+  },
+  "dependencies": {
+    "zod": "^3.23.3"
   }
 }

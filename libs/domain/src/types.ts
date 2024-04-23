@@ -10,7 +10,7 @@ export type KreyolLanguage = (typeof KreyolLanguages)[keyof typeof KreyolLanguag
 
 export type MeaningLanguage = KreyolLanguage | 'fr'
 
-export const LanguageArray: MeaningLanguage[] = [...(Object.values(KreyolLanguages) as Array<KreyolLanguage>), 'fr']
+export const LanguageArray: ReadonlyArray<MeaningLanguage> = [...(Object.values(KreyolLanguages) as Array<KreyolLanguage>), 'fr']
 
 export const MongoCollection = {
   reference: 'reference',
