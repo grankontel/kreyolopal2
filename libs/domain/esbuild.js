@@ -3,13 +3,13 @@ const config = require('./esbuild.config')
 
 if (process.argv.indexOf('--watch') > 0) {
   esbuild
-    .context(config)
+    .context(config(true))
     .then((ctx) => ctx.watch())
     .catch(() => process.exit(1))
   console.log('watching...')
 } else {
   esbuild
-    .build(config)
+    .build(config(false))
     .then(() => {
       console.log('⚡ Done')
     })
