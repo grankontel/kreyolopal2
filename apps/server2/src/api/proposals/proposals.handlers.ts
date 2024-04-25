@@ -1,7 +1,7 @@
 import type { Context } from 'hono'
 import { MongoClient } from 'mongodb'
 import config from '#config'
-import { SubmitEntry } from '@kreyolopal/domain'
+import { ProposalEntry } from '@kreyolopal/domain'
 
 const submitProposal = async function (c: Context) {
   const logger = c.get('logger')
@@ -15,8 +15,15 @@ const submitProposal = async function (c: Context) {
     return c.json({ error: 'You are not logged in.' }, 403)
   }
 
-	const entry:SubmitEntry = c.req.valid('json')
-	logger.debug(entry)
+	let entry:ProposalEntry = c.req.valid('json')
+  entry.creator = user.id
+  entry.definitions.forEach((definition, index) => {
+    entry.definitions[index].upvoters = [{
+      user: user.id,
+      birthdate: user.birthdate
+    }]
+  })
+	logger.debug(JSON.stringify(entry))
 
 	return c.json({ message: 'ok' })
 }

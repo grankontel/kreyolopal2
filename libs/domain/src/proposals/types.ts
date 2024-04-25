@@ -21,13 +21,13 @@ export interface ProposalDefinition extends SubmitDefinition {
 	upvoters: [
 		{
 			user: string,
-			bithdate: Date
+			birthdate: Date
 		}
 	],
 	downvoters: [
 		{
 			user: string,
-			bithdate: Date
+			birthdate: Date
 		}
 	]
 }
