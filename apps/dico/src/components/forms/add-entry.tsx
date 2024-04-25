@@ -140,7 +140,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
     }
 
     newEntry = sanitizeSubmitEntry(newEntry)
-    console.log(newEntry)
+    console.log(JSON.stringify(newEntry))
     setPending(false)
   }
 
