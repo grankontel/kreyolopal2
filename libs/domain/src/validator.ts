@@ -5,11 +5,10 @@ const NatureArray: ReadonlyArray<string> = (Object.values(Natures) as Array<stri
 const KreyolArray: ReadonlyArray<string> =(Object.values(KreyolLanguages) as Array<string>)
 const LanguageArray: ReadonlyArray<string> = [...(Object.values(KreyolLanguages) as Array<string>), 'fr']
 
-
 export const SubmitDefinitionSchema = z.object({
   kreyol: z.string().refine((val) =>KreyolArray.includes(val)),
   nature: z.array(z.string()).nonempty().refine((val) => val.every(v => NatureArray.includes(v)), {message: 'Invalid nature provided'}),
-  meaning: z.any().refine((val) => Object.keys(val).every(v => LanguageArray.includes(v)), {message: 'Invalid language on meaning'}),
+  meaning: z.object({}).catchall(z.any()).refine((val) => Object.keys(val).every(v => LanguageArray.includes(v)), {message: 'Invalid language on meaning'}),
   usage: z.array(z.string()).nonempty(),
   synonyms: z.array(z.string()),
   confer: z.array(z.string())
