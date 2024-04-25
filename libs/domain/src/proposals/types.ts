@@ -1,4 +1,4 @@
-import { Meaning, Quote } from "../definition"
+import { BaseDefinition, Meaning, Quote } from "../definition"
 import { KreyolLanguage, Nature } from "../types"
 
 export interface SubmitDefinition {
@@ -17,22 +17,15 @@ export interface SubmitEntry {
 	definitions: Array<SubmitDefinition>
 }
 
-export interface ProposalDefinition extends SubmitDefinition {
-	upvoters: [
-		{
-			user: string,
-			birthdate: Date
-		}
-	],
-	downvoters: [
-		{
-			user: string,
-			birthdate: Date
-		}
-	]
+export interface ProposalDefinition extends BaseDefinition {
+  creator: string
+	rank: number
+  upvoters: Backer[]
+	downvoters: Backer[]
 }
 
-export interface ProposalEntry extends SubmitEntry {
-	creator: string,
-	rank: number,
+export interface Backer {
+  user: string
+  birthdate: string
 }
+

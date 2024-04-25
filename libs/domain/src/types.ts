@@ -17,6 +17,7 @@ export const MongoCollection = {
   validated: 'validated',
   personal: 'personal',
   lexicons: 'lexicons',
+  proposals: 'proposals',
 } as const;
 
 export const Natures = {

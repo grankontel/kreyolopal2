@@ -14,9 +14,7 @@ export interface Quote {
   author: string
 }
 
-
-export interface SingleDefinition {
-  source: DefinitionSource
+export interface BaseDefinition {
   entry: string
   docType: 'definition'
   definition_id: string
@@ -30,9 +28,19 @@ export interface SingleDefinition {
   quotes: Quote[]
 }
 
+export interface SingleDefinition extends BaseDefinition {
+  source: DefinitionSource
+}
+
 export type Definitions = {
   [key in KreyolLanguage]: SingleDefinition[]
 } & object
+
+export interface BaseEntry {
+  entry: string
+  docType: 'entry'
+  variations: string[]
+}
 
 export interface DictionaryEntry {
   _id: string
