@@ -22,11 +22,12 @@ const submitProposal = async function (c: Context) {
   const definitions: ProposalDefinition[] = body.definitions.map((def) => {
     const id = Ulid.generate()
     return {
-      ...def,
       creator: user.id,
+      entry: body.entry,
       docType: 'definition',
       definition_id: Ulid.toCanonical(id),
       rank: 0,
+      ...def,
       upvoters: [{ user: user.id, birthdate: user.birth_date }],
       downvoters: []
     }

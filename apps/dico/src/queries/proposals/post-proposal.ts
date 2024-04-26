@@ -13,7 +13,7 @@ export async function postProposal(
 
   if (token) myHeaders.set('Authorization', `Bearer ${token}`)
 
-  return fetch(`/api/psoposals`, {
+  return fetch(`/api/proposals`, {
     method: 'POST',
     headers: myHeaders,
     body: JSON.stringify(entry),

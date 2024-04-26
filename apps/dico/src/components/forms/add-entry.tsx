@@ -20,6 +20,8 @@ import { LanguageCombobox } from '@/components/language-combobox'
 import { NatureCombobox } from '@/components/nature-combobox'
 import { checkWord } from '@/queries/check-word'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
+import { useMutation } from '@tanstack/react-query'
+import { postProposal } from '@/queries/proposals/post-proposal'
 
 interface LangDefinition {
   language: MeaningLanguage
@@ -59,6 +61,29 @@ export const AddEntry = ({ entry }: { entry: string }) => {
   const [synonyms, setSynonyms] = useState<string[]>([])
   const [confer, setConfer] = useState<string[]>([])
   const [quotes, setQuotes] = useState<Quote[]>([])
+
+  const notifyer = (err: { error?: string; toString: () => string }) => {
+    toast({
+      title: 'Erreur',
+      variant: 'destructive',
+      description: err?.error || err.toString(),
+    })
+  }
+
+  const addEntryMutation = useMutation({
+    mutationFn: (newEntry: SubmitEntry) => {
+      return postProposal(auth?.session_id || '', newEntry)
+    },
+    onSuccess: () => {
+      toast({
+        variant: 'default',
+        description: 'Entrée ajoutée',
+      })
+    },
+    onError: (err: Error) => {
+      notifyer(err)
+    },
+  })
 
   const var_regex = /^([a-z]([a-z-]|é|è|ò|à|)*,?)*$/gm
   const entry_regex = /^[a-z]([a-z-]|é|è|ò|à|)*$/gm
@@ -141,6 +166,8 @@ export const AddEntry = ({ entry }: { entry: string }) => {
 
     newEntry = sanitizeSubmitEntry(newEntry)
     console.log(JSON.stringify(newEntry))
+
+    addEntryMutation.mutate(newEntry)
     setPending(false)
   }
 
