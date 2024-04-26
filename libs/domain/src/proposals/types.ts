@@ -28,4 +28,3 @@ export interface Backer {
   user: string
   birthdate: string
 }
-

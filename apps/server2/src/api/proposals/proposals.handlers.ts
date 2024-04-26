@@ -69,7 +69,9 @@ const submitProposal = async function (c: Context) {
 
     const result = await coll.insertMany(definitions)
     logger.info(`inserted ${result.insertedCount} definitions`)
-    return c.json({ message: 'ok' })
+
+    existingEntry.definitions = definitions
+    return c.json(existingEntry)
 
   } catch (e: any) {
     console.log(e)
