@@ -1,4 +1,4 @@
-import { BaseDefinition, BaseEntry, Meaning, Quote } from '../definition'
+import { BaseDefinition, BaseEntry, Meaning, Quote, SpecificEntry } from '../definition'
 import { KreyolLanguage, Nature } from '../types'
 
 export interface SubmitDefinition {
@@ -28,3 +28,5 @@ export interface Backer {
   user: string
   birthdate: Date
 }
+
+export interface ProposalEntry extends SpecificEntry<ProposalDefinition> {}
