@@ -1,7 +1,9 @@
 import { isLoggedIn } from '@/app/dashboard/is-logged-in'
-import { BookmarkIcon } from '@/components/bookmark-icon'
+import { EntryDefinitionList } from '@/components/entry-definition-list'
+import { EntryTitle } from '@/components/entry-title'
 import { AddEntry } from '@/components/forms/add-entry'
 import { checkWord } from '@/queries/check-word'
+import { getProposedWord } from '@/queries/get-word'
 import { redirect } from 'next/navigation'
 
 export const runtime = 'edge'
@@ -17,24 +19,27 @@ export default async function Page({ params }: { params: { entry: string } }) {
   if (data) {
     redirect(`/dashboard/dictionary/gp/${entry}`)
   }
-  
-  return (
-    <div className="flex min-h-screen flex-col">
-      <main className="flex-1 py-6">
-        <div className="container space-y-6 px-4 md:px-6">
-          <div className="grid  items-start gap-2">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-              <span className="flex items-center gap-2">
-                <BookmarkIcon className="h-6 w-6" />
-                {entry}
-              </span>
-            </h1>
 
+  const entryInfo = await getProposedWord(token, 'gp', entry)
+  const source = entryInfo?.entry
+  return (
+    <div>
+      <div className="flex min-h-screen flex-col">
+        <main className="flex-1 py-6">
+          <div className="container space-y-6 px-4 md:px-6">
+            <EntryTitle source={source} bookmarkable={false} />
+
+            <div className="above-article flex flex-row">
+            <EntryDefinitionList
+              entry={source.entry}
+              definitions={source.definitions}
+              kreyol={'gp'}
+            /> 
+            </div>
             <AddEntry entry={entry} />
           </div>
-          <div className="above-article flex flex-row"></div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   )
 }
