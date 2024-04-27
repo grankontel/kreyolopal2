@@ -42,6 +42,10 @@ export interface BaseEntry {
   variations: string[]
 }
 
+export interface SpecificEntry<T extends BaseDefinition> extends BaseEntry {
+  definitions: T[]
+}
+
 export interface DictionaryEntry {
   _id: string
   entry: string

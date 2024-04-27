@@ -2,7 +2,7 @@ import type { Context } from 'hono'
 import { MongoClient } from 'mongodb'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
-import { sanitizeSubmitEntry, BaseEntry, MongoCollection, SubmitEntry, ProposalDefinition } from '@kreyolopal/domain'
+import { sanitizeSubmitEntry, BaseEntry, MongoCollection, ProposalDefinition } from '@kreyolopal/domain'
 import { DatabaseUser } from '#lib/db'
 import { Ulid } from 'id128'
 
@@ -18,7 +18,7 @@ const submitProposal = async function (c: Context) {
     return c.json({ error: 'You are not logged in.' }, 403)
   }
 
-  let body: SubmitEntry = sanitizeSubmitEntry(c.req.valid('json'))
+  const body = sanitizeSubmitEntry(c.req.valid('json'))
   const definitions: ProposalDefinition[] = body.definitions.map((def) => {
     const id = Ulid.generate()
     return {
@@ -29,7 +29,8 @@ const submitProposal = async function (c: Context) {
       rank: 0,
       ...def,
       upvoters: [{ user: user.id, birthdate: user.birth_date }],
-      downvoters: []
+      downvoters: [],
+      quotes: [],
     }
   })
 

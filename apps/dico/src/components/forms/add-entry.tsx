@@ -13,7 +13,6 @@ import {
   MeaningLanguage,
   sanitizeSubmitEntry,
 } from '@kreyolopal/domain'
-import type { Nature } from '@kreyolopal/domain'
 import FeatherIcon from '@/components/FeatherIcon'
 import { Tags } from '@/components/tags'
 import { LanguageCombobox } from '@/components/language-combobox'
@@ -22,26 +21,11 @@ import { checkWord } from '@/queries/check-word'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
 import { useMutation } from '@tanstack/react-query'
 import { postProposal } from '@/queries/proposals/post-proposal'
+import type { Nature, SubmitEntry } from '@kreyolopal/domain'
 
 interface LangDefinition {
   language: MeaningLanguage
   definition: string
-}
-
-export interface SubmitEntry {
-  entry: string
-  variations: string[]
-  definitions: Array<SubmitDefinition>
-}
-
-export interface SubmitDefinition {
-  kreyol: KreyolLanguage
-  nature: Nature[]
-  meaning: Meaning
-  usage: string[]
-  synonyms: string[]
-  confer: string[]
-  quotes: Quote[]
 }
 
 export const AddEntry = ({ entry }: { entry: string }) => {
@@ -136,19 +120,19 @@ export const AddEntry = ({ entry }: { entry: string }) => {
     return true
   }
 
-
-
   const submitHandler = async (event: Event) => {
     event.preventDefault()
     setPending(true)
 
     //verify data (meaning, usage)
     let meaningObj: Meaning = {}
-    meaning.filter((item) => item.definition.length > 2).forEach((item) => {
-      meaningObj[item.language] = item.definition
-    })
+    meaning
+      .filter((item) => item.definition.length > 2)
+      .forEach((item) => {
+        meaningObj[item.language] = item.definition
+      })
 
-    let newEntry: SubmitEntry = {
+    let anEntry = {
       entry,
       variations,
       definitions: [
@@ -164,7 +148,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
       ],
     }
 
-    newEntry = sanitizeSubmitEntry(newEntry)
+    const newEntry = sanitizeSubmitEntry(anEntry)
     console.log(JSON.stringify(newEntry))
 
     addEntryMutation.mutate(newEntry)
@@ -250,9 +234,9 @@ export const AddEntry = ({ entry }: { entry: string }) => {
                         meaning.map((_, i) =>
                           i === index
                             ? {
-                              ...meaning[index],
-                              definition: e.target.value.toLowerCase(),
-                            }
+                                ...meaning[index],
+                                definition: e.target.value.toLowerCase(),
+                              }
                             : meaning[i]
                         )
                       )
@@ -361,7 +345,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
           variant="logo"
           loading={pending}
           aria-disabled={pending}
-          onClick={submitHandler}
+          onClick={(e: any) => submitHandler(e)}
         >
           Valider
         </Button>

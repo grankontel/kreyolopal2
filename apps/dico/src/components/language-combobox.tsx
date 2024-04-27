@@ -46,7 +46,7 @@ export function LanguageCombobox<T = KreyolLanguage | MeaningLanguage>({
   const langues =
     allowed === undefined
       ? def_langues
-      : def_langues.filter((item) => allowed?.includes(item.key))
+      : def_langues.filter((item) => allowed.includes(item.key as T))
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
