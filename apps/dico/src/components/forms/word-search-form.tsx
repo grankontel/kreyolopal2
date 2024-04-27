@@ -110,7 +110,7 @@ export function WordSearchForm() {
                   )
                 })}
                 {word.length > 0 &&
-                  words.findIndex((item) => item.entry === word) === -1 ? (
+                words.findIndex((item) => item.entry === word) === -1 ? (
                   <ProposeWord word={word} />
                 ) : (
                   ''

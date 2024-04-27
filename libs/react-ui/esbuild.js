@@ -1,9 +1,9 @@
 const esbuild = require('esbuild')
-const { Generator } = require('npm-dts');
+const { Generator } = require('npm-dts')
 new Generator({
   entry: 'src/index.ts',
   output: 'dist/index.d.ts',
-}).generate();
+}).generate()
 
 const config = require('./esbuild.config')
 

@@ -1,4 +1,4 @@
-import { apiServer } from "@/lib/types"
+import { apiServer } from '@/lib/types'
 
 export async function checkWord(token: string, entry: string): Promise<boolean> {
   return new Promise<boolean>(async (resolve, reject) => {

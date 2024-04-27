@@ -1,8 +1,18 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import { UserDictionaryEntry, UserProposalEntry, apiServer, cookieName } from '@/lib/types'
-import { DictionaryEntry, DictionaryFullEntry, KreyolLanguage, ProposalEntry } from '@kreyolopal/domain'
+import {
+  UserDictionaryEntry,
+  UserProposalEntry,
+  apiServer,
+  cookieName,
+} from '@/lib/types'
+import {
+  DictionaryEntry,
+  DictionaryFullEntry,
+  KreyolLanguage,
+  ProposalEntry,
+} from '@kreyolopal/domain'
 import { parseCookie } from '@/lib/utils'
 
 export async function getWord(
@@ -97,7 +107,7 @@ export async function getProposedWord(
     myHeaders.set('Content-Type', 'application/json')
     myHeaders.set('Accept', 'application/json')
     myHeaders.set('Authorization', `Bearer ${token}`)
-  
+
     const lang = kreyol as KreyolLanguage
     // Fetch data from external API
     const result = await fetch(`${apiServer}/api/proposals/entry/${kreyol}/${entry}`, {
@@ -116,7 +126,7 @@ export async function getProposedWord(
     const data = await (result as Response).json<ProposalEntry>()
     const response: UserProposalEntry = {
       entry: data,
-      kreyol
+      kreyol,
     }
 
     resolve(response)

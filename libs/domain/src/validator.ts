@@ -26,13 +26,17 @@ export const SubmitDefinitionSchema = z
     usage: z.array(z.string()).nonempty(),
     synonyms: z.array(z.string()),
     confer: z.array(z.string()),
-    quotes: z.optional(z.array(
-      z.object({
-        text: z.string().min(1),
-        from: z.string().min(1),
-        author: z.string().min(1),
-      }).required()
-    )),
+    quotes: z.optional(
+      z.array(
+        z
+          .object({
+            text: z.string().min(1),
+            from: z.string().min(1),
+            author: z.string().min(1),
+          })
+          .required()
+      )
+    ),
   })
   .required()
 

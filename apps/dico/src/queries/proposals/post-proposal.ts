@@ -1,10 +1,7 @@
 import { ResponseError } from '@/lib/types'
 import { ProposalDefinition, SubmitEntry } from '@kreyolopal/domain'
 
-export async function postProposal(
-  token: string,
-  entry: SubmitEntry,
-) {
+export async function postProposal(token: string, entry: SubmitEntry) {
   console.log('postProposal')
 
   const myHeaders = new Headers()

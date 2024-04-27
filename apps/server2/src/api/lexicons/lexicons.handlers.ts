@@ -2,7 +2,12 @@ import type { Context } from 'hono'
 import { MongoClient } from 'mongodb'
 import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
-import { Lexicon, MongoCollection, RestrictedDefinitionSource, DictionaryFullEntry } from '@kreyolopal/domain'
+import {
+  Lexicon,
+  MongoCollection,
+  RestrictedDefinitionSource,
+  DictionaryFullEntry,
+} from '@kreyolopal/domain'
 import { PoolClient } from 'pg'
 
 interface LexiconEntry {
@@ -379,7 +384,6 @@ const deleteLexicon = async (c: Context) => {
   }
 }
 
-
 interface AddDefinitionPayload {
   entry: string
   definitions: {
@@ -442,7 +446,9 @@ const addDefinitions = async function (c: Context) {
       },
     }
 
-    const refColl = mongo.db(config.mongodb.db).collection(MongoCollection.reference)
+    const refColl = mongo
+      .db(config.mongodb.db)
+      .collection(MongoCollection.reference)
     const refCursor = refColl.find(refFilter, { projection })
     const refResult = (await refCursor.toArray())
       .filter((item) => item.entry === entry)
@@ -455,7 +461,9 @@ const addDefinitions = async function (c: Context) {
       },
     }
 
-    const valColl = mongo.db(config.mongodb.db).collection(MongoCollection.validated)
+    const valColl = mongo
+      .db(config.mongodb.db)
+      .collection(MongoCollection.validated)
     const valCursor = valColl.find(valFilter, { projection })
     const valResult = (await valCursor.toArray())
       .filter((item) => item.entry === entry)
@@ -558,9 +566,9 @@ const listEntries = async function (c: Context) {
     const coll = mongo
       .db(config.mongodb.db)
       .collection(MongoCollection.lexicons)
-    const cursor = coll.aggregate(agg);
-    const result = await cursor.toArray();
-    await cursor.close();
+    const cursor = coll.aggregate(agg)
+    const result = await cursor.toArray()
+    await cursor.close()
 
     const data: DictionaryFullEntry[] = result?.map((item) => {
       const def_object = item.definitions.reduce((obj, v) => {
@@ -596,82 +604,74 @@ const listEntries = async function (c: Context) {
     }
 
     return c.json({ error: 'Not Found.' }, 404)
-
   } catch (_error) {
     logger.error('getLexicon Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)
   } finally {
     client.release()
   }
-
 }
 
-const buildListAggregate = (lexiconId: string, skip: number, limit: number) => (
-  [
-    {
-      $match: {
-        lexicons:
-          lexiconId,
+const buildListAggregate = (lexiconId: string, skip: number, limit: number) => [
+  {
+    $match: {
+      lexicons: lexiconId,
+    },
+  },
+  {
+    $skip: skip,
+  },
+  {
+    $limit: limit,
+  },
+  {
+    $lookup: {
+      from: 'reference',
+      let: {
+        defi: '$def_ids',
       },
-    },
-    {
-      $skip: skip,
-    },
-    {
-      $limit: limit,
-    },
-    {
-      $lookup: {
-        from: "reference",
-        let: {
-          defi: "$def_ids",
-        },
-        pipeline: [
-          {
-            $match: {
-              docType: "definition",
-              $expr: {
-                $in: ["$definition_id", "$$defi"],
-              },
+      pipeline: [
+        {
+          $match: {
+            docType: 'definition',
+            $expr: {
+              $in: ['$definition_id', '$$defi'],
             },
           },
-        ],
-        as: "ref_definitions",
-      },
-    },
-    {
-      $lookup: {
-        from: "validated",
-        let: {
-          defi: "$def_ids",
         },
-        pipeline: [
-          {
-            $match: {
-              docType: "definition",
-              $expr: {
-                $in: ["$definition_id", "$$defi"],
-              },
+      ],
+      as: 'ref_definitions',
+    },
+  },
+  {
+    $lookup: {
+      from: 'validated',
+      let: {
+        defi: '$def_ids',
+      },
+      pipeline: [
+        {
+          $match: {
+            docType: 'definition',
+            $expr: {
+              $in: ['$definition_id', '$$defi'],
             },
           },
-        ],
-        as: "val_definitions",
-      },
-    },
-    {
-      $project: {
-        entry: 1,
-        variations: 1,
-        definitions: {
-          $concatArrays: [
-            "$ref_definitions",
-            "$val_definitions",
-          ],
         },
+      ],
+      as: 'val_definitions',
+    },
+  },
+  {
+    $project: {
+      entry: 1,
+      variations: 1,
+      definitions: {
+        $concatArrays: ['$ref_definitions', '$val_definitions'],
       },
     },
-  ]
-)
+  },
+]
 
 export default {
   getLexicon,

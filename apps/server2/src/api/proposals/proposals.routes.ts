@@ -13,12 +13,16 @@ const paramGetWordSchema = z
 
 const routes = createRouter()
 
-routes.post('/', zValidator('json', SubmitEntrySchema, sendBadRequest), handlers.submitProposal)
+routes.post(
+  '/',
+  zValidator('json', SubmitEntrySchema, sendBadRequest),
+  handlers.submitProposal
+)
 
 // get specific word
 routes.get(
-    '/entry/:language/:word',
-    zValidator('param', paramGetWordSchema, sendBadRequest),
-    handlers.getProposedWord
-  )
+  '/entry/:language/:word',
+  zValidator('param', paramGetWordSchema, sendBadRequest),
+  handlers.getProposedWord
+)
 export default routes

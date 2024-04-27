@@ -30,11 +30,11 @@ export default async function Page({ params }: { params: { entry: string } }) {
             <EntryTitle source={source} bookmarkable={false} />
 
             <div className="above-article flex flex-row">
-            <EntryDefinitionList
-              entry={source.entry}
-              definitions={source.definitions}
-              kreyol={'gp'}
-            /> 
+              <EntryDefinitionList
+                entry={source.entry}
+                definitions={source.definitions}
+                kreyol={'gp'}
+              />
             </div>
             <AddEntry entry={entry} />
           </div>

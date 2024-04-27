@@ -19,7 +19,6 @@ const findWord = async function (c: Context) {
     return c.json({ error: 'You are not logged in.' }, 403)
   }
 
-
   if (aWord.length === 0)
     return c.json(
       {
@@ -58,7 +57,7 @@ const findWord = async function (c: Context) {
       .collection(MongoCollection.validated)
     const nb_validated = await coll.countDocuments(filter)
 
-    return c.json<boolean>(nb_validated > 0 , nb_validated > 0 ? 200 : 404)
+    return c.json<boolean>(nb_validated > 0, nb_validated > 0 ? 200 : 404)
   } catch (e: any) {
     logger.error(e.message)
     throw createHttpException({
@@ -67,7 +66,6 @@ const findWord = async function (c: Context) {
       statusText: 'Unknown error.',
     })
   }
-
 }
 
 const getWord = async function (c: Context) {
@@ -267,4 +265,4 @@ const getKreyolsFor = async function (c: Context) {
   }
 }
 
-export default { findWord,getWord, getSuggestion, getKreyolsFor }
+export default { findWord, getWord, getSuggestion, getKreyolsFor }

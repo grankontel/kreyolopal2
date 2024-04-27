@@ -1,11 +1,5 @@
 import { useRouter } from 'next/navigation'
-import {
-  Button,
-  Columns,
-  Content,
-  Heading,
-  Section,
-} from 'react-bulma-components'
+import { Button, Columns, Content, Heading, Section } from 'react-bulma-components'
 import { ImageSet } from '@kreyolopal/web-ui'
 import PropTypes from 'prop-types'
 

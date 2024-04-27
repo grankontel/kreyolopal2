@@ -12,7 +12,6 @@ const getConfig = (isDev = false) => ({
   format: 'cjs',
   target: 'node20',
   plugins: [nodeExternalsPlugin()],
-}
-)
+})
 
 module.exports = getConfig

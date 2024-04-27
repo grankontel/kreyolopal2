@@ -1,12 +1,12 @@
-import * as React from "react"
+import * as React from 'react'
 import * as PropTypes from 'prop-types'
 
 import { FlagGp } from './FlagGp'
 import { FlagMq } from './FlagMq'
 import { FlagHt } from './FlagHt'
-import { FlagDm } from "./FlagDm"
-import { MeaningLanguage } from "@kreyolopal/domain"
-import { FlagFr } from "./FlagFr"
+import { FlagDm } from './FlagDm'
+import { MeaningLanguage } from '@kreyolopal/domain'
+import { FlagFr } from './FlagFr'
 
 interface LangFlagProps extends React.SVGAttributes<SVGSVGElement> {
   langue: MeaningLanguage

@@ -5,7 +5,7 @@ import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import { WordsRepository } from '#lib/words.repository'
 import { HTTPException } from 'hono/http-exception'
-import { DictionaryFullEntry, MongoCollection } from  '@kreyolopal/domain'
+import { DictionaryFullEntry, MongoCollection } from '@kreyolopal/domain'
 
 function formatDate(date: string | number | Date): string | null {
   if (date === null) return null

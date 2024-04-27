@@ -1,8 +1,8 @@
-import { KreyolLanguage, MeaningLanguage } from "./types"
+import { KreyolLanguage, MeaningLanguage } from './types'
 
-export type RestrictedDefinitionSource =  "reference" | "validated"
+export type RestrictedDefinitionSource = 'reference' | 'validated'
 
-export type DefinitionSource = RestrictedDefinitionSource | "personal" | "lexicons"
+export type DefinitionSource = RestrictedDefinitionSource | 'personal' | 'lexicons'
 
 export type Meaning = {
   [key in MeaningLanguage]?: string
