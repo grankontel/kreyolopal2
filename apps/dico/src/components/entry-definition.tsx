@@ -1,6 +1,11 @@
 'use client'
 import Link from 'next/link'
-import { MeaningLanguage, SingleDefinition, KreyolLanguage } from '@kreyolopal/domain'
+import {
+  MeaningLanguage,
+  SingleDefinition,
+  ProposalDefinition,
+  KreyolLanguage,
+} from '@kreyolopal/domain'
 import { hashKey } from '@/lib/utils'
 import FeatherIcon from './FeatherIcon'
 import { DropdownMenu, DropdownMenuTrigger } from './ui/dropdown-menu'
@@ -11,12 +16,14 @@ import { useDashboard } from '@/app/dashboard/dashboard-provider'
 import { useToast } from '@/components/ui/use-toast'
 import { AddEntriesPayload, addEntries } from '@/queries/lexicons/add-entries'
 import { useState } from 'react'
+import { Button } from './ui/button'
+import { Badge } from './ui/badge'
 
 interface EntryDefinitionProps {
   entry: string
   kreyol: KreyolLanguage
   index: number
-  definition: SingleDefinition
+  definition: SingleDefinition | ProposalDefinition
 }
 
 export const EntryDefinition = ({
@@ -45,7 +52,7 @@ export const EntryDefinition = ({
           entry: entry,
           definitions: [
             {
-              source: definition.source,
+              source: (definition as SingleDefinition).source,
               id: definition.definition_id,
             },
           ],
@@ -76,22 +83,33 @@ export const EntryDefinition = ({
           <span className="font-medium">
             {index}. {subnature}{' '}
           </span>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className={`focus-visible:ring-ring border-input bg-background hover:bg-accent hover:text-accent-foreground 
+          {definition.source != 'proposals' ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={`focus-visible:ring-ring border-input bg-background hover:bg-accent hover:text-accent-foreground 
               inline-flex h-9 w-9 items-center justify-center whitespace-nowrap 
               rounded-md border text-sm font-medium shadow-sm transition-colors 
               focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50`}
-            >
-              <FeatherIcon iconName="chevron-right" />
-            </DropdownMenuTrigger>
-            <LexiconDropdownMenu
-              onSelect={(item) => {
-                setLexiconId(item.id)
-                addEntry.mutate()
-              }}
-            />
-          </DropdownMenu>
+              >
+                <FeatherIcon iconName="chevron-right" />
+              </DropdownMenuTrigger>
+              <LexiconDropdownMenu
+                onSelect={(item) => {
+                  setLexiconId(item.id)
+                  addEntry.mutate()
+                }}
+              />
+            </DropdownMenu>
+          ) : (
+            <span>
+            <Button size='sm' variant='ghost'>
+              <FeatherIcon className='text-logo' iconName="thumbs-up" />&nbsp;8
+            </Button>
+            <Button size='sm' variant='ghost'>
+            <FeatherIcon className='text-logo' iconName="thumbs-down" />&nbsp;8
+          </Button>
+          </span>
+        )}
         </p>
         <section className="mb-3">
           {def_langues.map((lang) => {

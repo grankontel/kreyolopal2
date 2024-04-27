@@ -26,7 +26,7 @@ rabbitmq ?
 
 - [X] finish add definition form in proposal
 - [X] handle proposal creation
-- [ ] imporove proposal page verifications
+- [X] improve proposal page verifications
 - [ ] upvote definition
 - [ ] downvote definition
 - [ ] validate proposal

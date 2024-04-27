@@ -1,11 +1,11 @@
-import { SingleDefinition, KreyolLanguage } from '@kreyolopal/domain'
+import { SingleDefinition, ProposalDefinition, KreyolLanguage } from '@kreyolopal/domain'
 import { hashKey } from '@/lib/utils'
 import { EntryDefinition } from './entry-definition'
 
 interface EntryDefinitionListProps {
   entry: string
   kreyol: KreyolLanguage
-  definitions: SingleDefinition[]
+  definitions: SingleDefinition[] | ProposalDefinition[]
 }
 
 export const EntryDefinitionList = ({
