@@ -1,6 +1,6 @@
 import MainPanel from '@/components/dashboard/main-panel'
 import WordPanel from '@/components/dashboard/word-panel'
-import { Entry } from '@/components/entry'
+import { Entry } from '@/components/entry/entry'
 
 export const runtime = 'edge'
 

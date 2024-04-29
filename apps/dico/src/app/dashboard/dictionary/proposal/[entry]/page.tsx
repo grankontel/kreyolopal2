@@ -1,6 +1,6 @@
 import { isLoggedIn } from '@/app/dashboard/is-logged-in'
-import { EntryDefinitionList } from '@/components/entry-definition-list'
-import { EntryTitle } from '@/components/entry-title'
+import { EntryDefinitionList } from '@/components/entry/entry-definition-list'
+import { EntryTitle } from '@/components/entry/entry-title'
 import { AddEntry } from '@/components/forms/add-entry'
 import { checkWord } from '@/queries/check-word'
 import { getProposedWord } from '@/queries/get-word'

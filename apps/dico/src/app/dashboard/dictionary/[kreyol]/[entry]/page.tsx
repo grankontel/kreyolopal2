@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { Entry } from '@/components/entry'
+import { Entry } from '@/components/entry/entry'
 import { getWord } from '@/queries/get-word'
 import { KreyolLanguage } from '@kreyolopal/domain'
 import { isLoggedIn } from '@/app/dashboard/is-logged-in'

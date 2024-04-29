@@ -1,4 +1,4 @@
-import { EntryHeader } from '../entry-header'
+import { EntryHeader } from '../entry/entry-header'
 
 export default function WordPanel({
   children,

@@ -2,9 +2,9 @@
 import { Button } from '@/components/ui/button'
 import { IconAttributes } from '@kreyolopal/react-ui'
 import { useEffect, useState } from 'react'
-import { useToast } from './ui/use-toast'
+import { useToast } from '@/components/ui/use-toast'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
-import { BookmarkIcon } from './bookmark-icon'
+import { BookmarkIcon } from '@/components/bookmark-icon'
 
 export const EntryBookmarkButton = ({
   entry,

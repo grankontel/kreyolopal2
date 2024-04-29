@@ -1,4 +1,4 @@
-import { WordSearchForm } from './forms/word-search-form'
+import { WordSearchForm } from '@/components/forms/word-search-form'
 
 export function EntryHeader() {
   return (

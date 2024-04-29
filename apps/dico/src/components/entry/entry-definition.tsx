@@ -7,16 +7,16 @@ import {
   KreyolLanguage,
 } from '@kreyolopal/domain'
 import { hashKey } from '@/lib/utils'
-import FeatherIcon from './FeatherIcon'
-import { DropdownMenu, DropdownMenuTrigger } from './ui/dropdown-menu'
-import { LexiconDropdownMenu } from './lexicons/lexicon-dropdown-menu'
+import FeatherIcon from '../FeatherIcon'
+import { DropdownMenu, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { LexiconDropdownMenu } from '@/components/lexicons/lexicon-dropdown-menu'
 import { dicoUrl } from '@/lib/dicoUrl'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
 import { useToast } from '@/components/ui/use-toast'
 import { addEntries } from '@/queries/lexicons/add-entries'
 import { useState } from 'react'
-import { ProposalVoteButtons } from './proposal-vote-buttons'
+import { ProposalVoteButtons } from '@/components/proposal-vote-buttons'
 
 interface EntryDefinitionProps {
   entry: string
@@ -36,8 +36,6 @@ const AddToLexicon = ({ definition }: { definition: SingleDefinition }) => {
     })
   }
 
-  console.log(definition)
-  
   const addEntry = useMutation({
     mutationFn: ({ lexiconId }: { lexiconId: string }) => {
       return addEntries(
