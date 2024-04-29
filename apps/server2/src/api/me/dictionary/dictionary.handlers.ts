@@ -100,17 +100,12 @@ const bookmarkWord = async function (c: Context) {
 
   const query = { user_id: user_id, entry: word }
   const bdate = formatDate(user.birth_date)
+
   return WordsRepository.getInstance(c)
-    .GetOne(word, (item) => {
-      return {
-        entry: item.entry,
-        variations: item.variations,
-        definitions: item.definitions,
-      }
-    })
+    .GetReference(word, "gp")
     .then(
       (data) => {
-        if (data.length === 0) return c.json({ error: 'Not Found.' }, 404)
+        if (data === null) return c.json({ error: 'Not Found.' }, 404)
 
         const coll = client
           .db(config.mongodb.db)
@@ -119,7 +114,7 @@ const bookmarkWord = async function (c: Context) {
         const updateObj = {
           user_id: user_id,
           user_birthdate: bdate,
-          ...(data[0] as object),
+          ...data,
         }
 
         if (user.birth_date === undefined || user.birth_date === null) {
@@ -170,7 +165,14 @@ const bookmarkWord = async function (c: Context) {
           statusText: 'Unknown error.',
         })
       }
-    )
+    ).catch((e) => {
+      logger.error(e.message)
+      throw createHttpException({
+        errorContent: { error: 'Unknown error..' },
+        status: 500,
+        statusText: 'Unknown error.',
+      })
+    })
 }
 
 const getWordId = (c: Context, client: MongoClient, logger: winston.Logger) =>

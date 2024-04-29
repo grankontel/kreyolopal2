@@ -46,6 +46,10 @@ export interface SpecificEntry<T extends BaseDefinition> extends BaseEntry {
   definitions: T[]
 }
 
+export interface DictionaryBaseEntry extends BaseEntry {
+  _id: string
+}
+
 export interface DictionaryEntry {
   _id: string
   entry: string
