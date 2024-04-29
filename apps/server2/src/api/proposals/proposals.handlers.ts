@@ -167,6 +167,90 @@ const getProposedWord = async function (c: Context) {
   }
 }
 
+const validateProposal = async function (c: Context) {
+  const logger = c.get('logger')
+  const mongo: MongoClient = c.get('mongodb')
+  const user: DatabaseUser = c.get('user')
+
+  const { entry: srcEntry } = c.req.param()
+  const { variations: srcVar, definitions }: { variations: string[]; definitions: string[] } =
+    c.req.valid('json')
+
+  const entry = srcEntry.trim()
+  let variations = srcVar.map((item) => item.trim().toLowerCase())
+  if (!variations.includes(entry)) variations = [entry, ...variations]
+
+  const aWord = entry.trim()
+
+  logger.info(`validateProposal for ${entry}`)
+
+  if (!user) {
+    logger.debug('user not logged in')
+    return c.json({ error: 'You are not logged in.' }, 403)
+  }
+
+  if (!user.is_admin) {
+    logger.debug('user not admin')
+    return c.json({ error: 'Unsufficient permissions.' }, 403)
+  }
+
+  const proposal = mongo.db(config.mongodb.db).collection(MongoCollection.proposals)
+
+  //find entry in proposal
+  const filter = { entry: aWord, docType: "entry" }
+
+  const found = await proposal.countDocuments(filter)
+  logger.debug(`found ${found} entries for ${aWord}`)
+
+  if (found === 0)
+    return c.json({ error: "Not Found." }, 404)
+
+  const session = mongo.startSession();
+  try {
+    logger.info('start transaction')
+    let nbAdded = 0
+    await session.withTransaction(async () => {
+      const proposal = mongo.db(config.mongodb.db).collection(MongoCollection.proposals)
+      const validated = mongo.db(config.mongodb.db).collection(MongoCollection.validated)
+
+      const newEntry = {
+        entry: entry,
+        docType: 'entry',
+      }
+
+      logger.debug('try to add new entry')
+      await validated.updateOne(newEntry, { $set: { variations } }, { upsert: true, session: session })
+      logger.info('added new entry')
+
+      // find documents
+      const filter = { entry: entry, docType: "definition", definition_id: { $in: definitions } }
+      const defCursor = proposal.find(filter, { projection: { _id: 0 }, session: session })
+      const docs = await defCursor.toArray()
+      defCursor.close()
+
+      const result = await validated.insertMany(docs, { session: session })
+      nbAdded = result.insertedCount
+      logger.info(`${nbAdded} documents added`)
+
+      //delete documents
+      await proposal.deleteMany({ entry: entry }, { session: session })
+
+    })
+    return c.json({ message: "Entry validated.", nb: nbAdded }, 200)
+  } catch (e: any) {
+    logger.error(e.message)
+    throw createHttpException({
+      errorContent: { error: 'Unknown error..' },
+      status: 500,
+      statusText: 'Unknown error.',
+    })
+  } finally {
+    logger.info('end transaction')
+    await session.endSession()
+  }
+
+}
+
 const upvote = async function (c: Context) {
   const logger = c.get('logger')
   const client: MongoClient = c.get('mongodb')
@@ -294,4 +378,4 @@ const getVotes = async function (c: Context) {
   return c.json(item, 200)
 }
 
-export default { submitProposal, getProposedWord, upvote, downvote, getVotes }
+export default { submitProposal, getProposedWord, validateProposal, upvote, downvote, getVotes }

@@ -18,6 +18,13 @@ const paramVoteSchema = z
   })
   .required()
 
+const postValiddateSchema = z
+  .object({
+    variations: z.array(z.string()),
+    definitions: z.array(z.string().min(1)).nonempty(),
+  })
+  .required()
+
 const routes = createRouter()
 
 routes.post(
@@ -31,6 +38,12 @@ routes.get(
   '/entry/:language/:word',
   zValidator('param', paramGetWordSchema, sendBadRequest),
   handlers.getProposedWord
+)
+
+routes.post(
+  '/validate/:entry',
+  zValidator('json', postValiddateSchema, sendBadRequest),
+  handlers.validateProposal
 )
 
 // votes
