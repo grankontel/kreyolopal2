@@ -27,6 +27,7 @@ rabbitmq ?
 - [X] finish add definition form in proposal
 - [X] handle proposal creation
 - [X] improve proposal page verifications
+- [ ] updtate WordRepository class
 - [ ] upvote definition
 - [ ] downvote definition
 - [ ] validate proposal
