@@ -58,6 +58,7 @@ export function LoginForm() {
               id="password"
               autoComplete="current-password"
               type="password"
+              placeholder='enter your password'
               required
             />
           </div>
