@@ -3,7 +3,7 @@
 import {
   ProposalDefinition,
 } from '@kreyolopal/domain'
-import FeatherIcon from './FeatherIcon'
+import FeatherIcon from '../FeatherIcon'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
 import { Button } from '@/components/ui/button'
 import type { Backer } from '@kreyolopal/domain/proposals/types'

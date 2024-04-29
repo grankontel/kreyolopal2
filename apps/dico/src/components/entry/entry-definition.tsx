@@ -8,7 +8,7 @@ import {
 } from '@kreyolopal/domain'
 import { hashKey } from '@/lib/utils'
 import { dicoUrl } from '@/lib/dicoUrl'
-import { ProposalVoteButtons } from '@/components/proposal-vote-buttons'
+import { ProposalVoteButtons } from '@/components/entry/proposal-vote-buttons'
 import { AddToLexicon } from './add-to-lexicon'
 
 interface EntryDefinitionProps {
