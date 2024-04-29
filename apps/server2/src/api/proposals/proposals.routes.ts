@@ -11,6 +11,13 @@ const paramGetWordSchema = z
   })
   .required()
 
+const paramVoteSchema = z
+  .object({
+    entry: z.string().min(1),
+    definition_id: z.string().min(1),
+  })
+  .required()
+
 const routes = createRouter()
 
 routes.post(
@@ -25,4 +32,26 @@ routes.get(
   zValidator('param', paramGetWordSchema, sendBadRequest),
   handlers.getProposedWord
 )
+
+// votes
+routes.get(
+  '/votes/:entry/:definition_id',
+  zValidator('param', paramVoteSchema, sendBadRequest),
+  handlers.getVotes
+)
+
+// upvote
+routes.get(
+  '/votes/:entry/:definition_id/up',
+  zValidator('param', paramVoteSchema, sendBadRequest),
+  handlers.upvote
+)
+
+// downvote
+routes.get(
+  '/votes/:entry/:definition_id/down',
+  zValidator('param', paramVoteSchema, sendBadRequest),
+  handlers.downvote
+)
+
 export default routes
