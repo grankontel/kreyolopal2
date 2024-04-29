@@ -5,14 +5,14 @@ import {
 } from '@kreyolopal/domain'
 import FeatherIcon from './FeatherIcon'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
-import { Button } from './ui/button'
+import { Button } from '@/components/ui/button'
 import type { Backer } from '@kreyolopal/domain/proposals/types'
 
 export const ProposalVoteButtons = ({ definition }: { definition: ProposalDefinition }) => {
   const dash = useDashboard()
 
   const isBacker = (array: Backer[]) => array.findIndex((item) => item.user === dash?.user_id) !== -1
-  
+
   return (
     <span>
       <Button size='default'
