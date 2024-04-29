@@ -14,10 +14,9 @@ import { dicoUrl } from '@/lib/dicoUrl'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
 import { useToast } from '@/components/ui/use-toast'
-import { AddEntriesPayload, addEntries } from '@/queries/lexicons/add-entries'
+import { addEntries } from '@/queries/lexicons/add-entries'
 import { useState } from 'react'
-import { Button } from './ui/button'
-import { Badge } from './ui/badge'
+import { ProposalVoteButtons } from './proposal-vote-buttons'
 
 interface EntryDefinitionProps {
   entry: string
@@ -26,6 +25,63 @@ interface EntryDefinitionProps {
   definition: SingleDefinition | ProposalDefinition
 }
 
+const AddToLexicon = ({ definition }: { definition: SingleDefinition }) => {
+  const dash = useDashboard()
+  const { toast } = useToast()
+  const notifyer = (err: { error?: string; toString: () => string }) => {
+    toast({
+      title: 'Erreur',
+      variant: 'destructive',
+      description: err?.error || err.toString(),
+    })
+  }
+
+  console.log(definition)
+  
+  const addEntry = useMutation({
+    mutationFn: ({ lexiconId }: { lexiconId: string }) => {
+      return addEntries(
+        lexiconId,
+        {
+          entry: definition.entry,
+          definitions: [
+            {
+              source: definition.source,
+              id: definition.definition_id,
+            },
+          ],
+        },
+        dash?.session_id
+      )
+    },
+    onSuccess: () => {
+      toast({
+        variant: 'default',
+        description: 'Entrée ajoutée',
+      })
+    },
+    onError: (err: Error) => {
+      notifyer(err)
+    },
+  })
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        className={`focus-visible:ring-ring border-input bg-background hover:bg-accent hover:text-accent-foreground 
+    inline-flex h-9 w-9 items-center justify-center whitespace-nowrap 
+    rounded-md border text-sm font-medium shadow-sm transition-colors 
+    focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50`}
+      >
+        <FeatherIcon iconName="chevron-right" />
+      </DropdownMenuTrigger>
+      <LexiconDropdownMenu
+        onSelect={(item) => {
+          addEntry.mutate({ lexiconId: item.id })
+        }}
+      />
+    </DropdownMenu>
+  )
+}
 export const EntryDefinition = ({
   entry,
   kreyol,
@@ -84,32 +140,10 @@ export const EntryDefinition = ({
             {index}. {subnature}{' '}
           </span>
           {definition.source != 'proposals' ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className={`focus-visible:ring-ring border-input bg-background hover:bg-accent hover:text-accent-foreground 
-              inline-flex h-9 w-9 items-center justify-center whitespace-nowrap 
-              rounded-md border text-sm font-medium shadow-sm transition-colors 
-              focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50`}
-              >
-                <FeatherIcon iconName="chevron-right" />
-              </DropdownMenuTrigger>
-              <LexiconDropdownMenu
-                onSelect={(item) => {
-                  setLexiconId(item.id)
-                  addEntry.mutate()
-                }}
-              />
-            </DropdownMenu>
+            <AddToLexicon definition={definition as SingleDefinition} />
           ) : (
-            <span>
-            <Button size='sm' variant='ghost'>
-              <FeatherIcon className='text-logo' iconName="thumbs-up" />&nbsp;8
-            </Button>
-            <Button size='sm' variant='ghost'>
-            <FeatherIcon className='text-logo' iconName="thumbs-down" />&nbsp;8
-          </Button>
-          </span>
-        )}
+            <ProposalVoteButtons definition={definition as ProposalDefinition} />
+          )}
         </p>
         <section className="mb-3">
           {def_langues.map((lang) => {
