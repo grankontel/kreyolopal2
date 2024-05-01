@@ -69,6 +69,6 @@ const config = {
 
 config.mongodb.uri = `mongodb://${config.mongodb.user}:${encodeURIComponent(
   String(config.mongodb.password)
-)}@${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.db}`
+)}@${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.db}?replicaSet=rs0`
 
 export default config

@@ -73,7 +73,7 @@ Promise.all([mongoClient.connect()])
       server.listen(port)
     },
     (reason) => {
-      console.log(config.db)
+      console.log(config.mongodb.uri)
       console.log(reason)
       process.stdout.write(`\n❌ Cannot connect to mongo : ${reason}\n\n`)
       process.exit(1)
