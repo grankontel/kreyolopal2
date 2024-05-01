@@ -120,9 +120,21 @@ const getWord = async function (c: Context) {
       .db(config.mongodb.db)
       .collection(MongoCollection.reference)
     const cursor = coll.find(filter, { projection })
-    const result = await cursor.toArray()
+    let result = await cursor.toArray()
     cursor.close()
-    if (result.length === 0) return c.json({ error: 'Not Found.' }, 404)
+    if (result.length === 0) {
+      logger.info(`${aWord} is not in reference collection`)
+
+      const coll = client
+        .db(config.mongodb.db)
+        .collection(MongoCollection.validated)
+      const cursor = coll.find(filter, { projection })
+      result = await cursor.toArray()
+      cursor.close()
+
+      if (result.length === 0) 
+        return c.json({ error: 'Not Found.' }, 404)
+    }
 
     const entry = result.filter((item) => item.docType == 'entry')
     const defs = result
