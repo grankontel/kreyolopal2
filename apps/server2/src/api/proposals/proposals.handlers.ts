@@ -11,6 +11,7 @@ import {
 } from '@kreyolopal/domain'
 import { DatabaseUser } from '#lib/db'
 import { Ulid } from 'id128'
+import { HTTPException } from 'hono/http-exception'
 
 const submitProposal = async function (c: Context) {
   const logger = c.get('logger')
@@ -173,8 +174,10 @@ const validateProposal = async function (c: Context) {
   const user: DatabaseUser = c.get('user')
 
   const { entry: srcEntry } = c.req.param()
-  const { variations: srcVar, definitions }: { variations: string[]; definitions: string[] } =
-    c.req.valid('json')
+  const {
+    variations: srcVar,
+    definitions,
+  }: { variations: string[]; definitions: string[] } = c.req.valid('json')
 
   const entry = srcEntry.trim()
   let variations = srcVar.map((item) => item.trim().toLowerCase())
@@ -194,24 +197,31 @@ const validateProposal = async function (c: Context) {
     return c.json({ error: 'Unsufficient permissions.' }, 403)
   }
 
-  const proposal = mongo.db(config.mongodb.db).collection(MongoCollection.proposals)
+  const proposal = mongo
+    .db(config.mongodb.db)
+    .collection(MongoCollection.proposals)
 
   //find entry in proposal
-  const filter = { entry: aWord, docType: "entry" }
+  const filter = { entry: aWord, docType: 'entry' }
 
   const found = await proposal.countDocuments(filter)
   logger.debug(`found ${found} entries for ${aWord}`)
 
-  if (found === 0)
-    return c.json({ error: "Not Found." }, 404)
+  if (found === 0) return c.json({ error: 'Not Found.' }, 404)
 
-  const session = mongo.startSession();
+  const session = mongo.startSession()
+  let nbAdded = 0
+  let ids: string[] = []
+
   try {
     logger.info('start transaction')
-    let nbAdded = 0
     await session.withTransaction(async () => {
-      const proposal = mongo.db(config.mongodb.db).collection(MongoCollection.proposals)
-      const validated = mongo.db(config.mongodb.db).collection(MongoCollection.validated)
+      const proposal = mongo
+        .db(config.mongodb.db)
+        .collection(MongoCollection.proposals)
+      const validated = mongo
+        .db(config.mongodb.db)
+        .collection(MongoCollection.validated)
 
       const newEntry = {
         entry: entry,
@@ -219,14 +229,36 @@ const validateProposal = async function (c: Context) {
       }
 
       logger.debug('try to add new entry')
-      await validated.updateOne(newEntry, { $set: { variations } }, { upsert: true, session: session })
+      await validated.updateOne(
+        newEntry,
+        { $set: { variations } },
+        { upsert: true, session: session }
+      )
       logger.info('added new entry')
 
       // find documents
-      const filter = { entry: entry, docType: "definition", definition_id: { $in: definitions } }
-      const defCursor = proposal.find(filter, { projection: { _id: 0 }, session: session })
+      const filter = {
+        entry: entry,
+        docType: 'definition',
+        definition_id: { $in: definitions },
+      }
+      const defCursor = proposal.find(filter, {
+        projection: { _id: 0 },
+        session: session,
+      })
       const docs = await defCursor.toArray()
       defCursor.close()
+
+      logger.debug(docs.length)
+      if (docs.length == 0) {
+        throw createHttpException(
+          { error: 'Unprocessable Entity' },
+          422,
+          'Unprocessable Entity',
+          `No valid definitions ids : ${definitions.join(',')}`,
+          )
+      }
+      ids = docs.map((doc) => doc.definition_id)
 
       const result = await validated.insertMany(docs, { session: session })
       nbAdded = result.insertedCount
@@ -234,21 +266,23 @@ const validateProposal = async function (c: Context) {
 
       //delete documents
       await proposal.deleteMany({ entry: entry }, { session: session })
-
     })
-    return c.json({ message: "Entry validated.", nb: nbAdded }, 200)
+    return c.json({ message: 'Entry validated.', nb: nbAdded, ids }, 200)
   } catch (e: any) {
     logger.error(e.message)
-    throw createHttpException({
-      errorContent: { error: 'Unknown error..' },
-      status: 500,
-      statusText: 'Unknown error.',
-    })
+    if (e instanceof HTTPException) {
+      throw e
+    } else {
+      throw createHttpException({
+        errorContent: { error: 'Unknown error..' },
+        status: 500,
+        statusText: 'Unknown error.',
+      })
+    }
   } finally {
     logger.info('end transaction')
     await session.endSession()
   }
-
 }
 
 const upvote = async function (c: Context) {
@@ -267,29 +301,33 @@ const upvote = async function (c: Context) {
   }
 
   //find entry in proposal
-  const filter = { entry: aWord, docType: "entry" }
-  const proposal = client.db(config.mongodb.db).collection(MongoCollection.proposals)
+  const filter = { entry: aWord, docType: 'entry' }
+  const proposal = client
+    .db(config.mongodb.db)
+    .collection(MongoCollection.proposals)
 
   const found = await proposal.countDocuments(filter)
   logger.debug(`found ${found} entries for ${aWord}`)
 
-  if (found === 0)
-    return c.json({ error: "Not Found." }, 404)
+  if (found === 0) return c.json({ error: 'Not Found.' }, 404)
 
   const updateDoc = {
     $pull: {
       downvoters: {
-        user: user.id
-      }
-    }
+        user: user.id,
+      },
+    },
   }
-  const entryFilter = { entry: aWord, docType: "definition", definition_id: definition_id }
+  const entryFilter = {
+    entry: aWord,
+    docType: 'definition',
+    definition_id: definition_id,
+  }
 
   let modified = await proposal.updateOne(entryFilter, updateDoc)
   logger.debug(JSON.stringify(modified))
 
-  if (modified.modifiedCount > 0)
-    return c.json({ message: "Vote added." }, 200)
+  if (modified.modifiedCount > 0) return c.json({ message: 'Vote added.' }, 200)
 
   modified = await proposal.updateOne(
     entryFilter,
@@ -297,8 +335,7 @@ const upvote = async function (c: Context) {
     { upsert: true }
   )
 
-  return c.json({ message: "Vote added." }, 200)
-
+  return c.json({ message: 'Vote added.' }, 200)
 }
 
 const downvote = async function (c: Context) {
@@ -317,38 +354,43 @@ const downvote = async function (c: Context) {
   }
 
   //find entry in proposal
-  const filter = { entry: aWord, docType: "entry" }
-  const proposal = client.db(config.mongodb.db).collection(MongoCollection.proposals)
+  const filter = { entry: aWord, docType: 'entry' }
+  const proposal = client
+    .db(config.mongodb.db)
+    .collection(MongoCollection.proposals)
 
   const found = await proposal.countDocuments(filter)
   logger.debug(`found ${found} entries for ${aWord}`)
 
-  if (found === 0)
-    return c.json({ error: "Not Found." }, 404)
+  if (found === 0) return c.json({ error: 'Not Found.' }, 404)
 
   const updateDoc = {
     $pull: {
       upvoters: {
-        user: user.id
-      }
-    }
+        user: user.id,
+      },
+    },
   }
-  const entryFilter = { entry: aWord, docType: "definition", definition_id: definition_id }
+  const entryFilter = {
+    entry: aWord,
+    docType: 'definition',
+    definition_id: definition_id,
+  }
 
   let modified = await proposal.updateOne(entryFilter, updateDoc)
   logger.debug(JSON.stringify(modified))
 
-  if (modified.modifiedCount > 0)
-    return c.json({ message: "Vote added." }, 200)
+  if (modified.modifiedCount > 0) return c.json({ message: 'Vote added.' }, 200)
 
   modified = await proposal.updateOne(
     entryFilter,
-    { $addToSet: { downvoters: { user: user.id, birthdate: user.birth_date } } },
+    {
+      $addToSet: { downvoters: { user: user.id, birthdate: user.birth_date } },
+    },
     { upsert: true }
   )
 
-  return c.json({ message: "Vote added." }, 200)
-
+  return c.json({ message: 'Vote added.' }, 200)
 }
 
 const getVotes = async function (c: Context) {
@@ -367,15 +409,27 @@ const getVotes = async function (c: Context) {
   }
 
   //find entry in proposal
-  const proposal = client.db(config.mongodb.db).collection(MongoCollection.proposals)
-  const filter = { entry: aWord, docType: "definition", definition_id: definition_id }
+  const proposal = client
+    .db(config.mongodb.db)
+    .collection(MongoCollection.proposals)
+  const filter = {
+    entry: aWord,
+    docType: 'definition',
+    definition_id: definition_id,
+  }
   const projection = { _id: 0, upvoters: 1, downvoters: 1 }
 
   const item = await proposal.findOne(filter, { projection })
-  if (item === null)
-    return c.json({ error: "Not Found." }, 404)
+  if (item === null) return c.json({ error: 'Not Found.' }, 404)
 
   return c.json(item, 200)
 }
 
-export default { submitProposal, getProposedWord, validateProposal, upvote, downvote, getVotes }
+export default {
+  submitProposal,
+  getProposedWord,
+  validateProposal,
+  upvote,
+  downvote,
+  getVotes,
+}

@@ -10,14 +10,14 @@ services:
       DB_SCHEMA: ${DB_SCHEMA}
       DB_ANON_ROLE: ${DB_ANON_ROLE}
       DB_API_ROLE: ${DB_API_ROLE}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     restart: always
     volumes:
       - ./data/db:/var/lib/postgresql/data
       - "./initdb:/docker-entrypoint-initdb.d:ro"
     ports:
       - "5432:5432"
-      
+
   adminer:
     image: adminer
     container_name: "adminer"
@@ -64,7 +64,16 @@ services:
   mongo:
     image: mongo
     # openssl rand -base64 756 > ./data/keys/keyFile.key 
-    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017", "--keyFile" ,"/data/keys/keyFile.key"]
+    command:
+      [
+        "--replSet",
+        "rs0",
+        "--bind_ip_all",
+        "--port",
+        "27017",
+        "--keyFile",
+        "/data/keys/keyFile.key"
+      ]
     # command: ["--bind_ip_all", "--port", "27017"]
     # add '127.0.0.1       host.docker.internal' to /etc/hosts
     extra_hosts:
@@ -75,7 +84,7 @@ services:
       timeout: 30s
       start_period: 0s
       start_interval: 1s
-      retries: 30      
+      retries: 30
     restart: always
     container_name: "mongo"
     environment:
