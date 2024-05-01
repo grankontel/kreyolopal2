@@ -42,6 +42,7 @@ const getWord = async function (c: Context) {
       entry: word,
     }
     const projection = {
+      _id: 0,
       user_id: 1,
       entry: 1,
       variations: 1,
@@ -58,7 +59,7 @@ const getWord = async function (c: Context) {
     logger.debug(JSON.stringify(result?.[0]))
     //client.close()
 
-    const data = result?.map((item) => {
+/*     const data = result?.map((item) => {
       return {
         id: item._id,
         entry: item.entry,
@@ -66,12 +67,12 @@ const getWord = async function (c: Context) {
         definitions: item.definitions,
       }
     })
-
-    if (data.length > 0) {
+ */
+    if (result.length > 0) {
       c.res.headers.append('Cache-Control', 'private, maxage=86400')
 
       c.status(200)
-      return c.json(data)
+      return c.json(result)
     }
 
     return c.json({ error: 'Not Found.' }, 404)

@@ -17,7 +17,6 @@ export default async function Page({
   }
 
   const data = await getWord(params.kreyol, params.entry)
-
   if (!data) {
     return notFound()
   }

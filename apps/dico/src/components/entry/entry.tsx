@@ -20,10 +20,10 @@ export function Entry<
     | UserDictionaryEntry
     | UserProposalEntry,
 >({ kreyol, value, ...props }: { kreyol: KreyolLanguage; value: T }) {
-  const source =
-    'is_bookmarked' in value && 'bookmark' in value && 'entry' in value
-      ? ((value.is_bookmarked ? value.bookmark : value.entry) as DictionaryEntry)
-      : (value.entry as ProposalEntry)
+  let source = value.entry
+  if ('is_bookmarked' in value && 'bookmark' in value && value.is_bookmarked) {
+    source = value.bookmark as DictionaryEntry
+  }
 
   const relatedList: string[] = [source]
     .map((entry) => {

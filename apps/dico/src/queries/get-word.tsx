@@ -72,14 +72,15 @@ export async function getWord(
       })
 
       if (result2?.ok) {
-        const data2 = await result2.json<DictionaryFullEntry[]>()
+
+        const data2 = await result2.json<DictionaryEntry[]>()
 
         const bookmarks: DictionaryEntry[] = data2.map((item) => {
           return {
             _id: item.id,
             entry: item.entry,
             variations: item.variations,
-            definitions: item.definitions[lang],
+            definitions: item.definitions.filter((def) => def.kreyol === lang),
           }
         })
         response.is_bookmarked = bookmarks.length > 0
