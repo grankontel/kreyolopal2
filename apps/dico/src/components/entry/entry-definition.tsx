@@ -11,6 +11,9 @@ import { dicoUrl } from '@/lib/dicoUrl'
 import { ProposalVoteButtons } from '@/components/entry/proposal-vote-buttons'
 import { AddToLexicon } from './add-to-lexicon'
 
+function convertDefinition<T>(definition: SingleDefinition | ProposalDefinition) : T {
+  return definition as unknown as T
+}
 interface EntryDefinitionProps {
   entry: string
   kreyol: KreyolLanguage
@@ -38,10 +41,12 @@ export const EntryDefinition = ({
           <span className="font-medium">
             {index}. {subnature}{' '}
           </span>
-          {definition.source != 'proposals' ? (
+          eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          @ts-ignore
+          {!('source' in definition) || ['reference', 'validated'].includes( definition.source)  ? (
             <AddToLexicon definition={definition as SingleDefinition} />
           ) : (
-            <ProposalVoteButtons definition={definition as ProposalDefinition} />
+            <ProposalVoteButtons definition={convertDefinition(definition)} />
           )}
         </p>
         <section className="mb-3">

@@ -98,7 +98,7 @@ export async function getProposedWord(
 ): Promise<UserProposalEntry | null> {
   const allowedKreyol = ['gp']
 
-  return new Promise<ProposalEntry | null>(async (resolve, reject) => {
+  return new Promise<UserProposalEntry | null>(async (resolve, reject) => {
     if (kreyol.length == 0 || entry.length == 0 || !allowedKreyol.includes(kreyol)) {
       resolve(null)
     }
