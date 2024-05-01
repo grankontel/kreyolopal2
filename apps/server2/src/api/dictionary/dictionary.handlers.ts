@@ -122,6 +122,8 @@ const getWord = async function (c: Context) {
     const cursor = coll.find(filter, { projection })
     let result = await cursor.toArray()
     cursor.close()
+    let source = MongoCollection.reference
+
     if (result.length === 0) {
       logger.info(`${aWord} is not in reference collection`)
 
@@ -131,6 +133,7 @@ const getWord = async function (c: Context) {
       const cursor = coll.find(filter, { projection })
       result = await cursor.toArray()
       cursor.close()
+      source = MongoCollection.validated
 
       if (result.length === 0) 
         return c.json({ error: 'Not Found.' }, 404)
@@ -139,7 +142,7 @@ const getWord = async function (c: Context) {
     const entry = result.filter((item) => item.docType == 'entry')
     const defs = result
       .filter((item) => item.docType == 'definition')
-      .map((item) => ({ source: MongoCollection.reference, ...item }))
+      .map((item) => ({ source: source, ...item }))
 
     const data = { ...entry[0], definitions: defs }
     caches.entries.set(word + '_' + lang, data)
@@ -193,15 +196,14 @@ const getSuggestion = async function (c: Context) {
       .collection(MongoCollection.reference)
 
     const vali = client
-    .db(config.mongodb.db)
-    .collection(MongoCollection.validated)
+      .db(config.mongodb.db)
+      .collection(MongoCollection.validated)
 
     // exact entry in reference
     let exact = await coll.findOne(filterEnries, { projection })
     if (exact === null) {
-      logger.info("not in reference")
+      logger.info('not in reference')
       exact = await vali.findOne(filterEnries, { projection })
-
     }
 
     // find variations
@@ -215,9 +217,9 @@ const getSuggestion = async function (c: Context) {
     const list = await cursor.toArray()
     cursor.close()
 
-     cursor = vali.find(filterVariations, { projection }).limit(24)
-     list.push(...(await cursor.toArray()))
-     cursor.close()
+    cursor = vali.find(filterVariations, { projection }).limit(24)
+    list.push(...(await cursor.toArray()))
+    cursor.close()
 
     const unsorted =
       exact === null
@@ -274,11 +276,19 @@ const getKreyolsFor = async function (c: Context) {
     )
 
   try {
-    const result = await client.db(config.mongodb.db).command({
+    let result = await client.db(config.mongodb.db).command({
       distinct: MongoCollection.reference,
       key: 'kreyol',
       query: { entry: aWord, docType: 'definition' },
     })
+
+    if (result.values.length === 0) {
+      result = await client.db(config.mongodb.db).command({
+        distinct: MongoCollection.validated,
+        key: 'kreyol',
+        query: { entry: aWord, docType: 'definition' },
+      })
+    }
     c.status(200)
     return c.json(result.values)
   } catch (e: any) {
