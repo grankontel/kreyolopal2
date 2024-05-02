@@ -9,7 +9,6 @@ import { ModeToggle } from '@/components/mode-toogle'
 import Sidebar from '@/components/dashboard/sidebar'
 import SideMenu from '@/components/dashboard/side-menu'
 import DashboardPath from '@/components/dashboard/dashboard-path'
-import { IconAttributes } from '@kreyolopal/react-ui'
 import { redirect } from 'next/navigation'
 import { parseCookie } from '@/lib/utils'
 import { UserDropdown } from '@/components/dashboard/user-dropdown'
@@ -72,7 +71,7 @@ export default function DashboardLayout({
   )
 }
 
-function Package2Icon(props: IconAttributes) {
+function Package2Icon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

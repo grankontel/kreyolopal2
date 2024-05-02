@@ -1,9 +1,8 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import { IconAttributes } from '@kreyolopal/react-ui'
 
-function BellIcon(props: IconAttributes) {
+function BellIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

@@ -4,13 +4,12 @@ import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { IconAttributes } from '@kreyolopal/react-ui'
 import { getEntries } from '@/queries/get-suggestions'
 import { DictionaryEntry } from '@kreyolopal/domain'
 import debounce from 'lodash.debounce'
 import { useRouter } from 'next/navigation'
 
-function SearchIcon(props: IconAttributes) {
+function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

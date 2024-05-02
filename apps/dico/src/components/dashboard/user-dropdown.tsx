@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 import { LogoutDialogContent } from '@/components/dashboard/logout-dialog'
-import { IconAttributes } from '@kreyolopal/react-ui'
 import { useDicoStore } from '@/store/dico-store'
 import { ResponseError, User, apiServer, cookieName } from '@/lib/types'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -78,7 +77,7 @@ export const UserDropdown = async ({ token }: { token: string }) => {
   )
 }
 
-function UserIcon(props: IconAttributes) {
+function UserIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

@@ -1,6 +1,5 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { IconAttributes } from '@kreyolopal/react-ui'
 import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
 import { useDashboard } from '@/app/dashboard/dashboard-provider'
@@ -71,7 +70,7 @@ export const EntryBookmarkButton = ({
   )
 }
 
-function BookmarkedIcon(props: IconAttributes) {
+function BookmarkedIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
