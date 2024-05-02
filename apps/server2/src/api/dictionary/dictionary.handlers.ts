@@ -55,7 +55,7 @@ const findWord = async function (c: Context) {
     const validated = client
       .db(config.mongodb.db)
       .collection(MongoCollection.validated)
-    const nb_validated = await coll.countDocuments(filter)
+    const nb_validated = await validated.countDocuments(filter)
 
     return c.json<boolean>(nb_validated > 0, nb_validated > 0 ? 200 : 404)
   } catch (e: any) {
