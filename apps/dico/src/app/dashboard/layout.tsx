@@ -50,7 +50,7 @@ export default function DashboardLayout({
       </Sidebar>
       <DashboardProvider init={{ ...auth }}>
         <div className="flex flex-col">
-          <header className="flex h-14 items-center justify-between px-6 bg-gray-100/40 dark:bg-gray-800/40">
+          <header className="flex h-14 items-center justify-between bg-gray-100/40 px-6 dark:bg-gray-800/40">
             <div className="flex items-center gap-4">
               <Link className="lg:hidden" href="#">
                 <Package2Icon className="h-6 w-6" />

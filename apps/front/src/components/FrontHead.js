@@ -44,11 +44,7 @@ export default function FrontHead() {
         href="/favicons/favicon-16x16.png"
       />
       <link rel="manifest" href="/favicons/site.webmanifest" />
-      <link
-        rel="mask-icon"
-        href="/favicons/safari-pinned-tab.svg"
-        color="#5bbad5"
-      />
+      <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#5bbad5" />
       <link rel="shortcut icon" href="/favicons/favicon.ico" />
       <meta name="msapplication-TileColor" content="#ffc40d" />
       <meta name="msapplication-config" content="/favicons/browserconfig.xml" />

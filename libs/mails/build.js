@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 //requiring path and fs modules
 const path = require('path')
 const fs = require('fs')
@@ -98,9 +99,7 @@ function build(isInitial) {
     const indexContent = components.map((item) => {
       return `export { ${item.component} } from "./${item.file}";`
     })
-    indexContent.push(
-      'export type {mailTemplateFunction, mailResult} from "./types.ts";'
-    )
+    indexContent.push('export type {mailTemplateFunction, mailResult} from "./types.ts";')
     fs.writeFileSync(indexPath, indexContent.join('\r\n'))
   })
 }

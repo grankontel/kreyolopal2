@@ -99,12 +99,14 @@ routes.put(
   handlers.addDefinitions
 )
 
-routes.get('/:username/:slug/entries', 
-  zValidator('param', paramSlug, sendBadRequest), 
+routes.get(
+  '/:username/:slug/entries',
+  zValidator('param', paramSlug, sendBadRequest),
   zValidator('query', queryListSchema, sendBadRequest),
-  handlers.listEntries)
+  handlers.listEntries
+)
 
-  /*
+/*
 routes.get('/:username/:slug/suggest/:word', handlers.suggestWord)
 */
 export default routes

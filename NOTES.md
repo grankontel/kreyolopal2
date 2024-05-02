@@ -22,6 +22,29 @@ entry is then removed from proposal
 users are notified ?
 rabbitmq ?
 
+### Proposals
+
+- [X] finish add definition form in proposal
+- [X] handle proposal creation
+- [X] improve proposal page verifications
+- [X] updtate WordRepository class
+- [X] upvote definition
+- [X] downvote definition
+- [X] validate proposal
+- [X] validate proposal button
+
+### Profile
+
+- [ ] change password
+
+### Stack
+
+- [ ] switch logger to pino (https://github.com/pinojs/pino)
+- [ ] migrate to Drizzle (https://drizzle.dev/docs/getting-started/installation)
+- [ ] install drizzle eslint
+- [ ] migrate to Neon (https://neon.tech/pricing)
+- [ ] migrate to Cloud Atlas
+- [ ] migrate to Hono/Cloudflare
 
 ## Lexicon entry
 
@@ -170,61 +193,6 @@ rabbitmq ?
 ]
 ```
 
-### Main index
-
-```js
-db.reference.createIndex(
-   { entry: 1 },
-   { unique: true, partialFilterExpression: { docType: "entry" } }
-)
-```
-
-```js
-db.reference.createIndex(
-   { entry: 1, docType: -1, kreyol: 1 },
-   { sparse: true, name: 'search' }
-)
-```
-
-```js
-db.reference.createIndex(
-   { variations: 1 },
-   { name: 'suggest', partialFilterExpression: { docType: "entry" } }
-)
-```
-
-```js
-db.reference.createIndex(
-   { definition_id: 1 },
-   { sparse: true, name: 'definition' }
-)
-```
-
-
-## Lexicon
-
-### Lexicons index
-
-```js
-db.lexicons.createIndex(
-   { entry: 1  },
-   { unique: true}
-)
-```
-
-```js
-db.lexicons.createIndex(
-   { entry: 1, lexicons: 1 },
-   { sparse: true, name: 'search' }
-)
-```
-
-```js
-db.lexicons.createIndex(
-   { variations: 1, lexicons: 1 },
-   { sparse: true, name: 'suggest'}
-)
-```
 ### Entry
 
 ```json

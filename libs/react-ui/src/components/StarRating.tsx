@@ -5,15 +5,20 @@ import styled from '@emotion/styled'
 interface onRatedFunc {
   (value: number): void
 }
-type StarRatingProps = { disabled?: boolean, hidden: boolean, value?: number, onRated?: onRatedFunc }
+type StarRatingProps = {
+  disabled?: boolean
+  hidden: boolean
+  value?: number
+  onRated?: onRatedFunc
+}
 
 const SRDiv = styled.div`
-.on {
-  color: #ffc107;
-}
-.off {
-  color: #ccc;
-}
+  .on {
+    color: #ffc107;
+  }
+  .off {
+    color: #ccc;
+  }
 `
 
 const SRButton = styled.button`
@@ -28,12 +33,20 @@ const SRButton = styled.button`
   }
 `
 
-export const StarRating = ({ disabled = false, hidden, value = 0, onRated }: StarRatingProps) => {
+export const StarRating = ({
+  disabled = false,
+  hidden,
+  value = 0,
+  onRated,
+}: StarRatingProps) => {
   const initialValue = Math.min(Math.max(value || 0, 0), 5)
   const [rating, setRating] = React.useState(initialValue)
   const [hover, setHover] = React.useState(0)
 
-  const ratingIsSet = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, index: number) => {
+  const ratingIsSet = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    index: number
+  ) => {
     e.preventDefault()
     setRating(index)
     if (onRated !== undefined) {
@@ -42,7 +55,7 @@ export const StarRating = ({ disabled = false, hidden, value = 0, onRated }: Sta
   }
 
   return (
-    <SRDiv className="star-rating"  hidden={hidden}>
+    <SRDiv className="star-rating" hidden={hidden}>
       {[...Array(5)].map((star, index) => {
         index += 1
         return (

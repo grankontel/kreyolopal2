@@ -4,7 +4,8 @@ import { StatusCode } from 'hono/utils/http-status'
 export function createHttpException(
   errorContent: object,
   status = 500,
-  statusText = 'Internal server error'
+  statusText = 'Internal server error',
+  message?:string
 ): HTTPException {
   const errorResponse = new Response(JSON.stringify(errorContent), {
     status,
@@ -13,5 +14,6 @@ export function createHttpException(
 
   return new HTTPException(status as StatusCode, {
     res: errorResponse,
+    message: message ?? statusText
   })
 }

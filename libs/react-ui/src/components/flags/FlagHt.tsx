@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from 'react'
 
-export const FlagHt = (props: any) => (
+export const FlagHt = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -11,7 +11,7 @@ export const FlagHt = (props: any) => (
   >
     <style>
       {
-        ".e{stroke-width:.15}.f{fill:none}.g{stroke-width:.3}.h{fill:#fff}.i{fill:#f1b517}.j{stroke-width:.265}.k{stroke:#000}.l{fill:#d21034}.m{stroke-width:.325}.n{fill:#0a328c}.o{fill:#00209f}.p{stroke-width:.163}.q{stroke-width:.287}.r{stroke-linecap:round}.s{fill:#016a16}.t{stroke-width:.125}.u{stroke-width:.157}"
+        '.e{stroke-width:.15}.f{fill:none}.g{stroke-width:.3}.h{fill:#fff}.i{fill:#f1b517}.j{stroke-width:.265}.k{stroke:#000}.l{fill:#d21034}.m{stroke-width:.325}.n{fill:#0a328c}.o{fill:#00209f}.p{stroke-width:.163}.q{stroke-width:.287}.r{stroke-linecap:round}.s{fill:#016a16}.t{stroke-width:.125}.u{stroke-width:.157}'
       }
     </style>
     <path d="M0 0h1000v600H0z" className="l" />
@@ -254,13 +254,7 @@ export const FlagHt = (props: any) => (
     <g transform="matrix(-.86366 0 0 .84072 925.67 265.057)">
       <g className="k">
         <g className="e" transform="matrix(-1 0 0 1 984.545 0)">
-          <ellipse
-            cx={472.443}
-            cy={104.751}
-            className="h"
-            rx={3.569}
-            ry={1.681}
-          />
+          <ellipse cx={472.443} cy={104.751} className="h" rx={3.569} ry={1.681} />
           <g className="i">
             <use xlinkHref="#p" />
             <use xlinkHref="#q" className="f" />
@@ -558,23 +552,14 @@ export const FlagHt = (props: any) => (
         transform="matrix(-.86366 0 0 .84072 924.516 265.057)"
       />
     </g>
-    <use
-      xlinkHref="#o"
-      transform="matrix(-.86366 0 0 .84072 924.516 265.057)"
-    />
+    <use xlinkHref="#o" transform="matrix(-.86366 0 0 .84072 924.516 265.057)" />
     <g className="k">
       <g className="e h" transform="matrix(-.86366 0 0 .84072 924.516 265.057)">
         <use xlinkHref="#AH" />
         <use xlinkHref="#AI" />
       </g>
       <g className="e" transform="matrix(-.86366 0 0 .84072 924.64 265.057)">
-        <ellipse
-          cx={472.443}
-          cy={104.751}
-          className="h"
-          rx={3.569}
-          ry={1.681}
-        />
+        <ellipse cx={472.443} cy={104.751} className="h" rx={3.569} ry={1.681} />
         <g className="i">
           <use xlinkHref="#p" />
           <use xlinkHref="#q" className="f" />
@@ -1076,19 +1061,13 @@ export const FlagHt = (props: any) => (
         id="AJ"
         d="M470.357 104.29s.922-1.098 1.186-3.162.834-12.648.834-13.351v-2.24"
       />
-      <path
-        id="AK"
-        d="m570.121 86.252-13.617 7.086.072.138.958.173 12.935-6.733z"
-      />
+      <path id="AK" d="m570.121 86.252-13.617 7.086.072.138.958.173 12.935-6.733z" />
       <path id="AL" d="m570.523 86.586-7.673 13.586 1.244-.68 7.083-12.538z" />
       <path
         id="AM"
         d="M534.984 12.151s-.938 2.158.094 4.316 2.064 3.19 2.627 4.597 0 2.721.657 3.753"
       />
-      <path
-        id="AN"
-        d="M556.463 42.648s1.446-.983 3.758.058 2.313.867 2.313.867"
-      />
+      <path id="AN" d="M556.463 42.648s1.446-.983 3.758.058 2.313.867 2.313.867" />
     </defs>
   </svg>
 )

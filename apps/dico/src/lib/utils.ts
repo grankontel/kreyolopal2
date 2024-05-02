@@ -22,7 +22,7 @@ export const hashKey = (radix: string, item: string) => {
 
 export function parseCookie(
   cookie: string
-): { user_id: string; session_id: string; username: string } | null {
+): { user_id: string; session_id: string; username: string, permissions: string[] } | null {
   if (cookie === undefined) return null
   const [data, digest] = cookie.split('.')
 

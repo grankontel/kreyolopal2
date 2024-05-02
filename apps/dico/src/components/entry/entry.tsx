@@ -3,34 +3,37 @@
  * @see https://v0.dev/t/7Zyk89nt9tB
  */
 import Link from 'next/link'
-import { UserDictionaryEntry } from '@/lib/types'
-import { DictionaryEntry, KreyolLanguage } from '@kreyolopal/domain'
+import { UserDictionaryEntry, UserProposalEntry } from '@/lib/types'
+import {
+  DictionaryEntry,
+  KreyolLanguage,
+  BaseDefinition,
+  ProposalEntry,
+} from '@kreyolopal/domain'
 import { hashKey, onlyUnique } from '@/lib/utils'
-import { EntryBookmarkButton } from './entry-bookmark-button'
 import { EntryDefinitionList } from './entry-definition-list'
 import { dicoUrl } from '@/lib/dicoUrl'
+import { EntryTitle } from './entry-title'
 
-export function Entry({
-  kreyol,
-  value,
-  ...props
-}: {
-  kreyol: KreyolLanguage
-  value: UserDictionaryEntry
-}) {
-  const source: DictionaryEntry = (
-    value.is_bookmarked ? value.bookmark : value.entry
-  ) as DictionaryEntry
+export function Entry<
+  T extends { entry: DictionaryEntry | ProposalEntry } =
+    | UserDictionaryEntry
+    | UserProposalEntry,
+>({ kreyol, value, ...props }: { kreyol: KreyolLanguage; value: T }) {
+  let source = value.entry
+  if ('is_bookmarked' in value && 'bookmark' in value && value.is_bookmarked) {
+    source = value.bookmark as DictionaryEntry
+  }
 
-  const relatedList = [source]
+  const relatedList: string[] = [source]
     .map((entry) => {
       const syns = entry.definitions
-        .map((def) => {
+        .map((def: BaseDefinition) => {
           return def.synonyms
         })
         .flat()
       const confer = entry.definitions
-        .map((def) => {
+        .map((def: BaseDefinition) => {
           return def.confer
         })
         .flat()
@@ -38,25 +41,19 @@ export function Entry({
     })
     .flat()
     .filter(onlyUnique)
-
+  //    const relatedList: string[] = []
   return (
-    <div className="flex flex-col min-h-screen" {...props}>
+    <div className="flex min-h-screen flex-col" {...props}>
       <main className="flex-1 py-6">
         <div className="container space-y-6 px-4 md:px-6">
-          <div className="grid items-start gap-2">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-              <span className="flex items-center gap-2">
-                <EntryBookmarkButton
-                  entry={source.entry}
-                  bookmarked={value.is_bookmarked}
-                />
-                {source.entry}
-              </span>
-            </h1>
-            <p className="text-gray-500 dark:text-gray-400">
-              {source.variations.join(' /')}
-            </p>
-          </div>
+          <EntryTitle
+            source={source}
+            bookmarkable={'is_bookmarked' in value}
+            bookmarked={
+              'is_bookmarked' in value ? (value.is_bookmarked as boolean) : false
+            }
+          />
+
           <div className="above-article flex flex-row">
             <EntryDefinitionList
               entry={source.entry}
@@ -64,18 +61,18 @@ export function Entry({
               kreyol={kreyol}
             />
 
-            <aside className="hidden md:block  basis-1/4 px-4">
+            <aside className="hidden basis-1/4  px-4 md:block">
               {relatedList.length === 0 ? (
                 ' '
               ) : (
                 <div className="sticky top-20">
-                  <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                    <h3 className="text-lg font-semibold mb-2">Voir aussi</h3>
+                  <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+                    <h3 className="mb-2 text-lg font-semibold">Voir aussi</h3>
                     <ul className="space-y-2">
                       {relatedList.map((item: string) => (
                         <li key={hashKey('also_', item)}>
                           <Link
-                            className="text-gray-700 dark:text-gray-300 hover:underline"
+                            className="text-gray-700 hover:underline dark:text-gray-300"
                             href={dicoUrl(kreyol, item)}
                           >
                             {item.charAt(0).toUpperCase() + item.slice(1)}

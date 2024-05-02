@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { build } = require('esbuild')
 const { replace } = require('esbuild-plugin-replace')
 const fs = require('node:fs')
@@ -31,6 +32,7 @@ build({
   ],
 })
   .then(() => {
+    // prettier-ignore
     fs.writeFileSync(
       './dist/package.json',
       JSON.stringify(pdata, null, '  ')

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/table'
 import { PaginatedDico } from '@/lib/types'
 import { makeId, hashKey } from '@/lib/utils'
-import { KreyolFlag } from '@kreyolopal/react-ui'
+import { LangFlag } from '@kreyolopal/react-ui'
 import { SingleDefinition, DictionaryFullEntry, KreyolLanguage } from '@kreyolopal/domain'
 import DicoTableCell from '@/components/dicotable/dico-table-cell'
 import { UseQueryResult } from '@tanstack/react-query'
@@ -45,7 +45,10 @@ function wordsToRow(words: DictionaryFullEntry[]): WordRow[] {
   const lignes: WordRow[] = []
   words.forEach((word) => {
     const defs = Object.entries(word.definitions).map((item) => {
-      return { langue: item[0] as KreyolLanguage, definitions: item[1]  as SingleDefinition[]}
+      return {
+        langue: item[0] as KreyolLanguage,
+        definitions: item[1] as SingleDefinition[],
+      }
     })
     const totalDefs = defs.reduce((nbdefs, item) => nbdefs + item.definitions.length, 0)
     defs.forEach(({ langue, definitions }, langue_index) => {
@@ -64,7 +67,7 @@ function wordsToRow(words: DictionaryFullEntry[]): WordRow[] {
           entry_rowspan,
           variations: word.variations,
           langue,
-          Flag: <KreyolFlag kreyol={langue} width="24" height="12" />,
+          Flag: <LangFlag langue={langue} width="24" height="12" />,
           flag_rowspan:
             definitions.length === 1 ? 1 : def_index === 0 ? definitions.length : 0,
           nature: definition.nature,
@@ -120,7 +123,7 @@ export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
     <DicoTableSkeleton />
   ) : isError ? (
     <TableError message={error.message} />
-  ) : (
+  ) : lignes.length > 0 ? (
     <Table>
       <DicoTableHeaders />
       <TableBody>
@@ -128,23 +131,23 @@ export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
           return (
             <TableRow key={ligne.id}>
               {ligne.entry_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.entry_rowspan} className="align-top mt-2">
+                <TableCell rowSpan={ligne.entry_rowspan} className="mt-2 align-top">
                   {ligne.entry}
                 </TableCell>
               )}
               {ligne.entry_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.entry_rowspan} className="align-top mt-2">
+                <TableCell rowSpan={ligne.entry_rowspan} className="mt-2 align-top">
                   {ligne.variations.map((variation) => {
                     return <div key={hashKey('var_', variation)}>{variation}</div>
                   })}
                 </TableCell>
               )}
               {ligne.flag_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.flag_rowspan} className="align-top mt-2">
+                <TableCell rowSpan={ligne.flag_rowspan} className="mt-2 align-top">
                   <Link href={ligne.url}>{ligne.Flag}</Link>
                 </TableCell>
               )}
-              <TableCell className="align-top mt-2">{ligne.nature}</TableCell>
+              <TableCell className="mt-2 align-top">{ligne.nature}</TableCell>
               <TableCell>{ligne.definition_cpf}</TableCell>
               <TableCell>{ligne.definition_fr}</TableCell>
               <DicoTableCell
@@ -176,5 +179,5 @@ export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
         })}
       </TableBody>
     </Table>
-  )
+  ) : ('Aucune entrée trouvée')
 }
