@@ -4,7 +4,7 @@ import {
   ProposalDefinition,
 } from '@kreyolopal/domain'
 import FeatherIcon from '../FeatherIcon'
-import { useDashboard } from '@/app/dashboard/dashboard-provider'
+import { useDashboard } from '@/components/dashboard/dashboard-provider'
 import { Button } from '@/components/ui/button'
 import type { Backer } from '@kreyolopal/domain/proposals/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'

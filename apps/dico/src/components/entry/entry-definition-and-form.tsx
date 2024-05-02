@@ -23,7 +23,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { validateProposal } from '@/queries/proposals/validate-proposal'
-import { useDashboard } from '@/app/dashboard/dashboard-provider'
+import { useDashboard } from '@/components/dashboard/dashboard-provider'
 
 interface EntryDefinitionAndFormProps {
 	entry: string

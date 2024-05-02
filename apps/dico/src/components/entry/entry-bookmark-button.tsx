@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
-import { useDashboard } from '@/app/dashboard/dashboard-provider'
+import { useDashboard } from '@/components/dashboard/dashboard-provider'
 import { BookmarkIcon } from '@/components/bookmark-icon'
 
 export const EntryBookmarkButton = ({

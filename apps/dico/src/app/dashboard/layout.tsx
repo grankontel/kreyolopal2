@@ -14,7 +14,7 @@ import { parseCookie } from '@/lib/utils'
 import { UserDropdown } from '@/components/dashboard/user-dropdown'
 import { LayoutFooter } from '@/components/layout-footer'
 import { LogoutDialog } from '@/components/dashboard/logout-dialog'
-import { DashboardProvider } from './dashboard-provider'
+import { DashboardProvider } from '@/components/dashboard/dashboard-provider'
 
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 

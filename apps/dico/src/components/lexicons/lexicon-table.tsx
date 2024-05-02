@@ -20,7 +20,7 @@ import { Dialog, DialogTrigger } from '../ui/dialog'
 import { AlertDialog } from '../ui/alert-dialog'
 import { ConfirmDialogContent } from '../confirm-dialog'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useDashboard } from '@/app/dashboard/dashboard-provider'
+import { useDashboard } from '@/components/dashboard/dashboard-provider'
 import { deleteLexicon } from '@/queries/lexicons/put-lexicon'
 import { useToast } from '@/components/ui/use-toast'
 
