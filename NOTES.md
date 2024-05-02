@@ -31,7 +31,7 @@ rabbitmq ?
 - [X] upvote definition
 - [X] downvote definition
 - [X] validate proposal
-- [ ] validate proposal button
+- [X] validate proposal button
 
 ### Profile
 
