@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -30,6 +31,7 @@ interface LangDefinition {
 
 export const AddEntry = ({ entry }: { entry: string }) => {
   const auth = useDashboard()
+  const router = useRouter()
   const { toast } = useToast()
 
   const [isChecking, setChecking] = useState(false)
@@ -63,6 +65,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
         variant: 'default',
         description: 'Entrée ajoutée',
       })
+      router.refresh()
     },
     onError: (err: Error) => {
       notifyer(err)
@@ -347,7 +350,7 @@ export const AddEntry = ({ entry }: { entry: string }) => {
           aria-disabled={pending}
           onClick={(e: any) => submitHandler(e)}
         >
-          Valider
+          Ajouter
         </Button>
       </div>
     </div>

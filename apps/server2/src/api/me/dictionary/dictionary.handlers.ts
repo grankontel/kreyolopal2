@@ -465,7 +465,7 @@ const listWords = async function (c: Context) {
       return c.json<DictionaryFullEntry[]>(data)
     }
 
-    return c.json({ error: 'Not Found.' }, 404)
+    return c.json([], 200)
   } catch (e: any) {
     logger.error(e.message)
     throw createHttpException({

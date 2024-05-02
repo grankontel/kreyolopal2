@@ -36,7 +36,9 @@ export default async function Page({ params }: { params: { entry: string } }) {
                 <EntryDefinitionList
                   entry={source.entry}
                   definitions={source.definitions}
+                  variations={source.variations}
                   kreyol={'gp'}
+                  showForm={true}
                 />
               </div>
             )}

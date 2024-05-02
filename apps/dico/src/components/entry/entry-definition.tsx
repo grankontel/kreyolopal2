@@ -14,7 +14,8 @@ import { AddToLexicon } from './add-to-lexicon'
 function convertDefinition<T>(definition: SingleDefinition | ProposalDefinition) : T {
   return definition as unknown as T
 }
-interface EntryDefinitionProps {
+
+export interface EntryDefinitionProps {
   entry: string
   kreyol: KreyolLanguage
   index: number
@@ -41,8 +42,6 @@ export const EntryDefinition = ({
           <span className="font-medium">
             {index}. {subnature}{' '}
           </span>
-          eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          @ts-ignore
           {!('source' in definition) || ['reference', 'validated'].includes( definition.source)  ? (
             <AddToLexicon definition={definition as SingleDefinition} />
           ) : (

@@ -123,7 +123,7 @@ export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
     <DicoTableSkeleton />
   ) : isError ? (
     <TableError message={error.message} />
-  ) : (
+  ) : lignes.length > 0 ? (
     <Table>
       <DicoTableHeaders />
       <TableBody>
@@ -179,5 +179,5 @@ export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
         })}
       </TableBody>
     </Table>
-  )
+  ) : ('Aucune entrée trouvée')
 }
