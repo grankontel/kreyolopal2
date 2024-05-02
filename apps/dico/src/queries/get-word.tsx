@@ -72,14 +72,15 @@ export async function getWord(
       })
 
       if (result2?.ok) {
-        const data2 = await result2.json<DictionaryFullEntry[]>()
+
+        const data2 = await result2.json<DictionaryEntry[]>()
 
         const bookmarks: DictionaryEntry[] = data2.map((item) => {
           return {
             _id: item.id,
             entry: item.entry,
             variations: item.variations,
-            definitions: item.definitions[lang],
+            definitions: item.definitions.filter((def) => def.kreyol === lang),
           }
         })
         response.is_bookmarked = bookmarks.length > 0
@@ -98,7 +99,7 @@ export async function getProposedWord(
 ): Promise<UserProposalEntry | null> {
   const allowedKreyol = ['gp']
 
-  return new Promise<ProposalEntry | null>(async (resolve, reject) => {
+  return new Promise<UserProposalEntry | null>(async (resolve, reject) => {
     if (kreyol.length == 0 || entry.length == 0 || !allowedKreyol.includes(kreyol)) {
       resolve(null)
     }

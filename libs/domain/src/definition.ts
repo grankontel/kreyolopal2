@@ -51,7 +51,6 @@ export interface DictionaryBaseEntry extends BaseEntry {
 }
 
 export interface DictionaryEntry {
-  _id: string
   entry: string
   variations: string[]
   definitions: Array<SingleDefinition>

@@ -15,7 +15,9 @@ export interface UserEntry<U extends BaseEntry> {
   entry: U
   kreyol: string
 }
-export interface UserDictionaryEntry extends UserEntry<DictionaryEntry> {
+export interface UserDictionaryEntry  {
+  entry: DictionaryEntry
+  kreyol: string
   cacheMode: 'public' | 'private'
   is_bookmarked: boolean
   bookmark?: DictionaryEntry

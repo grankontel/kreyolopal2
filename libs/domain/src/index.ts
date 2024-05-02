@@ -4,4 +4,4 @@ export * from './definition'
 export * from './lexicon'
 export * from './validator'
 
-export type { SubmitDefinition, SubmitEntry, ProposalDefinition } from './proposals/types'
+export type { SubmitDefinition, SubmitEntry, ProposalDefinition, ProposalEntry } from './proposals/types'

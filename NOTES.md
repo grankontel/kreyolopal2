@@ -30,7 +30,8 @@ rabbitmq ?
 - [X] updtate WordRepository class
 - [X] upvote definition
 - [X] downvote definition
-- [ ] validate proposal
+- [X] validate proposal
+- [ ] validate proposal button
 
 ### Profile
 
