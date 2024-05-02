@@ -1,4 +1,4 @@
-import { isLoggedIn } from '@/app/dashboard/is-logged-in'
+import { getPermissions, isLoggedIn } from '@/app/dashboard/is-logged-in'
 import { EntryDefinitionList } from '@/components/entry/entry-definition-list'
 import { EntryTitle } from '@/components/entry/entry-title'
 import { AddEntry } from '@/components/forms/add-entry'
@@ -14,7 +14,7 @@ export default async function Page({ params }: { params: { entry: string } }) {
   if (!token) {
     return undefined
   }
-  const { entry } = params
+  const entry = decodeURIComponent(params.entry)
 
   const data = await checkWord(token, entry)
   if (data) {
@@ -23,6 +23,8 @@ export default async function Page({ params }: { params: { entry: string } }) {
 
   const entryInfo = await getProposedWord(token, 'gp', entry)
   const source: ProposalEntry = entryInfo?.entry ?? { entry, docType: 'entry', variations: [], definitions: []}
+
+  const perms = getPermissions()
   return (
     <div>
       <div className="flex min-h-screen flex-col">
@@ -38,7 +40,7 @@ export default async function Page({ params }: { params: { entry: string } }) {
                   definitions={source.definitions}
                   variations={source.variations}
                   kreyol={'gp'}
-                  showForm={true}
+                  showForm={perms.includes('validate_proposal')}
                 />
               </div>
             )}

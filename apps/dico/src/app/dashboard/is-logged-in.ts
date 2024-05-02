@@ -20,6 +20,23 @@ export const isLoggedIn = () => {
   return auth?.session_id
 }
 
+export const getPermissions = () => {
+  const cookieValue = cookies().get(cookieName)
+  if (cookieValue === undefined) {
+    throw new Error('Not logged in')
+  }
+  const auth = parseCookie(cookieValue.value)
+
+  console.log('***** is logged in  *****')
+
+  if (auth?.session_id === undefined) {
+    cookies().delete(cookieName)
+    throw new Error('Not logged in')
+  }
+
+  return auth?.permissions || []
+}
+
 export const getUsername = () => {
   const cookieValue = cookies().get(cookieName)
   if (cookieValue === undefined) {

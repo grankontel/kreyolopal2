@@ -22,6 +22,8 @@ import {
 import { useToast } from '@/components/ui/use-toast'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import { validateProposal } from '@/queries/proposals/validate-proposal'
+import { useDashboard } from '@/app/dashboard/dashboard-provider'
 
 interface EntryDefinitionAndFormProps {
 	entry: string
@@ -103,6 +105,7 @@ interface ValidateDialogContentProps {
 
 export const ValidateDialogContent = ({entry, definitions, variations: defaultVariations}: ValidateDialogContentProps) => {
   const [variations, setVariations] = useState<string[]>(defaultVariations)
+	const dash = useDashboard()
   const router = useRouter()
   const { toast } = useToast()
   const notifyer = (err: { error?: string; toString: () => string }) => {
@@ -117,10 +120,11 @@ export const ValidateDialogContent = ({entry, definitions, variations: defaultVa
   if (!variations.includes(entry)) setVariations([entry, ...variations])
 
 	const validateEntry = useMutation({
+		mutationFn: async () => validateProposal(dash?.session_id as string, {entry, variations, definitions}),
     onSuccess: () => {
       toast({
         variant: 'default',
-        description: 'Entrée ajoutée',
+        description: 'Entrée validée',
       })
       router.refresh()
     },
@@ -131,6 +135,7 @@ export const ValidateDialogContent = ({entry, definitions, variations: defaultVa
 	const submitHandler = async () => {
 
 		console.log('submitHandler', entry, variations, definitions)
+		validateEntry.mutate()
 	}
   return (
     <DialogContent className="sm:max-w-[425px]">
