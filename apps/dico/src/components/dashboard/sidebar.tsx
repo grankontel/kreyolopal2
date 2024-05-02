@@ -37,6 +37,7 @@ export default function Sidebar({
               width={182}
               height={50}
               alt="Zakari Brand"
+              priority
             />
           </Link>
           <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
