@@ -8,6 +8,7 @@ import { getEntries } from '@/queries/get-suggestions'
 import { DictionaryEntry } from '@kreyolopal/domain'
 import debounce from 'lodash.debounce'
 import { useRouter } from 'next/navigation'
+import { hashKey } from '@/lib/utils'
 
 function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -94,7 +95,7 @@ export function WordSearchForm() {
               <ul className="divide-y divide-gray-200 dark:divide-gray-900">
                 {words.map((item: DictionaryEntry, index: any) => {
                   return (
-                    <li key={item._id}>
+                    <li key={hashKey('entry',item.entry)}>
                       <Button
                         className="w-full justify-start text-left"
                         variant="ghost"

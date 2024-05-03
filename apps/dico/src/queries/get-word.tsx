@@ -77,7 +77,6 @@ export async function getWord(
 
         const bookmarks: DictionaryEntry[] = data2.map((item) => {
           return {
-            _id: item.id,
             entry: item.entry,
             variations: item.variations,
             definitions: item.definitions.filter((def) => def.kreyol === lang),
