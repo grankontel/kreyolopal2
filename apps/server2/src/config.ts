@@ -26,6 +26,14 @@ const config = {
     password: process.env.POSTGRES_PASSWORD,
     health: process.env.PGRST_HEALTH as string,
   },
+  neon: {
+    host: process.env.PGHOST,
+    port: Number(process.env.PGPORT || 5432),
+    database: process.env.PGDATABASE,
+    username: process.env.PGUSER,
+    password: process.env.PGPASSWORD,
+    uri: '',
+  },
   mongodb: {
     // uri: process.env.MONGODB_URI,
     host: process.env.MONGODB_HOST,
@@ -70,5 +78,9 @@ const config = {
 config.mongodb.uri = `mongodb://${config.mongodb.user}:${encodeURIComponent(
   String(config.mongodb.password)
 )}@${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.db}?replicaSet=rs0`
+
+config.neon.uri = `postgresql://${config.neon.username}:${encodeURIComponent(
+  String(config.neon.password)
+)}@${config.neon.host}:${config.neon.port}/${config.neon.database}?sslmode=require`
 
 export default config
