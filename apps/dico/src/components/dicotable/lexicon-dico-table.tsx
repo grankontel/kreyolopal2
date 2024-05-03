@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { useDashboard } from '@/app/dashboard/dashboard-provider'
+import { useDashboard } from '@/components/dashboard/dashboard-provider'
 import { DicoTable } from './dico-table'
 import { fetchLexiconEntries } from '@/queries/fetch-lexicon-entries'
 

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { fetchPersonalDico } from '@/queries/fetch-personal-dico'
-import { useDashboard } from '@/app/dashboard/dashboard-provider'
+import { useDashboard } from '@/components/dashboard/dashboard-provider'
 import { DicoTable } from './dico-table'
 
 export const PersonalDicoTable = () => {

@@ -5,7 +5,7 @@ import FeatherIcon from '../FeatherIcon'
 import { DropdownMenu, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { LexiconDropdownMenu } from '@/components/lexicons/lexicon-dropdown-menu'
 import { useMutation } from '@tanstack/react-query'
-import { useDashboard } from '@/app/dashboard/dashboard-provider'
+import { useDashboard } from '@/components/dashboard/dashboard-provider'
 import { useToast } from '@/components/ui/use-toast'
 import { addEntries } from '@/queries/lexicons/add-entries'
 

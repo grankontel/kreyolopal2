@@ -17,7 +17,7 @@ import { Switch } from '@/components/ui/switch'
 import { Lexicon } from '@kreyolopal/domain'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useDashboard } from '@/app/dashboard/dashboard-provider'
+import { useDashboard } from '@/components/dashboard/dashboard-provider'
 import { putLexicon, postLexicon } from '@/queries/lexicons/put-lexicon'
 import { useToast } from '@/components/ui/use-toast'
 

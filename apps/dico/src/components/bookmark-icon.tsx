@@ -1,6 +1,5 @@
-import { IconAttributes } from '@kreyolopal/react-ui'
 
-export function BookmarkIcon(props: IconAttributes) {
+export function BookmarkIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
