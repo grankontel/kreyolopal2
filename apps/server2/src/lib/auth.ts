@@ -1,4 +1,4 @@
-import { Lucia } from 'lucia'
+import { Lucia, TimeSpan } from 'lucia'
 const { createHmac } = require('node:crypto')
 import { adapter } from './db'
 import type { DatabaseUser } from './db'
@@ -47,6 +47,7 @@ export function parseCookie(cookie: string | null) {
 }
 
 export const lucia = new Lucia(adapter, {
+  sessionExpiresIn: new TimeSpan(1, "h"), // 2 weeks
   sessionCookie: {
     name: 'wabap',
     attributes: {
