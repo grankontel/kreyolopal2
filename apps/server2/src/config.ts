@@ -3,14 +3,14 @@ dotenv.config()
 
 const config = {
   app: {
-    port: process.env.PORT,
+    port: Number(process.env.PORT),
   },
   dico: {
-    useLocal: process.env.LOCAL_DICO,
+    useLocal: Boolean(process.env.LOCAL_DICO),
   },
   slack: {
     webhook: process.env.SLACK_WEBHOOK_URL,
-    noSend: process.env.NODE_ENV !== 'production',
+    noSend: Boolean(process.env.NODE_ENV !== 'production'),
   },
   aws: {
     keyId: process.env.AWS_ACCESS_KEY_ID,
@@ -25,6 +25,7 @@ const config = {
     username: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
     health: process.env.PGRST_HEALTH as string,
+    uri: '',
   },
   neon: {
     host: process.env.PGHOST,
@@ -67,7 +68,7 @@ const config = {
   },
   log: {
     level: process.env.LOGLEVEL || 'info',
-    prettyPrint: process.env.NODE_ENV !== 'production',
+    prettyPrint: Boolean(process.env.NODE_ENV !== 'production'),
   },
   auth: {
     secret: process.env.SESSION_SECRET,
@@ -82,5 +83,9 @@ config.mongodb.uri = `mongodb://${config.mongodb.user}:${encodeURIComponent(
 config.neon.uri = `postgresql://${config.neon.username}:${encodeURIComponent(
   String(config.neon.password)
 )}@${config.neon.host}:${config.neon.port}/${config.neon.database}?sslmode=require`
+
+config.db.uri = `postgresql://${config.db.username}:${encodeURIComponent(
+	String(config.db.password)
+)}@${config.db.host}:${config.db.port}/${config.db.database}`
 
 export default config
