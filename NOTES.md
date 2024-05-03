@@ -40,8 +40,7 @@ rabbitmq ?
 ### Stack
 
 - ~~[ ] switch logger to pino (https://github.com/pinojs/pino)~~
-- [ ] migrate to Drizzle (https://drizzle.dev/docs/getting-started/installation)
-- [ ] install drizzle eslint
+- [X] use Drizzle migration
 - [ ] migrate to Neon (https://neon.tech/pricing)
 - [ ] migrate to Cloud Atlas
 - [ ] migrate to Hono/Cloudflare

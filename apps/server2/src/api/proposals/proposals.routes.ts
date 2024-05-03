@@ -42,7 +42,7 @@ routes.get(
 
 routes.post(
   '/validate/:entry',
-  zValidator('param', z.object({entry: z.string().min(1)}), sendBadRequest),
+  zValidator('param', z.object({ entry: z.string().min(1) }), sendBadRequest),
   zValidator('json', postValiddateSchema, sendBadRequest),
   handlers.validateProposal
 )

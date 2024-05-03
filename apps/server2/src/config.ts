@@ -85,7 +85,7 @@ config.neon.uri = `postgresql://${config.neon.username}:${encodeURIComponent(
 )}@${config.neon.host}:${config.neon.port}/${config.neon.database}?sslmode=require`
 
 config.db.uri = `postgresql://${config.db.username}:${encodeURIComponent(
-	String(config.db.password)
+  String(config.db.password)
 )}@${config.db.host}:${config.db.port}/${config.db.database}`
 
 export default config

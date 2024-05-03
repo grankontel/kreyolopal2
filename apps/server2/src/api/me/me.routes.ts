@@ -8,7 +8,9 @@ const routes = createRouter()
 // get specific word
 routes.get('/', handlers.getUserInfo)
 
-routes.post('/updatepwd',
-zValidator('json', changePasswordSchema, sendBadRequest),
-handlers.updatePassword)
+routes.post(
+  '/updatepwd',
+  zValidator('json', changePasswordSchema, sendBadRequest),
+  handlers.updatePassword
+)
 export default routes
