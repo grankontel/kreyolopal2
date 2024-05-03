@@ -14,6 +14,7 @@
     "build-cf-types": "wrangler types --env-interface CloudflareEnv env.d.ts"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.4",
     "@marsidev/react-turnstile": "^0.5.3",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -37,10 +38,11 @@
     "react-cookie": "^7.1.0",
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18",
+    "react-hook-form": "^7.51.3",
     "slugify": "^1.6.6",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.22.4",
+    "zod": "^3.23.6",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
