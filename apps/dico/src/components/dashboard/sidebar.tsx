@@ -31,7 +31,7 @@ export default function Sidebar({
     <aside className="sidebar hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="bg-logo flex h-[60px] items-center border-b px-6">
-          <Link className="flex items-center gap-2 font-semibold" href="#">
+          <Link className="flex items-center gap-2 font-semibold" href="/dashboard">
             <Image
               src="/images/logo_name-transparent.svg"
               width={182}

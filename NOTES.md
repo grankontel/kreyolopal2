@@ -35,7 +35,7 @@ rabbitmq ?
 
 ### Profile
 
-- [ ] change password
+- [X] change password
 
 ### Stack
 
