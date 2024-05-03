@@ -54,7 +54,6 @@ Promise.all([mongoClient.connect()])
       app.use('*', async (c, next) => {
         c.set('pgPool', pgPool)
         c.set('mongodb', mongo)
-        c.set('logger', winston_logger)
         await next()
       })
 

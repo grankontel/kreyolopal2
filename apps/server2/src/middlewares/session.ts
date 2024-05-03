@@ -2,6 +2,7 @@ import { lucia, createCookie, parseCookie } from '#lib/auth'
 import { getCookie, setCookie } from 'hono/cookie'
 import type { MiddlewareHandler } from 'hono'
 import { winston_logger } from '#services/winston_logger'
+import type { User } from 'lucia'
 
 export const sessionMiddleware = (): MiddlewareHandler => {
   return async (c, next) => {
@@ -33,6 +34,8 @@ export const sessionMiddleware = (): MiddlewareHandler => {
     }
     c.set('user', user)
     c.set('session', session)
+    const childLogger = winston_logger.child(user as User);
+    c.set('logger', childLogger)
     return next()
   }
 }

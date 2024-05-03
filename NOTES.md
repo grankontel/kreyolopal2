@@ -39,7 +39,7 @@ rabbitmq ?
 
 ### Stack
 
-- [ ] switch logger to pino (https://github.com/pinojs/pino)
+- ~~[ ] switch logger to pino (https://github.com/pinojs/pino)~~
 - [ ] migrate to Drizzle (https://drizzle.dev/docs/getting-started/installation)
 - [ ] install drizzle eslint
 - [ ] migrate to Neon (https://neon.tech/pricing)
