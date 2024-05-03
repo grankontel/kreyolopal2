@@ -12,6 +12,7 @@ import { useDicoStore } from '@/store/dico-store'
 import { ResponseError, User, apiServer, cookieName } from '@/lib/types'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { cookies } from 'next/headers'
+import Link from 'next/link'
 
 const fetchUserInfo = async (token: string) => {
   return fetch(apiServer + '/api/me/', {
@@ -66,7 +67,9 @@ export const UserDropdown = async ({ token }: { token: string }) => {
 
           <DropdownMenuSeparator />
           <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href={'/settings'} passHref>Settings</Link>
+          </DropdownMenuItem>
           <DialogTrigger asChild>
             <DropdownMenuItem>Logout</DropdownMenuItem>
           </DialogTrigger>
