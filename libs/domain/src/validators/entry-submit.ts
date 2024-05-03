@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { KreyolLanguage, KreyolLanguages, Natures } from '#src/types'
+import { KreyolLanguage, KreyolLanguages, Natures } from '../types'
 
 const NatureArray: ReadonlyArray<string> = Object.values(Natures) as Array<string>
 const KreyolArray: ReadonlyArray<string> = Object.values(KreyolLanguages) as Array<string>
