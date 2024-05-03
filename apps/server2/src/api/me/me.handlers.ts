@@ -1,20 +1,8 @@
 import type { Context } from 'hono'
 import type { PoolClient } from 'pg'
 import { argon2 } from '#utils/argon'
-
-/*
-
-export interface DatabaseUser {
-  id: string
-  username: string
-  password: string
-  firstname: string
-  lastname: string
-  is_admin: boolean
-  birth_date: Date
-}
-
-*/
+import { lucia } from '#lib/auth'
+import { setCookie } from 'hono/cookie'
 
 const getUserInfo = async function (c: Context) {
   const logger = c.get('logger')
@@ -56,7 +44,8 @@ const updatePassword = async function (c: Context) {
       [user.id]
     )
 
-    const isValid = await argon2.verify(old_password, result.rows[0].password)
+    logger.debug('result', result.rows[0])
+    const isValid = await argon2.verify(result.rows[0].password, old_password)
     if (!isValid) {
       logger.warn('old password is not valid')
       return c.json(
@@ -67,6 +56,7 @@ const updatePassword = async function (c: Context) {
         400
       )
     }
+    logger.debug('old password is valid')
     const hashedPassword = await argon2.hash(new_password)
 
     await client
@@ -74,7 +64,14 @@ const updatePassword = async function (c: Context) {
       user.id, hashedPassword
     ])
 
-    return c.json({ status: 'success' }, 200)
+    const session = c.get('session')
+    await lucia.invalidateSession(session.id)
+    const theCookie = lucia.createBlankSessionCookie()
+    setCookie(c, theCookie.name, theCookie.value, {
+      ...theCookie.attributes,
+      httpOnly: false,
+    })
+      return c.json({ status: 'success' }, 200)
 
   } catch (_error) {
     logger.error('updatePassword Exception', _error)
