@@ -2,7 +2,6 @@ import { createAdaptorServer } from '@hono/node-server'
 import { cors } from 'hono/cors'
 import { HTTPException } from 'hono/http-exception'
 import { MongoClient } from 'mongodb'
-import { drizzle } from "drizzle-orm/node-postgres";
 
 import config from './config'
 import { logger } from './middlewares/logger'
@@ -45,9 +44,6 @@ process.on('SIGINT', async () => {
 
   process.exit(0)
 })
-
-// init drizzle
-const db = drizzle(pgPool);
 
 Promise.all([mongoClient.connect()])
   .then(
