@@ -43,6 +43,7 @@ rabbitmq ?
 - [X] use Drizzle migration
 - [ ] migrate to Neon (https://neon.tech/pricing)
 - [ ] migrate to Cloud Atlas
+- [ ] encapsulate database access in a class
 - [ ] migrate to Hono/Cloudflare
 
 ## Lexicon entry

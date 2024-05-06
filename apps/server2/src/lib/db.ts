@@ -13,6 +13,7 @@ import pg from 'pg'
 export const pgPool = new pg.Pool({
   connectionString: config.neon.uri,
 })
+
 ;(async () => {
   await pgPool
     .connect()

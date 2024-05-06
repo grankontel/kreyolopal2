@@ -76,9 +76,14 @@ const config = {
   },
 }
 
-config.mongodb.uri = `mongodb://${config.mongodb.user}:${encodeURIComponent(
-  String(config.mongodb.password)
-)}@${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.db}?replicaSet=rs0`
+config.mongodb.uri = process.env.NODE_ENV !== 'production' ? (
+  `mongodb://${config.mongodb.user}:${encodeURIComponent(
+    String(config.mongodb.password)
+  )}@${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.db}?replicaSet=rs0`
+) : (
+  `mongodb+srv://${config.mongodb.user}:${encodeURIComponent(
+    String(config.mongodb.password))}@cluster0.llxjy.mongodb.net/${config.mongodb.db}?retryWrites=true&w=majority&appName=Cluster0`
+)
 
 config.neon.uri = `postgresql://${config.neon.username}:${encodeURIComponent(
   String(config.neon.password)
