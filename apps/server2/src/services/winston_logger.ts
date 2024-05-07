@@ -1,5 +1,6 @@
 import winston from 'winston'
 const SlackHook = require('winston-slack-webhook-transport')
+
 import config from '../config'
 
 const alignedWithColorsAndTime = winston.format.combine(
@@ -10,9 +11,8 @@ const alignedWithColorsAndTime = winston.format.combine(
     const { timestamp, level, message, ...args } = info
 
     const ts = timestamp.slice(0, 19).replace('T', ' ')
-    return `${ts} [${level}]: ${message} ${
-      Object.keys(args).length ? JSON.stringify(args, null, 2) : ''
-    }`
+    return `${ts} [${level}]: ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ''
+      }`
   })
 )
 
@@ -21,6 +21,7 @@ const standardObjectFormat = winston.format.combine(
   winston.format.json()
 )
 
+// console options
 const options = {
   console: {
     level: config.log.level,

@@ -13,9 +13,12 @@ import { csrfMiddleware } from './middlewares/csrf'
 import { sessionMiddleware } from './middlewares/session'
 import { adminMiddleware } from './middlewares/admin'
 
+import { sentry } from '#services/sentry'
+
 const port: number = Number(config.app.port) || 3000
 
 const app = createRouter()
+
 app.use('*', logger())
 app.use('*', cors())
 // app.use('*', csrfMiddleware())
@@ -28,6 +31,7 @@ app.onError((err, c) => {
     return err.getResponse()
   }
   //...
+  sentry.captureException(err)
   winston_logger.error(err.message, err)
   return c.json({ status: 'error', error: 'Unknown error..' }, 500)
 })
