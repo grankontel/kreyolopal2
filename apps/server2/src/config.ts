@@ -70,6 +70,9 @@ const config = {
     level: process.env.LOGLEVEL || 'info',
     prettyPrint: Boolean(process.env.NODE_ENV !== 'production'),
   },
+  sentry: {
+    dsn: process.env.SENTRY_DSN,
+  },
   auth: {
     secret: process.env.SESSION_SECRET,
     duration: process.env.SESSION_DURATION,
