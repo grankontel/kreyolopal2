@@ -1,5 +1,5 @@
 {
-  "id": "0768db8b-082b-4e6b-ad70-1497fdb73d6a",
+  "id": "39262b81-d2c6-4adb-a1a7-e8de6e820294",
   "prevId": "ac73d0f0-f635-4320-a911-436b2810e862",
   "version": "5",
   "dialect": "pg",
@@ -68,13 +68,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "role_id": {
-          "name": "role_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 2
-        },
         "is_admin": {
           "name": "is_admin",
           "type": "boolean",
@@ -106,21 +99,7 @@
           "isUnique": false
         }
       },
-      "foreignKeys": {
-        "auth_user_role_id_roles_id_fk": {
-          "name": "auth_user_role_id_roles_id_fk",
-          "tableFrom": "auth_user",
-          "tableTo": "roles",
-          "columnsFrom": [
-            "role_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "auth_user_username_key": {
@@ -597,6 +576,85 @@
         }
       },
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "users_roles": {
+      "name": "users_roles",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role_id": {
+          "name": "role_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "IX_users_roles_userid": {
+          "name": "IX_users_roles_userid",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "users_roles_user_id_auth_user_id_fk": {
+          "name": "users_roles_user_id_auth_user_id_fk",
+          "tableFrom": "users_roles",
+          "tableTo": "auth_user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "users_roles_role_id_roles_id_fk": {
+          "name": "users_roles_role_id_roles_id_fk",
+          "tableFrom": "users_roles",
+          "tableTo": "roles",
+          "columnsFrom": [
+            "role_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "users_roles_user_id_role_id_pk": {
+          "name": "users_roles_user_id_role_id_pk",
+          "columns": [
+            "user_id",
+            "role_id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     }
   },

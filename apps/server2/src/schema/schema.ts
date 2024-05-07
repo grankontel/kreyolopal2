@@ -16,7 +16,6 @@ export const authUser = pgTable("auth_user", {
 	lastlogin: timestamp("lastlogin", { withTimezone: true, mode: 'string' }),
 	emailVerifToken: varchar("email_verif_token", { length: 255 }),
 	resetPwdToken: varchar("reset_pwd_token", { length: 255 }),
-	roleId: integer("role_id").notNull().default(2).references(() => roles.id, { onDelete: "cascade" }),
 	isAdmin: boolean("is_admin").default(false).notNull(),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
@@ -105,5 +104,17 @@ export const roles_permissions = pgTable("roles_permissions", {
 }, (table) => {
 	return {
 		ixPrimary: primaryKey({ columns: [table.roleId, table.permissionId] }),
+	}
+});
+
+export const user_roles = pgTable("users_roles", {
+	userId: text("user_id").notNull().references(() => authUser.id, { onDelete: "cascade" }),
+	roleId: integer("role_id").notNull().references(() => roles.id, { onDelete: "cascade" }),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => {
+	return {
+		ixPrimary: primaryKey({ columns: [table.userId, table.roleId] }),
+		ixUser: index("IX_users_roles_userid").on(table.userId),
 	}
 });
