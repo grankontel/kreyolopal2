@@ -12,6 +12,7 @@ import {
 import { DatabaseUser } from '#lib/db'
 import { Ulid } from 'id128'
 import { HTTPException } from 'hono/http-exception'
+import { getUserEnforcer } from '#lib/permissions'
 
 const submitProposal = async function (c: Context) {
   const logger = c.get('logger')
@@ -188,12 +189,13 @@ const validateProposal = async function (c: Context) {
   logger.info(`validateProposal for ${entry}`)
 
   if (!user) {
-    logger.debug('user not logged in')
+    logger.warn('user not logged in')
     return c.json({ error: 'You are not logged in.' }, 403)
   }
 
-  if (!user.is_admin) {
-    logger.debug('user not admin')
+  const enforcer = await getUserEnforcer(user)
+  if (!enforcer.can('validate', 'proposal')) {
+    logger.warn('user is not allowed to validate proposal')
     return c.json({ error: 'Unsufficient permissions.' }, 403)
   }
 

@@ -26,6 +26,7 @@ const login = async function (c: Context) {
     .then(async (client) => {
       const res = await client.query(text, values)
       const existingUser = res?.rows[0] as DatabaseUser | undefined
+      logger.debug('user exists', existingUser)
       if (!existingUser) {
         c.status(400)
         return c.json({
@@ -40,12 +41,14 @@ const login = async function (c: Context) {
           error: 'Incorrect username or password',
         })
       }
+      logger.debug('password is valid')
 
       return client
         .query('UPDATE auth_user SET lastlogin= NOW() WHERE id = $1 ', [
           existingUser.id,
         ])
         .then(() => {
+          logger.debug('updated last login time')
           return logUserIn(c, existingUser)
         })
     })
@@ -78,8 +81,8 @@ const signup = async function (c: Context) {
       (dbresult) => {
         const createdUser = dbresult.rows[0] as DatabaseUser
 
-        return lucia.createSession(createdUser.id, {}).then((session) => {
-          const theCookie = createCookie(session.id, createdUser)
+        return lucia.createSession(createdUser.id, {}).then(async (session) => {
+          const theCookie = await createCookie(session.id, createdUser)
           setCookie(c, theCookie.name, theCookie.value, {
             ...theCookie.attributes,
             httpOnly: false,

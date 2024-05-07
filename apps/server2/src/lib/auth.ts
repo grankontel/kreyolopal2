@@ -3,6 +3,7 @@ const { createHmac } = require('node:crypto')
 import { adapter } from './db'
 import type { DatabaseUser } from './db'
 import config from '#config'
+import { getUserPermissions } from './permissions'
 
 function getDigest(source: string): string {
   const hmac = createHmac('sha512', config.security.token)
@@ -13,19 +14,22 @@ function getDigest(source: string): string {
   return digest
 }
 
-export function createCookie(session_id: string, user: DatabaseUser) {
+export async function createCookie(session_id: string, user: DatabaseUser) {
   const now = new Date()
   // Add 30 days to now, and zero out hours, minutes, seconds, milliseconds
   now.setDate(now.getDate() + 30)
+  const perms = await getUserPermissions(user)
 
   const info = {
     session_id: session_id,
     user_id: user.id,
     username: user.username,
-    permissions: user.is_admin ? ['validate_proposal'] : [],
+    permissions: perms, // user.is_admin ? ['validate_proposal'] : [],
     expiresAt: now,
   }
+
   const infob64 = Buffer.from(JSON.stringify(info)).toString('base64')
+
   const digest = getDigest(infob64)
 
   const cookieValue = `${infob64}.${digest}`

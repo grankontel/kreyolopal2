@@ -11,7 +11,7 @@
     "build": "NODE_ENV='production' node ./build.js",
     "build2": "tsc --build ",
     "drizzle:generate": "drizzle-kit generate:pg --config ./src/drizzle.config.ts",
-		"drizzle:push": "drizzle-kit push:pg --config ./src/drizzle.config.ts",
+    "drizzle:push": "drizzle-kit push:pg --config ./src/drizzle.config.ts",
     "migrate": "ts-node ./drizzle.ts",
     "clean": "tsc --build --clean && rm -rf ./build",
     "prettier": "prettier ./src --write",
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.509.0",
+    "@casl/ability": "^6.7.1",
     "@hono/node-server": "^1.9.1",
     "@hono/zod-validator": "^0.2.1",
     "@kreyolopal/domain": "*",

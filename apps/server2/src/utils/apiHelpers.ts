@@ -97,8 +97,8 @@ export function logUserIn(
   c: Context,
   existingUser: DatabaseUser
 ): Promise<Response & TypedResponse<{}>> {
-  return lucia.createSession(existingUser.id, {}).then((session) => {
-    const theCookie = createCookie(session.id, existingUser)
+  return lucia.createSession(existingUser.id, {}).then(async (session) => {
+    const theCookie = await createCookie(session.id, existingUser)
     setCookie(c, theCookie.name, theCookie.value, {
       ...theCookie.attributes,
       httpOnly: false,
