@@ -40,11 +40,15 @@ rabbitmq ?
 ### Stack
 
 - ~~[ ] switch logger to pino (https://github.com/pinojs/pino)~~
-- [ ] migrate to Drizzle (https://drizzle.dev/docs/getting-started/installation)
-- [ ] install drizzle eslint
-- [ ] migrate to Neon (https://neon.tech/pricing)
-- [ ] migrate to Cloud Atlas
-- [ ] migrate to Hono/Cloudflare
+- [X] use Drizzle migration
+- ~~[ ] migrate to Neon (https://neon.tech/pricing)~~
+- ~~[ ] migrate to Cloud Atlas~~
+- ~~[ ] encapsulate database access in a class~~
+- ~~[ ] migrate to Hono/Cloudflare~~
+
+cloudflare workers does not provide a proper way to log errors
+it seems there is no persistent of the server, therefore the db connection is per request
+
 
 ## Lexicon entry
 

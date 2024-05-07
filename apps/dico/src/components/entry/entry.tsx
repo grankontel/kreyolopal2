@@ -57,6 +57,7 @@ export function Entry<
           <div className="above-article flex flex-row">
             <EntryDefinitionList
               entry={source.entry}
+              variations={source.variations}
               definitions={source.definitions}
               kreyol={kreyol}
             />

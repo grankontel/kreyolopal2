@@ -255,8 +255,8 @@ const validateProposal = async function (c: Context) {
           { error: 'Unprocessable Entity' },
           422,
           'Unprocessable Entity',
-          `No valid definitions ids : ${definitions.join(',')}`,
-          )
+          `No valid definitions ids : ${definitions.join(',')}`
+        )
       }
       ids = docs.map((doc) => doc.definition_id)
 

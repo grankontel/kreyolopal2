@@ -1,4 +1,4 @@
-import { Lucia } from 'lucia'
+import { Lucia, TimeSpan } from 'lucia'
 const { createHmac } = require('node:crypto')
 import { adapter } from './db'
 import type { DatabaseUser } from './db'
@@ -22,7 +22,7 @@ export function createCookie(session_id: string, user: DatabaseUser) {
     session_id: session_id,
     user_id: user.id,
     username: user.username,
-    permissions: user.is_admin ? ['validate_proposal']: [],
+    permissions: user.is_admin ? ['validate_proposal'] : [],
     expiresAt: now,
   }
   const infob64 = Buffer.from(JSON.stringify(info)).toString('base64')
@@ -47,6 +47,7 @@ export function parseCookie(cookie: string | null) {
 }
 
 export const lucia = new Lucia(adapter, {
+  sessionExpiresIn: new TimeSpan(1, 'h'), // 2 weeks
   sessionCookie: {
     name: 'wabap',
     attributes: {

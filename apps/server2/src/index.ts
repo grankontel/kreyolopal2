@@ -2,6 +2,7 @@ import { createAdaptorServer } from '@hono/node-server'
 import { cors } from 'hono/cors'
 import { HTTPException } from 'hono/http-exception'
 import { MongoClient } from 'mongodb'
+
 import config from './config'
 import { logger } from './middlewares/logger'
 import { createRouter } from '#services/hono'

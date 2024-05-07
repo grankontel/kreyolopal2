@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { KreyolLanguage, KreyolLanguages, Natures } from '../types'
+import { SubmitEntry } from '../proposals/types'
 
 const NatureArray: ReadonlyArray<string> = Object.values(Natures) as Array<string>
 const KreyolArray: ReadonlyArray<string> = Object.values(KreyolLanguages) as Array<string>
@@ -50,7 +51,7 @@ export const SubmitEntrySchema = z
 
 export type SubmitEntryType = z.infer<typeof SubmitEntrySchema>
 
-export function sanitizeSubmitEntry(value: any) {
+export function sanitizeSubmitEntry(value: any): SubmitEntry {
   const src = { ...SubmitEntrySchema.parse(value) }
 
   src.entry = src.entry.trim()
@@ -70,5 +71,5 @@ export function sanitizeSubmitEntry(value: any) {
     )
   })
 
-  return src
+  return src as SubmitEntry
 }

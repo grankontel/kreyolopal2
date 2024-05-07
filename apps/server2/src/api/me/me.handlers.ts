@@ -59,9 +59,9 @@ const updatePassword = async function (c: Context) {
     logger.debug('old password is valid')
     const hashedPassword = await argon2.hash(new_password)
 
-    await client
-    .query('UPDATE auth_user SET password= $2 WHERE id = $1 ', [
-      user.id, hashedPassword
+    await client.query('UPDATE auth_user SET password= $2 WHERE id = $1 ', [
+      user.id,
+      hashedPassword,
     ])
 
     const session = c.get('session')
@@ -71,8 +71,7 @@ const updatePassword = async function (c: Context) {
       ...theCookie.attributes,
       httpOnly: false,
     })
-      return c.json({ status: 'success' }, 200)
-
+    return c.json({ status: 'success' }, 200)
   } catch (_error) {
     logger.error('updatePassword Exception', _error)
     return c.json({ status: 'error', error: [_error] }, 500)

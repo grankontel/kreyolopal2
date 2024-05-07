@@ -59,7 +59,7 @@ const getWord = async function (c: Context) {
     logger.debug(JSON.stringify(result?.[0]))
     //client.close()
 
-/*     const data = result?.map((item) => {
+    /*     const data = result?.map((item) => {
       return {
         id: item._id,
         entry: item.entry,
@@ -103,7 +103,7 @@ const bookmarkWord = async function (c: Context) {
   const bdate = formatDate(user.birth_date)
 
   return WordsRepository.getInstance(c)
-    .GetReference(word, "gp")
+    .GetReference(word, 'gp')
     .then(
       (data) => {
         if (data === null) return c.json({ error: 'Not Found.' }, 404)
@@ -166,7 +166,8 @@ const bookmarkWord = async function (c: Context) {
           statusText: 'Unknown error.',
         })
       }
-    ).catch((e) => {
+    )
+    .catch((e) => {
       logger.error(e.message)
       throw createHttpException({
         errorContent: { error: 'Unknown error..' },

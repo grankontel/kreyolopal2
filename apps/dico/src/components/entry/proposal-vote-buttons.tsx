@@ -6,7 +6,7 @@ import {
 import FeatherIcon from '../FeatherIcon'
 import { useDashboard } from '@/components/dashboard/dashboard-provider'
 import { Button } from '@/components/ui/button'
-import type { Backer } from '@kreyolopal/domain/proposals/types'
+import type { Backer } from '@kreyolopal/domain'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/use-toast'
 import { downVote, getVotes, upVote } from '@/queries/proposals/votes'

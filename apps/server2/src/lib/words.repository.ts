@@ -2,13 +2,20 @@ import type { Context } from 'hono'
 import winston from 'winston'
 import { MongoClient } from 'mongodb'
 import config from '#config'
-import { BaseDefinition, DictionaryBaseEntry, DictionaryEntry, KreyolLanguage, MongoCollection, SingleDefinition } from '@kreyolopal/domain'
+import {
+  BaseDefinition,
+  DictionaryBaseEntry,
+  DictionaryEntry,
+  KreyolLanguage,
+  MongoCollection,
+  SingleDefinition,
+} from '@kreyolopal/domain'
 
 export class WordsRepository {
   private static instance: WordsRepository
   private static logger: winston.Logger
   private static client: MongoClient
-  private constructor() { }
+  private constructor() {}
 
   public static getInstance(c: Context): WordsRepository {
     if (!WordsRepository.instance) {
@@ -20,7 +27,9 @@ export class WordsRepository {
     return WordsRepository.instance
   }
 
-  public async Exists(word: string): Promise<"reference" | "validated" | false> {
+  public async Exists(
+    word: string
+  ): Promise<'reference' | 'validated' | false> {
     const refCol = WordsRepository.client
       .db(config.mongodb.db)
       .collection(MongoCollection.reference)
@@ -34,8 +43,7 @@ export class WordsRepository {
         return val != 0
       })
 
-    if (inReference)
-      return "reference"
+    if (inReference) return 'reference'
 
     const refVal = WordsRepository.client
       .db(config.mongodb.db)
@@ -50,13 +58,15 @@ export class WordsRepository {
         return val != 0
       })
 
-    if (inValidated)
-      return "validated"
+    if (inValidated) return 'validated'
 
     return false
   }
 
-  public async GetReference(aWord: string, lang: KreyolLanguage): Promise<DictionaryEntry | null> {
+  public async GetReference(
+    aWord: string,
+    lang: KreyolLanguage
+  ): Promise<DictionaryEntry | null> {
     return new Promise<DictionaryEntry | null>(async (resolve, reject) => {
       WordsRepository.logger.info(`WordsRepository.GetReference ${aWord}`)
       const client = WordsRepository.client
@@ -94,11 +104,12 @@ export class WordsRepository {
         }
 
         const entry = result.filter((item) => item.docType == 'entry')[0]
-        const basedefs: BaseDefinition[] = result
-          .filter((item) => item.docType == 'definition') as BaseDefinition[]
+        const basedefs: BaseDefinition[] = result.filter(
+          (item) => item.docType == 'definition'
+        ) as BaseDefinition[]
         const defs: SingleDefinition[] = basedefs.map((item) => {
-          const {_id, ...rest} = item
-          return ({ source: MongoCollection.reference, ...rest })
+          const { _id, ...rest } = item
+          return { source: MongoCollection.reference, ...rest }
         })
 
         const data: DictionaryEntry = { ...entry, definitions: defs }
