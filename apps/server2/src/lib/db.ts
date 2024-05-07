@@ -11,7 +11,8 @@ import pg from 'pg'
   connectionTimeoutMillis: 5000,
 }) */
 export const pgPool = new pg.Pool({
-  connectionString: config.neon.uri,
+  connectionString: config.db.uri, //config.neon.uri,
+  connectionTimeoutMillis: 5000,
 })
 
 ;(async () => {
