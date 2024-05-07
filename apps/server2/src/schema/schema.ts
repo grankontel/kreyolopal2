@@ -1,5 +1,7 @@
 import { pgTable, index, unique, text, varchar, date, timestamp, boolean, foreignKey, uuid, char, jsonb, integer, uniqueIndex } from "drizzle-orm/pg-core"
-  import { sql } from "drizzle-orm"
+import { sql } from "drizzle-orm"
+import { primaryKey } from "drizzle-orm/pg-core";
+import { serial } from "drizzle-orm/pg-core";
 
 
 
@@ -14,29 +16,30 @@ export const authUser = pgTable("auth_user", {
 	lastlogin: timestamp("lastlogin", { withTimezone: true, mode: 'string' }),
 	emailVerifToken: varchar("email_verif_token", { length: 255 }),
 	resetPwdToken: varchar("reset_pwd_token", { length: 255 }),
+	roleId: integer("role_id").notNull().default(2).references(() => roles.id, { onDelete: "cascade" }),
 	isAdmin: boolean("is_admin").default(false).notNull(),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 },
-(table) => {
-	return {
-		ixAuthUserResetPwdToken: index("IX_auth_user_reset_pwd_token").on(table.resetPwdToken),
-		authUserUsernameKey: unique("auth_user_username_key").on(table.username),
-		authUserEmailKey: unique("auth_user_email_key").on(table.email),
-	}
-});
+	(table) => {
+		return {
+			ixAuthUserResetPwdToken: index("IX_auth_user_reset_pwd_token").on(table.resetPwdToken),
+			authUserUsernameKey: unique("auth_user_username_key").on(table.username),
+			authUserEmailKey: unique("auth_user_email_key").on(table.email),
+		}
+	});
 
 export const userSession = pgTable("user_session", {
 	id: text("id").primaryKey().notNull(),
 	expiresAt: timestamp("expires_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	userId: text("user_id").notNull().references(() => authUser.id, { onDelete: "cascade" } ),
+	userId: text("user_id").notNull().references(() => authUser.id, { onDelete: "cascade" }),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 });
 
 export const spellcheckeds = pgTable("spellcheckeds", {
 	id: uuid("id").defaultRandom().primaryKey().notNull(),
-	userId: text("user_id").notNull().references(() => authUser.id, { onDelete: "cascade" } ),
+	userId: text("user_id").notNull().references(() => authUser.id, { onDelete: "cascade" }),
 	kreyol: char("kreyol", { length: 2 }).notNull(),
 	request: varchar("request", { length: 255 }).notNull(),
 	status: varchar("status", { length: 255 }).notNull(),
@@ -47,7 +50,7 @@ export const spellcheckeds = pgTable("spellcheckeds", {
 });
 
 export const ratings = pgTable("ratings", {
-	spellcheckedId: uuid("spellchecked_id").primaryKey().notNull().references(() => spellcheckeds.id, { onDelete: "cascade" } ),
+	spellcheckedId: uuid("spellchecked_id").primaryKey().notNull().references(() => spellcheckeds.id, { onDelete: "cascade" }),
 	rating: integer("rating"),
 	userCorrection: varchar("user_correction", { length: 255 }),
 	userNotes: varchar("user_notes", { length: 255 }),
@@ -59,7 +62,7 @@ export const ratings = pgTable("ratings", {
 
 export const lexicons = pgTable("lexicons", {
 	id: uuid("id").defaultRandom().primaryKey().notNull(),
-	owner: text("owner").notNull().references(() => authUser.id, { onDelete: "cascade" } ),
+	owner: text("owner").notNull().references(() => authUser.id, { onDelete: "cascade" }),
 	name: text("name").notNull(),
 	slug: text("slug").notNull(),
 	description: varchar("description", { length: 255 }),
@@ -67,8 +70,40 @@ export const lexicons = pgTable("lexicons", {
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 },
-(table) => {
+	(table) => {
+		return {
+			ixOwnerSlug: uniqueIndex("IX_owner_slug").on(table.owner, table.slug),
+		}
+	});
+
+export const roles = pgTable("roles", {
+	id: serial("id").primaryKey().notNull(),
+	name: varchar("name", { length: 40 }).notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => {
 	return {
-		ixOwnerSlug: uniqueIndex("IX_owner_slug").on(table.owner, table.slug),
+		ixName: unique("IX_name").on(table.name),
+	}
+});
+
+export const permissions = pgTable("permissions", {
+	id: serial("id").primaryKey().notNull(),
+	action: varchar("action", { length: 40 }).notNull(),
+	subject: varchar("subject", { length: 60 }).notNull(),
+	conditions: jsonb("conditions"),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+
+});
+
+export const roles_permissions = pgTable("roles_permissions", {
+	roleId: integer("role_id").notNull().references(() => roles.id, { onDelete: "cascade" }),
+	permissionId: integer("permission_id").notNull().references(() => permissions.id, { onDelete: "cascade" }),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => {
+	return {
+		ixPrimary: primaryKey({ columns: [table.roleId, table.permissionId] }),
 	}
 });

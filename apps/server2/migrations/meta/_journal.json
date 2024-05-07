@@ -8,6 +8,20 @@
       "when": 1714746201670,
       "tag": "0000_odd_blockbuster",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1715075825732,
+      "tag": "0001_jittery_triton",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1715076502012,
+      "tag": "0002_warm_quicksilver",
+      "breakpoints": true
     }
   ]
 }
