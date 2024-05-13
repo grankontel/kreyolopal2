@@ -22,14 +22,14 @@ const Logo = (props: React.SVGProps<SVGSVGElement>) => (
       <nav className="ml-auto flex gap-4 sm:gap-6">
         <Link
           className="text-sm font-medium underline-offset-4 hover:underline"
-          href="#features"
+          href="/#features"
         >
           Features
         </Link>
         <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
           Pricing
         </Link>
-        <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
+        <Link className="text-sm font-medium underline-offset-4 hover:underline" href="/#a_propos">
           About
         </Link>
         <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">

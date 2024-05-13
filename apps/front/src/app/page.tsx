@@ -138,7 +138,8 @@ export default function Home() {
 
       <section className="w-full py-12 md:py-24 lg:py-32">
         <div className="flex flex-col items-center space-y-2 space-y-4 px-4 py-4 text-center md:px-6">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+          <h2 id="a_propos"
+            className="text-3xl font-bold tracking-tighter sm:text-5xl">
             L&apos;équipe
           </h2>
           <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
