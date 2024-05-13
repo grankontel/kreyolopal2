@@ -161,7 +161,7 @@ export default function Home() {
             />
             <div className="space-y-2 text-center">
               <h3 className="text-lg font-semibold">Hector Poullet</h3>
-              <p className="text-gray-500 dark:text-gray-400">Lexicographe</p>
+              <p className="text-gray-500 dark:text-gray-400">Auteur &ndash; Lexicographe</p>
               <p className="text-sm">
                 Hector Poullet est lexicographe et auteur de Guadeloupe. Il est connu pour
                 le &ldquo;Dictionnaire français-créole&rdquo;, Le Déterville :
@@ -184,7 +184,7 @@ export default function Home() {
             />
             <div className="space-y-2 text-center">
               <h3 className="text-lg font-semibold">Jean-Christophe Maillard</h3>
-              <p className="text-gray-500 dark:text-gray-400">Auteur-Compositeur</p>
+              <p className="text-gray-500 dark:text-gray-400">Auteur &ndash; Compositeur</p>
               <p className="text-sm">
                 Jean-Cristophe Maillard, est un guitariste, auteur-compositeur et
                 producteur de Guadeloupe. Auteur de quatres albums solos, il a collaboré
@@ -209,7 +209,7 @@ export default function Home() {
             <div className="space-y-2 text-center">
               <h3 className="text-lg font-semibold">TiMalo</h3>
               <p className="text-gray-500 dark:text-gray-400">
-                Romancier &amp; activiste créolophone
+                Romancier &ndash; Activiste
               </p>
               <p className="text-sm">
                 Thierry Malo alias TiMalo, est romancier et poète créolophone. Il est le

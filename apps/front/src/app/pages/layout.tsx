@@ -9,7 +9,7 @@ export default function Layout({
   return (
     <main className="flex min-h-[100dvh] flex-col">
       <HomeHeader />
-      <article className="prose ">{children}</article>
+      <article className="prose prose-lg dark:prose-invert max-w-none m-6 w-3/4">{children}</article>
       <HomeFooter />
     </main>
   )
