@@ -29,8 +29,8 @@ const HomeHeader = () => (
       <Link className="text-sm font-medium underline-offset-4 hover:underline" href="#">
         Pricing
       </Link>
-      <Link className="text-sm font-medium underline-offset-4 hover:underline" href="/#a_propos">
-        About
+      <Link className="text-sm font-medium underline-offset-4 hover:underline" href="/#team">
+        L'équipe
       </Link>
       <Link className="text-sm font-medium underline-offset-4 hover:underline" href="https://dico.kreyolopal.com/contact">
         Nous contacter

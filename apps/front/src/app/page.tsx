@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { SVGProps } from 'react'
 import HomeHeader from './_components/home-header'
 import HomeFooter from './_components/home-footer'
+import WaitingList from './_components/waiting-list'
 
 const LearnMore = () => {
   return (
@@ -136,9 +137,9 @@ export default function Home() {
         </div>
       </HomeSection>
 
-      <section className="w-full py-12 md:py-24 lg:py-32">
+      <HomeSection className=" w-full py-12 md:py-24 lg:py-32">
         <div className="flex flex-col items-center space-y-2 space-y-4 px-4 py-4 text-center md:px-6">
-          <h2 id="a_propos"
+          <h2 id="team"
             className="text-3xl font-bold tracking-tighter sm:text-5xl">
             L&apos;équipe
           </h2>
@@ -222,7 +223,11 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </HomeSection>
+      <HomeSection>
+        <WaitingList list_id="16815" />
+
+      </HomeSection>
       <HomeFooter />
     </main>
   )
