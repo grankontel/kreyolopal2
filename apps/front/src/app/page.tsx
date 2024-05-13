@@ -144,8 +144,8 @@ export default function Home() {
             L&apos;équipe
           </h2>
           <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-            Voici l'équipe fondatrice qui a uni ses forces pour créer notre plateforme. 
-            Chacun apportant une expertise unique, ensemble, ils repoussent les limites de l'innovation.
+            Voici l&apos;équipe fondatrice qui a uni ses forces pour créer notre plateforme. 
+            Chacun apportant une expertise unique, ensemble, ils repoussent les limites de l&apos;innovation.
           </p>
         </div>
         <div className="container grid grid-cols-1 gap-8 px-4 md:grid-cols-3 md:px-6">
@@ -232,7 +232,7 @@ export default function Home() {
             Inscrivez-vous gratuitement
           </h2>
           <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-            En attendant l'ouverture de la plateforme, nous vous invitons à nous inscrire sur notre liste d'attente.
+            En attendant l&apos;ouverture de la plateforme, nous vous invitons à nous inscrire sur notre liste d&apos;attente.
           </p>
 
           <WaitingList list_id="16815" />
