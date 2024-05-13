@@ -84,7 +84,7 @@ export default function Home() {
         </div>
       </HomeSection>
 
-      <HomeSection className=" bg-gray-100  dark:bg-gray-800">
+      <HomeSection className="py-6 md:py-12 lg:py-24 xl:py-32 bg-gray-100  dark:bg-gray-800">
         <div className="container px-4 md:px-6">
           <div className="grid items-center gap-6 lg:grid-cols-[1fr_500px] lg:gap-12 xl:grid-cols-[1fr_550px]">
             <img
@@ -137,15 +137,15 @@ export default function Home() {
         </div>
       </HomeSection>
 
-      <HomeSection className=" w-full py-12 md:py-24 lg:py-32">
+      <HomeSection className="  w-full pb-4 pt-6 md:pt-12 lg:pt-24">
         <div className="flex flex-col items-center space-y-2 space-y-4 px-4 py-4 text-center md:px-6">
           <h2 id="team"
             className="text-3xl font-bold tracking-tighter sm:text-5xl">
             L&apos;équipe
           </h2>
           <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-            Our all-in-one SaaS platform offers a suite of powerful tools to streamline
-            your business operations, enhance collaboration, and drive growth.
+            Voici l'équipe fondatrice qui a uni ses forces pour créer notre plateforme. 
+            Chacun apportant une expertise unique, ensemble, ils repoussent les limites de l'innovation.
           </p>
         </div>
         <div className="container grid grid-cols-1 gap-8 px-4 md:grid-cols-3 md:px-6">
@@ -224,9 +224,19 @@ export default function Home() {
           </div>
         </div>
       </HomeSection>
-      <HomeSection>
-        <WaitingList list_id="16815" />
+      <HomeSection className=" w-full pb-4 pt-6 md:pt-12 lg:pt-24">
+        <div className="flex flex-col items-center space-y-2 space-y-4 px-4 py-4 text-center md:px-6">
 
+          <h2 id="pricing"
+            className="text-3xl font-bold tracking-tighter sm:text-5xl">
+            Inscrivez-vous gratuitement
+          </h2>
+          <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+            En attendant l'ouverture de la plateforme, nous vous invitons à nous inscrire sur notre liste d'attente.
+          </p>
+
+          <WaitingList list_id="16815" />
+        </div>
       </HomeSection>
       <HomeFooter />
     </main>
