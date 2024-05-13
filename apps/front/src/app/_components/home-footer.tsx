@@ -9,7 +9,7 @@ const HomeFooter = () => (
       <Link className="text-xs underline-offset-4 hover:underline" href="/pages/legal-notice">
         Terms of Service
       </Link>
-      <Link className="text-xs underline-offset-4 hover:underline" href="#">
+      <Link className="text-xs underline-offset-4 hover:underline" href="/pages/privacy-policy">
         Privacy Policy
       </Link>
       <Link className="text-xs underline-offset-4 hover:underline" href="#">
