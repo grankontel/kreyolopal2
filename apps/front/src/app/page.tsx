@@ -144,8 +144,8 @@ export default function Home() {
             L&apos;équipe
           </h2>
           <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-            Voici l'équipe fondatrice qui a uni ses forces pour créer notre plateforme. 
-            Chacun apportant une expertise unique, ensemble, ils repoussent les limites de l'innovation.
+            Voici l'équipe fondatrice qui a uni ses forces pour créer cette plateforme. 
+            Chacun apportant une perspective unique sur le créole et ses usages.
           </p>
         </div>
         <div className="container grid grid-cols-1 gap-8 px-4 md:grid-cols-3 md:px-6">
