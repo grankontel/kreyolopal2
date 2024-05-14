@@ -11,8 +11,23 @@
     owner: "{{ user }}"
     state: directory
 
+- name: DEPLOY | Create mongodb keys directory
+  file:
+    path: "{{ ansistrano_shared_path }}/keys"
+    owner: "{{ user }}"
+    state: directory
+
+- name: DEPLOY | create key content
+  command: openssl rand -base64 756
+  register: mongo_key_file
+
 - name: DEPLOY | Create mongodb keys file
-  command: openssl rand -base64 756 > "{{ ansistrano_shared_path }}/keys/keyFile.key"
-  args:
-    creates: "{{ ansistrano_shared_path }}/keys/keyFile.key"
+  ansible.builtin.copy:
+    content: "{{ mongo_key_file.stdout }}"
+    dest: "{{ ansistrano_shared_path }}/keys/keyFile.key"
+    owner: "{{ user }}"
+    group: wheel
+    mode: a+r
+
+
 
