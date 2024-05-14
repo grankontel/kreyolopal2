@@ -1,10 +1,5 @@
 # app config
 apps:
-  dico:
-    port: 3000
-    directory: dico
-    restricted: true
-    pm2start: false
   admin:
     port: 3010
     directory: admin
