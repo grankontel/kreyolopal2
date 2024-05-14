@@ -11,7 +11,7 @@
     "preimages": "rimraf -g ./shared/public/images/w* ",
     "images": "node ./shared/scripts/sharpImgs.js",
     "build": "turbo run build",
-    "predeploy": "dotenv -v NODE_ENV='production' -- turbo run build  --filter=!admin && ./tools/predeploy.sh",
+    "predeploy": "dotenv -v NODE_ENV='production' -- turbo run build  --filter=!admin --filter=!@kreyolopal/web-admin && ./tools/predeploy.sh",
     "deploy": "cd ansible && ansible-playbook -i hosts.yml deploy.yml --ask-vault-password",
     "dev": "turbo run dev --parallel",
     "dev:admin": "turbo run dev --filter=server2 --filter=admin --parallel",
