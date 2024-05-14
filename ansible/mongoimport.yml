@@ -93,6 +93,66 @@
               name: definition
               sparse: true
             state: present
+
+# db.validated.createIndex(
+#    { entry: 1 },
+#    { unique: true, partialFilterExpression: { docType: "entry" } }
+# );
+
+          - database: zakari
+            collection: validated
+            keys:
+              entry: 1
+            options:
+              name: entry_1
+              unique: true
+              partialFilterExpression:
+                docType: entry
+            state: present
+
+# db.validated.createIndex(
+#    { entry: 1, docType: -1, kreyol: 1 },
+#    { sparse: true, name: 'search' }
+# );
+          - database: zakari
+            collection: validated
+            keys:
+              entry: 1
+              docType: -1
+              kreyol: 1
+            options:
+              name: search
+              sparse: true
+            state: present
+
+# db.validated.createIndex(
+#    { variations: 1 },
+#    { name: 'suggest', partialFilterExpression: { docType: "entry" } }
+# );
+
+          - database: zakari
+            collection: validated
+            keys:
+              variations: 1
+            options:
+              name: suggest
+              partialFilterExpression:
+                docType: entry
+            state: present
+
+# db.validated.createIndex(
+#    { definition_id: 1 },
+#    { sparse: true, name: 'definition' }
+# );
+
+          - database: zakari
+            collection: validated
+            keys:
+              definition_id: 1
+            options:
+              name: definition
+              sparse: true
+            state: present
             
 # db.lexicons.createIndex(
 #    { entry: 1  },

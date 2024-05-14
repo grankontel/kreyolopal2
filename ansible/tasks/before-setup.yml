@@ -11,3 +11,8 @@
     owner: "{{ user }}"
     state: directory
 
+- name: DEPLOY | Create mongodb keys file
+  command: openssl rand -base64 756 > "{{ ansistrano_shared_path }}/keys/keyFile.key"
+  args:
+    creates: "{{ ansistrano_shared_path }}/keys/keyFile.key"
+
