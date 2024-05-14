@@ -15,7 +15,7 @@ const Logo = (props: React.SVGProps<SVGSVGElement>) => (
 
 const HomeHeader = () => (
   <header className="flex h-14 items-center px-4 lg:px-6 sm:bg-logo sm:text-logo-foreground fixed top-0 z-10 w-full">
-    <Link className="flex items-center justify-center" href="#">
+    <Link className="flex items-center justify-center" href="/">
       <Logo className="h-6 w-6 flex sm:hidden" /> 
       <img
               src="/images/logo_name-transparent.svg"
@@ -38,7 +38,7 @@ const HomeHeader = () => (
         Pricing
       </Link>
       <Link className="text-sm font-medium underline-offset-4 hover:underline" href="/#team">
-        L'équipe
+        L&apos;équipe
       </Link>
       <Link className="text-sm font-medium underline-offset-4 hover:underline" href="https://dico.kreyolopal.com/contact">
         Nous contacter
