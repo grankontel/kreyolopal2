@@ -63,3 +63,9 @@
     line: 127.0.0.1       host.docker.internal
     state: present
 
+- name: DOCKER | Ensure mongo is in /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    line: 127.0.0.1       mongo
+    state: present
+

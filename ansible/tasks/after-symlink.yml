@@ -14,7 +14,7 @@
     state: present
 
 # - name: MONGO | Initialize mongo replica set
-#   command: "mongosh -u root -p {{ pwd_mongo }} --host localhost --port 27017 --eval \"rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]})\" "
+#   command: "mongosh -u root -p {{ pwd_mongo }} --host localhost --port 27017 --eval \"rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]})\" "
 #   register: mogosh_rs_result
 
 # - debug: 
