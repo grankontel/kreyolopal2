@@ -62,24 +62,19 @@ services:
   #     - postgrest
 
   mongo:
-    image: mongo
+    image: local/mongodb:7.0
     # openssl rand -base64 756 > ./data/keys/keyFile.key 
-    command:
-      [
-        "--replSet",
-        "rs0",
-        "--bind_ip_all",
-        "--port",
-        "27017",
-        "--keyFile",
-        "/data/keys/keyFile.key"
-      ]
-    # command: ["--bind_ip_all", "--port", "27017"]
+    build:
+      context: .
+      dockerfile: ./mongoDockerfile.yml
+    command: [ "--replSet", "rs0", "--bind_ip_all", "--port", "27017", "--keyFile", "/data/keys/keyFile.key" ]
+    # command: ["--bind_ip_all", "--port", "27017"]
+    hostname: mongo
     # add '127.0.0.1       host.docker.internal' to /etc/hosts
     extra_hosts:
       - "host.docker.internal:host-gateway"
     healthcheck:
-      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]}) }" | mongosh --port 27017 --quiet
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}) }" | mongosh --port 27017 --quiet
       interval: 5s
       timeout: 30s
       start_period: 0s
@@ -92,7 +87,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - ./data/mongodb:/data/db
-      - ./data/keys:/data/keys
     ports:
       - "27017:27017"
 
