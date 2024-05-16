@@ -41,6 +41,7 @@ export const logger = (): MiddlewareHandler => {
 
     const start = Date.now()
 
+    c.set('logger', winston_logger)
     await next()
     const service = time(start)
 

@@ -2,14 +2,19 @@ import config from '#config'
 import { NodePostgresAdapter } from '@lucia-auth/adapter-postgresql'
 import pg from 'pg'
 
-export const pgPool = new pg.Pool({
+/*export const pgPool = new pg.Pool({
   user: config.db.username,
   password: config.db.password,
   host: config.db.host,
   port: config.db.port,
   database: config.db.database,
   connectionTimeoutMillis: 5000,
+}) */
+export const pgPool = new pg.Pool({
+  connectionString: config.db.uri, //config.neon.uri,
+  connectionTimeoutMillis: 5000,
 })
+
 ;(async () => {
   await pgPool
     .connect()

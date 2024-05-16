@@ -1,8 +1,6 @@
 import { StateCreator } from 'zustand'
 import { LexiconSlice, DicoStore } from './types'
-import { Lexicon } from '@/lib/lexicons/types'
-import { DashboardMenuItem } from '@/lib/dashboard'
-import { useDicoStore } from './dico-store'
+import { Lexicon } from '@kreyolopal/domain'
 
 export const createLexiconSlice: StateCreator<DicoStore, [], [], LexiconSlice> = (
   set

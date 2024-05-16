@@ -1,6 +1,5 @@
 import { generateId } from 'lucia'
 import { setCookie } from 'hono/cookie'
-// import { pgPool } from '#lib/db'
 import { lucia, createCookie } from '#lib/auth'
 import { createHttpException } from '#utils/createHttpException'
 
@@ -107,7 +106,8 @@ const signup = async function (c: Context) {
           statusText: 'Unknown error.',
         })
       }
-    ).finally(() => {
+    )
+    .finally(() => {
       client.release()
     })
     .catch((e) => {

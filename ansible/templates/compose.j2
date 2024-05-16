@@ -38,7 +38,22 @@ services:
       - db
 
   mongo:
-    image: mongo
+    image: 'local/mongodb:{{ mongodb_version_min }}'
+    build:
+      context: .
+      dockerfile: ./mongoDockerfile.yml
+    command: [ "--replSet", "rs0", "--bind_ip_all", "--port", "27017", "--keyFile", "/data/keys/keyFile.key" ]
+    # command: ["--bind_ip_all", "--port", "27017"]
+    hostname: mongo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+#      start_interval: 1s
+      retries: 30
     restart: always
     container_name: "mongo"
     user: "{{ user_id }}:{{ user_gid }}"
@@ -47,6 +62,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - {{ ansistrano_shared_path }}/data/mongodb:/data/db
+#      - {{ ansistrano_shared_path }}/keys:/data/keys
     ports:
       - "27017:27017"
 

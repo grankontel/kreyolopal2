@@ -3,10 +3,21 @@ import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
 import handlers from './lexicons.handlers'
 
+const queryListSchema = z.object({
+  offset: z.coerce.number().int().nonnegative().optional(),
+  limit: z.coerce.number().int().nonnegative().optional(),
+})
+
 const slugCheck = z.string().regex(/^[a-z]+([a-z0-9]|-)*$/)
 const paramUsername = z.object({
   username: z.string().trim().min(3),
 })
+
+const paramLexiconId = z
+  .object({
+    id: z.string().uuid(),
+  })
+  .required()
 
 const paramSlug = z
   .object({
@@ -50,6 +61,13 @@ routes.post(
   handlers.addLexicon
 )
 
+routes.put(
+  '/:id',
+  zValidator('param', paramLexiconId, sendBadRequest),
+  zValidator('json', postLexiconSchema, sendBadRequest),
+  handlers.editLexicon
+)
+
 routes.get(
   '/:username/:slug',
   zValidator('param', paramSlug, sendBadRequest),
@@ -57,8 +75,8 @@ routes.get(
 )
 
 routes.delete(
-  '/:username/:slug',
-  zValidator('param', paramSlug, sendBadRequest),
+  '/:id',
+  zValidator('param', paramLexiconId, sendBadRequest),
   handlers.deleteLexicon
 )
 
@@ -75,14 +93,20 @@ routes.get(
 )
 
 routes.put(
-  '/:username/:slug/definition',
-  zValidator('param', paramSlug, sendBadRequest),
+  '/:id/definition',
+  zValidator('param', paramLexiconId, sendBadRequest),
   zValidator('json', addDefinitionSchema, sendBadRequest),
   handlers.addDefinitions
 )
+
+routes.get(
+  '/:username/:slug/entries',
+  zValidator('param', paramSlug, sendBadRequest),
+  zValidator('query', queryListSchema, sendBadRequest),
+  handlers.listEntries
+)
+
 /*
-routes.get('/:username/:slug/entries', zValidator('param', paramSlug, sendBadRequest), 
-handlers.listEntries)
 routes.get('/:username/:slug/suggest/:word', handlers.suggestWord)
 */
 export default routes

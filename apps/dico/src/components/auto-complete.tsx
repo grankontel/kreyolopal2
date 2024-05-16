@@ -6,7 +6,7 @@ export const AutoComplete = ({ ...props }) => {
   return (
     <div className="relative">
       <Input {...props} />
-      <div className="absolute top-full left-0 w-full bg-white mt-2 shadow-lg z-10">
+      <div className="absolute left-0 top-full z-10 mt-2 w-full bg-white shadow-lg">
         <ul className="divide-y divide-gray-200">
           <li>
             <Button className="w-full justify-start text-left" variant="ghost">

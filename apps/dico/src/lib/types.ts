@@ -1,50 +1,29 @@
-import { KreyolLanguage } from '@kreyolopal/react-ui'
+import {
+  KreyolLanguage,
+  BaseDefinition,
+  DictionaryEntry,
+  DictionaryFullEntry,
+  ProposalEntry,
+  BaseEntry,
+} from '@kreyolopal/domain'
 
 export const apiServer =
   process.env.NEXT_PUBLIC_API_SERVER || 'https://api.kreyolopal.com'
 export const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
-export type MeaningLanguage = KreyolLanguage | 'fr'
-
-type Definitions = {
-  [key in KreyolLanguage]: SingleDefinition[]
-} & object
-
-type Meaning = {
-  [key in MeaningLanguage]?: string
-} & object
-
-export interface SingleDefinition {
-  nature: string[]
-  subnature?: string[]
-  meaning: Meaning
-  usage: string[]
-  synonyms: string[]
-  confer: string[]
-  quotes: string[]
-}
-
-export interface DictionaryEntry {
-  _id: string
-  entry: string
-  variations: string[]
-  definitions: Array<SingleDefinition>
-}
-
-export interface DictionaryFullEntry {
-  id: string
-  entry: string
-  variations: string[]
-  definitions: Definitions
-}
-
-export type UserDictionaryEntry = {
-  cacheMode: 'public' | 'private'
-  is_bookmarked: boolean
-  entry: DictionaryEntry
-  bookmark?: DictionaryEntry
+export interface UserEntry<U extends BaseEntry> {
+  entry: U
   kreyol: string
 }
+export interface UserDictionaryEntry  {
+  entry: DictionaryEntry
+  kreyol: string
+  cacheMode: 'public' | 'private'
+  is_bookmarked: boolean
+  bookmark?: DictionaryEntry
+}
+
+export interface UserProposalEntry extends UserEntry<ProposalEntry> {}
 
 export class ResponseError extends Error {
   readonly response: Response
@@ -71,4 +50,10 @@ export interface SpellcheckResponse {
   unknown_words: string[]
   message: string
   html?: string
+}
+
+export interface PaginatedDico {
+  count: number
+  maxPages: number
+  entries: DictionaryFullEntry[]
 }

@@ -29,8 +29,10 @@ test.rest
 data/db/*
 data/old.db
 data/mongodb/*
+data/keys/*
 !data/db/.gitkeep
 !data/mongodb/.gitkeep
+!data/keys/.gitkeep
 
 # import file
 import/var 

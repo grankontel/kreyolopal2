@@ -2,6 +2,7 @@ import { createAdaptorServer } from '@hono/node-server'
 import { cors } from 'hono/cors'
 import { HTTPException } from 'hono/http-exception'
 import { MongoClient } from 'mongodb'
+
 import config from './config'
 import { logger } from './middlewares/logger'
 import { createRouter } from '#services/hono'
@@ -12,9 +13,12 @@ import { csrfMiddleware } from './middlewares/csrf'
 import { sessionMiddleware } from './middlewares/session'
 import { adminMiddleware } from './middlewares/admin'
 
+import { sentry } from '#services/sentry'
+
 const port: number = Number(config.app.port) || 3000
 
 const app = createRouter()
+
 app.use('*', logger())
 app.use('*', cors())
 // app.use('*', csrfMiddleware())
@@ -27,6 +31,7 @@ app.onError((err, c) => {
     return err.getResponse()
   }
   //...
+  sentry.captureException(err)
   winston_logger.error(err.message, err)
   return c.json({ status: 'error', error: 'Unknown error..' }, 500)
 })
@@ -54,7 +59,6 @@ Promise.all([mongoClient.connect()])
       app.use('*', async (c, next) => {
         c.set('pgPool', pgPool)
         c.set('mongodb', mongo)
-        c.set('logger', winston_logger)
         await next()
       })
 
@@ -73,7 +77,7 @@ Promise.all([mongoClient.connect()])
       server.listen(port)
     },
     (reason) => {
-      console.log(config.db)
+      console.log(config.mongodb.uri)
       console.log(reason)
       process.stdout.write(`\n❌ Cannot connect to mongo : ${reason}\n\n`)
       process.exit(1)

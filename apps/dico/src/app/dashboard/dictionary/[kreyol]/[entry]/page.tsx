@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
-import { Entry } from '@/components/entry'
+import { Entry } from '@/components/entry/entry'
 import { getWord } from '@/queries/get-word'
-import { KreyolLanguage } from '@kreyolopal/react-ui'
+import { KreyolLanguage } from '@kreyolopal/domain'
 import { isLoggedIn } from '@/app/dashboard/is-logged-in'
 
 export const runtime = 'edge'
@@ -17,15 +17,8 @@ export default async function Page({
   }
 
   const data = await getWord(params.kreyol, params.entry)
-
   if (!data) {
     return notFound()
   }
-  return (
-    <Entry
-      kreyol={params.kreyol as KreyolLanguage}
-      value={data}
-      dicoUrl={(w) => `/dashboard/dictionary/${params.kreyol}/${encodeURI(w)}`}
-    />
-  )
+  return <Entry kreyol={params.kreyol as KreyolLanguage} value={data} />
 }

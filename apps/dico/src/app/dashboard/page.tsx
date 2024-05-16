@@ -1,5 +1,5 @@
 import MainPanel from '@/components/dashboard/main-panel'
-import { DicoTable } from '@/components/dicotable/dico-table'
+import { PersonalDicoTable } from '@/components/dicotable/personal-dico-table'
 import {
   CardTitle,
   CardDescription,
@@ -12,17 +12,15 @@ export const runtime = 'edge'
 
 export default function Home() {
   return (
-    <MainPanel title="Produits">
+    <MainPanel title="Mon dictionnaire">
       <Card>
         <CardHeader>
-          <CardTitle>Product Overview</CardTitle>
-          <CardDescription>
-            View and manage all your products from a single place
-          </CardDescription>
+          <CardTitle>Mon dictionnaire</CardTitle>
+          <CardDescription>Le vocabulaire que j&apos;ai sélectionné</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-auto w-full">
-            <DicoTable />
+          <div className="w-full overflow-auto">
+            <PersonalDicoTable />
           </div>
         </CardContent>
       </Card>

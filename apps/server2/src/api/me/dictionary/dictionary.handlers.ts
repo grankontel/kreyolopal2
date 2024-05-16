@@ -5,7 +5,7 @@ import config from '#config'
 import { createHttpException } from '#utils/createHttpException'
 import { WordsRepository } from '#lib/words.repository'
 import { HTTPException } from 'hono/http-exception'
-import { MongoCollection } from '#domain/types'
+import { DictionaryFullEntry, MongoCollection } from '@kreyolopal/domain'
 
 function formatDate(date: string | number | Date): string | null {
   if (date === null) return null
@@ -42,6 +42,7 @@ const getWord = async function (c: Context) {
       entry: word,
     }
     const projection = {
+      _id: 0,
       user_id: 1,
       entry: 1,
       variations: 1,
@@ -49,14 +50,16 @@ const getWord = async function (c: Context) {
     }
 
     // const client = getClient()
-    const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+    const coll = client
+      .db(config.mongodb.db)
+      .collection(MongoCollection.personal)
     const cursor = coll.find(filter, { projection })
     const result = await cursor.toArray()
     cursor.close()
     logger.debug(JSON.stringify(result?.[0]))
     //client.close()
 
-    const data = result?.map((item) => {
+    /*     const data = result?.map((item) => {
       return {
         id: item._id,
         entry: item.entry,
@@ -64,12 +67,12 @@ const getWord = async function (c: Context) {
         definitions: item.definitions,
       }
     })
-
-    if (data.length > 0) {
+ */
+    if (result.length > 0) {
       c.res.headers.append('Cache-Control', 'private, maxage=86400')
 
       c.status(200)
-      return c.json(data)
+      return c.json(result)
     }
 
     return c.json({ error: 'Not Found.' }, 404)
@@ -98,24 +101,21 @@ const bookmarkWord = async function (c: Context) {
 
   const query = { user_id: user_id, entry: word }
   const bdate = formatDate(user.birth_date)
+
   return WordsRepository.getInstance(c)
-    .GetOne(word, (item) => {
-      return {
-        entry: item.entry,
-        variations: item.variations,
-        definitions: item.definitions,
-      }
-    })
+    .GetReference(word, 'gp')
     .then(
       (data) => {
-        if (data.length === 0) return c.json({ error: 'Not Found.' }, 404)
+        if (data === null) return c.json({ error: 'Not Found.' }, 404)
 
-        const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+        const coll = client
+          .db(config.mongodb.db)
+          .collection(MongoCollection.personal)
         const options = { upsert: true }
         const updateObj = {
           user_id: user_id,
           user_birthdate: bdate,
-          ...(data[0] as object),
+          ...data,
         }
 
         if (user.birth_date === undefined || user.birth_date === null) {
@@ -167,6 +167,14 @@ const bookmarkWord = async function (c: Context) {
         })
       }
     )
+    .catch((e) => {
+      logger.error(e.message)
+      throw createHttpException({
+        errorContent: { error: 'Unknown error..' },
+        status: 500,
+        statusText: 'Unknown error.',
+      })
+    })
 }
 
 const getWordId = (c: Context, client: MongoClient, logger: winston.Logger) =>
@@ -205,7 +213,9 @@ const getWordId = (c: Context, client: MongoClient, logger: winston.Logger) =>
     }
 
     const user_id = user.id
-    const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+    const coll = client
+      .db(config.mongodb.db)
+      .collection(MongoCollection.personal)
     const filter = {
       entry: word,
       user_id: user_id,
@@ -257,7 +267,9 @@ const addSubField = async function (c: Context, subField: string) {
   return getWordId(c, client, logger)
     .then(
       (wordId) => {
-        const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+        const coll = client
+          .db(config.mongodb.db)
+          .collection(MongoCollection.personal)
 
         const fieldObj = {}
         fieldObj[`definitions.${kreyol}.${rank}.${subField}`] = text
@@ -343,7 +355,9 @@ const addConfer = async function (c: Context) {
 
       return getWordId(c, client, logger)
         .then((wordId) => {
-          const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+          const coll = client
+            .db(config.mongodb.db)
+            .collection(MongoCollection.personal)
 
           const fieldObj = {}
           fieldObj[`definitions.${kreyol}.${rank}.confer`] = text
@@ -409,7 +423,9 @@ const listWords = async function (c: Context) {
 
   try {
     // const client = getClient()
-    const coll = client.db(config.mongodb.db).collection(MongoCollection.personal)
+    const coll = client
+      .db(config.mongodb.db)
+      .collection(MongoCollection.personal)
     const cursor = coll
       .find(filter, { projection })
       .skip(offset)
@@ -417,12 +433,18 @@ const listWords = async function (c: Context) {
     const result = await cursor.toArray()
     cursor.close()
 
-    const data = result?.map((item) => {
+    const data: DictionaryFullEntry[] = result?.map((item) => {
+      const def_object = item.definitions.reduce((obj, v) => {
+        obj[v.kreyol] = obj[v.kreyol] || []
+        obj[v.kreyol].push(v)
+        return obj
+      }, Object.create(null))
+
       return {
         id: item._id,
         entry: item.entry,
         variations: item.variations,
-        definitions: item.definitions,
+        definitions: def_object,
       }
     })
 
@@ -441,10 +463,10 @@ const listWords = async function (c: Context) {
       c.res.headers.append('X-Total-Count', nb)
 
       c.status(200)
-      return c.json(data)
+      return c.json<DictionaryFullEntry[]>(data)
     }
 
-    return c.json({ error: 'Not Found.' }, 404)
+    return c.json([], 200)
   } catch (e: any) {
     logger.error(e.message)
     throw createHttpException({

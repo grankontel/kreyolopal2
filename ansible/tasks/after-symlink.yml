@@ -1,9 +1,24 @@
 
 ---
+- name: DOCKER | build mongo image
+  command:
+    cmd: "docker build . -t local/mongodb:{{ mongodb_version_min }} -f mongoDockerfile.yml"
+  args:
+    chdir: "{{ ansistrano_shared_path }}"
+  environment:
+    DOCKER_BUILDKIT: '1'
+
 - name: DOCKER | ensure docker is up
   community.docker.docker_compose:
     project_src: "{{ ansistrano_shared_path }}"
     state: present
+
+# - name: MONGO | Initialize mongo replica set
+#   command: "mongosh -u root -p {{ pwd_mongo }} --host localhost --port 27017 --eval \"rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]})\" "
+#   register: mogosh_rs_result
+
+# - debug: 
+#     msg: "replicaset init result '{{ mogosh_rs_result.stdout }}'"
 
 - name: MONGO | Create 'zakari' database user with name 'zakari' and secret password.
   community.mongodb.mongodb_user:

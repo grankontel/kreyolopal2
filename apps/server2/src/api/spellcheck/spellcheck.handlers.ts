@@ -132,14 +132,13 @@ const postRating = async function (c: Context) {
       VALUES(${columns.map((item, index) => `$${index + 1}`).join(', ')})
       ON CONFLICT(spellchecked_id) 
       DO UPDATE SET
-      rating = EXCLUDED.rating
-        `
+      rating = EXCLUDED.rating`
       text =
         text +
         (user_correction ? ',user_correction = EXCLUDED.user_correction' : '')
       text = text + (user_notes ? ', user_notes = EXCLUDED.user_notes' : '')
 
-      text = text + `RETURNING spellchecked_id;`
+      text = text + ` RETURNING spellchecked_id;`
       logger.debug(text)
       res = await client.query(text, values)
       const retour_id = res.rows[0].spellchecked_id

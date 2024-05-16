@@ -10,7 +10,7 @@
         file: vars.yml
     - name: IMPORT |  salts & keys
       set_fact:
-        pwd_mongo: "{{ lookup('password', 'credentials/' + ansible_host + '/pwd_mongo length=18 chars=ascii_letters,digits') }}"
+        pwd_mongo: "{{ lookup('ansible.builtin.password', 'credentials/' + ansible_host + '/pwd_mongo length=18 chars=ascii_letters,digits') }}"
 
     - name: IMPORT | Create import directory
       file:
@@ -87,6 +87,66 @@
 # )
           - database: zakari
             collection: reference
+            keys:
+              definition_id: 1
+            options:
+              name: definition
+              sparse: true
+            state: present
+
+# db.validated.createIndex(
+#    { entry: 1 },
+#    { unique: true, partialFilterExpression: { docType: "entry" } }
+# );
+
+          - database: zakari
+            collection: validated
+            keys:
+              entry: 1
+            options:
+              name: entry_1
+              unique: true
+              partialFilterExpression:
+                docType: entry
+            state: present
+
+# db.validated.createIndex(
+#    { entry: 1, docType: -1, kreyol: 1 },
+#    { sparse: true, name: 'search' }
+# );
+          - database: zakari
+            collection: validated
+            keys:
+              entry: 1
+              docType: -1
+              kreyol: 1
+            options:
+              name: search
+              sparse: true
+            state: present
+
+# db.validated.createIndex(
+#    { variations: 1 },
+#    { name: 'suggest', partialFilterExpression: { docType: "entry" } }
+# );
+
+          - database: zakari
+            collection: validated
+            keys:
+              variations: 1
+            options:
+              name: suggest
+              partialFilterExpression:
+                docType: entry
+            state: present
+
+# db.validated.createIndex(
+#    { definition_id: 1 },
+#    { sparse: true, name: 'definition' }
+# );
+
+          - database: zakari
+            collection: validated
             keys:
               definition_id: 1
             options:

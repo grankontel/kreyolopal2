@@ -9,13 +9,12 @@ import { ModeToggle } from '@/components/mode-toogle'
 import Sidebar from '@/components/dashboard/sidebar'
 import SideMenu from '@/components/dashboard/side-menu'
 import DashboardPath from '@/components/dashboard/dashboard-path'
-import { IconAttributes } from '@kreyolopal/react-ui'
 import { redirect } from 'next/navigation'
 import { parseCookie } from '@/lib/utils'
 import { UserDropdown } from '@/components/dashboard/user-dropdown'
 import { LayoutFooter } from '@/components/layout-footer'
 import { LogoutDialog } from '@/components/dashboard/logout-dialog'
-import { DashboardProvider } from './dashboard-provider'
+import { DashboardProvider } from '@/components/dashboard/dashboard-provider'
 
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
@@ -50,7 +49,7 @@ export default function DashboardLayout({
       </Sidebar>
       <DashboardProvider init={{ ...auth }}>
         <div className="flex flex-col">
-          <header className="flex h-14 items-center justify-between px-6 bg-gray-100/40 dark:bg-gray-800/40">
+          <header className="flex h-14 items-center justify-between bg-gray-100/40 px-6 dark:bg-gray-800/40">
             <div className="flex items-center gap-4">
               <Link className="lg:hidden" href="#">
                 <Package2Icon className="h-6 w-6" />
@@ -72,7 +71,7 @@ export default function DashboardLayout({
   )
 }
 
-function Package2Icon(props: IconAttributes) {
+function Package2Icon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

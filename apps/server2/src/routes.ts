@@ -9,6 +9,7 @@ import contactRoutes from './api/contact'
 import healthRoutes from './api/health'
 import verifyRoutes from './api/verify'
 import lexiconsRoutes from './api/lexicons'
+import proposalsRoutes from './api/proposals'
 
 import { AppRouter } from '#services/hono'
 import { winston_logger as logger } from '#services/winston_logger'
@@ -29,6 +30,7 @@ function setRoutes(app: AppRouter) {
   app.route('/api/me/dictionary', myDicoRoutes)
   app.route('/api/contact', contactRoutes)
   app.route('/api/verify', verifyRoutes)
+  app.route('/api/proposals', proposalsRoutes)
 
   logger.info('All routes added')
 

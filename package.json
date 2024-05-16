@@ -11,14 +11,14 @@
     "preimages": "rimraf -g ./shared/public/images/w* ",
     "images": "node ./shared/scripts/sharpImgs.js",
     "build": "turbo run build",
-    "predeploy": "dotenv -v NODE_ENV='production' -- turbo run build  --filter=!admin && ./tools/predeploy.sh",
+    "predeploy": "dotenv -v NODE_ENV='production' -- turbo run build  --filter=!admin --filter=!@kreyolopal/web-admin && ./tools/predeploy.sh",
     "deploy": "cd ansible && ansible-playbook -i hosts.yml deploy.yml --ask-vault-password",
     "dev": "turbo run dev --parallel",
     "dev:admin": "turbo run dev --filter=server2 --filter=admin --parallel",
     "dev:dico": "turbo run dev --filter=server2 --filter=@kreyolopal/react-ui --filter=dico --parallel",
     "dev:front": "turbo run dev --filter=@kreyolopal/web-ui --filter=front --parallel",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{js,ts,tsx,md}\""
+    "format": "prettier --write \"./{apps,libs,tools,shared}/**/*.{js,jsx,ts,tsx,json,md,html}\""
   },
   "repository": {
     "type": "git",
@@ -29,10 +29,11 @@
     "eslint-config-custom": "*",
     "eslint-config-prettier": "^9.1.0",
     "n-readlines": "^1.0.1",
-    "prettier": "latest",
-    "rimraf": "^4.4.1",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.13",
+    "rimraf": "^5.0.5",
     "sharp": "^0.33.1",
-    "turbo": "^1.13.2",
-    "wrangler": "^3.28.3"
+    "turbo": "^1.13.3",
+    "wrangler": "^3.55.0"
   }
 }

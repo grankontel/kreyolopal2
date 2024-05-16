@@ -4,20 +4,26 @@
     src: env_docker.j2
     dest: "{{ ansistrano_shared_path }}/.env"
 
-- name: DEPLOY | Create API .env (old server)
-  template:
-    src: env_api.j2
-    dest: "{{ ansistrano_shared_path }}/server/.env"
-
 - name: DEPLOY | Create API .env (server2)
   template:
     src: env_api.j2
     dest: "{{ ansistrano_shared_path }}/server2/.env"
 
-- name: DEPLOY | Create ADMIN .env
+# - name: DEPLOY | Create ADMIN .env
+#   template:
+#     src: env_admin.j2
+#     dest: "{{ ansistrano_shared_path }}/admin/.env"
+
+- name: DEPLOY | mongodb version
+  set_fact:
+    mongodb_version_min: '7.0'
+    mongodb_user_id: '1200'
+    mongo_dockerfile: "{{ ansistrano_shared_path }}/mongoDockerfile.yml"
+
+- name: DEPLOY | Create mongo docker file
   template:
-    src: env_admin.j2
-    dest: "{{ ansistrano_shared_path }}/admin/.env"
+    src: mongo_dockerfile.j2
+    dest: "{{ mongo_dockerfile }}"
 
 - name: DEPLOY | Create docker-compose
   template:

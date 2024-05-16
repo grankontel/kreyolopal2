@@ -1,9 +1,8 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import { IconAttributes } from '@kreyolopal/react-ui'
 
-function BellIcon(props: IconAttributes) {
+function BellIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -31,13 +30,14 @@ export default function Sidebar({
   return (
     <aside className="sidebar hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
       <div className="flex h-full max-h-screen flex-col gap-2">
-        <div className="flex h-[60px] items-center border-b px-6 bg-logo">
-          <Link className="flex items-center gap-2 font-semibold" href="#">
+        <div className="bg-logo flex h-[60px] items-center border-b px-6">
+          <Link className="flex items-center gap-2 font-semibold" href="/dashboard">
             <Image
               src="/images/logo_name-transparent.svg"
               width={182}
               height={50}
               alt="Zakari Brand"
+              priority
             />
           </Link>
           <Button className="ml-auto h-8 w-8" size="icon" variant="outline">

@@ -43,7 +43,7 @@ export function ContactForm() {
           />
         </div>
       </div>
-      <div className="grid gap-2 mt-4">
+      <div className="mt-4 grid gap-2">
         <Label htmlFor="email">Email</Label>
         <Input
           id="email"
@@ -54,7 +54,7 @@ export function ContactForm() {
           type="email"
         />
       </div>
-      <div className="grid gap-2 mt-4">
+      <div className="mt-4 grid gap-2">
         <Label htmlFor="subject">Objet</Label>
         <Input
           id="subject"
@@ -64,17 +64,17 @@ export function ContactForm() {
           type="text"
         />
       </div>
-      <div className="grid gap-2 mt-4">
+      <div className="mt-4 grid gap-2">
         <Label htmlFor="message">Message</Label>
         <Textarea id="message" name="message" placeholder="Votre message..." rows={6} />
       </div>
-      <div className="grid gap-2 mt-4">
+      <div className="mt-4 grid gap-2">
         <Turnstile id="" siteKey={turnstileSiteKey} />
       </div>
       {state.status === 'initial' ? (
         ' '
       ) : (
-        <div className="grid gap-2 mt-4">
+        <div className="mt-4 grid gap-2">
           {state.status === 'error' ? (
             <Notification variant="danger" title="Erreur">
               {state.errors?.join(' ')}
@@ -87,7 +87,7 @@ export function ContactForm() {
         </div>
       )}
 
-      <div className="grid gap-2 mt-4">
+      <div className="mt-4 grid gap-2">
         <SubmitButton variant="logo">Envoyer</SubmitButton>
       </div>
     </form>

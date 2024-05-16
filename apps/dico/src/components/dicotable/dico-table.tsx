@@ -1,6 +1,6 @@
 'use client'
 
-import { JSX, useEffect, useState } from 'react'
+import { Dispatch, JSX, SetStateAction, useEffect, useState } from 'react'
 import {
   TableHead,
   TableRow,
@@ -9,16 +9,15 @@ import {
   TableBody,
   Table,
 } from '@/components/ui/table'
-import { DictionaryFullEntry, User } from '@/lib/types'
+import { PaginatedDico } from '@/lib/types'
 import { makeId, hashKey } from '@/lib/utils'
-import { KreyolFlag, KreyolLanguage } from '@kreyolopal/react-ui'
+import { LangFlag } from '@kreyolopal/react-ui'
+import { SingleDefinition, DictionaryFullEntry, KreyolLanguage } from '@kreyolopal/domain'
 import DicoTableCell from '@/components/dicotable/dico-table-cell'
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { fetchPersonalDico } from '@/queries/fetch-personal-dico'
+import { UseQueryResult } from '@tanstack/react-query'
 import Link from 'next/link'
 import { DicoTableSkeleton } from './dico-table-skeleton'
 import { TableError } from './table-error'
-import { useDashboard } from '@/app/dashboard/dashboard-provider'
 
 type WordRow = {
   id: string
@@ -46,7 +45,10 @@ function wordsToRow(words: DictionaryFullEntry[]): WordRow[] {
   const lignes: WordRow[] = []
   words.forEach((word) => {
     const defs = Object.entries(word.definitions).map((item) => {
-      return { langue: item[0] as KreyolLanguage, definitions: item[1] }
+      return {
+        langue: item[0] as KreyolLanguage,
+        definitions: item[1] as SingleDefinition[],
+      }
     })
     const totalDefs = defs.reduce((nbdefs, item) => nbdefs + item.definitions.length, 0)
     defs.forEach(({ langue, definitions }, langue_index) => {
@@ -65,7 +67,7 @@ function wordsToRow(words: DictionaryFullEntry[]): WordRow[] {
           entry_rowspan,
           variations: word.variations,
           langue,
-          Flag: <KreyolFlag kreyol={langue} width="24" height="12" />,
+          Flag: <LangFlag langue={langue} width="24" height="12" />,
           flag_rowspan:
             definitions.length === 1 ? 1 : def_index === 0 ? definitions.length : 0,
           nature: definition.nature,
@@ -97,18 +99,18 @@ const DicoTableHeaders = () => (
   </TableHeader>
 )
 
-export const DicoTable = () => {
-  const [page, setPage] = useState(0)
-  const dash = useDashboard()
+interface DicoTableProps {
+  pageHandler: {
+    page: number
+    setPage: Dispatch<SetStateAction<number>>
+  }
+  queryResult: UseQueryResult<PaginatedDico, Error>
+}
 
-  const { isPending, isError, error, data, isFetching, isPlaceholderData } = useQuery({
-    queryKey: ['personalDico', page],
-    queryFn: () => {
-      const token: string = dash?.session_id || ''
-      return fetchPersonalDico({ token, page })
-    },
-    placeholderData: keepPreviousData,
-  })
+export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
+  const { page, setPage } = pageHandler
+
+  const { isPending, isError, error, data, isFetching, isPlaceholderData } = queryResult
 
   const [lignes, setLignes] = useState<WordRow[]>([])
   useEffect(() => {
@@ -121,7 +123,7 @@ export const DicoTable = () => {
     <DicoTableSkeleton />
   ) : isError ? (
     <TableError message={error.message} />
-  ) : (
+  ) : lignes.length > 0 ? (
     <Table>
       <DicoTableHeaders />
       <TableBody>
@@ -129,23 +131,23 @@ export const DicoTable = () => {
           return (
             <TableRow key={ligne.id}>
               {ligne.entry_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.entry_rowspan} className="align-top mt-2">
+                <TableCell rowSpan={ligne.entry_rowspan} className="mt-2 align-top">
                   {ligne.entry}
                 </TableCell>
               )}
               {ligne.entry_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.entry_rowspan} className="align-top mt-2">
+                <TableCell rowSpan={ligne.entry_rowspan} className="mt-2 align-top">
                   {ligne.variations.map((variation) => {
                     return <div key={hashKey('var_', variation)}>{variation}</div>
                   })}
                 </TableCell>
               )}
               {ligne.flag_rowspan === 0 ? null : (
-                <TableCell rowSpan={ligne.flag_rowspan} className="align-top mt-2">
+                <TableCell rowSpan={ligne.flag_rowspan} className="mt-2 align-top">
                   <Link href={ligne.url}>{ligne.Flag}</Link>
                 </TableCell>
               )}
-              <TableCell className="align-top mt-2">{ligne.nature}</TableCell>
+              <TableCell className="mt-2 align-top">{ligne.nature}</TableCell>
               <TableCell>{ligne.definition_cpf}</TableCell>
               <TableCell>{ligne.definition_fr}</TableCell>
               <DicoTableCell
@@ -177,5 +179,5 @@ export const DicoTable = () => {
         })}
       </TableBody>
     </Table>
-  )
+  ) : ('Aucune entrée trouvée')
 }
