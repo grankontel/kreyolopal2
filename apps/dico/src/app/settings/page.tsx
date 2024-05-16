@@ -2,6 +2,8 @@ import MainPanel from '@/components/dashboard/main-panel'
 import { isLoggedIn } from '@/app/dashboard/is-logged-in'
 import { ChangePasswordForm } from './_components/change-password-form'
 
+export const runtime = 'edge'
+
 export default function SettingsPage() {
     const token = isLoggedIn()
     if (!token) {
