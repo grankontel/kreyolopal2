@@ -1,0 +1,40 @@
+{
+  "name": "api-server",
+  "version": "1.0.0",
+  "description": "Backend server for kreyolopal services",
+  "author": "Thierry Malo",
+  "license": "ISC",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV='production' node ./dist/server.js",
+    "build": "NODE_ENV='production' node ./build.js",
+    "format": "prettier ./src --write",
+    "lint": "eslint . --ext .ts"
+  },
+  "imports": {
+    "#lib/*": "./src/lib/*.ts",
+    "#services/*": "./src/services/*.ts",
+    "#utils/*": "./src/utils/*.ts",
+    "#domain/*": "./src/domain/*.ts",
+    "#config": "./src/config.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.11.1",
+    "dotenv": "^16.4.5",
+    "hono": "^4.3.7",
+    "winston": "^3.13.0",
+    "winston-slack-webhook-transport": "^2.3.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "esbuild": "^0.21.3",
+    "esbuild-plugin-replace": "^1.4.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.5",
+    "tsx": "^4.10.4",
+    "typescript": "^5.4.5"
+  }
+}
