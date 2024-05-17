@@ -1,13 +1,27 @@
-import { Hono } from 'hono'
+import { createRouter } from '#utils/hono'
 import { HTTPException } from 'hono/http-exception'
-import { cors } from 'hono/cors'
+import { pgPool } from '#services/db'
+import { MongoClient } from 'mongodb'
+
 import winston_logger from '#services/logger'
 import { logger } from './middlewares/logger'
+import { sessionMiddleware } from './middlewares/session'
+import setRoutes from './routes'
 
-const app = new Hono()
+const app = createRouter()
 
 app.use('*', logger())
-app.use('*', cors())
+app.use('*', async (c, next) => {
+	console.log('here')
+	c.set('pgPool', pgPool)
+	// c.set('mongodb', mongo)
+	await next()
+})
+
+
+app.use('*', sessionMiddleware())
+
+setRoutes(app)
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
@@ -19,7 +33,5 @@ app.onError((err, c) => {
   winston_logger.error(err.message, err)
   return c.json({ status: 'error', error: 'Unknown error..' }, 500)
 })
-
-app.get('/', (c) => c.text('Hono!'))
 
 export default app

@@ -46,7 +46,8 @@ export const logger = (): MiddlewareHandler => {
     const service = time(start)
 
     const rextra = { ...extra, status: c.res.status, service: service }
-    winston_logger.info(
+    const logger = c.get('logger')
+    logger.info(
       `response : ${method} ${path} code: ${c.res.status} ${service}`,
       rextra
     )
