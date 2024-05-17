@@ -31,6 +31,15 @@ const config = {
     iterations: Number(process.env.ARGON_ITERATIONS || 2),
     // captchaKey: process.env.CAPTCHA_SECRET_KEY,
   },
+  mail: {
+    webmaster: process.env.MAINTAINER_EMAIL as string,
+    apiKey: process.env.MAILGUN_API_KEY,
+    domain: process.env.MAILGUN_DOMAIN,
+    host: process.env.MAILGUN_HOST,
+    from: process.env.MAILGUN_FROM,
+    listKey: process.env.MAILIST_API_KEY,
+    listId: process.env.MAILIST_LISTID,
+  },
 }
 
 config.db.uri = `postgresql://${config.db.username}:${encodeURIComponent(
