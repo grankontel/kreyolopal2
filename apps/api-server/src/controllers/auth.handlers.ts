@@ -2,7 +2,7 @@ import type { Context } from "hono"
 import type { PoolClient } from "pg"
 
 import { generateId } from "lucia"
-import { DatabaseUser } from "#services/db"
+import type { DatabaseUser, pgPool } from "#services/db"
 import { createCookie, lucia } from "#services/auth"
 import { setCookie } from "hono/cookie"
 import { createHttpException, logUserIn } from "#utils/apiHelpers"
@@ -10,7 +10,7 @@ import { argon2 } from "#utils/argon2"
 
 const login = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool = c.get('pgPool')
+  const pgPool: pgPool = c.get('pgPool')
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const body = c.req.valid('json')
@@ -56,7 +56,7 @@ const login = async function (c: Context) {
 
 const signup = async function (c: Context) {
 	const logger = c.get('logger')
-	const pgPool = c.get('pgPool')
+	const pgPool: pgPool = c.get('pgPool')
 	logger.info('signup')
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore

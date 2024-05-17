@@ -10,7 +10,35 @@ const defaultPermissions: Permission[] = [
   {
     "action": "read",
     "subject": "dictionary",
-  }
+  },
+  {
+    "action": "add",
+    "subject": "lexicon",
+  },
+  {
+    "action": "read",
+    "subject": "lexicon",
+  },
+  {
+    "action": "edit",
+    "subject": "lexicon",
+  },
+  {
+    "action": "delete",
+    "subject": "lexicon",
+  },
+  {
+    "action": "list",
+    "subject": "lexicon",
+  },
+  {
+    "action": "read_entry",
+    "subject": "lexicon",
+  },
+  {
+    "action": "list_entry",
+    "subject": "lexicon",
+  },
 ]
 
 export const setDefaultPermissions = () => {

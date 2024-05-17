@@ -20,3 +20,5 @@ export interface DatabaseUser {
   lastname: string
   is_admin: boolean
 }
+
+export type pgPool = pg.Pool

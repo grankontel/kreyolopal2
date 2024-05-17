@@ -6,6 +6,7 @@ import auth from './controllers/auth.routes'
 import contact from './controllers/contact.routes'
 import dictionary from './controllers/dictionary.routes'
 import health from './controllers/health.routes'
+import lexicons from './controllers/lexicons/routes'
 
 function setRoutes(app: AppRouter) {
 	app.use('/api/*', cors())
@@ -16,6 +17,7 @@ function setRoutes(app: AppRouter) {
   app.route('/api/dictionary', dictionary)
   app.route('/api/contact', contact)
   app.route('/api/health', health)
+  app.route('/api/lexicons', lexicons)
 
   logger.info('All routes added')
   return app
