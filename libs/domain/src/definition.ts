@@ -1,12 +1,18 @@
-import { KreyolLanguage, MeaningLanguage } from './types'
+import { DefinitionSource, KreyolLanguage, Meaning } from "./types"
 
-export type RestrictedDefinitionSource = 'reference' | 'validated'
+export interface BaseEntry {
+  entry: string
+  docType: 'entry'
+  variations: string[]
+}
 
-export type DefinitionSource = RestrictedDefinitionSource | 'personal' | 'lexicons'
+export interface SpecificEntry<T extends DictionaryDefinition> extends BaseEntry {
+  definitions: T[]
+}
 
-export type Meaning = {
-  [key in MeaningLanguage]?: string
-} & object
+export interface DictionaryEntry extends BaseEntry {
+  aliasOf?: string
+}
 
 export interface Quote {
   text: string
@@ -14,11 +20,15 @@ export interface Quote {
   author: string
 }
 
-export interface BaseDefinition {
+export interface DictionaryDefinition {
   entry: string
   docType: 'definition'
+  prefix?: string
+  suffix?: string
+  asIn?: string
   definition_id: string
   kreyol: KreyolLanguage
+  rank: number
   nature: string[]
   subnature?: string[]
   meaning: Meaning
@@ -28,37 +38,12 @@ export interface BaseDefinition {
   quotes: Quote[]
 }
 
-export interface SingleDefinition extends BaseDefinition {
+export interface SingleDefinition extends DictionaryDefinition {
   source: DefinitionSource
 }
 
-export type Definitions = {
-  [key in KreyolLanguage]: SingleDefinition[]
-} & object
-
-export interface BaseEntry {
-  entry: string
-  docType: 'entry'
-  variations: string[]
-}
-
-export interface SpecificEntry<T extends BaseDefinition> extends BaseEntry {
-  definitions: T[]
-}
-
-export interface DictionaryBaseEntry extends BaseEntry {
-  _id: string
-}
-
-export interface DictionaryEntry {
+export interface DictionaryFullEntry {
   entry: string
   variations: string[]
   definitions: Array<SingleDefinition>
-}
-
-export interface DictionaryFullEntry {
-  id: string
-  entry: string
-  variations: string[]
-  definitions: Definitions
 }
