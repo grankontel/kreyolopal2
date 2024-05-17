@@ -22,4 +22,10 @@ dicoRoutes.get(
   zValidator('param', paramGetWordSchema, sendBadRequest),
   handlers.getWord
 )
+
+dicoRoutes.get('/check/:word', handlers.findWord)
+
+// get available kreyol for a word
+dicoRoutes.get('/kreyolsfor/:word', handlers.getKreyolsFor)
+
 export default dicoRoutes

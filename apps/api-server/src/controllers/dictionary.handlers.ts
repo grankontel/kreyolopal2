@@ -18,7 +18,7 @@ const getSuggestion = async function (c: Context) {
 	const mongo: MongoClient = c.get('mongodb')
 	const user: DatabaseUser = c.get('user')
 
-	const word = _decodeURI( c.req.param('word').trim())
+	const word = _decodeURI(c.req.param('word').trim())
 
 	logger.info(`dictionary.getSuggestion ${word}`)
 
@@ -120,7 +120,7 @@ const getWord = async function (c: Context) {
 
 	const { language, word } = c.req.param()
 	const lang = language.toLowerCase().trim()
-	const aWord = _decodeURI( word.trim())
+	const aWord = _decodeURI(word.trim())
 
 	logger.info(`dictionary.getWord ${language} ${aWord}`)
 	if (aWord.length === 0)
@@ -139,12 +139,12 @@ const getWord = async function (c: Context) {
 	}
 
 	const value = caches.entries.get(word + '_' + lang)
-  if (value !== undefined) {
-    logger.info(`value for ${word}_${lang} is in cache`)
-    c.res.headers.append('Cache-Control', 'public, maxage=86400')
-    c.status(200)
-    return c.json(value)
-  }
+	if (value !== undefined) {
+		logger.info(`value for ${word}_${lang} is in cache`)
+		c.res.headers.append('Cache-Control', 'public, maxage=86400')
+		c.status(200)
+		return c.json(value)
+	}
 
 	const filter = {
 		$and: [
@@ -201,7 +201,7 @@ const getWord = async function (c: Context) {
 			caches.entries.set(word + '_' + lang, entry)
 
 			c.res.headers.append('Cache-Control', 'public, maxage=86400')
-				return c.json(entry, 200)
+			return c.json(entry, 200)
 		}
 
 		const defs = result
@@ -227,4 +227,117 @@ const getWord = async function (c: Context) {
 
 
 }
-export default { getSuggestion, getWord }
+
+const findWord = async function (c: Context) {
+	const logger = c.get('logger')
+	const client = c.get('mongodb')
+	const user = c.get('user')
+
+	const { word } = c.req.param()
+	const aWord = _decodeURI(word.trim())
+
+	logger.info(`dictionary.findWord  ${word}`)
+
+	if (!user) {
+		logger.debug('user not logged in')
+		return c.json({ error: 'You are not logged in.' }, 403)
+	}
+
+	if (aWord.length === 0)
+		return c.json({ message: 'Bad request', }, 400)
+
+	const filter = {
+		$and: [
+			{
+				entry: aWord,
+			},
+			{
+				$or: [
+					{
+						docType: 'entry',
+					},
+					{
+						docType: 'definition',
+					},
+				],
+			},
+		],
+	}
+
+	try {
+		const coll = client
+			.db(config.mongodb.database)
+			.collection(MongoCollection.reference)
+		const nb_reference = await coll.countDocuments(filter)
+		if (nb_reference !== 0) return c.json<boolean>(true, 200)
+
+		const validated = client
+			.db(config.mongodb.database)
+			.collection(MongoCollection.validated)
+		const nb_validated = await validated.countDocuments(filter)
+
+		return c.json<boolean>(nb_validated > 0, nb_validated > 0 ? 200 : 404)
+	} catch (e: any) {
+		logger.error(e.message)
+		throw createHttpException({
+			errorContent: { error: 'Unknown error..' },
+			status: 500,
+			statusText: 'Unknown error.',
+		})
+	}
+}
+
+const getKreyolsFor = async function (c: Context) {
+  const logger = c.get('logger')
+  const mongo: MongoClient = c.get('mongodb')
+	const user: DatabaseUser = c.get('user')
+
+
+  const { word } = c.req.param()
+	const aWord = _decodeURI(word.trim())
+
+
+	logger.info(`dictionary.getKreyolsFor  ${aWord}`)
+	if (aWord.length === 0)
+		return c.json({ message: 'Bad request', }, 400)
+
+	if (!user) {
+		logger.debug('user not logged in')
+		return c.json({ error: 'You are not logged in.' }, 403)
+	}
+
+	const enforcer = await getUserEnforcer(user)
+
+	if (!enforcer.can('read', 'dictionary')) {
+		logger.debug('user does not have read dictionary permission')
+		return c.json({ error: 'Unsufficient permissions.' }, 403)
+	}
+
+  try {
+    let result = await mongo.db(config.mongodb.database).command({
+      distinct: MongoCollection.reference,
+      key: 'kreyol',
+      query: { entry: aWord, docType: 'definition' },
+    })
+
+    if (result.values.length === 0) {
+      result = await mongo.db(config.mongodb.database).command({
+        distinct: MongoCollection.validated,
+        key: 'kreyol',
+        query: { entry: aWord, docType: 'definition' },
+      })
+    }
+    c.status(200)
+    return c.json(result.values)
+  } catch (e: any) {
+    logger.error(e.message)
+    throw createHttpException({
+      errorContent: { error: 'Unknown error..' },
+      status: 500,
+      statusText: 'Unknown error.',
+    })
+  }
+}
+
+
+export default { getSuggestion, getWord, findWord, getKreyolsFor }
