@@ -53,3 +53,15 @@ export async function logUserIn(
 	}
 	return await c.json(response)
 }
+
+
+// Optimized
+export const _decodeURI = (value: string) => {
+  if (!/[%+]/.test(value)) {
+    return value
+  }
+  if (value.includes('+')) {
+    value = value.replace(/\+/g, ' ')
+  }
+  return value.includes('%') ? decodeURIComponent(value) : value
+}
