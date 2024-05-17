@@ -34,7 +34,7 @@ export const sessionMiddleware = (): MiddlewareHandler => {
     }
     c.set('user', user)
     c.set('session', session)
-    const childLogger = winston_logger.child(user as User)
+    const childLogger = winston_logger.child({user: user as User})
     c.set('logger', childLogger)
     return next()
   }

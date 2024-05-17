@@ -40,11 +40,23 @@ const config = {
     listKey: process.env.MAILIST_API_KEY,
     listId: process.env.MAILIST_LISTID,
   },
+  mongodb: {
+    // uri: process.env.MONGODB_URI,
+    host: process.env.MONGODB_HOST,
+    username: process.env.MONGODB_USER,
+    password: process.env.MONGODB_PASSWORD,
+    database: process.env.MONGODB_DB,
+    port: Number(process.env.MONGODB_PORT || 27017),
+    uri: '',
+	}
 }
 
 config.db.uri = `postgresql://${config.db.username}:${encodeURIComponent(
 	String(config.db.password)
 )}@${config.db.host}:${config.db.port}/${config.db.database}`
 
+config.mongodb.uri = `mongodb://${config.mongodb.username}:${encodeURIComponent(
+  String(config.mongodb.password)
+)}@${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.database}?replicaSet=rs0`
 
 export default config

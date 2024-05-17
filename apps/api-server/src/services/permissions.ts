@@ -1,13 +1,7 @@
-import { Permission } from "@kreyolopal/domain"
+import { Permission, getEnforcer } from "@kreyolopal/domain"
 import { DatabaseUser, pgPool } from "./db"
 
-export const getUserPermissions = async (user: DatabaseUser) => {
-	if (user.is_admin) {
-		return [{
-			action: 'manage',
-			subject: 'all'
-		}]
-	}
+export const getPermissionsFromDb = async (userId: string) => {
 	const result = await pgPool.query<Permission>(`WITH user_role as (
 		SELECT role_id
 		FROM users_roles
@@ -20,6 +14,27 @@ export const getUserPermissions = async (user: DatabaseUser) => {
 	) 
 	SELECT p.action, p.subject, p.conditions 
 	FROM permissions p JOIN user_perms up ON p.id = up.permission_id`
-	, [user.id])
+	, [userId])
 	return result.rows
 }
+
+export const getUserPermissions = async (user: DatabaseUser) => {
+	return new Promise<Permission[]>(async (resolve, reject) => {
+		const perms: Permission[] = []
+
+		if (user.is_admin) {
+			resolve([{
+				action: 'manage',
+				subject: 'all'
+			}])
+		}
+		else {
+			return getPermissionsFromDb(user.id).then(result => {
+				resolve(result)
+			})
+		}
+	})
+}
+
+export const getUserEnforcer = async (user: DatabaseUser) => getUserPermissions(user).then(perms => getEnforcer(perms))
+

@@ -49,7 +49,7 @@ export const logger = (): MiddlewareHandler => {
     const logger = c.get('logger')
     logger.info(
       `response : ${method} ${path} code: ${c.res.status} ${service}`,
-      rextra
+      {request: rextra}
     )
     // log(fn, LogPrefix.Outgoing, method, path, c.res.status, time(start))
   }

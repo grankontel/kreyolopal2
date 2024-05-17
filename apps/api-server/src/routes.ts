@@ -4,6 +4,7 @@ import logger from '#services/logger'
 
 import auth from './controllers/auth.routes'
 import contact from './controllers/contact.routes'
+import dictionary from './controllers/dictionary.routes'
 
 function setRoutes(app: AppRouter) {
 	app.use('/api/*', cors())
@@ -11,6 +12,7 @@ function setRoutes(app: AppRouter) {
   logger.info('Adding routes')
 
 	app.route('/api/auth', auth)
+  app.route('/api/dictionary', dictionary)
   app.route('/api/contact', contact)
 
   logger.info('All routes added')

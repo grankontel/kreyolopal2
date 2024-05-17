@@ -6,6 +6,10 @@ const defaultPermissions: Permission[] = [
   {
     "action": "manage",
     "subject": "all",
+  },
+  {
+    "action": "read",
+    "subject": "dictionary",
   }
 ]
 
