@@ -93,7 +93,10 @@ export const permissions = pgTable("permissions", {
 	conditions: jsonb("conditions"),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-
+}, (table) => {
+	return {
+		permissions_action_subject: unique("permissions_action_subject").on(table.action, table.subject),
+	}
 });
 
 export const roles_permissions = pgTable("roles_permissions", {
@@ -107,7 +110,7 @@ export const roles_permissions = pgTable("roles_permissions", {
 	}
 });
 
-export const user_roles = pgTable("users_roles", {
+export const users_roles = pgTable("users_roles", {
 	userId: text("user_id").notNull().references(() => authUser.id, { onDelete: "cascade" }),
 	roleId: integer("role_id").notNull().references(() => roles.id, { onDelete: "cascade" }),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),

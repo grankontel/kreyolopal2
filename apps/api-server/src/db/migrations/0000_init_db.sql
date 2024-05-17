@@ -174,6 +174,11 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "IX_auth_user_reset_pwd_token" ON "auth_user" ("reset_pwd_token");--> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "IX_owner_slug" ON "lexicons" ("owner","slug");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "IX_auth_user_reset_pwd_token" ON "auth_user" ("reset_pwd_token");
+--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "IX_owner_slug" ON "lexicons" ("owner","slug");
+--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "IX_users_roles_userid" ON "users_roles" ("user_id");
+--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "permissions_action_subject" ON "permissions" USING btree ("action", "subject");
+--> statement-breakpoint

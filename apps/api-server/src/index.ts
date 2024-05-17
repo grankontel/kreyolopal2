@@ -2,12 +2,18 @@ import { createAdaptorServer } from '@hono/node-server'
 import config from './config'
 import app from './app'
 import winston_logger from '#services/logger'
+import { setDefaultPermissions } from '#services/def_perm'
 
 const port: number = Number(config.app.port) || 3000
 
 /* const mongoClient = new MongoClient(config.mongodb.uri, {
   serverSelectionTimeoutMS: 5000,
 })
+ */
+/* winston_logger.info('👮 Ensure default permissions are set...')
+Promise.all([
+	setDefaultPermissions(),
+])
  */
 winston_logger.info('🔌 connecting to mongo database...')
 
