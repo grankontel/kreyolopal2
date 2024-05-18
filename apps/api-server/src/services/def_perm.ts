@@ -15,19 +15,20 @@ const defaultPermissions: Permission[] = [
 ]
 
 export const setDefaultPermissions = () => {
-  let query = 'INSERT INTO "permissions" ("action", "subject", "conditions") VALUES '
+  let query = 'INSERT INTO "permissions" ("id","action", "subject", "conditions") VALUES '
 
   for (let index = 0; index < defaultPermissions.length; index++) {
     const element = defaultPermissions[index];
     const hasConditions = (element.conditions && element.conditions.length > 0) as boolean
-    const elemSql = `('${element.action}','${element.subject}',${hasConditions ? "'" + element.conditions + "'" : 'NULL'})`
+    const elemSql = `(${index+1}, '${element.action}','${element.subject}',${hasConditions ? "'" + element.conditions + "'" : 'NULL'})`
 
     if (index > 0)
       query += ','
     query += elemSql
   }
 
-  query += ' ON CONFLICT ON CONSTRAINT permissions_action_subject DO NOTHING;'
+  query += ' ON CONFLICT (id) DO UPDATE SET action = EXCLUDED.action, subject = EXCLUDED.subject, conditions = EXCLUDED.conditions;'
+//  query += ' ON CONFLICT ON CONSTRAINT permissions_action_subject DO NOTHING;'
   return pgPool.query(query)
 }
 
