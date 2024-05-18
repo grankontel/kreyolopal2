@@ -5,12 +5,14 @@ import { useDicoStore } from '@/store/dico-store'
 import { DashboardMenuItem } from '@/lib/dashboard'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getLexicons } from '@/queries/lexicons/get-lexicons'
-import { Lexicon } from '@kreyolopal/domain'
+import { Lexicon, getEnforcer } from '@kreyolopal/domain'
 import { AuthValue, ResponseError } from '@/lib/types'
 import { useEffect } from 'react'
+import { AnyAbility } from '@casl/ability'
 
 export interface DashboardContextValue extends AuthValue {
   isLoggedIn: () => string | false
+  enforcer: AnyAbility
 }
 
 const DashboardContext = createContext<DashboardContextValue | null>(null)
@@ -26,6 +28,7 @@ export const DashboardProvider = ({
   const queryClient = useQueryClient()
   const username = init.username
   const token = init.session_id
+  const enforcer = getEnforcer(init.permissions)
 
   const { data, isError, error, isLoading } = useQuery<
     unknown,
@@ -68,7 +71,7 @@ export const DashboardProvider = ({
   }, [data])
 
   return (
-    <DashboardContext.Provider value={{ ...init, isLoggedIn: () => init.session_id }}>
+    <DashboardContext.Provider value={{ ...init, enforcer, isLoggedIn: () => init.session_id }}>
       {children}
     </DashboardContext.Provider>
   )
