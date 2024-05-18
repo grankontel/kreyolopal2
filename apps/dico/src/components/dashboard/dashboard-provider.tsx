@@ -6,14 +6,9 @@ import { DashboardMenuItem } from '@/lib/dashboard'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getLexicons } from '@/queries/lexicons/get-lexicons'
 import { Lexicon } from '@kreyolopal/domain'
-import { ResponseError } from '@/lib/types'
+import { AuthValue, ResponseError } from '@/lib/types'
 import { useEffect } from 'react'
 
-export interface AuthValue {
-  session_id: string
-  user_id: string
-  username: string
-}
 export interface DashboardContextValue extends AuthValue {
   isLoggedIn: () => string | false
 }
