@@ -12,6 +12,7 @@ const defaultPermissions: Permission[] = [
   ...subjectPermissions('dictionary', ['read', 'bookmark']),
   ...subjectPermissions('lexicon', ['add', 'read', 'edit', 'delete', 'list', 'read_entry', 'list_entry']),
   ...subjectPermissions('proposals', ['submit','read', 'validate', 'vote']),
+  ...subjectPermissions('spellcheck', ['request','rate']),
 ]
 
 export const setDefaultPermissions = () => {

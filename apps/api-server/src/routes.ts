@@ -9,6 +9,7 @@ import health from './controllers/health.routes'
 import lexicons from './controllers/lexicons/routes'
 import meRoutes from './controllers/me/routes'
 import myDicoRoutes from './controllers/me/dictionary.routes'
+import spellRoutes from "./controllers/spellcheck";
 
 function setRoutes(app: AppRouter) {
 	app.use('/api/*', cors())
@@ -22,6 +23,7 @@ function setRoutes(app: AppRouter) {
   app.route('/api/lexicons', lexicons)
   app.route('/api/me', meRoutes)
   app.route('/api/me/dictionary', myDicoRoutes)
+  app.route('/api/spellcheck', spellRoutes)
 
   logger.info('All routes added')
   return app
