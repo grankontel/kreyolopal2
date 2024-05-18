@@ -14,6 +14,8 @@
     "build-cf-types": "wrangler types --env-interface CloudflareEnv env.d.ts"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.1",
+    "@casl/react": "^3.1.0",
     "@hookform/resolvers": "^3.3.4",
     "@marsidev/react-turnstile": "^0.5.3",
     "@radix-ui/react-alert-dialog": "^1.0.5",
