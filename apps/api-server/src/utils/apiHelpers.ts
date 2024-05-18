@@ -2,6 +2,8 @@ import { setCookie } from 'hono/cookie'
 import { HTTPException } from 'hono/http-exception'
 import { StatusCode } from 'hono/utils/http-status'
 import { sign as jwt_sign } from 'jsonwebtoken'
+import { z } from 'zod'
+
 import { createCookie, lucia } from '#services/auth'
 
 import type { Context, TypedResponse } from 'hono'
@@ -65,3 +67,8 @@ export const _decodeURI = (value: string) => {
   }
   return value.includes('%') ? decodeURIComponent(value) : value
 }
+
+export const queryListSchema = z.object({
+	offset: z.coerce.number().int().nonnegative().optional(),
+	limit: z.coerce.number().int().nonnegative().optional(),
+})

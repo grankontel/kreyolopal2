@@ -1,10 +1,5 @@
 import { z } from 'zod'
 
-export const queryListSchema = z.object({
-	offset: z.coerce.number().int().nonnegative().optional(),
-	limit: z.coerce.number().int().nonnegative().optional(),
-})
-
 const slugCheck = z.string().regex(/^[a-z]+([a-z0-9]|-)*$/)
 
 export const paramUsername = z.object({

@@ -5,6 +5,7 @@ import { z } from 'zod'
 import * as schema from './schema'
 import handlers from './handlers'
 import entriesHandlers from './entries.handlers'
+import { queryListSchema } from '#utils/apiHelpers'
 
 const routes = createRouter()
 
@@ -55,7 +56,7 @@ routes.put(
 routes.get(
   '/:username/:slug/entries',
   zValidator('param', schema.paramSlug, sendBadRequest),
-  zValidator('query', schema.queryListSchema, sendBadRequest),
+  zValidator('query', queryListSchema, sendBadRequest),
   entriesHandlers.listEntries
 )
 

@@ -14,6 +14,9 @@ export interface DictionaryEntry extends BaseEntry {
   aliasOf?: string
 }
 
+export interface DictionaryStoredEntry extends DictionaryEntry {
+  _id: string
+}
 export interface Quote {
   text: string
   from: string

@@ -1,44 +1,16 @@
 import { Permission } from '@kreyolopal/domain'
 import { pgPool } from './db';
 
+const subjectPermissions = (subject: string, actions: string[]) => actions.map(action => ({ action, subject }))
+
 // default permissions
 const defaultPermissions: Permission[] = [
   {
     "action": "manage",
     "subject": "all",
   },
-  {
-    "action": "read",
-    "subject": "dictionary",
-  },
-  {
-    "action": "add",
-    "subject": "lexicon",
-  },
-  {
-    "action": "read",
-    "subject": "lexicon",
-  },
-  {
-    "action": "edit",
-    "subject": "lexicon",
-  },
-  {
-    "action": "delete",
-    "subject": "lexicon",
-  },
-  {
-    "action": "list",
-    "subject": "lexicon",
-  },
-  {
-    "action": "read_entry",
-    "subject": "lexicon",
-  },
-  {
-    "action": "list_entry",
-    "subject": "lexicon",
-  },
+  ...subjectPermissions('dictionary', ['read', 'bookmark']),
+  ...subjectPermissions('lexicon', ['add', 'read', 'edit', 'delete', 'list', 'read_entry', 'list_entry']),
 ]
 
 export const setDefaultPermissions = () => {
