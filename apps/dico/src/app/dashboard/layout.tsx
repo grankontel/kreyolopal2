@@ -44,10 +44,10 @@ export default function DashboardLayout({
   }
   return (
     <div className="grid h-screen w-full lg:grid-cols-[280px_1fr]">
-      <Sidebar>
-        <SideMenu username={auth.username} token={auth.session_id} />
-      </Sidebar>
       <DashboardProvider init={{ ...auth }}>
+        <Sidebar>
+          <SideMenu />
+        </Sidebar>
         <div className="flex flex-col">
           <header className="flex h-14 items-center justify-between bg-gray-100/40 px-6 dark:bg-gray-800/40">
             <div className="flex items-center gap-4">

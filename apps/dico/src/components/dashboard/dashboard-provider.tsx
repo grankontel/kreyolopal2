@@ -69,6 +69,7 @@ export const DashboardProvider = ({
           label: item.name,
           path: '/dashboard' + item.path,
         })),
+        permission: {action: 'read', subject: 'lexicon'}
       })
       setPersonnel(personnel)
     }
