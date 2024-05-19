@@ -3,14 +3,14 @@ import { DatabaseUser, pgPool } from "./db"
 
 export const getPermissionsFromDb = async (userId: string) => {
 	const result = await pgPool.query<Permission>(`WITH user_role as (
-		SELECT role_id
+		SELECT role
 		FROM users_roles
 		WHERE user_id =$1
 	), 
 	user_perms as (
 		SELECT DISTINCT rp.permission_id
-		FROM roles_permissions rp JOIN user_role ON rp.role_id in 
-		(select role_id from user_role)
+		FROM roles_permissions rp JOIN user_role ON rp.role in 
+		(select role from user_role)
 	) 
 	SELECT p.action, p.subject, p.conditions 
 	FROM permissions p JOIN user_perms up ON p.id = up.permission_id`

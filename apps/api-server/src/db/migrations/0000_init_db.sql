@@ -78,10 +78,10 @@ CREATE OR REPLACE TRIGGER "set_timestamp"
  BEFORE UPDATE ON "public"."roles" FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp();
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "roles_permissions" (
+	"role" varchar(40) NOT NULL,
 	"permission_id" integer NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"role" varchar(40) NOT NULL,
 	CONSTRAINT "roles_permissions_role_permission_id" PRIMARY KEY("permission_id","role")
 );
 --> statement-breakpoint

@@ -78,8 +78,8 @@ const signup = async function (c: Context) {
 		const dbresult = await client.query<DatabaseUser>(text, values)
 		createdUser = dbresult.rows[0]
 
-		const add_role = `INSERT INTO users_roles (user_id, role_id) VALUES ($1, $2)`
-		await client.query(add_role, [createdUser.id, 2])
+		const add_role = `INSERT INTO users_roles (user_id, role) VALUES ($1, $2)`
+		await client.query(add_role, [createdUser.id, 'standard'])
 
 		await client.query('COMMIT')
 	} catch (e) {
