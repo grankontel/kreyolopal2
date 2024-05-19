@@ -28,7 +28,7 @@ export const DashboardProvider = ({
   const queryClient = useQueryClient()
   const username = init.username
   const token = init.session_id
-  const enforcer = getEnforcer(init.permissions)
+  const enforcer: AnyAbility = getEnforcer(init.permissions)
 
   const { data, isError, error, isLoading } = useQuery<
     unknown,
@@ -40,6 +40,10 @@ export const DashboardProvider = ({
     staleTime: Infinity,
     queryFn: () => {
       console.log('querying lexicons...')
+      if (enforcer.cannot('list', 'lexicon')) {
+        console.log('insufficient permissions')
+        return []
+      }
       return username ? getLexicons(username, token) : []
     },
   })

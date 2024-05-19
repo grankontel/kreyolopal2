@@ -1,4 +1,4 @@
-import { AbilityBuilder, createMongoAbility } from '@casl/ability';
+import { AbilityBuilder, AnyAbility, createMongoAbility } from '@casl/ability';
 
 export interface Permission {
 	action: string
@@ -14,7 +14,7 @@ export interface LoginResponse {
 	token?: string;
 }
 
-export const getEnforcer = (perms: Permission[]) => {
+export const getEnforcer = (perms: Permission[]) : AnyAbility => {
 	// define abilities
 	const { can: allow, cannot: forbid, build } = new AbilityBuilder(createMongoAbility);
 
