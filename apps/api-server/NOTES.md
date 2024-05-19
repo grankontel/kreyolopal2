@@ -1,14 +1,27 @@
 
 
 ```sql
-INSERT INTO "roles" ("id", "name", "created_at", "updated_at") VALUES
-(1,	'admin',	'2024-05-07 09:59:09.230519+00',	'2024-05-07 09:59:09.230519+00'),
-(2,	'standard',	'2024-05-07 09:59:24.792949+00',	'2024-05-07 09:59:24.792949+00');
---> statement-breakpoint
-INSERT INTO "permissions" ("id", "action", "subject", "conditions", "created_at", "updated_at") VALUES
-(1,	'manage',	'all',	NULL,	'2024-05-07 10:11:46.47642+00',	'2024-05-07 10:11:46.47642+00');
---> statement-breakpoint
-INSERT INTO "roles_permissions" ("role_id", "permission_id", "created_at", "updated_at") VALUES
-(1,	1,	'2024-05-07 10:12:04.930803+00',	'2024-05-07 10:12:04.930803+00');
+INSERT INTO "roles_permissions" ("role", "permission_id") VALUES 
+, ("admin",1)
+, ("reader",2)
+, ("reader",5)
+, ("reader",8)
+, ("reader",9)
+, ("reader",10)
+, ("reader",12)
+, ("standard",2)
+, ("standard",3)
+, ("standard",4)
+, ("standard",5)
+, ("standard",6)
+, ("standard",7)
+, ("standard",8)
+, ("standard",9)
+, ("standard",10)
+, ("standard",11)
+, ("standard",12)
+, ("standard",14)
+, ("standard",15)
+, ("standard",16);
 --> statement-breakpoint
 ```
