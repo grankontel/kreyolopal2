@@ -1,51 +1,55 @@
 import { relations } from "drizzle-orm/relations";
-import { authUser, lexicons, spellcheckeds, ratings, userSession, roles, roles_permissions, permissions, users_roles } from "./schema";
-
-export const lexiconsRelations = relations(lexicons, ({one}) => ({
-	authUser: one(authUser, {
-		fields: [lexicons.owner],
-		references: [authUser.id]
-	}),
-}));
-
-export const authUserRelations = relations(authUser, ({many}) => ({
-	lexicons: many(lexicons),
-	spellcheckeds: many(spellcheckeds),
-	userSessions: many(userSession),
-	users_roles: many(users_roles),
-}));
+import { auth_user, spellcheckeds, ratings, lexicons, user_session, permissions, roles_permissions, roles, users_roles } from "./schema";
 
 export const spellcheckedsRelations = relations(spellcheckeds, ({one, many}) => ({
-	authUser: one(authUser, {
-		fields: [spellcheckeds.userId],
-		references: [authUser.id]
+	auth_user: one(auth_user, {
+		fields: [spellcheckeds.user_id],
+		references: [auth_user.id]
 	}),
 	ratings: many(ratings),
 }));
 
+export const auth_userRelations = relations(auth_user, ({many}) => ({
+	spellcheckeds: many(spellcheckeds),
+	lexicons: many(lexicons),
+	user_sessions: many(user_session),
+	users_roles: many(users_roles),
+}));
+
 export const ratingsRelations = relations(ratings, ({one}) => ({
 	spellchecked: one(spellcheckeds, {
-		fields: [ratings.spellcheckedId],
+		fields: [ratings.spellchecked_id],
 		references: [spellcheckeds.id]
 	}),
 }));
 
-export const userSessionRelations = relations(userSession, ({one}) => ({
-	authUser: one(authUser, {
-		fields: [userSession.userId],
-		references: [authUser.id]
+export const lexiconsRelations = relations(lexicons, ({one}) => ({
+	auth_user: one(auth_user, {
+		fields: [lexicons.owner],
+		references: [auth_user.id]
+	}),
+}));
+
+export const user_sessionRelations = relations(user_session, ({one}) => ({
+	auth_user: one(auth_user, {
+		fields: [user_session.user_id],
+		references: [auth_user.id]
 	}),
 }));
 
 export const roles_permissionsRelations = relations(roles_permissions, ({one}) => ({
-	role: one(roles, {
-		fields: [roles_permissions.roleId],
-		references: [roles.id]
-	}),
 	permission: one(permissions, {
-		fields: [roles_permissions.permissionId],
+		fields: [roles_permissions.permission_id],
 		references: [permissions.id]
 	}),
+	role: one(roles, {
+		fields: [roles_permissions.role],
+		references: [roles.name]
+	}),
+}));
+
+export const permissionsRelations = relations(permissions, ({many}) => ({
+	roles_permissions: many(roles_permissions),
 }));
 
 export const rolesRelations = relations(roles, ({many}) => ({
@@ -53,17 +57,13 @@ export const rolesRelations = relations(roles, ({many}) => ({
 	users_roles: many(users_roles),
 }));
 
-export const permissionsRelations = relations(permissions, ({many}) => ({
-	roles_permissions: many(roles_permissions),
-}));
-
 export const users_rolesRelations = relations(users_roles, ({one}) => ({
-	authUser: one(authUser, {
-		fields: [users_roles.userId],
-		references: [authUser.id]
+	auth_user: one(auth_user, {
+		fields: [users_roles.user_id],
+		references: [auth_user.id]
 	}),
 	role: one(roles, {
-		fields: [users_roles.roleId],
-		references: [roles.id]
+		fields: [users_roles.role],
+		references: [roles.name]
 	}),
 }));

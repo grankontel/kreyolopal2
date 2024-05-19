@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS "permissions" (
 	"subject" varchar(60) NOT NULL,
 	"conditions" jsonb,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "permissions_action_subject" UNIQUE("action","subject")
 );
 --> statement-breakpoint
 CREATE OR REPLACE TRIGGER "set_timestamp" 
@@ -68,22 +69,20 @@ CREATE OR REPLACE TRIGGER "set_timestamp"
  BEFORE UPDATE ON "public"."ratings" FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp();
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "roles" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"name" varchar(40) NOT NULL,
+	"name" varchar(40) PRIMARY KEY NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "IX_name" UNIQUE("name")
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE OR REPLACE TRIGGER "set_timestamp" 
- BEFORE UPDATE ON "public"."ratings" FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp();
+ BEFORE UPDATE ON "public"."roles" FOR EACH ROW EXECUTE FUNCTION trigger_set_timestamp();
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "roles_permissions" (
-	"role_id" integer NOT NULL,
 	"permission_id" integer NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "roles_permissions_role_id_permission_id_pk" PRIMARY KEY("role_id","permission_id")
+	"role" varchar(40) NOT NULL,
+	CONSTRAINT "roles_permissions_role_permission_id" PRIMARY KEY("permission_id","role")
 );
 --> statement-breakpoint
 CREATE OR REPLACE TRIGGER "set_timestamp" 
@@ -117,10 +116,10 @@ CREATE OR REPLACE TRIGGER "set_timestamp"
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users_roles" (
 	"user_id" text NOT NULL,
-	"role_id" integer NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "users_roles_user_id_role_id_pk" PRIMARY KEY("user_id","role_id")
+	"role" varchar(40) NOT NULL,
+	CONSTRAINT "users_roles_user_id_role" PRIMARY KEY("user_id","role")
 );
 --> statement-breakpoint
 CREATE OR REPLACE TRIGGER "set_timestamp" 
@@ -139,13 +138,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "roles_permissions" ADD CONSTRAINT "roles_permissions_role_id_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."roles"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "roles_permissions" ADD CONSTRAINT "roles_permissions_permission_id_permissions_id_fk" FOREIGN KEY ("permission_id") REFERENCES "public"."permissions"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "roles_permissions" ADD CONSTRAINT "roles_permissions_permission_id_permissions_id_fk" FOREIGN KEY ("permission_id") REFERENCES "public"."permissions"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "roles_permissions" ADD CONSTRAINT "roles_permissions_role_roles_name_fk" FOREIGN KEY ("role") REFERENCES "public"."roles"("name") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -169,16 +168,11 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "users_roles" ADD CONSTRAINT "users_roles_role_id_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."roles"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "users_roles" ADD CONSTRAINT "users_roles_role_roles_name_fk" FOREIGN KEY ("role") REFERENCES "public"."roles"("name") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "IX_auth_user_reset_pwd_token" ON "auth_user" ("reset_pwd_token");
---> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "IX_owner_slug" ON "lexicons" ("owner","slug");
---> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "IX_auth_user_reset_pwd_token" ON "auth_user" ("reset_pwd_token");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "IX_owner_slug" ON "lexicons" ("owner","slug");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "IX_users_roles_userid" ON "users_roles" ("user_id");
---> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "permissions_action_subject" ON "permissions" USING btree ("action", "subject");
---> statement-breakpoint
