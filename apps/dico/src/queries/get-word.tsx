@@ -25,6 +25,11 @@ export async function getWord(
 
   const { user_id, session_id } = auth || { user_id: null, session_id: null }
   const cacheMode = !user_id ? 'public' : 'private'
+  const token = session_id
+
+  const fetchHeaders = new Headers()
+  fetchHeaders.set('Content-Type', 'application/json')
+  fetchHeaders.set('Authorization', `Bearer ${token}`)
 
   return new Promise<UserDictionaryEntry | null>(async (resolve, reject) => {
     if (kreyol.length == 0 || entry.length == 0 || !allowedKreyol.includes(kreyol)) {
@@ -36,9 +41,7 @@ export async function getWord(
     const result = await fetch(`${apiServer}/api/dictionary/entry/${kreyol}/${entry}`, {
       method: 'GET',
       //      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: fetchHeaders,
       next: { revalidate: 3600 },
     }).catch(function (error) {
       console.log("Il y a eu un problème avec l'opération fetch : " + error.message)
@@ -49,7 +52,8 @@ export async function getWord(
       resolve(null)
     }
 
-    const data = await (result as Response).json<DictionaryEntry>()
+    const data = await (result as Response).json<DictionaryFullEntry>()
+    console.log(data)
     const response: UserDictionaryEntry = {
       cacheMode: cacheMode,
       is_bookmarked: false,
@@ -58,14 +62,10 @@ export async function getWord(
     }
 
     if (user_id) {
-      const token = session_id
       const result2 = await fetch(`${apiServer}/api/me/dictionary/${entry}`, {
         method: 'GET',
 
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: fetchHeaders,
         next: { revalidate: 3600 },
       }).catch(function (error) {
         console.log("Il y a eu un problème avec l'opération fetch : " + error.message)
