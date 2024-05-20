@@ -6,7 +6,7 @@ export interface BaseEntry {
   variations: string[]
 }
 
-export interface SpecificEntry<T extends DictionaryDefinition> extends BaseEntry {
+export interface SpecificEntry<T extends DictionaryDefinition = DictionaryDefinition> extends BaseEntry {
   definitions: T[]
 }
 
@@ -45,8 +45,5 @@ export interface SingleDefinition extends DictionaryDefinition {
   source: DefinitionSource
 }
 
-export interface DictionaryFullEntry {
-  entry: string
-  variations: string[]
-  definitions: Array<SingleDefinition>
+export interface DictionaryFullEntry extends SpecificEntry<SingleDefinition> {
 }

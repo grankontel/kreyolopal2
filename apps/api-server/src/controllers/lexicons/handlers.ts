@@ -256,7 +256,7 @@ const getAllLexicons = async function (c: Context) {
     const values = [owner_id]
     const res = await client.query(text, values)
     if (res.rows.length === 0) {
-      return c.json({ error: 'Not Found' }, 404)
+      return c.json([], 200)
     }
 
     const lexicons: Lexicon[] = (

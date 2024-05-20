@@ -5,9 +5,9 @@
 import Link from 'next/link'
 import { UserDictionaryEntry, UserProposalEntry } from '@/lib/types'
 import {
-  DictionaryEntry,
+  DictionaryFullEntry,
   KreyolLanguage,
-  BaseDefinition,
+  SingleDefinition,
   ProposalEntry,
 } from '@kreyolopal/domain'
 import { hashKey, onlyUnique } from '@/lib/utils'
@@ -16,24 +16,24 @@ import { dicoUrl } from '@/lib/dicoUrl'
 import { EntryTitle } from './entry-title'
 
 export function Entry<
-  T extends { entry: DictionaryEntry | ProposalEntry } =
+  T extends { entry: DictionaryFullEntry | ProposalEntry } =
     | UserDictionaryEntry
     | UserProposalEntry,
 >({ kreyol, value, ...props }: { kreyol: KreyolLanguage; value: T }) {
   let source = value.entry
   if ('is_bookmarked' in value && 'bookmark' in value && value.is_bookmarked) {
-    source = value.bookmark as DictionaryEntry
+    source = value.bookmark as DictionaryFullEntry
   }
 
   const relatedList: string[] = [source]
     .map((entry) => {
       const syns = entry.definitions
-        .map((def: BaseDefinition) => {
+        .map((def: SingleDefinition) => {
           return def.synonyms
         })
         .flat()
       const confer = entry.definitions
-        .map((def: BaseDefinition) => {
+        .map((def: SingleDefinition) => {
           return def.confer
         })
         .flat()
