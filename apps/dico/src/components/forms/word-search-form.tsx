@@ -9,6 +9,7 @@ import { DictionaryEntry } from '@kreyolopal/domain'
 import debounce from 'lodash.debounce'
 import { useRouter } from 'next/navigation'
 import { hashKey } from '@/lib/utils'
+import { useDashboard } from '@/components/dashboard/dashboard-provider'
 
 function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -36,6 +37,7 @@ export function WordSearchForm() {
   const router = useRouter()
   const [word, setWord] = useState('')
   const debounceSetWord = debounce(setWord, 500)
+  const auth = useDashboard()
   useEffect(() => {
     return () => {
       debounceSetWord.cancel()
@@ -50,7 +52,7 @@ export function WordSearchForm() {
     queryKey: ['suggest', word],
     queryFn: async ({ queryKey }) => {
       const [_, word] = queryKey
-      const rep = await getEntries(word)
+      const rep = await getEntries(word, auth?.session_id)
       return rep
     },
   })
@@ -101,10 +103,10 @@ export function WordSearchForm() {
                         variant="ghost"
                         onClick={(e) => {
                           e.preventDefault()
-                          router.push(`/dashboard/dictionary/gp/${encodeURI(item.entry)}`)
+                          router.push(`/dashboard/dictionary/gp/${encodeURI(item.aliasOf ?? item.entry)}`)
                         }}
                       >
-                        {item.variations.join('/')}
+                        {item.entry}
                       </Button>
                     </li>
                   )
