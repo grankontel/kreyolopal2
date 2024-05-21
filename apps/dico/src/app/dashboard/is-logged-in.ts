@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { parseCookie } from '@/lib/utils'
+import { Permission } from '@kreyolopal/domain'
 
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
@@ -20,7 +21,13 @@ export const isLoggedIn = () => {
   return auth?.session_id
 }
 
-export const getPermissions = () => {
+let _permissions: Permission[] | undefined = undefined
+
+export const getPermissions = (): Permission[] => {
+  if (_permissions !== undefined) {
+    return _permissions
+  }
+
   const cookieValue = cookies().get(cookieName)
   if (cookieValue === undefined) {
     throw new Error('Not logged in')
@@ -34,7 +41,8 @@ export const getPermissions = () => {
     throw new Error('Not logged in')
   }
 
-  return auth?.permissions || []
+  _permissions = auth?.permissions || []
+  return _permissions
 }
 
 export const getUsername = () => {
