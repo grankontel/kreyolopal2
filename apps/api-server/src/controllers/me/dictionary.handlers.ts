@@ -448,17 +448,17 @@ const listWords = async function (c: Context) {
     cursor.close()
 
     const data: DictionaryFullEntry[] = result?.map((item) => {
-      const def_object = item.definitions.reduce((obj, v) => {
+/*       const def_object = item.definitions.reduce((obj, v) => {
         obj[v.kreyol] = obj[v.kreyol] || []
         obj[v.kreyol].push(v)
         return obj
-      }, Object.create(null))
+      }, Object.create(null)) */
 
       return {
         id: item._id,
         entry: item.entry,
         variations: item.variations,
-        definitions: def_object,
+        definitions: item.definitions,
       }
     })
 
