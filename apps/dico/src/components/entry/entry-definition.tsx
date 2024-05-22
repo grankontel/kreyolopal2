@@ -11,7 +11,7 @@ import { hashKey } from '@/lib/utils'
 import { dicoUrl } from '@/lib/dicoUrl'
 import { ProposalVoteButtons } from '@/components/entry/proposal-vote-buttons'
 import { AddToLexicon } from './add-to-lexicon'
-import { Can } from '@/components/Can'
+import { Can } from '@/components/can'
 import { useEnforcer } from '@/queries/use-enforcer'
 
 function convertDefinition<T>(definition: SingleDefinition | ProposalDefinition): T {
