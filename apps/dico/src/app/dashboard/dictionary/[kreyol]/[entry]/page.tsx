@@ -17,7 +17,8 @@ export default async function Page({
     return undefined
   }
 
-  const enforcer = getEnforcer(getPermissions())
+  const permissions = getPermissions()
+  const enforcer = getEnforcer(permissions)
   if (enforcer.cannot('read', 'dictionary')) {
     return (
       <NoPermissions />
