@@ -8,6 +8,7 @@ import { logger } from './middlewares/logger'
 import { sessionMiddleware } from './middlewares/session'
 import setRoutes from './routes'
 import config from '#config'
+import { sentry } from '#services/sentry'
 
 const mongoClient = new MongoClient(config.mongodb.uri, {
   serverSelectionTimeoutMS: 5000,
@@ -41,7 +42,7 @@ const app = Promise.all([mongoClient.connect()])
           return err.getResponse()
         }
         //...
-        // sentry.captureException(err)
+        sentry.captureException(err)
         winston_logger.error(err.message, err)
         return c.json({ status: 'error', error: 'Unknown error..' }, 500)
       })
