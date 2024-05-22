@@ -102,6 +102,7 @@ export async function getProposedWord(
   return new Promise<UserProposalEntry | null>(async (resolve, reject) => {
     if (kreyol.length == 0 || entry.length == 0 || !allowedKreyol.includes(kreyol)) {
       resolve(null)
+      return
     }
 
     const myHeaders = new Headers()
@@ -122,6 +123,7 @@ export async function getProposedWord(
 
     if ((result as Response).status === 404) {
       resolve(null)
+      return
     }
 
     const data = await (result as Response).json<ProposalEntry>()
