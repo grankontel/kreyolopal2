@@ -1,3 +1,4 @@
+'use client'
 
 import Link from 'next/link'
 import {
@@ -10,7 +11,7 @@ import { hashKey } from '@/lib/utils'
 import { dicoUrl } from '@/lib/dicoUrl'
 import { ProposalVoteButtons } from '@/components/entry/proposal-vote-buttons'
 import { AddToLexicon } from './add-to-lexicon'
-import { Can } from '@casl/react'
+import { Can } from '@/components/Can'
 import { useEnforcer } from '@/queries/use-enforcer'
 
 function convertDefinition<T>(definition: SingleDefinition | ProposalDefinition): T {
@@ -31,14 +32,14 @@ export const EntryDefinition = ({
   definition,
 }: EntryDefinitionProps) => {
 
+  const enforcer = useEnforcer()
   const nature = definition.nature.join(', ')
   const subnature = definition.subnature?.length
     ? definition.subnature.join(', ')
     : nature
   const def_langues = Object.keys(definition.meaning).filter((value) => value !== 'fr')
-  const hasVoteButtons = ('source' in definition) && ['reference', 'validated'].includes(definition.source)
-  const enforcer = useEnforcer()
-
+  const isNotPrpoposal = ('source' in definition) && ['reference', 'validated'].includes(definition.source)
+  const vote_allowed = enforcer.can('vote', 'proposals')
   return (
     <section className="definition border-b-2 border-b-gray-200 py-4 dark:border-b-gray-700 dark:bg-inherit">
       <div className="grid gap-2">
@@ -46,14 +47,12 @@ export const EntryDefinition = ({
           <span className="font-medium">
             {index}. {subnature}{' '}
           </span>
-          {!hasVoteButtons ? 
+          {isNotPrpoposal ?
             enforcer.can('add', 'lexicon') ? (<AddToLexicon definition={definition as SingleDefinition} />) : ''
-           : (
-            <Can do='vote' on='proposals' ability={enforcer} passThrough>
-              {allowed => <ProposalVoteButtons definition={convertDefinition(definition)} disabled={!allowed} />}
+            : (
+              <ProposalVoteButtons definition={convertDefinition(definition)} disabled={!vote_allowed} />
 
-            </Can>
-          )}
+            )}
         </p>
         <section className="mb-3">
           {def_langues.map((lang) => {

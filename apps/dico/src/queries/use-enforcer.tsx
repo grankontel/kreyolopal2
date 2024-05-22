@@ -1,18 +1,13 @@
-import { parseCookie } from '@/lib/utils'
-import { Permission, getEnforcer } from '@kreyolopal/domain'
-import { useCookies } from 'react-cookie'
+'use client'
 
-let _permissions: Permission[] | undefined = undefined
+import { parseCookie } from '@/lib/utils'
+import { getEnforcer } from '@kreyolopal/domain'
+import Cookies from 'universal-cookie'
+
 const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
 export function useEnforcer() {
-	if (_permissions !== undefined) {
-		return getEnforcer(_permissions)
-	}
-
-	const [cookies, setCookies, removeCookie] = useCookies()
-	const auth = parseCookie(cookies[cookieName])
-	_permissions = auth?.permissions
-	return getEnforcer(_permissions || [])
-
+	const cookies = new Cookies(null, { path: '/' });
+	const auth = parseCookie(cookies.get(cookieName))
+	return getEnforcer(auth?.permissions || [])
 }

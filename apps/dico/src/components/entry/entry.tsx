@@ -25,15 +25,16 @@ export function Entry<
     source = value.bookmark as DictionaryFullEntry
   }
 
+  console.log(source)
   const relatedList: string[] = [source]
     .map((entry) => {
       const syns = entry.definitions
-        .map((def: SingleDefinition) => {
+        .map((def) => {
           return def.synonyms
         })
         .flat()
       const confer = entry.definitions
-        .map((def: SingleDefinition) => {
+        .map((def) => {
           return def.confer
         })
         .flat()

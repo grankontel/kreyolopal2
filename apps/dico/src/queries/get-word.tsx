@@ -53,7 +53,7 @@ export async function getWord(
     }
 
     const data = await (result as Response).json<DictionaryFullEntry>()
-    console.log(data)
+//    console.log(data)
     const response: UserDictionaryEntry = {
       cacheMode: cacheMode,
       is_bookmarked: false,

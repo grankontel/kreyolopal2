@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useCookies } from 'react-cookie'
+import Cookies from 'universal-cookie'
 import { ResponseError, User, cookieName } from '@/lib/types'
 import { useDicoStore } from '@/store/dico-store'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -31,7 +31,7 @@ const fetchLogin = (content: IUserCredentials): Promise<User> => {
 
 export function useLogin(notifyer?: (error: Error) => void) {
   const queryClient = useQueryClient()
-  const [cookies, setCookies, removeCookie] = useCookies()
+  const cookies = new Cookies(null, { path: '/' });
   const router = useRouter()
   const { user, setUser } = useDicoStore((state) => ({
     user: state.user,
@@ -41,7 +41,7 @@ export function useLogin(notifyer?: (error: Error) => void) {
   const { mutate: signInMutation } = useMutation({
     mutationFn: fetchLogin,
     onSuccess: (data) => {
-      setCookies(cookieName, data.cookie)
+      cookies.set(cookieName, data.cookie)
       const auth = parseCookie(data.cookie)
       data.bearer = auth?.session_id
       // save the user in the state

@@ -5,7 +5,7 @@
  */
 import { useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { Can } from '@casl/react'
+import { Can } from '@/components/Can'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -19,6 +19,7 @@ import {
 import { useDicoStore } from '@/store/dico-store'
 import { useToast } from '@/components/ui/use-toast'
 import { useDashboard } from '@/components/dashboard/dashboard-provider'
+import { AnyAbility } from '@casl/ability'
 
 function addEmphasis(src: string) {
   const strArray = Array.from(src)
@@ -120,7 +121,7 @@ export function SpellcheckForm() {
             />
           </div>
           <div className="flex w-full items-center space-x-2">
-            <Can do="request" a="spellcheck" passThrough ability={auth?.enforcer}>
+            <Can do="request" a="spellcheck" passThrough ability={auth?.enforcer as AnyAbility}>
               {(allowed: boolean) => (
                 <Button
                   className="w-[140px]"
