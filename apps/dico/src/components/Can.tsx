@@ -51,33 +51,7 @@ export function Can<
 	T extends AnyAbility,
 	IsBound extends boolean = false
 >(props: CanBasicProps & CanExtraProps<T>) {
-  const [, updateState] = React.useState({}); 
-  const forceUpdate = React.useCallback(() => updateState({}), []);
-
 	let _isAllowed: boolean = false;
-	let _ability: T | null = null;
-	let _unsubscribeFromAbility: Unsubscribe = noop;
-
-	useEffect(() => {
-		return () => {
-			// Anything in here is fired on component unmount.
-			_unsubscribeFromAbility()
-		}
-	}, [])
-
-	function _connectToAbility(ability?: T) {
-    if (ability === _ability) {
-      return;
-    }
-
-    _unsubscribeFromAbility();
-    _ability = null;
-
-    if (ability) {
-      _ability = ability;
-      _unsubscribeFromAbility = ability.on('updated', () => forceUpdate());
-    }
-  }
 
 	function _canRender(): boolean {
 		//const props: any = this.props;
@@ -95,7 +69,6 @@ export function Can<
 		return elements as ReactNode;
 	}
 
-	_connectToAbility(props.ability);
 	_isAllowed = _canRender();
 	return props.passThrough || _isAllowed ? _renderChildren() : null;
 

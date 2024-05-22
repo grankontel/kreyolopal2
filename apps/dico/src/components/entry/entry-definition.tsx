@@ -48,7 +48,9 @@ export const EntryDefinition = ({
             {index}. {subnature}{' '}
           </span>
           {isNotPrpoposal ?
-            enforcer.can('add', 'lexicon') ? (<AddToLexicon definition={definition as SingleDefinition} />) : ''
+            (<Can do="add" on="lexicon" ability={enforcer}>
+              <AddToLexicon definition={definition as SingleDefinition} />
+            </Can>)
             : (
               <ProposalVoteButtons definition={convertDefinition(definition)} disabled={!vote_allowed} />
 

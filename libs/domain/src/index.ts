@@ -1,6 +1,6 @@
 export { MongoCollection, Natures } from './consts'
 export { LanguageArray } from './types'
-export type { KreyolLanguage, MeaningLanguage, Nature, RestrictedDefinitionSource } from './types'
+export type { KreyolLanguage, MeaningLanguage, Meaning, Nature, RestrictedDefinitionSource } from './types'
 export * from './definition'
 export * from './lexicon'
 export * from './validators'

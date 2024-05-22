@@ -1,7 +1,5 @@
 import {
   KreyolLanguage,
-  BaseDefinition,
-  DictionaryEntry,
   DictionaryFullEntry,
   ProposalEntry,
   BaseEntry,
@@ -24,11 +22,11 @@ export interface UserEntry<U extends BaseEntry> {
   kreyol: string
 }
 export interface UserDictionaryEntry {
-  entry: DictionaryEntry
+  entry: DictionaryFullEntry
   kreyol: string
   cacheMode: 'public' | 'private'
   is_bookmarked: boolean
-  bookmark?: DictionaryEntry
+  bookmark?: DictionaryFullEntry
 }
 
 export interface UserProposalEntry extends UserEntry<ProposalEntry> { }

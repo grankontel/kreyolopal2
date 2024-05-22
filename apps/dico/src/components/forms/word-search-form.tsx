@@ -52,7 +52,7 @@ export function WordSearchForm() {
     queryKey: ['suggest', word],
     queryFn: async ({ queryKey }) => {
       const [_, word] = queryKey
-      const rep = await getEntries(word, auth?.session_id)
+      const rep = await getEntries(word, auth?.session_id as string)
       return rep
     },
   })

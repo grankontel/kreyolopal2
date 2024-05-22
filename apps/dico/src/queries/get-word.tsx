@@ -73,11 +73,12 @@ export async function getWord(
 
       if (result2?.ok) {
 
-        const data2 = await result2.json<DictionaryEntry[]>()
+        const data2 = await result2.json<DictionaryFullEntry[]>()
 
-        const bookmarks: DictionaryEntry[] = data2.map((item) => {
+        const bookmarks: DictionaryFullEntry[] = data2.map((item) => {
           return {
             entry: item.entry,
+            docType: item.docType,
             variations: item.variations,
             definitions: item.definitions.filter((def) => def.kreyol === lang),
           }
