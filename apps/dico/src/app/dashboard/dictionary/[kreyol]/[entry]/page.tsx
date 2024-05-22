@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation'
 import { Entry } from '@/components/entry/entry'
 import { getWord } from '@/queries/get-word'
-import { KreyolLanguage } from '@kreyolopal/domain'
-import { isLoggedIn } from '@/app/dashboard/is-logged-in'
+import { KreyolLanguage, getEnforcer } from '@kreyolopal/domain'
+import { getPermissions, isLoggedIn } from '@/app/dashboard/is-logged-in'
+import NoPermissions from '@/components/noPermissions'
 
 export const runtime = 'edge'
 
@@ -14,6 +15,13 @@ export default async function Page({
   const token = isLoggedIn()
   if (!token) {
     return undefined
+  }
+
+  const enforcer = getEnforcer(getPermissions())
+  if (enforcer.cannot('read', 'dictionary')) {
+    return (
+      <NoPermissions />
+    )
   }
 
   const data = await getWord(params.kreyol, params.entry)
