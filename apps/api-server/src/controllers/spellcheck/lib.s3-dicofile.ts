@@ -1,5 +1,5 @@
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
-import config from '../../config'
+import config from '#config'
 import { DicoFile, KreyolLang } from './spellcheck.types'
 
 const streamToString = (stream): Promise<string> =>

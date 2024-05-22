@@ -1,7 +1,7 @@
 import winston from 'winston'
 import SlackHook from 'winston-slack-webhook-transport'
 
-import config from '../config'
+import config from '#config'
 
 const alignedWithColorsAndTime = winston.format.combine(
   winston.format.colorize(),
