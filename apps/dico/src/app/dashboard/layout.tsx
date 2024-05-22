@@ -4,11 +4,13 @@
  */
 import Link from 'next/link'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { ModeToggle } from '@/components/mode-toogle'
 import DashboardPath from '@/components/dashboard/dashboard-path'
-import { redirect } from 'next/navigation'
 import { parseCookie } from '@/lib/utils'
+import Sidebar from '@/components/dashboard/sidebar'
+import SideMenu from '@/components/dashboard/side-menu'
 import { UserDropdown } from '@/components/dashboard/user-dropdown'
 import { LayoutFooter } from '@/components/layout-footer'
 import { LogoutDialog } from '@/components/dashboard/logout-dialog'
@@ -18,10 +20,8 @@ const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME || 'wabap'
 
 export default function DashboardLayout({
   children,
-  sidebar
 }: Readonly<{
   children: React.ReactNode
-  sidebar: React.ReactNode
 }>) {
   const getAuthValue = () => {
     const cookieValue = cookies().get(cookieName)
@@ -45,7 +45,9 @@ export default function DashboardLayout({
   return (
     <div className="grid h-screen w-full lg:grid-cols-[280px_1fr]">
       <DashboardProvider init={{ ...auth }}>
-        {sidebar}
+        <Sidebar>
+          <SideMenu />
+        </Sidebar>
         <div className="flex flex-col">
           <header className="flex h-14 items-center justify-between bg-gray-100/40 px-6 dark:bg-gray-800/40">
             <div className="flex items-center gap-4">
