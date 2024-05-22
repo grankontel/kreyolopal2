@@ -16,7 +16,12 @@ interface VoteData {
   "downvoters": Backer[],
 }
 
-export const ProposalVoteButtons = ({ definition }: { definition: ProposalDefinition }) => {
+interface ProposalVoteButtonsProps {
+  definition: ProposalDefinition
+  disabled?: boolean
+}
+
+export const ProposalVoteButtons = ({ definition, disabled = false }: ProposalVoteButtonsProps) => {
   const queryClient = useQueryClient()
   const dash = useDashboard()
   const { toast } = useToast()
@@ -72,13 +77,13 @@ export const ProposalVoteButtons = ({ definition }: { definition: ProposalDefini
     <span>
       <Button size='default'
         variant={isBacker(data.upvoters) ? 'secondary' : 'ghost'}
-        disabled={isBacker(data.upvoters)}
+        disabled={disabled || isBacker(data.upvoters)}
         onClick={(e) => { e.preventDefault(); handleUpVote.mutate() }}>
         <FeatherIcon className='text-logo' iconName="thumbs-up" />&nbsp;{data.upvoters.length}
       </Button>
       <Button size='default'
         variant={isBacker(data.downvoters) ? 'secondary' : 'ghost'}
-        disabled={isBacker(data.downvoters)}
+        disabled={disabled || isBacker(data.downvoters)}
         onClick={(e) => { e.preventDefault(); handleDownVote.mutate() }}>
         <FeatherIcon className='text-logo' iconName="thumbs-down" />&nbsp;{data.downvoters.length}
       </Button>
