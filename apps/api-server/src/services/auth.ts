@@ -2,9 +2,26 @@ import { Lucia, TimeSpan } from 'lucia'
 const { createHmac } = require('node:crypto')
 import { adapter } from './db'
 import type { DatabaseUser } from './db'
-import config from '#config'
 import { getUserPermissions } from './permissions'
 import { Permission } from '@kreyolopal/domain'
+import { sha3_256 } from 'js-sha3'
+import config from '#config'
+
+/**
+ * Generate a hash
+ * @param {string} data the data to make the hash for
+ */
+function generateHash(data: string) {
+  const hash = sha3_256.create()
+
+  hash.update(data)
+  return hash.hex()
+}
+
+export const generateVerifToken = (userpart: unknown) => {
+  const stamp = Date.now()
+  return generateHash(`${stamp}:${userpart}:${config.security.token}`)
+}
 
 function getDigest(source: string): string {
   const hmac = createHmac('sha512', config.security.token)

@@ -7,9 +7,11 @@ import contact from './controllers/contact.routes'
 import dictionary from './controllers/dictionary.routes'
 import health from './controllers/health.routes'
 import lexicons from './controllers/lexicons/routes'
-import meRoutes from './controllers/me/routes'
-import myDicoRoutes from './controllers/me/dictionary.routes'
-import spellRoutes from "./controllers/spellcheck";
+import me from './controllers/me/routes'
+import myDico from './controllers/me/dictionary.routes'
+import spellcheck from "./controllers/spellcheck"
+import proposals from './controllers/proposals.routes'
+import verify from './controllers/verify'
 
 function setRoutes(app: AppRouter) {
 	app.use('/api/*', cors())
@@ -21,9 +23,11 @@ function setRoutes(app: AppRouter) {
   app.route('/api/contact', contact)
   app.route('/api/health', health)
   app.route('/api/lexicons', lexicons)
-  app.route('/api/me', meRoutes)
-  app.route('/api/me/dictionary', myDicoRoutes)
-  app.route('/api/spellcheck', spellRoutes)
+  app.route('/api/me', me)
+  app.route('/api/me/dictionary', myDico)
+  app.route('/api/spellcheck', spellcheck)
+  app.route('/api/proposals', proposals)
+  app.route('/api/verify', verify)
 
   logger.info('All routes added')
   return app
