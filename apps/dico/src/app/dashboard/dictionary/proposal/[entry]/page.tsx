@@ -7,7 +7,7 @@ import { getProposedWord } from '@/queries/get-word'
 import { redirect } from 'next/navigation'
 import { BaseEntry, ProposalEntry, getEnforcer } from '@kreyolopal/domain'
 import NoPermissions from '@/components/noPermissions'
-import { Can } from '@/components/Can'
+import { Can } from '@/components/can'
 
 export const runtime = 'edge'
 

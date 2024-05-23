@@ -5,7 +5,7 @@
  */
 import { useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { Can } from '@/components/Can'
+import { Can } from '@/components/can'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
