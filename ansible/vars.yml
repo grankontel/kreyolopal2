@@ -7,7 +7,7 @@ apps:
     pm2start: false
   api:
     port: 5000
-    directory: server2
+    directory: api-server
     restricted: false
     pm2start: true
  
