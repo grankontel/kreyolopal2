@@ -3,10 +3,11 @@ import type { PoolClient } from 'pg'
 import { setCookie } from 'hono/cookie'
 import { argon2 } from '#utils/argon2'
 import { lucia } from '#services/auth'
+import type { PgPool } from '#services/db'
 
 const getUserInfo = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   const user = c.get('user')
 
   logger.info('getUserInfo')
@@ -26,7 +27,7 @@ const getUserInfo = async function (c: Context) {
 
 const updatePassword = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   const user = c.get('user')
 
   logger.info('updatePassword')

@@ -1,6 +1,6 @@
 import config from '#config'
 import { lucia } from '#services/auth'
-import type { pgPool } from '#services/db'
+import type { PgPool } from '#services/db'
 import type { Context } from 'hono'
 import type { MongoClient } from 'mongodb'
 const {version, description} = require('../../package.json')
@@ -13,7 +13,7 @@ const ping = async function (c: Context) {
 
 const healthcheck = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool: pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   const client: MongoClient = c.get('mongodb')
   logger.debug('healthcheck')
 

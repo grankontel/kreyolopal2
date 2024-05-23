@@ -1,12 +1,12 @@
 import type { Context } from 'hono'
 import spellchecker from './lib.spellcheck'
-// import { pgPool } from '#lib/db'
+import type { PgPool } from '#services/db'
 import { DicoRequest, KreyolLang } from './spellcheck.types'
 import { getUserEnforcer } from '#services/permissions'
 
 const postSpellCheck = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const body = c.req.valid('json') as Record<string, string>
@@ -87,7 +87,7 @@ const postSpellCheck = async function (c: Context) {
 
 const postRating = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   const id = c.req.param('id')
   const user = c.get('user')
 

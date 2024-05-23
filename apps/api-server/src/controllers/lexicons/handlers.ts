@@ -1,14 +1,14 @@
 import config from '#config'
 import type { Context } from 'hono'
 import type { MongoClient } from 'mongodb'
-import type { DatabaseUser, pgPool } from '#services/db'
+import type { DatabaseUser, PgPool } from '#services/db'
 import { getUserEnforcer } from '#services/permissions'
 import type { PoolClient } from 'pg'
 import { Lexicon, MongoCollection } from '@kreyolopal/domain'
 
 const addLexicon = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool: pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   //const client = c.get('mongodb')
   const user: DatabaseUser = c.get('user')
   const { name, description, slug, is_private } = c.req.valid('json')
@@ -58,7 +58,7 @@ const addLexicon = async function (c: Context) {
 
 const editLexicon = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool: pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   //const client = c.get('mongodb')
   const user: DatabaseUser = c.get('user')
 
@@ -111,7 +111,7 @@ const editLexicon = async function (c: Context) {
 
 const getLexicon = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool: pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   //const client = c.get('mongodb')
   const user = c.get('user')
   const { username, slug } = c.req.param()
@@ -164,7 +164,7 @@ const getLexicon = async function (c: Context) {
 
 const deleteLexicon = async (c: Context) => {
   const logger = c.get('logger')
-  const pgPool: pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   const mongo: MongoClient = c.get('mongodb')
   const user: DatabaseUser = c.get('user')
 
@@ -220,7 +220,7 @@ const deleteLexicon = async (c: Context) => {
 
 const getAllLexicons = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool: pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   //const client = c.get('mongodb')
   const user = c.get('user')
   const { username } = c.req.param()

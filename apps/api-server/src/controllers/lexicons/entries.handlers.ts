@@ -1,7 +1,7 @@
 import config from '#config'
 import type { Context } from 'hono'
 import type { MongoClient } from 'mongodb'
-import type { DatabaseUser, pgPool } from '#services/db'
+import type { DatabaseUser, PgPool } from '#services/db'
 import { getUserEnforcer } from '#services/permissions'
 import type { PoolClient } from 'pg'
 import { DictionaryFullEntry, MongoCollection, RestrictedDefinitionSource } from '@kreyolopal/domain'
@@ -17,7 +17,7 @@ interface AddDefinitionPayload {
 
 const getLexiconEntry = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool: pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   const mongo: MongoClient = c.get('mongodb')
   const user: DatabaseUser = c.get('user')
 
@@ -76,7 +76,7 @@ const getLexiconEntry = async function (c: Context) {
 
 const addDefinitions = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool: pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   const mongo: MongoClient = c.get('mongodb')
   const user: DatabaseUser = c.get('user')
 
@@ -210,7 +210,7 @@ const addDefinitions = async function (c: Context) {
 
 const listEntries = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   const mongo = c.get('mongodb')
   const user = c.get('user')
   const { username, slug } = c.req.param()

@@ -1,7 +1,7 @@
 // import config from '#config'
 import type { Context } from 'hono'
 import type { PoolClient } from 'pg'
-import type { DatabaseUser } from '#services/db'
+import type { DatabaseUser, PgPool } from '#services/db'
 import { createHttpException, logUserIn } from '#utils/apiHelpers'
 import { argon2 } from "#utils/argon2"
 import { generateVerifToken } from '#services/auth'
@@ -10,7 +10,7 @@ import { getResetpwd } from '@kreyolopal/mails'
 
 const verifyMail = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const token = c.req.param('token')
@@ -37,7 +37,7 @@ const verifyMail = async function (c: Context) {
 
 const postResetPwdToken = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const { password, token } = c.req.valid('json') as Record<string, string>
@@ -98,7 +98,7 @@ const postResetPwdToken = async function (c: Context) {
 
 const postResetPwd = async function (c: Context) {
   const logger = c.get('logger')
-  const pgPool = c.get('pgPool')
+  const pgPool: PgPool = c.get('pgPool')
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const { email } = c.req.valid('json') as Record<string, string>

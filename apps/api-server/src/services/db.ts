@@ -21,4 +21,4 @@ export interface DatabaseUser {
   is_admin: boolean
 }
 
-export type pgPool = pg.Pool
+export type PgPool = pg.Pool
