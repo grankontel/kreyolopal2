@@ -23,7 +23,7 @@ const config = {
     uri: '',
   },
   security: {
-    salt: process.env.API_SALT,
+    salt: String(process.env.API_SALT || ''),
     token: process.env.TOKEN_SALT,
     adminSecret: process.env.PGRST_JWT_SECRET as string,
     memoryCost: Number(process.env.ARGON_MEMORYCOST || 24),
