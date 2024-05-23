@@ -1,8 +1,8 @@
-import config from '#config'
+// import config from '#config'
 import type { Context } from 'hono'
 import type { PoolClient } from 'pg'
 import type { DatabaseUser } from '#services/db'
-import { _decodeURI, createHttpException, logUserIn } from '#utils/apiHelpers'
+import { createHttpException, logUserIn } from '#utils/apiHelpers'
 import { argon2 } from "#utils/argon2"
 import { generateVerifToken } from '#services/auth'
 import { sendEmail } from '#services/mail'

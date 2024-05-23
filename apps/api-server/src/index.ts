@@ -2,7 +2,6 @@ import { createAdaptorServer } from '@hono/node-server'
 import config from './config'
 import hono from './app'
 import winston_logger from '#services/logger'
-import { setDefaultPermissions } from '#services/def_perm'
 
 const port: number = Number(config.app.port) || 3000
 

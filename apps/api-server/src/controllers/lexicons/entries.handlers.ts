@@ -1,5 +1,4 @@
 import config from '#config'
-import { lucia } from '#services/auth'
 import type { Context } from 'hono'
 import type { MongoClient } from 'mongodb'
 import type { DatabaseUser, pgPool } from '#services/db'

@@ -32,7 +32,7 @@ export function createHttpException(
 export async function logUserIn(
   c: Context,
   existingUser: DatabaseUser
-): Promise<Response & TypedResponse<{}>> {
+): Promise<Response & TypedResponse<LoginResponse>> {
   const session = await lucia.createSession(existingUser.id, {})
 	const permissions = await getUserPermissions(existingUser)
 	const theCookie = await createCookie(session.id, existingUser, permissions)
@@ -41,7 +41,7 @@ export async function logUserIn(
 		httpOnly: false,
 	})
 	c.status(200)
-	let response: LoginResponse = {
+	const response: LoginResponse = {
 		cookie: theCookie.value,
 		firstname: existingUser.firstname,
 		lastname: existingUser.lastname,
@@ -53,7 +53,7 @@ export async function logUserIn(
 			config.security.adminSecret
 		)
 	}
-	return await c.json(response)
+	return c.json(response)
 }
 
 

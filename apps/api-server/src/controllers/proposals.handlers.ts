@@ -5,7 +5,7 @@ import type { MongoClient } from 'mongodb'
 import type { DatabaseUser } from '#services/db'
 import { getUserEnforcer } from '#services/permissions'
 import { Ulid } from 'id128'
-import { _decodeURI, createHttpException } from '#utils/apiHelpers'
+import { createHttpException } from '#utils/apiHelpers'
 import { MongoCollection, sanitizeSubmitEntry } from '@kreyolopal/domain'
 import type { BaseEntry, ProposalDefinition, ProposalEntry } from '@kreyolopal/domain'
 

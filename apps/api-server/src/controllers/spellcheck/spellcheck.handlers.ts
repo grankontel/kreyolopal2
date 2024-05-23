@@ -1,7 +1,7 @@
 import type { Context } from 'hono'
 import spellchecker from './lib.spellcheck'
 // import { pgPool } from '#lib/db'
-import { DicoRequest, KreyolLang, MessageResponse } from './spellcheck.types'
+import { DicoRequest, KreyolLang } from './spellcheck.types'
 import { getUserEnforcer } from '#services/permissions'
 
 const postSpellCheck = async function (c: Context) {
@@ -26,7 +26,7 @@ const postSpellCheck = async function (c: Context) {
 
   const dico = body.kreyol.toUpperCase() as KreyolLang
 
-  let lMessage: DicoRequest & { [k: string]: any } = {
+  const lMessage: DicoRequest & { [k: string]: any } = {
     user: user.id, // req.user.id,
     tool: c.req.header('User-Agent'),
     service: 'spellcheck',

@@ -20,7 +20,6 @@ export const getPermissionsFromDb = async (userId: string) => {
 
 export const getUserPermissions = async (user: DatabaseUser) => {
 	return new Promise<Permission[]>(async (resolve, reject) => {
-		const perms: Permission[] = []
 
 		if (user.is_admin) {
 			resolve([{

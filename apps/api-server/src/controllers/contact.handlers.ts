@@ -1,5 +1,4 @@
 import type { Context } from "hono"
-import type { PoolClient } from "pg"
 
 import config from '#config'
 import { sendFromEmail } from '#services/mail'
