@@ -10,7 +10,7 @@ import lexicons from './controllers/lexicons/routes'
 import me from './controllers/me/routes'
 import myDico from './controllers/me/dictionary.routes'
 import spellcheck from "./controllers/spellcheck"
-import proposals from './controllers/proposals.routes'
+import proposals from './controllers/proposals/proposals.routes'
 import verify from './controllers/verify'
 
 function setRoutes(app: AppRouter) {
