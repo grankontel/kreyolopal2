@@ -411,7 +411,7 @@ const addConfer = async function (c: Context) {
 
 const listWords = async function (c: Context) {
   const { limit = 20, offset = 0 } = c.req.valid('query')
-  const pagesize = Math.min(limit, 25)
+  const pagesize = Math.min(limit, config.app.pageSize)
   const logger = c.get('logger')
   const client = c.get('mongodb')
   const user = c.get('user')

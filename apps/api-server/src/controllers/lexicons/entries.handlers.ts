@@ -215,7 +215,7 @@ const listEntries = async function (c: Context) {
   const user = c.get('user')
   const { username, slug } = c.req.param()
   const { limit = 20, offset = 0 } = c.req.valid('query')
-  const pagesize = Math.min(limit, 25)
+  const pagesize = Math.min(limit, config.app.pageSize)
 
   logger.info(`listEntries  ${username}/${slug}`)
   logger.debug(JSON.stringify({ limit, offset }))

@@ -4,6 +4,7 @@ dotenv.config()
 const config = {
   app: {
     port: Number(process.env.PORT),
+    pageSize: Number(process.env.PAGESIZE || 25),
   },
   log: {
     level: process.env.LOGLEVEL || 'info',

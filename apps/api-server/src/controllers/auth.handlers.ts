@@ -26,6 +26,7 @@ const login = async function (c: Context) {
       const res = await client.query(text, values)
       const existingUser = res?.rows[0] as DatabaseUser | undefined
       if (!existingUser) {
+        logger.debug('User not found')
         c.status(400)
         return c.json({
           error: 'Incorrect username or password',
@@ -34,6 +35,7 @@ const login = async function (c: Context) {
 
       const validPassword = await argon2.verify(existingUser.password, password)
       if (!validPassword) {
+        logger.debug('Password not valid')
         c.status(400)
         return c.json({
           error: 'Incorrect username or password',
