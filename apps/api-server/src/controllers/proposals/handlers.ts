@@ -7,7 +7,7 @@ import { getUserEnforcer } from '#services/permissions'
 import { Ulid } from 'id128'
 import { createHttpException } from '#utils/apiHelpers'
 import { MongoCollection, sanitizeSubmitEntry } from '@kreyolopal/domain'
-import type { BaseEntry, ProposalDefinition, ProposalEntry } from '@kreyolopal/domain'
+import type { BaseEntry,  ProposalDefinition, ProposalEntry } from '@kreyolopal/domain'
 
 const submitProposal = async function (c: Context) {
 	const logger = c.get('logger')
@@ -313,8 +313,92 @@ const validateProposal = async function (c: Context) {
 	}
 }
 
+const listProposals = async function (c: Context) {
+	const logger = c.get('logger')
+	const mongo: MongoClient = c.get('mongodb')
+	const user: DatabaseUser = c.get('user')
+	const { limit = 20, offset = 0 } = c.req.valid('query')
+  const pagesize = Math.min(limit, config.app.pageSize)
+
+	logger.info(`listProposals`)
+
+	if (!user) {
+		logger.debug('user not logged in')
+		return c.json({ error: 'You are not logged in.' }, 403)
+	}
+	const enforcer = await getUserEnforcer(user)
+
+	if (!enforcer.can('submit', 'proposals')) {
+		logger.debug('user does not have submit proposals permission')
+		return c.json({ error: 'Unsufficient permissions.' }, 403)
+	}
+
+
+	try {
+		const filter = {}
+		const projection = {
+			_id: 0,
+		}
+    // const client = getClient()
+    const coll = mongo
+      .db(config.mongodb.database)
+      .collection(MongoCollection.proposals)
+    const cursor = coll
+      .find(filter, { projection })
+      .skip(offset)
+      .limit(pagesize)
+    const result = await cursor.toArray()
+    cursor.close()
+
+    const data: ProposalEntry[] = result?.map((item) => {
+/*       const def_object = item.definitions.reduce((obj, v) => {
+        obj[v.kreyol] = obj[v.kreyol] || []
+        obj[v.kreyol].push(v)
+        return obj
+      }, Object.create(null)) */
+
+      return {
+        id: item._id,
+        entry: item.entry,
+				docType: item.docType,
+        variations: item.variations,
+        definitions: item.definitions,
+      }
+    })
+
+    if (data.length > 0) {
+      const nb = await mongo
+        .db(config.mongodb.database)
+        .collection(MongoCollection.proposals)
+        .countDocuments(filter)
+      const endRange = Math.min(nb, offset + limit)
+      c.res.headers.append('Cache-Control', 'private, maxage=86400')
+      c.res.headers.append(
+        'Access-Control-Expose-Headers',
+        'X-Total-Count, Content-Range'
+      )
+      c.res.headers.append('Content-Range', `${offset}-${endRange}/${nb}`)
+      c.res.headers.append('X-Total-Count', nb)
+
+      c.status(200)
+      return c.json<ProposalEntry[]>(data)
+    }
+
+    return c.json([], 200)
+  } catch (e: any) {
+    logger.error(e.message)
+    throw createHttpException({
+      errorContent: { error: 'Unknown error..' },
+      status: 500,
+      statusText: 'Unknown error.',
+    })
+  }
+
+}
+
 export default {
 	submitProposal,
 	getProposedWord,
 	validateProposal,
+	listProposals,
 }

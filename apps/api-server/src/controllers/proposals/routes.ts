@@ -2,11 +2,18 @@ import { createRouter, sendBadRequest } from '#utils/hono'
 import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
 
+import { queryListSchema } from '#utils/apiHelpers'
 import { SubmitEntrySchema } from '@kreyolopal/domain'
 import * as schema from './schema'
 import handlers from './handlers'
 
 const routes = createRouter()
+
+routes.get(
+  '/',
+  zValidator('query', queryListSchema, sendBadRequest),
+  handlers.listProposals
+)
 
 routes.post(
   '/',
