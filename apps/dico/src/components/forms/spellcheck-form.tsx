@@ -5,6 +5,7 @@
  */
 import { useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { Can } from '@/components/can'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -17,6 +18,8 @@ import {
 } from '@/queries/post-spellcheck'
 import { useDicoStore } from '@/store/dico-store'
 import { useToast } from '@/components/ui/use-toast'
+import { useDashboard } from '@/components/dashboard/dashboard-provider'
+import { AnyAbility } from '@casl/ability'
 
 function addEmphasis(src: string) {
   const strArray = Array.from(src)
@@ -41,6 +44,7 @@ export function SpellcheckForm() {
   const [response, setResponse] = useState<SpellcheckResponse>()
   const user = useDicoStore((state) => state.user)
   const { toast } = useToast()
+  const auth = useDashboard()
 
   const setErrorMessage = (msg: string) => {
     toast({
@@ -117,9 +121,18 @@ export function SpellcheckForm() {
             />
           </div>
           <div className="flex w-full items-center space-x-2">
-            <Button className="w-[140px]" type="submit" variant="logo">
-              Vérifier
-            </Button>
+            <Can do="request" on="spellcheck" passThrough ability={auth?.enforcer as AnyAbility}>
+              {(allowed: boolean) => (
+                <Button
+                  className="w-[140px]"
+                  disabled={!allowed}
+                  type="submit"
+                  variant="logo"
+                >
+                  Vérifier
+                </Button>
+              )}
+            </Can>
             <Button
               className="w-[80px]"
               type="button"
@@ -149,7 +162,15 @@ export function SpellcheckForm() {
             </Button>
           </CopyToClipboard>
           <div className="flex items-center space-x-1">
-            <StarRating hidden={response === undefined} onRated={rateCorrection} />
+            <Can do="rate" on="spellcheck" passThrough ability={auth?.enforcer as AnyAbility}>
+              {(allowed: boolean) => (
+                <StarRating
+                  hidden={response === undefined}
+                  disabled={!allowed}
+                  onRated={rateCorrection}
+                />
+              )}
+            </Can>
           </div>
         </div>
       </div>

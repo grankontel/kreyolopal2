@@ -32,7 +32,6 @@ export const ChangePasswordForm = () => {
   function onSubmit(values: ChangePasswordPayload) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values)
     updatePassword.mutate(values )
   }
 

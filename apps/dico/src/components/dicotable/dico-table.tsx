@@ -10,7 +10,7 @@ import {
   Table,
 } from '@/components/ui/table'
 import { PaginatedDico } from '@/lib/types'
-import { makeId, hashKey } from '@/lib/utils'
+import { makeId, hashKey, onlyUnique } from '@/lib/utils'
 import { LangFlag } from '@kreyolopal/react-ui'
 import { SingleDefinition, DictionaryFullEntry, KreyolLanguage } from '@kreyolopal/domain'
 import DicoTableCell from '@/components/dicotable/dico-table-cell'
@@ -44,12 +44,14 @@ type WordRow = {
 function wordsToRow(words: DictionaryFullEntry[]): WordRow[] {
   const lignes: WordRow[] = []
   words.forEach((word) => {
-    const defs = Object.entries(word.definitions).map((item) => {
+    const langues = word.definitions.map((def) => def.kreyol).filter(onlyUnique)
+    const defs = langues.map((langue) => {
       return {
-        langue: item[0] as KreyolLanguage,
-        definitions: item[1] as SingleDefinition[],
+        langue,
+        definitions: word.definitions.filter((def) => def.kreyol === langue),
       }
     })
+
     const totalDefs = defs.reduce((nbdefs, item) => nbdefs + item.definitions.length, 0)
     defs.forEach(({ langue, definitions }, langue_index) => {
       definitions.forEach((definition, def_index) => {

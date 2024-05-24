@@ -64,7 +64,7 @@
   command: 
     cmd: npm ci --omit=dev
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}/server2"
+    chdir: "{{ ansistrano_release_path.stdout }}/api-server"
   environment:
     NODE_ENV: 'production'
 

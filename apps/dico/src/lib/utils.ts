@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from 'clsx'
 import { SVGProps } from 'react'
 import { twMerge } from 'tailwind-merge'
+import { AuthValue } from './types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -22,7 +23,7 @@ export const hashKey = (radix: string, item: string) => {
 
 export function parseCookie(
   cookie: string
-): { user_id: string; session_id: string; username: string, permissions: string[] } | null {
+): AuthValue | null {
   if (cookie === undefined) return null
   const [data, digest] = cookie.split('.')
 

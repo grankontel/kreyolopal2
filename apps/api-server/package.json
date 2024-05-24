@@ -1,0 +1,73 @@
+{
+  "name": "api-server",
+  "version": "1.0.0",
+  "description": "Backend server for kreyolopal services",
+  "author": "Thierry Malo",
+  "license": "ISC",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV='production' node ./dist/server.js",
+    "build": "NODE_ENV='production' node ./build.js",
+    "db:generate": "drizzle-kit generate --config ./src/drizzle.config.ts",
+    "db:push": "drizzle-kit push  --config ./src/drizzle.config.ts",
+    "db:studio": "drizzle-kit studio --config ./src/drizzle.config.ts",
+    "format": "prettier ./src --write",
+    "lint": "eslint . --ext .ts"
+  },
+  "imports": {
+    "#lib/*": "./src/lib/*.ts",
+    "#services/*": "./src/services/*.ts",
+    "#utils/*": "./src/utils/*.ts",
+    "#domain/*": "./src/domain/*.ts",
+    "#config": "./src/config.ts"
+  },
+  "peerDependencies": {
+    "@node-rs/argon2": "^1",
+    "@node-rs/bcrypt": "^1",
+    "uglify-js": "^3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.577.0",
+    "@casl/ability": "^6.7.1",
+    "@hono/node-server": "^1.11.1",
+    "@hono/zod-validator": "^0.2.1",
+    "@kreyolopal/domain": "*",
+    "@kreyolopal/mails": "*",
+    "@lucia-auth/adapter-postgresql": "^3.1.2",
+    "bluebird": "^3.7.2",
+    "commander": "^12.0.0",
+    "dotenv": "^16.4.5",
+    "hono": "^4.3.7",
+    "id128": "^1.6.6",
+    "js-sha3": "^0.9.3",
+    "jsonwebtoken": "^9.0.2",
+    "lru-cache": "^10.2.2",
+    "lucia": "^3.2.0",
+    "mongodb": "^6.6.2",
+    "node-cache": "^5.1.2",
+    "node-fetch": "^3.3.2",
+    "oslo": "^1.2.0",
+    "pg": "^8.11.5",
+    "pg-hstore": "^2.3.4",
+    "typo-js": "^1.2.4",
+    "winston": "^3.13.0",
+    "winston-slack-webhook-transport": "^2.3.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "drizzle-kit": "^0.21.2",
+    "drizzle-orm": "^0.30.10",
+    "esbuild": "^0.21.3",
+    "esbuild-plugin-replace": "^1.4.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.5",
+    "tsx": "^4.10.4",
+    "typescript": "^5.4.5"
+  }
+}

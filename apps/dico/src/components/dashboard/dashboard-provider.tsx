@@ -5,17 +5,14 @@ import { useDicoStore } from '@/store/dico-store'
 import { DashboardMenuItem } from '@/lib/dashboard'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getLexicons } from '@/queries/lexicons/get-lexicons'
-import { Lexicon } from '@kreyolopal/domain'
-import { ResponseError } from '@/lib/types'
+import { Lexicon, getEnforcer } from '@kreyolopal/domain'
+import { AuthValue, ResponseError } from '@/lib/types'
 import { useEffect } from 'react'
+import { AnyAbility } from '@casl/ability'
 
-export interface AuthValue {
-  session_id: string
-  user_id: string
-  username: string
-}
 export interface DashboardContextValue extends AuthValue {
   isLoggedIn: () => string | false
+  enforcer: AnyAbility
 }
 
 const DashboardContext = createContext<DashboardContextValue | null>(null)
@@ -31,6 +28,7 @@ export const DashboardProvider = ({
   const queryClient = useQueryClient()
   const username = init.username
   const token = init.session_id
+  const enforcer: AnyAbility = getEnforcer(init.permissions)
 
   const { data, isError, error, isLoading } = useQuery<
     unknown,
@@ -42,6 +40,10 @@ export const DashboardProvider = ({
     staleTime: Infinity,
     queryFn: () => {
       console.log('querying lexicons...')
+      if (enforcer.cannot('list', 'lexicon')) {
+        console.log('insufficient permissions')
+        return []
+      }
       return username ? getLexicons(username, token) : []
     },
   })
@@ -67,13 +69,14 @@ export const DashboardProvider = ({
           label: item.name,
           path: '/dashboard' + item.path,
         })),
+        permission: {action: 'read', subject: 'lexicon'}
       })
       setPersonnel(personnel)
     }
   }, [data])
 
   return (
-    <DashboardContext.Provider value={{ ...init, isLoggedIn: () => init.session_id }}>
+    <DashboardContext.Provider value={{ ...init, enforcer, isLoggedIn: () => init.session_id }}>
       {children}
     </DashboardContext.Provider>
   )

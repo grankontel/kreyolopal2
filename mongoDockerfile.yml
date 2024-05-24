@@ -1,0 +1,11 @@
+# dockerfile for patching
+
+# replace these:
+#  mongodb_version_min: '7.0'
+#  mongodb_user_id: '1200'
+
+FROM mongo:7.0
+
+RUN mkdir -p /data/keys
+VOLUME /data/keys
+COPY --chown=999:999 --chmod=400 ./data/keys/keyFile.key /data/keys/keyFile.key

@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Lexicon } from '@kreyolopal/domain'
 import { useDicoStore } from '@/store/dico-store'
+import { EditLexiconDialogContent } from './edit-lexicon-dialog'
 
 export const LexiconDropdownMenu = ({
   onSelect,
@@ -18,7 +19,7 @@ export const LexiconDropdownMenu = ({
   return (
     <DropdownMenuContent>
       <DropdownMenuLabel>Ajouter à...</DropdownMenuLabel>
-      <DropdownMenuSeparator />
+      {lexicons.length > 0 ? (<DropdownMenuSeparator />) : ''}
       {lexicons.map((lexicon) => {
         return (
           <DropdownMenuItem key={lexicon.id} onSelect={() => onSelect(lexicon)}>
@@ -26,6 +27,7 @@ export const LexiconDropdownMenu = ({
           </DropdownMenuItem>
         )
       })}
+      <DropdownMenuSeparator />
     </DropdownMenuContent>
   )
 }
