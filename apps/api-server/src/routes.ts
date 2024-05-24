@@ -10,7 +10,8 @@ import lexicons from './controllers/lexicons/routes'
 import me from './controllers/me/routes'
 import myDico from './controllers/me/dictionary.routes'
 import spellcheck from "./controllers/spellcheck"
-import proposals from './controllers/proposals/proposals.routes'
+import proposals from './controllers/proposals/routes'
+import votes from './controllers/proposals/vote.routes'
 import verify from './controllers/verify'
 
 function setRoutes(app: AppRouter) {
@@ -27,6 +28,7 @@ function setRoutes(app: AppRouter) {
   app.route('/api/me/dictionary', myDico)
   app.route('/api/spellcheck', spellcheck)
   app.route('/api/proposals', proposals)
+  app.route('/api/proposals/votes', votes)
   app.route('/api/verify', verify)
 
   logger.info('All routes added')
