@@ -1,3 +1,4 @@
+import type { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Entry } from '@/components/entry/entry'
 import { getWord } from '@/queries/get-word'
@@ -6,6 +7,19 @@ import { getPermissions, isLoggedIn } from '@/app/dashboard/is-logged-in'
 import NoPermissions from '@/components/noPermissions'
 
 export const runtime = 'edge'
+
+type PageProps = {
+  params: { kreyol: string; entry: string }
+}
+export async function generateMetadata(
+  { params }: PageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+
+  return {
+    title:  params.entry + ' — dictionnaire '
+  }
+}
 
 export default async function Page({
   params,
