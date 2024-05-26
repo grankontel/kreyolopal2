@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2024-05-26
+
 ### Changed
 
 - change dictionary data structure
+- added some permissions
 
 ## [1.1.0] - 2024-05-15
 
