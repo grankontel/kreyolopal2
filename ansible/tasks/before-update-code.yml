@@ -12,7 +12,7 @@
   ignore_errors: yes
 
 - name: DOCKER | ensure docker is stopped
-  community.docker.docker_compose:
+  community.docker.docker_compose_v2:
     project_src: "{{ ansistrano_shared_path }}"
     state: absent
   when: compose_file.stat.exists 
