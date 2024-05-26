@@ -19,11 +19,11 @@
 
     - name: IMPORT | Copy import data
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/../import/var/entries2.json"
+        src: "{{ playbook_dir }}/../import/var/entries3.json"
         dest: ~/import/var/entries.json
 
     - name: IMPORT | ensure docker is up
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: "{{ ansistrano_deploy_to }}/shared"
         state: present
 

@@ -9,7 +9,7 @@
     DOCKER_BUILDKIT: '1'
 
 - name: DOCKER | ensure docker is up
-  community.docker.docker_compose:
+  community.docker.docker_compose_v2:
     project_src: "{{ ansistrano_shared_path }}"
     state: present
 
@@ -87,3 +87,6 @@
 - name: Include task list in play
   ansible.builtin.include_tasks:
     file: "{{ playbook_dir }}/tasks/start-apps.yml"
+
+- name: Restart Nginx
+  command:  sudo /bin/systemctl restart nginx
