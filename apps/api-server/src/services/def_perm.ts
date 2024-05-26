@@ -26,6 +26,20 @@ const defaultPermissions: Permission[] = [
 
 const defaultRoles: string[] = ['admin', 'standard', 'reader', 'validator']
 
+const defaultRolesPermissions: { role: string; permissions: number[] }[] = [
+  {
+    role: 'admin',
+    permissions: [1],
+  },
+  {
+    role: 'reader',
+    permissions: [2, 5, 8, 9, 10, 12],
+  },
+  {
+    role: 'standard',
+    permissions: [...Array(14).keys()].map((i) => i + 2),
+  },
+]
 export const setDefaultPermissions = () => {
   let query =
     'INSERT INTO "permissions" ("id","action", "subject", "conditions") VALUES '
@@ -57,6 +71,28 @@ export const setDefaultRoles = () => {
     query += elemSql
   }
 
+  query += ' ON CONFLICT DO NOTHING;'
+  return pgPool.query(query)
+}
+
+export const rolesPermissions = () => {
+  let query =
+    'INSERT INTO "roles_permissions" ("role", "permission_id") VALUES '
+  for (
+    let roleIndex = 0;
+    roleIndex < defaultRolesPermissions.length;
+    roleIndex++
+  ) {
+    const item = defaultRolesPermissions[roleIndex]
+    for (let permIndex = 0; permIndex < item.permissions.length; permIndex++) {
+      const perm = item.permissions[permIndex]
+      const elemSql = `('${item.role}',${perm})`
+
+      if (roleIndex + permIndex > 0) query += ','
+
+      query += elemSql
+    }
+  }
   query += ' ON CONFLICT DO NOTHING;'
   return pgPool.query(query)
 }
