@@ -5,9 +5,18 @@ import { AddEntry } from '@/components/forms/add-entry'
 import { checkWord } from '@/queries/check-word'
 import { getProposedWord } from '@/queries/get-word'
 import { redirect } from 'next/navigation'
-import { ProposalEntry } from '@kreyolopal/domain'
+import { BaseEntry, ProposalEntry, getEnforcer } from '@kreyolopal/domain'
+import NoPermissions from '@/components/noPermissions'
+import { Can } from '@/components/can'
 
 export const runtime = 'edge'
+
+const fakeEntry = (entry: string): ProposalEntry => ({
+  entry,
+  docType: 'entry',
+  variations: [],
+  definitions: [],
+})
 
 export default async function Page({ params }: { params: { entry: string } }) {
   const token = isLoggedIn()
@@ -21,10 +30,16 @@ export default async function Page({ params }: { params: { entry: string } }) {
     redirect(`/dashboard/dictionary/gp/${entry}`)
   }
 
-  const entryInfo = await getProposedWord(token, 'gp', entry)
-  const source: ProposalEntry = entryInfo?.entry ?? { entry, docType: 'entry', variations: [], definitions: []}
+  const enforcer = getEnforcer(getPermissions())
+  if (enforcer.cannot('read', 'proposals')) {
+    return (
+      <NoPermissions />
+    )
+  }
 
-  const perms = getPermissions()
+  const entryInfo = await getProposedWord(token, 'gp', entry)
+  const source: ProposalEntry = entryInfo !== null ? entryInfo?.entry : fakeEntry(entry)
+  // const source = fakeEntry(entry)
   return (
     <div>
       <div className="flex min-h-screen flex-col">
@@ -40,12 +55,14 @@ export default async function Page({ params }: { params: { entry: string } }) {
                   definitions={source.definitions}
                   variations={source.variations}
                   kreyol={'gp'}
-                  showForm={perms.includes('validate_proposal')}
+                  showForm={enforcer.can('validate', 'proposals')}
                 />
               </div>
             )}
 
-            <AddEntry entry={entry} />
+            <Can do='submit' on='proposals' ability={enforcer}>
+              <AddEntry entry={entry} />
+            </Can>
           </div>
         </main>
       </div>

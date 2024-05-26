@@ -4,7 +4,7 @@ path=`realpath "${BASH_SOURCE:-$0}"`
 DIR_PATH=`dirname $path`
 # FRONT_PATH=`realpath "${DIR_PATH}/../apps/front"`
 # ADMIN_PATH=`realpath "${DIR_PATH}/../apps/admin"`
-SRV2_PATH=`realpath "${DIR_PATH}/../apps/server2"`
+SRV2_PATH=`realpath "${DIR_PATH}/../apps/api-server"`
 BUILD_PATH="${DIR_PATH}/../build"
 
 if [ -d "$BUILD_PATH" ]; then
@@ -17,10 +17,10 @@ mkdir -p ${BUILD_PATH}/data/mongodb
 # ${DIR_PATH}/cpnext.sh dico
 # ${DIR_PATH}/cpnext.sh admin
 # ${DIR_PATH}/cpdist.sh server
-${DIR_PATH}/cpdist.sh server2
+${DIR_PATH}/cpdist.sh api-server
 
-cd  ${BUILD_PATH}/dico
-NODE_ENV='production' npm install --omit=dev --package-lock-only
+# cd  ${BUILD_PATH}/dico
+# NODE_ENV='production' npm install --omit=dev --package-lock-only
 
 # cp -R ${ADMIN_PATH}/prisma ${BUILD_PATH}/admin/
 
@@ -32,7 +32,7 @@ NODE_ENV='production' npm install --omit=dev --package-lock-only
 # cd  ${BUILD_PATH}/server
 # NODE_ENV='production' npm install --omit=dev --package-lock-only
 
-cd  ${BUILD_PATH}/server2
+cd  ${BUILD_PATH}/api-server
 NODE_ENV='production' npm install --omit=dev --package-lock-only
 
 # cp -R ${FRONT_PATH}/build ${BUILD_PATH}/www/

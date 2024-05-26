@@ -11,7 +11,7 @@
   command:
     cmd: pm2 start npm --name "api.{{ domain }}" -- start
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}/server2"
+    chdir: "{{ ansistrano_release_path.stdout }}/api-server"
 
 # - name: APP | start admin
 #   command:

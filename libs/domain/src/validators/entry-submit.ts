@@ -1,5 +1,6 @@
 import { z } from 'zod'
-import { KreyolLanguage, KreyolLanguages, Natures } from '../types'
+import { KreyolLanguage } from '../types'
+import {  KreyolLanguages, Natures } from '../consts'
 import { SubmitEntry } from '../proposals/types'
 
 const NatureArray: ReadonlyArray<string> = Object.values(Natures) as Array<string>
@@ -12,7 +13,10 @@ const LanguageArray: ReadonlyArray<string> = [
 export const SubmitDefinitionSchema = z
   .object({
     kreyol: z.string().refine((val) => KreyolArray.includes(val)),
-    nature: z
+    prefix: z.string().optional(),
+    suffix: z.string().optional(),
+    asIn: z.string().optional(),
+      nature: z
       .array(z.string())
       .nonempty()
       .refine((val) => val.every((v) => NatureArray.includes(v)), {

@@ -1,6 +1,6 @@
 {
   "name": "dico",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
@@ -14,6 +14,7 @@
     "build-cf-types": "wrangler types --env-interface CloudflareEnv env.d.ts"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.1",
     "@hookform/resolvers": "^3.3.4",
     "@marsidev/react-turnstile": "^0.5.3",
     "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -36,13 +37,13 @@
     "next": "^14.2.1",
     "next-themes": "^0.3.0",
     "react": "^18",
-    "react-cookie": "^7.1.0",
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18",
     "react-hook-form": "^7.51.3",
     "slugify": "^1.6.6",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
+    "universal-cookie": "^7.1.4",
     "zod": "^3.23.6",
     "zustand": "^4.5.2"
   },
