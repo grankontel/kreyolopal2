@@ -152,7 +152,6 @@ export const AddEntry = ({ entry }: { entry: string }) => {
     }
 
     const newEntry = sanitizeSubmitEntry(anEntry)
-    console.log(JSON.stringify(newEntry))
 
     addEntryMutation.mutate(newEntry)
     setPending(false)

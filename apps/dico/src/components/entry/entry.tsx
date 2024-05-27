@@ -21,7 +21,6 @@ export function Entry<T  extends (UserDictionaryEntry | UserProposalEntry)>({ kr
     source = value.bookmark as DictionaryFullEntry
   }
 
-  console.log(source)
   const relatedList: string[] = [source]
     .map((entry) => {
       const syns = entry.definitions
