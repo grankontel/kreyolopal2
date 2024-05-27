@@ -43,7 +43,6 @@ export const SubmitDefinitionSchema = z
       )
     ),
   })
-  .required()
 
 export const SubmitEntrySchema = z
   .object({
