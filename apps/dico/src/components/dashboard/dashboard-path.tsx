@@ -8,7 +8,7 @@ import {
   Breadcrumb,
 } from '@/components/ui/breadcrumb'
 import { DashboardMenuItem } from '@/lib/dashboard'
-import { hashKey } from '@/lib/utils'
+import { cn, hashKey } from '@/lib/utils'
 import { useDicoStore } from '@/store/dico-store'
 import { usePathname } from 'next/navigation'
 import { Fragment, useEffect, useState } from 'react'
@@ -41,7 +41,7 @@ const getBreadcrumb = (
   return false
 }
 
-export default function DashboardPath() {
+export default function DashboardPath({className}: React.HTMLAttributes<HTMLDivElement>) {
   const [crumbs, setCrumbs] = useState<{ label: string; path: string }[]>([])
   const pathName = usePathname()
   const { menus } = useDicoStore()
@@ -52,7 +52,7 @@ export default function DashboardPath() {
   //const crumbs = getBreadcrumb(pathName, menus) as { label: string; path: string }[]
 
   return (
-    <Breadcrumb className="breadcrumb">
+    <Breadcrumb className={cn("breadcrumb", className)}>
       <BreadcrumbList>
         {crumbs.map((crumb, index) => (
           <Fragment key={hashKey('crumb', crumb.label)}>
