@@ -6,6 +6,7 @@ interface DicoTableCellProps<T> {
   entry: T
   name: string
   value: React.ReactNode
+  className?: string
   onAdd: (item: T) => void
 }
 
@@ -14,6 +15,7 @@ export default function DicoTableCell<T>({
   name,
   value,
   onAdd,
+  className = '',
 }: DicoTableCellProps<T>) {
   const [isCellHover, setCellHover] = useState(false)
   const cellClassName = `dico-${name}-add-button`
@@ -24,7 +26,7 @@ export default function DicoTableCell<T>({
   })
 
   return (
-    <td onMouseEnter={() => setCellHover(true)} onMouseLeave={() => setCellHover(false)}>
+    <td className={className} onMouseEnter={() => setCellHover(true)} onMouseLeave={() => setCellHover(false)}>
       {value}
       <span className={cellClass} onClick={() => onAdd(entry)}>
         <FeatherIcon iconName="plus-square" />

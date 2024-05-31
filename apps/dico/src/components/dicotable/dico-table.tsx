@@ -91,12 +91,12 @@ const DicoTableHeaders = () => (
       <TableHead className="w-[150px]">Entr&eacute;e</TableHead>
       <TableHead className="w-[150px]">Variations</TableHead>
       <TableHead className="w-[26px]">Kr&eacute;y&ograve;l</TableHead>
-      <TableHead className="w-[150px]">Nature</TableHead>
-      <TableHead className="w-[150px]">D&eacute;finition</TableHead>
-      <TableHead className="w-[150px]">D&eacute;finition (FR)</TableHead>
-      <TableHead className="w-[150px]">Usage</TableHead>
-      <TableHead className="w-[150px]">Synonyme</TableHead>
-      <TableHead className="w-[150px]">Voir&nbsp;aussi</TableHead>
+      <TableHead className="sm:hover:w-[150px] lg:w-[150px]">Nature</TableHead>
+      <TableHead className="hidden md:w-[150px]">D&eacute;finition</TableHead>
+      <TableHead className="hidden md:w-[150px]">D&eacute;finition (FR)</TableHead>
+      <TableHead className="hidden md:w-[150px]">Usage</TableHead>
+      <TableHead className="hidden md:w-[150px]">Synonyme</TableHead>
+      <TableHead className="hidden md:w-[150px]">Voir&nbsp;aussi</TableHead>
     </tr>
   </TableHeader>
 )
@@ -150,9 +150,10 @@ export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
                 </TableCell>
               )}
               <TableCell className="mt-2 align-top">{ligne.nature}</TableCell>
-              <TableCell>{ligne.definition_cpf}</TableCell>
-              <TableCell>{ligne.definition_fr}</TableCell>
+              <TableCell className="hidden md:w-[150px]">{ligne.definition_cpf}</TableCell>
+              <TableCell className="hidden md:w-[150px]">{ligne.definition_fr}</TableCell>
               <DicoTableCell
+                className="hidden md:w-[150px]"
                 entry={ligne.definition_key}
                 name="usage"
                 value={ligne.usage.map((txt) => (
@@ -161,6 +162,7 @@ export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
                 onAdd={(id) => console.log(id)}
               />
               <DicoTableCell
+                className="hidden md:w-[150px]"
                 entry={ligne.definition_key}
                 name="synonyms"
                 value={ligne.synonyms.map((txt) => (
@@ -169,6 +171,7 @@ export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
                 onAdd={(id) => console.log(id)}
               />
               <DicoTableCell
+                className="hidden md:w-[150px]"
                 entry={ligne.definition_key}
                 name="confer"
                 value={ligne.confer.map((txt) => (
