@@ -38,7 +38,7 @@ const getBreadcrumb = (
     }
   }
 
-  return false
+  return []
 }
 
 export default function DashboardPath({className}: React.HTMLAttributes<HTMLDivElement>) {
