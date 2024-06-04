@@ -12,7 +12,8 @@ import { dicoUrl } from '@/lib/dicoUrl'
 import { ProposalVoteButtons } from '@/components/entry/proposal-vote-buttons'
 import { AddToLexicon } from './add-to-lexicon'
 import { Can } from '@/components/can'
-import { useEnforcer } from '@/queries/use-enforcer'
+import { AnyAbility } from '@casl/ability'
+import { useDashboard } from '@/components/dashboard/dashboard-provider'
 
 function convertDefinition<T>(definition: SingleDefinition | ProposalDefinition): T {
   return definition as unknown as T
@@ -31,7 +32,7 @@ export const EntryDefinition = ({
   index,
   definition,
 }: EntryDefinitionProps) => {
-  const enforcer = useEnforcer()
+  const auth = useDashboard()
   const nature = definition.nature.join(', ')
   const subnature = definition.subnature?.length
     ? definition.subnature.join(', ')
@@ -39,7 +40,7 @@ export const EntryDefinition = ({
   const def_langues = Object.keys(definition.meaning).filter((value) => value !== 'fr')
   const isNotPrpoposal =
     'source' in definition && ['reference', 'validated'].includes(definition.source)
-  const vote_allowed = enforcer.can('vote', 'proposals')
+  const vote_allowed = auth?.enforcer.can('vote', 'proposals')
   return (
     <section className="definition border-b-2 border-b-gray-200 py-4 dark:border-b-gray-700 dark:bg-inherit">
       <div className="grid gap-2">
@@ -48,7 +49,7 @@ export const EntryDefinition = ({
             {index}. {subnature}{' '}
           </span>
           {isNotPrpoposal ? (
-            <Can do="add" on="lexicon" ability={enforcer}>
+            <Can do="add" on="lexicon" ability={auth?.enforcer as AnyAbility}>
               <AddToLexicon definition={definition as SingleDefinition} />
             </Can>
           ) : (
