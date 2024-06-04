@@ -31,14 +31,14 @@ export const EntryDefinition = ({
   index,
   definition,
 }: EntryDefinitionProps) => {
-
   const enforcer = useEnforcer()
   const nature = definition.nature.join(', ')
   const subnature = definition.subnature?.length
     ? definition.subnature.join(', ')
     : nature
   const def_langues = Object.keys(definition.meaning).filter((value) => value !== 'fr')
-  const isNotPrpoposal = ('source' in definition) && ['reference', 'validated'].includes(definition.source)
+  const isNotPrpoposal =
+    'source' in definition && ['reference', 'validated'].includes(definition.source)
   const vote_allowed = enforcer.can('vote', 'proposals')
   return (
     <section className="definition border-b-2 border-b-gray-200 py-4 dark:border-b-gray-700 dark:bg-inherit">
@@ -47,14 +47,16 @@ export const EntryDefinition = ({
           <span className="font-medium">
             {index}. {subnature}{' '}
           </span>
-          {isNotPrpoposal ?
-            (<Can do="add" on="lexicon" ability={enforcer}>
+          {isNotPrpoposal ? (
+            <Can do="add" on="lexicon" ability={enforcer}>
               <AddToLexicon definition={definition as SingleDefinition} />
-            </Can>)
-            : (
-              <ProposalVoteButtons definition={convertDefinition(definition)} disabled={!vote_allowed} />
-
-            )}
+            </Can>
+          ) : (
+            <ProposalVoteButtons
+              definition={convertDefinition(definition)}
+              disabled={!vote_allowed}
+            />
+          )}
         </p>
         <section className="mb-3">
           {def_langues.map((lang) => {
@@ -101,19 +103,17 @@ export const EntryDefinition = ({
   )
 }
 
-const Synonyms = ({
-  entry,
-  kreyol,
-  list,
-}: {
+interface KreyolSublistProps {
   entry: string
   kreyol: KreyolLanguage
   list: string[]
-}) => (
+}
+
+const Synonyms = ({ entry, kreyol, list }: KreyolSublistProps) => (
   <section className="mb-2 grid gap-2">
     <h2 className="text-lg font-bold">Synonymes</h2>
     <ul className="flex flex-wrap gap-2">
-      {list.map(async (item) => {
+      {list.map((item) => {
         return (
           <li key={hashKey(entry + '_syn_', item)}>
             <Link
@@ -129,19 +129,11 @@ const Synonyms = ({
   </section>
 )
 
-const Confers = ({
-  entry,
-  kreyol,
-  list,
-}: {
-  entry: string
-  kreyol: KreyolLanguage
-  list: string[]
-}) => (
+const Confers = ({ entry, kreyol, list }: KreyolSublistProps) => (
   <section className="mb-2 grid gap-2">
     <h2 className="text-lg font-bold">Voir aussi</h2>
     <ul className="flex flex-wrap gap-2">
-      {list.map(async (item) => {
+      {list.map((item) => {
         return (
           <li key={hashKey(entry + '_confer_', item)}>
             <Link

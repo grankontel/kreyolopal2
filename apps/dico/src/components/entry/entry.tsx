@@ -14,14 +14,21 @@ import { hashKey, onlyUnique } from '@/lib/utils'
 import { EntryDefinitionList } from './entry-definition-list'
 import { dicoUrl } from '@/lib/dicoUrl'
 import { EntryTitle } from './entry-title'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
-export function Entry<T  extends (UserDictionaryEntry | UserProposalEntry)>({ kreyol, value, ...props }: { kreyol: KreyolLanguage; value: T }) {
+export function Entry<T extends UserDictionaryEntry | UserProposalEntry>({
+  kreyol,
+  value,
+  ...props
+}: {
+  kreyol: KreyolLanguage
+  value: T
+}) {
   let source = value.entry
   if ('is_bookmarked' in value && 'bookmark' in value && value.is_bookmarked) {
     source = value.bookmark as DictionaryFullEntry
   }
 
-  console.log(source)
   const relatedList: string[] = [source]
     .map((entry) => {
       const syns = entry.definitions
@@ -52,12 +59,14 @@ export function Entry<T  extends (UserDictionaryEntry | UserProposalEntry)>({ kr
           />
 
           <div className="above-article flex flex-row">
-            <EntryDefinitionList
-              entry={source.entry}
-              variations={source.variations}
-              definitions={source.definitions}
-              kreyol={kreyol}
-            />
+            <ScrollArea className='h-screen basis-3/4 pr-4'>
+              <EntryDefinitionList
+                entry={source.entry}
+                variations={source.variations}
+                definitions={source.definitions}
+                kreyol={kreyol}
+              />
+            </ScrollArea>
 
             <aside className="hidden basis-1/4  px-4 md:block">
               {relatedList.length === 0 ? (
