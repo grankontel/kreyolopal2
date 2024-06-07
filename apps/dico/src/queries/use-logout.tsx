@@ -22,7 +22,7 @@ const fetchLogout = async (token: string) => {
 export function useLogout(notifyer?: (error: Error) => void) {
   const router = useRouter()
   const queryClient = useQueryClient()
-  const cookies = new Cookies(null, { path: '/' });
+  const cookies = new Cookies(null, { path: '/' })
   const { user, unsetUser } = useDicoStore((state) => ({
     user: state.user,
     unsetUser: state.unsetUser,
@@ -31,7 +31,7 @@ export function useLogout(notifyer?: (error: Error) => void) {
   const { mutate: logoutMutation } = useMutation({
     mutationFn: () => fetchLogout(user?.bearer as string),
     onSuccess: () => {
-       cookies.remove(cookieName)
+      cookies.remove(cookieName)
       unsetUser()
       queryClient.invalidateQueries({ queryKey: ['me', 'personalDico', 'suggest'] })
       router.push('/login')

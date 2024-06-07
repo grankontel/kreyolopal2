@@ -1,4 +1,3 @@
-
 export function BookmarkIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg

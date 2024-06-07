@@ -41,7 +41,9 @@ const getBreadcrumb = (
   return []
 }
 
-export default function DashboardPath({className}: React.HTMLAttributes<HTMLDivElement>) {
+export default function DashboardPath({
+  className,
+}: React.HTMLAttributes<HTMLDivElement>) {
   const [crumbs, setCrumbs] = useState<{ label: string; path: string }[]>([])
   const pathName = usePathname()
   const { menus } = useDicoStore()
@@ -52,7 +54,7 @@ export default function DashboardPath({className}: React.HTMLAttributes<HTMLDivE
   //const crumbs = getBreadcrumb(pathName, menus) as { label: string; path: string }[]
 
   return (
-    <Breadcrumb className={cn("breadcrumb", className)}>
+    <Breadcrumb className={cn('breadcrumb', className)}>
       <BreadcrumbList>
         {crumbs.map((crumb, index) => (
           <Fragment key={hashKey('crumb', crumb.label)}>

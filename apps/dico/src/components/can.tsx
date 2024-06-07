@@ -59,9 +59,9 @@ export function Can<T extends AnyAbility, IsBound extends boolean = false>(
     //const props: any = this.props;
     const can = props.not ? 'cannot' : 'can'
 
-	if (props.ability === undefined) 
-		return false
-	
+    if (props.ability === undefined) 
+      return false
+
     return props.ability[can](props.do, props.on, props.field)
   }
 

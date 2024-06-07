@@ -1,4 +1,4 @@
-import { Permission } from "@kreyolopal/domain"
+import { Permission } from '@kreyolopal/domain'
 
 export interface DashboardMenuItem {
   icon?: string

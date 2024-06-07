@@ -20,9 +20,7 @@ export default async function Page({
   const permissions = getPermissions()
   const enforcer = getEnforcer(permissions)
   if (enforcer.cannot('read', 'dictionary')) {
-    return (
-      <NoPermissions />
-    )
+    return <NoPermissions />
   }
 
   const data = await getWord(params.kreyol, params.entry)

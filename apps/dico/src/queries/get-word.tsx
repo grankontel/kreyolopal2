@@ -53,7 +53,7 @@ export async function getWord(
     }
 
     const data = await (result as Response).json<DictionaryFullEntry>()
-//    console.log(data)
+    //    console.log(data)
     const response: UserDictionaryEntry = {
       cacheMode: cacheMode,
       is_bookmarked: false,
@@ -72,7 +72,6 @@ export async function getWord(
       })
 
       if (result2?.ok) {
-
         const data2 = await result2.json<DictionaryFullEntry[]>()
 
         const bookmarks: DictionaryFullEntry[] = data2.map((item) => {

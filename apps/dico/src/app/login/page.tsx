@@ -4,7 +4,7 @@ import Image from 'next/image'
 export default function LoginPage() {
   return (
     <div className="flex size-full h-screen flex-row">
-      <div className="hidden md:block bg-logo basis-1/2">
+      <div className="bg-logo hidden basis-1/2 md:block">
         <div className="m-4 px-4 py-12">
           <Image
             src="/images/logo_name-transparent.svg"

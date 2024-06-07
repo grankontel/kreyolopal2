@@ -59,7 +59,7 @@ export function Entry<T extends UserDictionaryEntry | UserProposalEntry>({
           />
 
           <div className="above-article flex flex-row">
-            <ScrollArea className='h-screen basis-3/4 pr-4'>
+            <ScrollArea className="h-screen basis-3/4 pr-4">
               <EntryDefinitionList
                 entry={source.entry}
                 variations={source.variations}

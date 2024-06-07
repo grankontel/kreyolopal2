@@ -26,7 +26,11 @@ export default function DicoTableCell<T>({
   })
 
   return (
-    <td className={className} onMouseEnter={() => setCellHover(true)} onMouseLeave={() => setCellHover(false)}>
+    <td
+      className={className}
+      onMouseEnter={() => setCellHover(true)}
+      onMouseLeave={() => setCellHover(false)}
+    >
       {value}
       <span className={cellClass} onClick={() => onAdd(entry)}>
         <FeatherIcon iconName="plus-square" />

@@ -69,14 +69,16 @@ export const DashboardProvider = ({
           label: item.name,
           path: '/dashboard' + item.path,
         })),
-        permission: {action: 'read', subject: 'lexicon'}
+        permission: { action: 'read', subject: 'lexicon' },
       })
       setPersonnel(personnel)
     }
   }, [data])
 
   return (
-    <DashboardContext.Provider value={{ ...init, enforcer, isLoggedIn: () => init.session_id }}>
+    <DashboardContext.Provider
+      value={{ ...init, enforcer, isLoggedIn: () => init.session_id }}
+    >
       {children}
     </DashboardContext.Provider>
   )

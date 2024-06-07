@@ -2,9 +2,9 @@ import { ResponseError } from '@/lib/types'
 import { changePasswordSchema } from '@kreyolopal/domain'
 
 export interface ChangePasswordPayload {
-	old_password: string
-	new_password: string
-	verification: string
+  old_password: string
+  new_password: string
+  verification: string
 }
 
 export async function changePassword(token: string, payload: ChangePasswordPayload) {

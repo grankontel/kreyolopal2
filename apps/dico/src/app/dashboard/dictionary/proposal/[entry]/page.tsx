@@ -32,9 +32,7 @@ export default async function Page({ params }: { params: { entry: string } }) {
 
   const enforcer = getEnforcer(getPermissions())
   if (enforcer.cannot('read', 'proposals')) {
-    return (
-      <NoPermissions />
-    )
+    return <NoPermissions />
   }
 
   const entryInfo = await getProposedWord(token, 'gp', entry)
@@ -60,7 +58,7 @@ export default async function Page({ params }: { params: { entry: string } }) {
               </div>
             )}
 
-            <Can do='submit' on='proposals' ability={enforcer}>
+            <Can do="submit" on="proposals" ability={enforcer}>
               <AddEntry entry={entry} />
             </Can>
           </div>

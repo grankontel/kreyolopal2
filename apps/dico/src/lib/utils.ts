@@ -21,9 +21,7 @@ export const hashKey = (radix: string, item: string) => {
   return radix + btoa(funhash(item).toString())
 }
 
-export function parseCookie(
-  cookie: string
-): AuthValue | null {
+export function parseCookie(cookie: string): AuthValue | null {
   if (cookie === undefined) return null
   const [data, digest] = cookie.split('.')
 

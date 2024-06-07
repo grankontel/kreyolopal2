@@ -56,7 +56,9 @@ export const UserDropdown = async ({ token }: { token: string }) => {
             variant="ghost"
           >
             <UserIcon className="h-4 w-4" />
-            <span className='hidden md:block'>&nbsp;{user?.firstname} {user?.lastname}</span>
+            <span className="hidden md:block">
+              &nbsp;{user?.firstname} {user?.lastname}
+            </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -67,7 +69,9 @@ export const UserDropdown = async ({ token }: { token: string }) => {
           <DropdownMenuSeparator />
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href={'/settings'} passHref>Settings</Link>
+            <Link href={'/settings'} passHref>
+              Settings
+            </Link>
           </DropdownMenuItem>
           <DialogTrigger asChild>
             <DropdownMenuItem>Logout</DropdownMenuItem>

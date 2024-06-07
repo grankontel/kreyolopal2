@@ -150,7 +150,9 @@ export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
                 </TableCell>
               )}
               <TableCell className="mt-2 align-top">{ligne.nature}</TableCell>
-              <TableCell className="hidden md:w-[150px]">{ligne.definition_cpf}</TableCell>
+              <TableCell className="hidden md:w-[150px]">
+                {ligne.definition_cpf}
+              </TableCell>
               <TableCell className="hidden md:w-[150px]">{ligne.definition_fr}</TableCell>
               <DicoTableCell
                 className="hidden md:w-[150px]"
@@ -184,5 +186,7 @@ export const DicoTable = ({ queryResult, pageHandler }: DicoTableProps) => {
         })}
       </TableBody>
     </Table>
-  ) : ('Aucune entrée trouvée')
+  ) : (
+    'Aucune entrée trouvée'
+  )
 }

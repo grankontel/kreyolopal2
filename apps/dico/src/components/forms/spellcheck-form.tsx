@@ -121,7 +121,12 @@ export function SpellcheckForm() {
             />
           </div>
           <div className="flex w-full items-center space-x-2">
-            <Can do="request" on="spellcheck" passThrough ability={auth?.enforcer as AnyAbility}>
+            <Can
+              do="request"
+              on="spellcheck"
+              passThrough
+              ability={auth?.enforcer as AnyAbility}
+            >
               {(allowed: boolean) => (
                 <Button
                   className="w-[140px]"
@@ -162,7 +167,12 @@ export function SpellcheckForm() {
             </Button>
           </CopyToClipboard>
           <div className="flex items-center space-x-1">
-            <Can do="rate" on="spellcheck" passThrough ability={auth?.enforcer as AnyAbility}>
+            <Can
+              do="rate"
+              on="spellcheck"
+              passThrough
+              ability={auth?.enforcer as AnyAbility}
+            >
               {(allowed: boolean) => (
                 <StarRating
                   hidden={response === undefined}

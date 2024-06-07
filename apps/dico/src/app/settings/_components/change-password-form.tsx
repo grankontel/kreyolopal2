@@ -4,35 +4,29 @@ import { useDashboard } from '@/components/dashboard/dashboard-provider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form"
+import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { changePassword, ChangePasswordPayload } from '../_actions/change-password'
 import { useMutation } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/use-toast'
 import { changePasswordSchema } from '@kreyolopal/domain'
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
-
 
 export const ChangePasswordForm = () => {
   const form = useForm<ChangePasswordPayload>({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
-      new_password: "",
-      old_password: "",
-      verification: "",
+      new_password: '',
+      old_password: '',
+      verification: '',
     },
   })
   // 2. Define a submit handler.
   function onSubmit(values: ChangePasswordPayload) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    updatePassword.mutate(values )
+    updatePassword.mutate(values)
   }
 
   const dash = useDashboard()
@@ -60,7 +54,6 @@ export const ChangePasswordForm = () => {
     onError: (err: any) => {
       notifyer(err)
     },
-
   })
   return (
     <Form {...form}>
@@ -69,8 +62,13 @@ export const ChangePasswordForm = () => {
           Changer mon mot de passe
         </h3>
         <div className="mt-2 space-y-4">
-
-          <input id="username" type="text" autoComplete='username' hidden defaultValue={dash?.username} />
+          <input
+            id="username"
+            type="text"
+            autoComplete="username"
+            hidden
+            defaultValue={dash?.username}
+          />
           <div>
             <FormField
               name="old_password"
@@ -110,7 +108,6 @@ export const ChangePasswordForm = () => {
                 </FormItem>
               )}
             />
-
           </div>
           <div>
             <FormField
@@ -131,13 +128,11 @@ export const ChangePasswordForm = () => {
                 </FormItem>
               )}
             />
-
           </div>
         </div>
-        <Button className="mt-4"
-          type='submit'
-          loading={updatePassword.isPending}
-        >Enregister</Button>
+        <Button className="mt-4" type="submit" loading={updatePassword.isPending}>
+          Enregister
+        </Button>
       </form>
     </Form>
   )

@@ -20,12 +20,9 @@ export default async function Page({
 
   const enforcer = getEnforcer(getPermissions())
   if (enforcer.cannot('read', 'lexicon')) {
-    return (
-      <NoPermissions />
-    )
+    return <NoPermissions />
   }
 
- 
   const data = await getLexicon(params.username, params.slug)
 
   if (!data) {
