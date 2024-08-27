@@ -12,12 +12,9 @@ export default function Page() {
     return undefined
   }
 
-
   const enforcer = getEnforcer(getPermissions())
   if (enforcer.cannot('list', 'lexicon')) {
-    return (
-      <NoPermissions />
-    )
+    return <NoPermissions />
   }
   return (
     <MainPanel title="Mes lexiques">

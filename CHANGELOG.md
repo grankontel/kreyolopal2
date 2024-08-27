@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- new dashboard layout is more mobile friendly
+
 ## [1.2.1] - 2024-05-26
 
 ### Changed

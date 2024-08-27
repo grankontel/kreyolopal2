@@ -1,10 +1,9 @@
 import { ResponseError } from '@/lib/types'
 
 interface ValidateProposalPayload {
-	entry: string
-	definitions: string[]
-	variations: string[]
-
+  entry: string
+  definitions: string[]
+  variations: string[]
 }
 
 export async function validateProposal(token: string, payload: ValidateProposalPayload) {
@@ -20,11 +19,15 @@ export async function validateProposal(token: string, payload: ValidateProposalP
     method: 'POST',
     headers: myHeaders,
     body: JSON.stringify({
-			definitions:payload.definitions,
-			variations: payload.variations,
-		}),
+      definitions: payload.definitions,
+      variations: payload.variations,
+    }),
   }).then(async (result) => {
-    if (!result.ok) throw new ResponseError(`Failed to validate definitions for ${payload.entry} `, result)
+    if (!result.ok)
+      throw new ResponseError(
+        `Failed to validate definitions for ${payload.entry} `,
+        result
+      )
 
     return result.json()
   })

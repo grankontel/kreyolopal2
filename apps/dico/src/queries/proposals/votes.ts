@@ -19,7 +19,11 @@ export async function getVotes(token: string, entry: string, definitionId: strin
   })
 }
 
-export async function upVote(token: string, entry: string, definitionId: string): Promise<{message:string}>{
+export async function upVote(
+  token: string,
+  entry: string,
+  definitionId: string
+): Promise<{ message: string }> {
   console.log('upVote')
 
   const myHeaders = new Headers()
@@ -34,11 +38,15 @@ export async function upVote(token: string, entry: string, definitionId: string)
   }).then(async (result) => {
     if (!result.ok) throw new ResponseError('Failed to propose new definition', result)
 
-    return result.json<{message:string}>()
+    return result.json<{ message: string }>()
   })
 }
 
-export async function downVote(token: string, entry: string, definitionId: string): Promise<{message:string}> {
+export async function downVote(
+  token: string,
+  entry: string,
+  definitionId: string
+): Promise<{ message: string }> {
   console.log('downVote')
 
   const myHeaders = new Headers()
@@ -53,6 +61,6 @@ export async function downVote(token: string, entry: string, definitionId: strin
   }).then(async (result) => {
     if (!result.ok) throw new ResponseError('Failed to propose new definition', result)
 
-    return result.json<{message:string}>()
+    return result.json<{ message: string }>()
   })
 }
