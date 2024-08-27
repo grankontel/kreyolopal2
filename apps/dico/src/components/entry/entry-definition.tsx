@@ -41,11 +41,16 @@ export const EntryDefinition = ({
   const isNotPrpoposal =
     'source' in definition && ['reference', 'validated'].includes(definition.source)
   const vote_allowed = auth?.enforcer.can('vote', 'proposals')
+
+  const subentry = (definition.prefix || definition.suffix) ? capitalizeFirstLetter([definition.prefix, definition.entry, definition.suffix].join(' ')) : ''
+  
   return (
     <section className="definition border-b-2 border-b-gray-200 py-4 dark:border-b-gray-700 dark:bg-inherit">
       <div className="grid gap-2">
-        <p className="nature text-md text-gray-400 dark:text-gray-600">
-          <span className="font-medium">
+        <p className="nature text-md ">
+          {subentry.length > 0 && (<div className='mb-2 text-lg italic'>{subentry}</div>)}
+          {definition.asIn && (<div className='mb-2 text-lg'>Comme dans :&nbsp;<span className='italic'>{definition.asIn}</span></div>)}
+          <span className="font-medium text-gray-400 dark:text-gray-600">
             {index}. {subnature}{' '}
           </span>
           {isNotPrpoposal ? (
@@ -175,3 +180,7 @@ const Usages = ({
     </ul>
   </div>
 )
+
+function capitalizeFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
