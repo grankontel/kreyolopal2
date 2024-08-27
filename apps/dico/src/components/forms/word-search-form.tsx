@@ -97,13 +97,15 @@ export function WordSearchForm() {
               <ul className="divide-y divide-gray-200 dark:divide-gray-900">
                 {words.map((item: DictionaryEntry, index: any) => {
                   return (
-                    <li key={hashKey('entry',item.entry)}>
+                    <li key={hashKey('entry', item.entry)}>
                       <Button
                         className="w-full justify-start text-left"
                         variant="ghost"
                         onClick={(e) => {
                           e.preventDefault()
-                          router.push(`/dashboard/dictionary/gp/${encodeURI(item.aliasOf ?? item.entry)}`)
+                          router.push(
+                            `/dashboard/dictionary/gp/${encodeURI(item.aliasOf ?? item.entry)}`
+                          )
                         }}
                       >
                         {item.entry}

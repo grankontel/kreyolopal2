@@ -45,18 +45,19 @@ export default function SettingsLayout({
   return (
     <div className="grid h-screen w-full lg:grid-cols-[280px_1fr]">
       <Sidebar>
-
-      <nav className="menu grid items-start px-4 text-sm font-medium">
-      <ul>
-      <li>
-      <Link className='flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50' href={'#'}>
-         <FeatherIcon iconName='shield' className="h-4 w-4" />
-        Changer mon mot de passe
-      </Link>
-</li>
-      </ul>
-    </nav>
-
+        <nav className="menu grid items-start px-4 text-sm font-medium">
+          <ul>
+            <li>
+              <Link
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                href={'#'}
+              >
+                <FeatherIcon iconName="shield" className="h-4 w-4" />
+                Changer mon mot de passe
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </Sidebar>
       <DashboardProvider init={{ ...auth }}>
         <div className="flex flex-col">
@@ -66,7 +67,6 @@ export default function SettingsLayout({
                 <Package2Icon className="h-6 w-6" />
                 <span className="sr-only">Home</span>
               </Link>
-
             </div>
             <div className="flex items-center gap-4">
               <UserDropdown token={auth.session_id} />

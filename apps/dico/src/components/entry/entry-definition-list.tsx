@@ -18,7 +18,6 @@ export const EntryDefinitionList = ({
   variations,
   showForm,
 }: EntryDefinitionListProps) => {
-
   return (
     <article className="basis-3/4  gap-2">
       {showForm ? (
@@ -28,15 +27,17 @@ export const EntryDefinitionList = ({
           definitions={definitions}
           variations={variations}
         />
-      ) : definitions.map((definition, index) => (
-        <EntryDefinition
-          key={hashKey('key_', entry + ':' + index)}
-          entry={entry}
-          kreyol={kreyol}
-          index={index + 1}
-          definition={definition}
-        />
-      ))}
+      ) : (
+        definitions.map((definition, index) => (
+          <EntryDefinition
+            key={hashKey('key_', entry + ':' + index)}
+            entry={entry}
+            kreyol={kreyol}
+            index={index + 1}
+            definition={definition}
+          />
+        ))
+      )}
     </article>
   )
 }

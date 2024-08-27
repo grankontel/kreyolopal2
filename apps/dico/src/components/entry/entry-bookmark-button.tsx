@@ -34,7 +34,7 @@ export const EntryBookmarkButton = ({
       headers: myHeaders,
     })
       .then(
-        async (result) => {
+        (result) => {
           if (result.ok) {
             setBookmarked(true)
             return true

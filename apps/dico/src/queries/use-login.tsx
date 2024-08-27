@@ -31,7 +31,7 @@ const fetchLogin = (content: IUserCredentials): Promise<User> => {
 
 export function useLogin(notifyer?: (error: Error) => void) {
   const queryClient = useQueryClient()
-  const cookies = new Cookies(null, { path: '/' });
+  const cookies = new Cookies(null, { path: '/' })
   const router = useRouter()
   const { user, setUser } = useDicoStore((state) => ({
     user: state.user,

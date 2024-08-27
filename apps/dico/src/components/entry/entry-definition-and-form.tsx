@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { EntryDefinition } from './entry-definition'
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,14 +10,14 @@ import { SingleDefinition, ProposalDefinition, KreyolLanguage } from '@kreyolopa
 import { hashKey } from '@/lib/utils'
 
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-	DialogClose,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
 } from '@/components/ui/dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { useMutation } from '@tanstack/react-query'
@@ -26,86 +26,89 @@ import { validateProposal } from '@/queries/proposals/validate-proposal'
 import { useDashboard } from '@/components/dashboard/dashboard-provider'
 
 interface EntryDefinitionAndFormProps {
-	entry: string
-	kreyol: KreyolLanguage
-	definitions: SingleDefinition[] | ProposalDefinition[]
-	variations?: string[]
-
+  entry: string
+  kreyol: KreyolLanguage
+  definitions: SingleDefinition[] | ProposalDefinition[]
+  variations?: string[]
 }
 
 export const EntryDefinitionAndForm = ({
-	entry,
-	kreyol,
-	definitions,
-	variations = [],
+  entry,
+  kreyol,
+  definitions,
+  variations = [],
 }: EntryDefinitionAndFormProps) => {
-	const [selected, setSelected] = useState<string[]>([])
-	const [pending, setPending] = useState<boolean>(false)
+  const [selected, setSelected] = useState<string[]>([])
+  const [pending, setPending] = useState<boolean>(false)
 
-	const checkChanged = (checked: string | boolean, definition_id: string) => {
-		if (!checked) {
-			setSelected(selected.filter(id => id !== definition_id))
-		} else {
-			setSelected([...selected, definition_id])
-		}
-	}
+  const checkChanged = (checked: string | boolean, definition_id: string) => {
+    if (!checked) {
+      setSelected(selected.filter((id) => id !== definition_id))
+    } else {
+      setSelected([...selected, definition_id])
+    }
+  }
 
-	return (
-		<div>
-			{definitions.map((definition, index) => (
-
-				<div key={hashKey('key_', entry + ':' + index)}
-					className="flex flex-row gap-2">
-					<div className="flex py-6">
-						<Checkbox
-							checked={selected.includes(definition.definition_id)}
-							onCheckedChange={(checked) => checkChanged(checked, definition.definition_id)}
-						/>
-					</div>
-					<div className="flex-1">
-						<EntryDefinition
-							entry={entry}
-							kreyol={kreyol}
-							index={index + 1}
-							definition={definition}
-						/>
-
-					</div>
-				</div>
-			))}
-			<div className="grid grid-cols-5  gap-4 py-2">
-				<Dialog>
-					<DialogTrigger asChild>
-						<Button
-							type="submit"
-							className="col-span-2 col-end-6"
-							variant="logo"
-							loading={pending}
-							disabled={selected.length === 0}
-							aria-disabled={pending}
-						>
-							Valider
-						</Button>
-
-					</DialogTrigger>
-					<ValidateDialogContent entry={entry} variations={variations} definitions={selected} />
-				</Dialog>
-
-			</div>
-		</div>
-	)
+  return (
+    <div>
+      {definitions.map((definition, index) => (
+        <div key={hashKey('key_', entry + ':' + index)} className="flex flex-row gap-2">
+          <div className="flex py-6">
+            <Checkbox
+              checked={selected.includes(definition.definition_id)}
+              onCheckedChange={(checked) =>
+                checkChanged(checked, definition.definition_id)
+              }
+            />
+          </div>
+          <div className="flex-1">
+            <EntryDefinition
+              entry={entry}
+              kreyol={kreyol}
+              index={index + 1}
+              definition={definition}
+            />
+          </div>
+        </div>
+      ))}
+      <div className="grid grid-cols-5  gap-4 py-2">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              type="submit"
+              className="col-span-2 col-end-6"
+              variant="logo"
+              loading={pending}
+              disabled={selected.length === 0}
+              aria-disabled={pending}
+            >
+              Valider
+            </Button>
+          </DialogTrigger>
+          <ValidateDialogContent
+            entry={entry}
+            variations={variations}
+            definitions={selected}
+          />
+        </Dialog>
+      </div>
+    </div>
+  )
 }
 
 interface ValidateDialogContentProps {
-	entry: string
-	definitions: string[]
-	variations: string[]
-
+  entry: string
+  definitions: string[]
+  variations: string[]
 }
 
-export const ValidateDialogContent = ({entry, definitions, variations: defaultVariations}: ValidateDialogContentProps) => {
+export const ValidateDialogContent = ({
+  entry,
+  definitions,
+  variations: defaultVariations,
+}: ValidateDialogContentProps) => {
   const [variations, setVariations] = useState<string[]>(defaultVariations)
-	const dash = useDashboard()
+  const dash = useDashboard()
   const router = useRouter()
   const { toast } = useToast()
   const notifyer = (err: { error?: string; toString: () => string }) => {
@@ -116,11 +119,12 @@ export const ValidateDialogContent = ({entry, definitions, variations: defaultVa
     })
   }
 
-	const var_regex = /^([a-z]([a-z-]|é|è|ò|à|)*,?)*$/gm
+  const var_regex = /^([a-z]([a-z-]|é|è|ò|à|)*,?)*$/gm
   if (!variations.includes(entry)) setVariations([entry, ...variations])
 
-	const validateEntry = useMutation({
-		mutationFn: async () => validateProposal(dash?.session_id as string, {entry, variations, definitions}),
+  const validateEntry = useMutation({
+    mutationFn: async () =>
+      validateProposal(dash?.session_id as string, { entry, variations, definitions }),
     onSuccess: () => {
       toast({
         variant: 'default',
@@ -131,19 +135,18 @@ export const ValidateDialogContent = ({entry, definitions, variations: defaultVa
     onError: (err: Error) => {
       notifyer(err)
     },
-	})
-	const submitHandler = async () => {
-
-		console.log('submitHandler', entry, variations, definitions)
-		validateEntry.mutate()
-	}
+  })
+  const submitHandler = async () => {
+    console.log('submitHandler', entry, variations, definitions)
+    validateEntry.mutate()
+  }
   return (
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle>Valider</DialogTitle>
         <DialogDescription>Voulez-vous valider ces définitions ?</DialogDescription>
       </DialogHeader>
-			<div className="grid grid-cols-5 items-center gap-4 text-gray-500 dark:text-gray-400">
+      <div className="grid grid-cols-5 items-center gap-4 text-gray-500 dark:text-gray-400">
         <Label htmlFor="variations" className="text-left">
           Variations
         </Label>
@@ -163,10 +166,7 @@ export const ValidateDialogContent = ({entry, definitions, variations: defaultVa
 
       <DialogFooter>
         <DialogClose asChild>
-          <Button
-            variant="logo"
-            onClick={submitHandler}
-          >
+          <Button variant="logo" onClick={submitHandler}>
             Yes
           </Button>
         </DialogClose>

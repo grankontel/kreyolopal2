@@ -4,8 +4,18 @@ export const getDefaultMenu = (pMenu: DashboardMenuItem[] = []) => {
   const menus: DashboardMenuItem[] = []
 
   const general: DashboardMenuItem[] = []
-  general.push({ icon: 'book', label: 'Dictionnaire', path: '/dashboard/dictionary', permission: {action: 'read', subject: 'dictionary'} })
-  general.push({ icon: 'tool', label: 'Orthographe', path: '/dashboard/spellcheck', permission: {action: 'request', subject: 'spellcheck'} })
+  general.push({
+    icon: 'book',
+    label: 'Dictionnaire',
+    path: '/dashboard/dictionary',
+    permission: { action: 'read', subject: 'dictionary' },
+  })
+  general.push({
+    icon: 'tool',
+    label: 'Orthographe',
+    path: '/dashboard/spellcheck',
+    permission: { action: 'request', subject: 'spellcheck' },
+  })
 
   menus.push({ label: 'Général', items: general })
   return menus.concat(getPersonalSubMenu(pMenu))

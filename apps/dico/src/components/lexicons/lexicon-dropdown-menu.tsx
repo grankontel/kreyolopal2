@@ -19,7 +19,7 @@ export const LexiconDropdownMenu = ({
   return (
     <DropdownMenuContent>
       <DropdownMenuLabel>Ajouter à...</DropdownMenuLabel>
-      {lexicons.length > 0 ? (<DropdownMenuSeparator />) : ''}
+      {lexicons.length > 0 ? <DropdownMenuSeparator /> : ''}
       {lexicons.map((lexicon) => {
         return (
           <DropdownMenuItem key={lexicon.id} onSelect={() => onSelect(lexicon)}>

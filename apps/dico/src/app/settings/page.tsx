@@ -5,11 +5,11 @@ import { ChangePasswordForm } from './_components/change-password-form'
 export const runtime = 'edge'
 
 export default function SettingsPage() {
-    const token = isLoggedIn()
-    if (!token) {
-      return undefined
-    }
-    return (
+  const token = isLoggedIn()
+  if (!token) {
+    return undefined
+  }
+  return (
     <MainPanel title="Mes parametres">
       <div className="mt-4">
         <ChangePasswordForm />

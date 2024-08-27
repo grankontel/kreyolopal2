@@ -29,7 +29,7 @@ export interface UserDictionaryEntry {
   bookmark?: DictionaryFullEntry
 }
 
-export interface UserProposalEntry extends UserEntry<ProposalEntry> { }
+export interface UserProposalEntry extends UserEntry<ProposalEntry> {}
 
 export class ResponseError extends Error {
   readonly response: Response
