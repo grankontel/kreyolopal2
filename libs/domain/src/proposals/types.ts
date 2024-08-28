@@ -32,6 +32,13 @@ export interface ProposalDefinition extends DictionaryDefinition {
   downvoters: Backer[]
 }
 
+export interface ProposalListItem {
+  upvoters: number
+  downvoters: number
+  kreyol: string[]
+  entry: string
+}
+
 export interface Backer {
   user: string
   birthdate: Date
