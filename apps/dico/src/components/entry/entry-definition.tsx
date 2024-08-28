@@ -47,7 +47,7 @@ export const EntryDefinition = ({
   return (
     <section className="definition border-b-2 border-b-gray-200 py-4 dark:border-b-gray-700 dark:bg-inherit">
       <div className="grid gap-2">
-        <p className="nature text-md ">
+        <div className="nature text-md ">
           {subentry.length > 0 && (<div className='mb-2 text-lg italic'>{subentry}</div>)}
           {definition.asIn && (<div className='mb-2 text-lg'>Comme dans :&nbsp;<span className='italic'>{definition.asIn}</span></div>)}
           <span className="font-medium text-gray-400 dark:text-gray-600">
@@ -63,7 +63,7 @@ export const EntryDefinition = ({
               disabled={!vote_allowed}
             />
           )}
-        </p>
+        </div>
         <section className="mb-3">
           {def_langues.map((lang) => {
             const k = lang as MeaningLanguage
