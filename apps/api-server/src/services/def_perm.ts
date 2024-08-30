@@ -10,7 +10,7 @@ const defaultPermissions: Permission[] = [
     action: 'manage',
     subject: 'all',
   },
-  ...subjectPermissions('dictionary', ['read', 'bookmark']),
+  ...subjectPermissions('dictionary', ['read', 'bookmark']), // 2
   ...subjectPermissions('lexicon', [
     'add',
     'read',
@@ -19,9 +19,9 @@ const defaultPermissions: Permission[] = [
     'list',
     'read_entry',
     'list_entry',
-  ]),
-  ...subjectPermissions('proposals', ['submit', 'read', 'validate', 'vote']),
-  ...subjectPermissions('spellcheck', ['request', 'rate']),
+  ]), // 7
+  ...subjectPermissions('proposals', ['submit', 'read', 'validate', 'vote', 'list']), // 4
+  ...subjectPermissions('spellcheck', ['request', 'rate']), // 2
 ]
 
 const defaultRoles: string[] = ['admin', 'standard', 'reader', 'validator']
@@ -37,7 +37,9 @@ const defaultRolesPermissions: { role: string; permissions: number[] }[] = [
   },
   {
     role: 'standard',
-    permissions: [...Array(14).keys()].map((i) => i + 2),
+    // all permissions but 'manage all' and 'rate spellcheck'
+    // means 15 permissions, starting at 2
+    permissions: [...Array(15).keys()].map((i) => i + 2),
   },
 ]
 export const setDefaultPermissions = () => {

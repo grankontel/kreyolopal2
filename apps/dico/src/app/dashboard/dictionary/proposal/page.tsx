@@ -7,10 +7,22 @@ import {
   CardContent,
   Card,
 } from '@/components/ui/card'
+import { getPermissions, isLoggedIn } from '../../is-logged-in'
+import { getEnforcer } from '@kreyolopal/domain'
+import NoPermissions from '@/components/noPermissions'
 
 export const runtime = 'edge'
 
 export default function Home() {
+  const token = isLoggedIn()
+  if (!token) {
+    return undefined
+  }
+
+  const enforcer = getEnforcer(getPermissions())
+  if (enforcer.cannot('list', 'lexicon')) {
+    return <NoPermissions />
+  }
 
   return (
     <MainPanel title="Mon dictionnaire">
