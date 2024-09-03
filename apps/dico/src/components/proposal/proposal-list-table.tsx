@@ -39,14 +39,15 @@ const defaultData: ProposalListItem[] = [
 const columnHelper = createColumnHelper<ProposalListItem>()
 const columns = [
 	columnHelper.accessor('entry', {
-		cell: info => <b>{info.getValue()}</b>,
+		cell: info => (<a href={`/dashboard/dictionary/proposal/${info.getValue()}/`}>
+
+			{info.getValue()}
+		</a>),
 		header: 'Entrée',
 	}),
 	columnHelper.accessor('kreyol', {
 		cell: info => info.getValue().map(langue => (
-			<a key={langue} href='#'>
-				<LangFlag langue={langue as MeaningLanguage} width="24" height="12" />
-			</a>
+			<LangFlag key={langue} langue={langue as MeaningLanguage} width="24" height="12" />
 		)),
 		header: 'kreyol(s)',
 	}),
