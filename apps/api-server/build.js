@@ -55,6 +55,7 @@ const buildCli = build({
   platform: 'node',
   loader: { '.ts': 'ts' },
   // packages: 'external',
+  external: ['@node-rs', 'uglify-js'],
   sourcemap: nodenv === 'development',
   plugins: [
     replace({
