@@ -43,7 +43,11 @@ const columns = [
 		header: 'Entrée',
 	}),
 	columnHelper.accessor('kreyol', {
-		cell: info => info.getValue().map(langue => <LangFlag key={langue} langue={langue as MeaningLanguage} width="24" height="12" />),
+		cell: info => info.getValue().map(langue => (
+			<a key={langue} href='#'>
+				<LangFlag langue={langue as MeaningLanguage} width="24" height="12" />
+			</a>
+		)),
 		header: 'kreyol(s)',
 	}),
 	columnHelper.accessor('upvoters', {
