@@ -175,3 +175,46 @@
 
 
 ```
+
+# Subscriptions specs #
+
+## Customer
+
+```json
+{
+  "name" :  "John Doe",
+  "email" : "john.doe@gmail.com",
+  "phone" : "+33123456789",
+  "address" : {
+    "city" : "Paris",
+    "country" : "France",
+    "line_1" : "1 rue de la paix",
+    "line_2" : "",  
+    "postal_code" : "75001",
+    "state" : ""
+  }
+}
+
+```
+
+Database should be : name; email; phone; address (as json) ; stripe_customer_id
+
+## Product
+
+```json
+{
+  "name" : "My Product",
+  "description" : "My Product description",
+}
+```
+
+Database should be : name; description ; stripe_customer_id
+
+```js
+const stripe = require('stripe')('sk_test_xxxxxxxxxxxx');
+
+const activeEntitlements = await stripe.entitlements.activeEntitlements.list({
+  customer: 'cus_9s6XKzkNRiz8i3',
+});
+```
+
