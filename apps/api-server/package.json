@@ -54,6 +54,7 @@
     "oslo": "^1.2.0",
     "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",
+    "stripe": "^16.10.0",
     "typo-js": "^1.2.4",
     "winston": "^3.13.0",
     "winston-slack-webhook-transport": "^2.3.5"
