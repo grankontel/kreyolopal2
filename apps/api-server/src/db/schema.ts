@@ -13,6 +13,7 @@ export const roles = pgTable('roles', {
 
 export const auth_user = pgTable('auth_user', {
     id: text('id').primaryKey().notNull(),
+    customer_id: varchar("customer_id", { length: 25 }).default('').notNull(),
     username: text('username').notNull(),
     firstname: varchar('firstname', { length: 255 }).notNull(),
     lastname: varchar('lastname', { length: 255 }).notNull(),
@@ -39,6 +40,7 @@ export const auth_user = pgTable('auth_user', {
         table.username
       ),
       auth_user_email_key: unique('auth_user_email_key').on(table.email),
+      auth_user_customer_id: unique("auth_user_customer_id").on(table.customer_id),
     }
   }
 )
