@@ -23,11 +23,11 @@ export interface Product {
   description: string
   images: any[]
   livemode: boolean
-  marketing_features: string[]
+  marketing_features: Array<{ name: string }>
   name: string
-	metatada: {
-		order: string
-	}
+  metatada: {
+    order: string
+  }
   tax_code: any
   type: string
   unit_label: any
