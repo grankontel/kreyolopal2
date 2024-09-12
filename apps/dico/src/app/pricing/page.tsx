@@ -137,7 +137,7 @@ const PlanButton = ({plan_id, children}: {plan_id: string, children?: React.Reac
   return (
     <Link
       className="inline-flex h-10 items-center justify-center rounded-md bg-logo px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-      href={`/billing/register/${plan_id}`}
+      href={`/checkout/${plan_id}`}
     >
       {children ?? 'Get started'}
     </Link>
@@ -167,6 +167,8 @@ const PlanTableItem = ({ plan }: { plan: Plan }) => (
 	</div>
 )
 export default function Home() {
+	const PlanSort = (a: Plan, b: Plan) =>Number( a.product.metatada?.order || 0) - Number(b.product.metatada?.order || 0)
+	
 	return (
 		<main className="flex min-h-[100dvh] flex-col">
 			<HomeHeader />
@@ -174,7 +176,7 @@ export default function Home() {
 				<div className="container max-w-6xl px-4 md:px-6">
 					<PlanTableTitle />
 					<div className="mx-auto grid gap-8 py-12 md:grid-cols-3 md:gap-6 lg:gap-8">
-						{plans.map((plan) => (
+						{plans.sort(PlanSort).map((plan) => (
 							<PlanTableItem  key={plan.id} plan={plan} />
 						))}
 						<div className="grid gap-6 rounded-lg border bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
