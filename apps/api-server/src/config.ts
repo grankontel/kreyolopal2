@@ -58,6 +58,9 @@ const config = {
   sentry: {
     dsn: process.env.SENTRY_DSN,
   },
+  stripe: {
+    secretKey: String(process.env.STRIPE_SECRET_KEY || ''),
+  },
 }
 
 config.db.uri = `postgresql://${config.db.username}:${encodeURIComponent(

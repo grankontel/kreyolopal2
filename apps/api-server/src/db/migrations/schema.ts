@@ -1,4 +1,4 @@
-import { pgTable, foreignKey, uuid, text, char, varchar, jsonb, timestamp, integer, unique, serial, index, date, boolean, uniqueIndex, primaryKey } from "drizzle-orm/pg-core"
+import { pgTable, foreignKey, uuid, integer, varchar, timestamp, unique, serial, jsonb, text, index, date, boolean, uniqueIndex, char, primaryKey } from "drizzle-orm/pg-core"
   import { sql } from "drizzle-orm"
 
 
@@ -48,6 +48,7 @@ export const permissions = pgTable("permissions", {
 
 export const auth_user = pgTable("auth_user", {
 	id: text("id").primaryKey().notNull(),
+	customer_id: varchar("customer_id", { length: 25 }).default('').notNull(),
 	username: text("username").notNull(),
 	firstname: varchar("firstname", { length: 255 }).notNull(),
 	lastname: varchar("lastname", { length: 255 }).notNull(),
@@ -66,6 +67,7 @@ export const auth_user = pgTable("auth_user", {
 		IX_auth_user_reset_pwd_token: index("IX_auth_user_reset_pwd_token").on(table.reset_pwd_token),
 		auth_user_username_key: unique("auth_user_username_key").on(table.username),
 		auth_user_email_key: unique("auth_user_email_key").on(table.email),
+		auth_user_customer_id: unique("auth_user_customer_id").on(table.customer_id),
 	}
 });
 

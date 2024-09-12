@@ -3,6 +3,7 @@ import { cors } from 'hono/cors'
 import logger from '#services/logger'
 
 import auth from './controllers/auth.routes'
+import billing from './controllers/billing.routes'
 import contact from './controllers/contact.routes'
 import dictionary from './controllers/dictionary.routes'
 import health from './controllers/health.routes'
@@ -19,6 +20,7 @@ function setRoutes(app: AppRouter) {
   logger.info('Adding routes')
 
 	app.route('/api/auth', auth)
+  app.route('/api/billing', billing)
   app.route('/api/dictionary', dictionary)
   app.route('/api/contact', contact)
   app.route('/api/health', health)

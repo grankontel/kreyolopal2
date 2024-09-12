@@ -9,3 +9,4 @@ export * from './suggest'
 
 export type { SubmitDefinition, SubmitEntry, ProposalDefinition, ProposalEntry, Backer } from './proposals/types'
 
+export * from './billing/types'
