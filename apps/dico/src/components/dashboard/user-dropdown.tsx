@@ -67,7 +67,7 @@ export const UserDropdown = async ({ token }: { token: string }) => {
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          {/* <DropdownMenuItem>Profile</DropdownMenuItem> */}
           <DropdownMenuItem>
             <Link href={'/settings'} passHref>
               Settings
