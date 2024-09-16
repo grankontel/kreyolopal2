@@ -9,6 +9,9 @@ const config = {
     level: process.env.LOGLEVEL || 'info',
     prettyPrint: Boolean(process.env.NODE_ENV !== 'production'),
   },
+  dico: {
+    useLocal: Boolean(process.env.LOCAL_DICO || false),
+  },
   slack: {
     webhook: String(process.env.SLACK_WEBHOOK_URL),
     noSend: Boolean(process.env.NODE_ENV !== 'production'),
